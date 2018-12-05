@@ -3,27 +3,34 @@
 const mustache = require('mustache');
 const vm = require('vm');
 const mqtt = require('mqtt');
-const { createLogger, format, transports } = require('winston');
+
 const config = require('./config.js').parse();
-const rules = require('./rules.js').parse();
-const sandbox = require('./sandbox.js');
-
-
-console.log(rules[0].action.eval);
-process.exit(0);
+const logger = require('./logger.js');
+//const rules = require('./rules.js').parse();
+const {Rules, Rule} = require('./rules.js');
 
 let justStarted = true;
 
-// Initate the logger
-const logger = createLogger({
-    level: config.loglevel,
-    format: format.combine(
-      format.colorize(),
-      format.splat(),
-      format.simple(),
-    ),
-    transports: [new transports.Console()]
-});
+// Shared items
+const store = new Map();
+
+
+
+
+const rules = new Rules(config);
+
+
+
+// Sandbox
+const sandbox = {
+    addToStore: function (key, value) {
+        store.set(key, value);        
+    },
+    getFromStore: function(key) {
+        return store.get(key);
+    },
+    log: logger    
+}
 
 
 let parse = function(topic, message) {
@@ -33,7 +40,7 @@ let parse = function(topic, message) {
     if (!data) {
         logger.warn('did not understand message %s on topic %s', message, topic)
     } else {
-        sandbox.data.states.set(topic, data);
+        store.set(topic, data);
     }
 }
 
@@ -93,15 +100,15 @@ let setMqttHandlers = function(mqttClient) {
 
 // start
 
-let mqttClient = mqtt.connect(config.mqtt.url, config.mqtt.options);
-setMqttHandlers(mqttClient);
+//let mqttClient = mqtt.connect(config.mqtt.url, config.mqtt.options);
+//setMqttHandlers(mqttClient);
 
-
-vm.createContext(sandbox.context);
+/*
+vm.createContext(sandbox);
 
 
 setTimeout(function() {
-    const code = 'getState(\"knx/connected\");';
-    console.log(vm.runInContext(code, sandbox.context));
-    console.log(sandbox.data.states);
-}, 3000);
+    const code = "addToStore('a', 10); log.warn(getFromStore('a'));";
+    vm.runInContext(code, sandbox);    
+}, 0);
+*/
