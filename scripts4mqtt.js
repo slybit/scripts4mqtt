@@ -5,10 +5,12 @@ const vm = require('vm');
 const mqtt = require('mqtt');
 const { createLogger, format, transports } = require('winston');
 const config = require('./config.js').parse();
-
+const rules = require('./rules.js').parse();
 const sandbox = require('./sandbox.js');
-vm.createContext(sandbox.context);
 
+
+console.log(rules[0].action.eval);
+process.exit(0);
 
 let justStarted = true;
 
@@ -93,6 +95,10 @@ let setMqttHandlers = function(mqttClient) {
 
 let mqttClient = mqtt.connect(config.mqtt.url, config.mqtt.options);
 setMqttHandlers(mqttClient);
+
+
+vm.createContext(sandbox.context);
+
 
 setTimeout(function() {
     const code = 'getState(\"knx/connected\");';

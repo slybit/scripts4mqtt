@@ -1,0 +1,15 @@
+[
+    {
+        "name"      : "Test",
+        "condition" : {
+            "type"      : "mqtt",
+            "topic"     : "knx/status/5/5/200",
+            "eval"      : "{{M}} == 1",
+            "change"    : "true"
+        },
+        "action"    : {
+            "type"      : "mqtt",
+            "eval"      : "write('knx/set/0/0/108', 1)"
+        }
+    }
+]
