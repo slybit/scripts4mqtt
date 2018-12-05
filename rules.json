@@ -8,7 +8,7 @@
                     "type": "mqtt",
                     "topic": "knx/status/5/5/200",
                     "eval": "{{M}} == 1",
-                    "change": "true"
+                    "trigger": "always"
                 }
             ]
         },
@@ -23,5 +23,35 @@
                 "val": 1
             }
         ]
+    },
+    {
+        "name": "SimpleTest",
+        "condition": {
+            "type": "or",
+            "condition": [
+                {
+                    "type": "simple",
+                    "val": true
+                },
+                {
+                    "type": "simple",
+                    "val": false
+                },
+                {
+                    "type": "and",
+                    "condition": [
+                        {
+                            "type": "simple",
+                            "val": false
+                        },
+                        {
+                            "type": "simple",
+                            "val": true
+                        }
+                        
+                    ]
+                }
+            ]
+        }
     }
 ]

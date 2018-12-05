@@ -6,7 +6,7 @@ class Rules {
     constructor(config) {
         this.config = config;        
         this.rules = this.loadRules();
-        console.log(JSON.stringify(this.rules, null, 4));
+        //console.log(JSON.stringify(this.rules, null, 4));
     }
 
     loadRules() {        
@@ -30,7 +30,7 @@ class Rules {
         }
         for (let r of rulesList) {
             try {
-                let rule = Rule.fromJSON(r);
+                let rule = new Rule(r);
                 rules.push(rule);
                 logger.info(rule);
             } catch (e) {
@@ -46,19 +46,20 @@ class Rules {
 
 class Rule {
 
-    static fromJSON(json) {
-        let rule = new Rule();
+    constructor(json) {
         logger.info("Parsing rule %s", json.name);
-        rule.name = json.name;
-        if (json.ontrue) {
-            rule.onTrueActions = Rule.parseActions(json.ontrue);
-        }
-        return rule;
+        this.name = json.name;
+        this.conditions = [];
+        this.logic = this.parseCondition(json.condition);
+        this.onFalseActions = [];
+        this.onTrueActions = Rule.parseActions(json.ontrue);        
     }
 
     static parseActions(json) {
         let actions = [];
-        if (Array.isArray(json)) {
+        if (json === undefined) {
+            return [];
+        } else if (Array.isArray(json)) {
             actions = json;
         } else {
             actions = [json];
@@ -68,8 +69,7 @@ class Rule {
             try {
                 switch (a.type.toLowerCase()) {
                     case "mqtt":
-                        console.log(a);
-                        result.push(SetValueAction.fromJSON(a));
+                        result.push(new SetValueAction(a));
                         break;
                 }
             } catch (err) {
@@ -79,17 +79,71 @@ class Rule {
         return result;
     }
 
-    static parseCondition(json) {
-
+    static evalLogic(logic) {
+        if (logic.type === "or") {
+            let result = false;
+            for (let c of logic.condition) {
+                if (Rule.evalLogic(c)) {
+                    result = true;
+                    break;
+                }
+            }
+            return result;
+        } else if (logic.type === "and") {
+            let result = true;
+            for (let c of logic.condition) {
+                if (!Rule.evalLogic(c)) {
+                    result = false;
+                    break;
+                }
+            }
+            return result;
+        } else {
+            return logic.state;
+        }
     }
 
-    constructor() {
-        this.name = undefined;
-        this.logic = undefined;
-        this.conditions = [];
-        this.onTrueActions = [];
-        this.onFalseActions = [];
+    // json can be either an array of conditions, or a single (nested) condition
+    // a condition has a 'type' and a 'condition' -> itself again an array (for 'or' and 'and') or a nested condition
+    parseCondition(json) {
+        if (Array.isArray(json)) {
+            let result = [];
+            for (let c of json) {
+                result.push(this.parseCondition(c));
+            }
+            return result;
+        } else {
+            if (!json.type) {
+                throw new Error('No type provided for condition.');
+            }
+            let c = undefined;
+            switch (json.type.toLowerCase()) {
+                case "and":
+                case "or":
+                    if (!Array.isArray(json.condition)) {
+                        throw new Error("OR and AND conditions require an array in the condition field.");
+                    }
+                    c = {
+                        'type': json.type.toLowerCase(),
+                        'condition': this.parseCondition(json.condition)
+                    };
+                    break;
+                case "mqtt":
+                    c = new MqttCondition(json);
+                    this.conditions.push(c);
+                    break;
+                case "simple":
+                    c = new SimpleCondition(json);
+                    this.conditions.push(c);
+                    break;
+                default:
+                    throw new Error("Unknown condition type: " + json.type);
+            }
+            return c;
+        }        
     }
+
+    
 
 
 
@@ -112,15 +166,95 @@ class Action {
 }
 
 class SetValueAction extends Action {
-    constructor(topic, val) {
+
+    constructor(json) {
         super();
-        this.topic = topic;
-        this.val = val;        
+        this.topic = json.topic;
+        this.val = json.val;        
     }
 
-    static fromJSON(json) {        
-        return new SetValueAction(json.topic, json.val);
+}
+
+
+
+/* --------------------------------------------------------------------------------------------
+ * Condition
+-------------------------------------------------------------------------------------------- */
+
+const Trigger = Object.freeze({
+    "no": 10,
+    "on_flip": 11,
+    "on_flip_true": 12,
+    "on_flip_false": 13,
+    "always": 14,
+});
+
+
+class Condition {
+
+    constructor(json) {
+        this.trigger = Trigger[json.trigger] ? Trigger[json.trigger] : Trigger["no"];
+        this.oldState = undefined;
+        this.state = undefined;
+    }
+    
+    flipped() {
+        return this.state !== this.oldState;
+    }
+
+    flippedFalse() {
+        return !this.state && this.flipped();
+    }
+
+    flippedTrue() {
+        return this.state && this.flipped();
+    }
+
+    triggered() {
+        return (this.trigger == Trigger.always) ||
+               (this.trigger == Trigger.on_flip && self.flipped()) ||
+               (this.trigger == Trigger.on_flip_true && self.flippedTrue()) ||
+               (this.trigger == Trigger.on_flip_false && self.flippedFalse());
+    }
+
+    /*
+        Evaluates this condition.
+        It must update these values for the condition:
+            _oldValue
+            _value            
+        It must return True if a complete evaluation of the rule is required, False if not.
+    */
+    evaluate() {
+        throw new Error('You have to implement the method evaluate!');
     }
 }
+
+
+class MqttCondition extends Condition {
+
+    constructor(json) {
+        super(json);
+        this.topic = json.topic;
+        this.eval = json.eval;
+        if (!(this.topic && this.eval))
+            throw new Error('Mqtt condition missing topic or eval');
+    }
+
+}
+
+class SimpleCondition extends Condition {
+
+    constructor(json) {
+        super(json);
+        this.state = (json.val == true);
+    }
+
+}
+
+
+
+
+
+
 
 module.exports = {Rules, Rule}
