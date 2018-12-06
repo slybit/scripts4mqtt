@@ -1,15 +1,21 @@
 const fs = require('fs');
 const util = require('util');
 const logger = require('./logger.js');
+const engine = require('./engine.js');
+const mustache = require('mustache');
+
+const topicToArray = function(topic) {
+    return topic.split('/');
+}
 
 class Rules {
     constructor(config) {
-        this.config = config;        
+        this.config = config;
         this.rules = this.loadRules();
         //console.log(JSON.stringify(this.rules, null, 4));
     }
 
-    loadRules() {        
+    loadRules() {
         logger.info("parsing rules");
         const file = process.env.MQTT4SCRIPTS_RULES || 'rules.json';
         let rulesList = [];
@@ -17,7 +23,7 @@ class Rules {
         if (fs.existsSync(file)) {
             try {
                 var contents = fs.readFileSync(file);
-                var jsonContent = JSON.parse(contents);                
+                var jsonContent = JSON.parse(contents);
                 if (Array.isArray(jsonContent)) {
                     rulesList = jsonContent;
                 } else {
@@ -39,10 +45,29 @@ class Rules {
         }
         return rules;
     }
+
+
+    /*
+    * This method is called by the mqtt library for every message that was recieved.
+      It will go over all MqttConditions in all rules and evaluate them.
+      Only the topic of the message is provided, the data should be taken from 'engine.store'
+    */
+    mqttConditionChecker(topic) {
+        logger.silly('mqttConditionChecker called');
+        for (let rule of this.rules)
+            for (let c of rule.conditions)
+                if ((c instanceof MqttCondition) && (c.topic === topic)) {
+                    logger.silly('Mqtt %s received, evaluating rule %s', topic, rule.name);
+                    if (c.evaluate())
+                        rule.scheduleActions()
+                }
+
+    }
+
 }
 
 
-    
+
 
 class Rule {
 
@@ -51,8 +76,8 @@ class Rule {
         this.name = json.name;
         this.conditions = [];
         this.logic = this.parseCondition(json.condition);
-        this.onFalseActions = [];
-        this.onTrueActions = Rule.parseActions(json.ontrue);        
+        this.onFalseActions = Rule.parseActions(json.onfalse);
+        this.onTrueActions = Rule.parseActions(json.ontrue);
     }
 
     static parseActions(json) {
@@ -63,9 +88,9 @@ class Rule {
             actions = json;
         } else {
             actions = [json];
-        }        
+        }
         let result = [];
-        for (let a of actions) {            
+        for (let a of actions) {
             try {
                 switch (a.type.toLowerCase()) {
                     case "mqtt":
@@ -101,6 +126,16 @@ class Rule {
         } else {
             return logic.state;
         }
+    }
+
+    scheduleActions() {
+        logger.info('Scheduling actions for rule %s', this.name);
+        let actions = [];
+        if (Rule.evalLogic(this.logic))
+            actions = this.onTrueActions;
+        else
+            actions = this.onFalseActions;
+        for (let a of actions) a.execute();
     }
 
     // json can be either an array of conditions, or a single (nested) condition
@@ -140,10 +175,10 @@ class Rule {
                     throw new Error("Unknown condition type: " + json.type);
             }
             return c;
-        }        
+        }
     }
 
-    
+
 
 
 
@@ -151,7 +186,7 @@ class Rule {
         return util.format("<Rule> %s - #conditions: %d, #onTrueActions: %d, #onFalseActions: %d", this.name, this.conditions.length, this.onTrueActions.length, this.onFalseActions.length);
     }
 
-    
+
 
 }
 
@@ -162,7 +197,7 @@ class Action {
 
     execute() {
         logger.info("Bang! Action executed.");
-    }    
+    }
 }
 
 class SetValueAction extends Action {
@@ -170,7 +205,14 @@ class SetValueAction extends Action {
     constructor(json) {
         super();
         this.topic = json.topic;
-        this.val = json.val;        
+        this.val = json.val;
+    }
+
+    execute() {
+        engine.mqttClient.publish(this.topic, JSON.stringify(this.val));
+        logger.info('published %s -> %s', this.topic, this.val);
+        //TODO: make value mustache expression
+        //TODO: add option for retain true or false
     }
 
 }
@@ -197,7 +239,7 @@ class Condition {
         this.oldState = undefined;
         this.state = undefined;
     }
-    
+
     flipped() {
         return this.state !== this.oldState;
     }
@@ -212,16 +254,16 @@ class Condition {
 
     triggered() {
         return (this.trigger == Trigger.always) ||
-               (this.trigger == Trigger.on_flip && self.flipped()) ||
-               (this.trigger == Trigger.on_flip_true && self.flippedTrue()) ||
-               (this.trigger == Trigger.on_flip_false && self.flippedFalse());
+               (this.trigger == Trigger.on_flip && this.flipped()) ||
+               (this.trigger == Trigger.on_flip_true && this.flippedTrue()) ||
+               (this.trigger == Trigger.on_flip_false && this.flippedFalse());
     }
 
     /*
         Evaluates this condition.
         It must update these values for the condition:
-            _oldValue
-            _value            
+            - oldValue
+            - value
         It must return True if a complete evaluation of the rule is required, False if not.
     */
     evaluate() {
@@ -240,6 +282,25 @@ class MqttCondition extends Condition {
             throw new Error('Mqtt condition missing topic or eval');
     }
 
+    evaluate() {
+        this.oldState = this.state;
+        this.state = false;
+
+        let data = {};
+        data.M = engine.store.get(this.topic);
+        data.T = topicToArray(this.topic);
+        try {
+            let script = mustache.render(this.eval, data);
+            console.log(script);
+            this.state = engine.runScript(script);
+        } catch (err) {
+            console.log(err);
+        }
+        logger.debug("Rule state updated from %s to %s; triggered = %s", this.oldState, this.state, this.triggered());
+
+        return this.triggered();
+    }
+
 }
 
 class SimpleCondition extends Condition {
@@ -247,6 +308,11 @@ class SimpleCondition extends Condition {
     constructor(json) {
         super(json);
         this.state = (json.val == true);
+    }
+
+    evaluate() {
+        this.oldState = this.state;
+        return this.state;
     }
 
 }

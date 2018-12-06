@@ -1,52 +1,18 @@
 'use strict'
 
-const mustache = require('mustache');
-const vm = require('vm');
-const mqtt = require('mqtt');
-
-const config = require('./config.js').parse();
 const logger = require('./logger.js');
-//const rules = require('./rules.js').parse();
+const engine = require('./engine.js');
+const config = require('./config.js').parse();
+const mqtt = require('mqtt');
 const {Rules, Rule} = require('./rules.js');
 
 let justStarted = true;
 
-// Shared items
-const store = new Map();
-
-
-
-
-const rules = new Rules(config);
-
-
-
-// Sandbox
-const sandbox = {
-    addToStore: function (key, value) {
-        store.set(key, value);        
-    },
-    getFromStore: function(key) {
-        return store.get(key);
-    },
-    log: logger    
-}
-
-
-let parse = function(topic, message) {
-    // ensure data is Object
-    let data = processMessage(message);
-
-    if (!data) {
-        logger.warn('did not understand message %s on topic %s', message, topic)
-    } else {
-        store.set(topic, data);
-    }
-}
-
-// evaluates the mqtt message
-// expects message to be a string
-let processMessage = function(message) {
+let processMessage = function(topic, message) {
+    // message is a Buffer, so first convert it to a String
+    message.toString();
+    logger.silly("MQTT received %s : %s", topic, message);
+    // now parse the data
     let data = {};
     if (message === 'true') {
         data.val = true;
@@ -62,8 +28,14 @@ let processMessage = function(message) {
         data.val = Number(message);
     }
     if (!data.ts) data.ts = (new Date).getTime();
-    return data;
+
+    if (!data) {
+        logger.warn('did not understand message %s on topic %s', message, topic)
+    } else {
+        engine.store.set(topic, data);
+    }
 }
+
 
 let setMqttHandlers = function(mqttClient) {
     mqttClient.on('connect', function () {
@@ -83,13 +55,12 @@ let setMqttHandlers = function(mqttClient) {
     });
 
     mqttClient.on('message', function (topic, message, packet) {
+        processMessage(topic, message); // this will update the store with the values
         // ignore the initial retained messages
         if (!packet.retain) justStarted = false;
         if (!justStarted || config.retained) {
-            // message is a buffer
-            logger.silly("MQTT received %s : %s", topic, message)
-            message = message.toString();
-            parse(topic, message);
+            // send the message to the rule engine
+            rules.mqttConditionChecker(topic);
         } else {
             logger.silly("MQTT ignored initial retained  %s : %s", topic, message)
         }
@@ -97,18 +68,17 @@ let setMqttHandlers = function(mqttClient) {
 }
 
 
-
-// start
-
-//let mqttClient = mqtt.connect(config.mqtt.url, config.mqtt.options);
-//setMqttHandlers(mqttClient);
-
-/*
-vm.createContext(sandbox);
+let mqttClient = mqtt.connect(config.mqtt.url, config.mqtt.options);
+setMqttHandlers(mqttClient);
+engine.mqttClient = mqttClient;
 
 
-setTimeout(function() {
-    const code = "addToStore('a', 10); log.warn(getFromStore('a'));";
-    vm.runInContext(code, sandbox);    
-}, 0);
-*/
+
+const code = "0 == 1";
+engine.store.set('b', 1000);
+console.log(engine.vm.runInContext(code, engine.sandbox));
+engine.runScript(code);
+
+
+
+const rules = new Rules(config);
