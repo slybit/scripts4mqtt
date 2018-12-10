@@ -41,6 +41,16 @@ class Rules {
         }
     }
 
+    saveRules() {
+        logger.info("saving rules");
+        const file = process.env.MQTT4SCRIPTS_RULES || 'rules.json';
+        try {
+            fs.writeFileSync(file, JSON.stringify(this.jsonContents));
+        } catch (e) {
+            logger.warn(e);
+        }
+    }
+
 
     /*
     * This method is called by the mqtt library for every message that was recieved.
@@ -75,17 +85,8 @@ class Rules {
     }
 
     createRule(input) {
-        try {
-            const rule = new Rule(input);
-            const id = Rule.generateId();
-            this.rules[id] = rule;
-            this.jsonContents[id] = input;
-            console.log(JSON.stringify(this.jsonContents));
-            return id;
-        } catch (err) {
-            logger.warn(err);
-            return err.message;
-        }
+        const id = Rule.generateId();
+        return this.updateRule(id, input);
     }
 
     updateRule(id, input) {
@@ -93,6 +94,7 @@ class Rules {
             const rule = new Rule(input);
             this.rules[id] = rule;
             this.jsonContents[id] = input;
+            this.saveRules();
             console.log(JSON.stringify(this.jsonContents));
             return id;
         } catch (err) {
@@ -104,6 +106,7 @@ class Rules {
     deleteRule(id) {
         delete this.rules[id];
         delete this.jsonContents[id];
+        this.saveRules();
         return {success : true};
     }
 
