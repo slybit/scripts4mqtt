@@ -13,6 +13,7 @@ exports.parse = function () {
     } else {
         return {
             loglevel: 'silly',
+            port: 4000,
             mqtt: {
                 url: 'mqtt://localhost'
             }
