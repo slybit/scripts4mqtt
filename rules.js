@@ -1,8 +1,10 @@
 const fs = require('fs');
 const util = require('util');
+const crypto = require('crypto');
+const mustache = require('mustache');
 const logger = require('./logger.js');
 const engine = require('./engine.js');
-const mustache = require('mustache');
+const config = require('./config.js').parse();
 
 const topicToArray = function(topic) {
     return topic.split('/');
@@ -11,39 +13,32 @@ const topicToArray = function(topic) {
 class Rules {
     constructor(config) {
         this.config = config;
-        this.rules = this.loadRules();
+        this.loadRules();
         //console.log(JSON.stringify(this.rules, null, 4));
     }
 
     loadRules() {
         logger.info("parsing rules");
         const file = process.env.MQTT4SCRIPTS_RULES || 'rules.json';
-        let rulesList = [];
-        let rules = [];
+        this.jsonContents = {};
+        this.rules = {};
         if (fs.existsSync(file)) {
             try {
                 var contents = fs.readFileSync(file);
-                var jsonContent = JSON.parse(contents);
-                if (Array.isArray(jsonContent)) {
-                    rulesList = jsonContent;
-                } else {
-                    rulesList = [jsonContent];
-                }
-                //return jsonContent;
+                this.jsonContents = JSON.parse(contents);
             } catch (e) {
                 logger.warn(e);
             }
         }
-        for (let r of rulesList) {
+        for (let key in this.jsonContents) {
             try {
-                let rule = new Rule(r);
-                rules.push(rule);
+                let rule = new Rule(this.jsonContents[key]);
+                this.rules[key] = rule;
                 logger.info(rule);
             } catch (e) {
                 logger.warn(e);
             }
         }
-        return rules;
     }
 
 
@@ -54,14 +49,66 @@ class Rules {
     */
     mqttConditionChecker(topic) {
         logger.silly('mqttConditionChecker called');
-        for (let rule of this.rules)
+        for (let key in this.rules) {
+            let rule = this.rules[key];
             for (let c of rule.conditions)
                 if ((c instanceof MqttCondition) && (c.topic === topic)) {
                     logger.silly('Mqtt %s received, evaluating rule %s', topic, rule.name);
                     if (c.evaluate())
                         rule.scheduleActions()
                 }
+            }
 
+    }
+
+    // REST APIs
+    listAllRules() {
+        let list = [];
+        for (let key in this.jsonContents) {
+            list.push({
+                key: key,
+                name : this.jsonContents[key].name,
+            });
+
+        }
+        return list;
+    }
+
+    createRule(input) {
+        try {
+            const rule = new Rule(input);
+            const id = Rule.generateId();
+            this.rules[id] = rule;
+            this.jsonContents[id] = input;
+            console.log(JSON.stringify(this.jsonContents));
+            return id;
+        } catch (err) {
+            logger.warn(err);
+            return err.message;
+        }
+    }
+
+    updateRule(id, input) {
+        try {
+            const rule = new Rule(input);
+            this.rules[id] = rule;
+            this.jsonContents[id] = input;
+            console.log(JSON.stringify(this.jsonContents));
+            return id;
+        } catch (err) {
+            logger.warn(err);
+            return err.message;
+        }
+    }
+
+    deleteRule(id) {
+        delete this.rules[id];
+        delete this.jsonContents[id];
+        return {success : true};
+    }
+
+    getRule(id) {
+        return this.jsonContents[id];
     }
 
 }
@@ -80,6 +127,10 @@ class Rule {
         this.onTrueActions = Rule.parseActions(json.ontrue);
     }
 
+    static generateId() {
+        return crypto.randomBytes(6).toString("hex");
+    }
+
     static parseActions(json) {
         let actions = [];
         if (json === undefined) {
@@ -91,14 +142,12 @@ class Rule {
         }
         let result = [];
         for (let a of actions) {
-            try {
-                switch (a.type.toLowerCase()) {
-                    case "mqtt":
-                        result.push(new SetValueAction(a));
-                        break;
-                }
-            } catch (err) {
-                logger.warn(err);
+            switch (a.type.toLowerCase()) {
+                case "mqtt":
+                    result.push(new SetValueAction(a));
+                    break;
+                default:
+                    throw new Error('Unknown action type ' + a.type);
             }
         }
         return result;
@@ -321,6 +370,7 @@ class SimpleCondition extends Condition {
 
 
 
+const rules = new Rules(config);
 
-
-module.exports = {Rules, Rule}
+//module.exports = {Rules, Rule}
+module.exports = rules;

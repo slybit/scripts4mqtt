@@ -1,5 +1,5 @@
-[
-    {
+{
+    "2aa39194692c": {
         "name": "Test",
         "condition": {
             "type": "or",
@@ -35,7 +35,7 @@
             }
         ]
     },
-    {
+    "ebf4db710972": {
         "name": "SimpleTest",
         "condition": {
             "type": "or",
@@ -59,10 +59,9 @@
                             "type": "simple",
                             "val": true
                         }
-
                     ]
                 }
             ]
         }
     }
-]
+}

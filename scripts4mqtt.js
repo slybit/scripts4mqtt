@@ -4,7 +4,8 @@ const logger = require('./logger.js');
 const engine = require('./engine.js');
 const config = require('./config.js').parse();
 const mqtt = require('mqtt');
-const {Rules, Rule} = require('./rules.js');
+//const {Rules, Rule} = require('./rules.js');
+const rules = require('./rules.js');
 
 let justStarted = true;
 
@@ -81,4 +82,4 @@ engine.runScript(code);
 
 
 
-const rules = new Rules(config);
+//const rules = new Rules(config);
