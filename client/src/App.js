@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
 import { SideNav, Nav } from 'react-sidenav'
-import logo from './logo.svg';
-import './App.css';
-import { AppContainer, Navigation, ExampleBody, Body, Title } from "./containers";
-import { Basic } from "./Basic";
+import { AppContainer, AppNav, ExampleBody, AppBody, Title, AppContent } from "./containers";
+import { RuleList } from './RuleList';
+import RULELISTDATA from './data';
 
 const AppNavigation = () => (
   <SideNav defaultSelectedPath="1">
@@ -17,22 +16,18 @@ class App extends Component {
   render() {
     return (
       <AppContainer>
-        <Navigation>
-          <Basic />
-        </Navigation>
-        <ExampleBody>
-        This simple example shows how you can use react-sidenav to create a
-          tree like structure
-        </ExampleBody>
-
-
-
-
-
-
-
-
-
+        <AppBody>
+          <AppNav>
+              <Title>Rules</Title>
+              <RuleList data={RULELISTDATA}/>
+          </AppNav>
+          <AppContent>
+            
+            This simple example shows how you can use react-sidenav to create a
+              tree like structure
+            
+          </AppContent>
+        </AppBody>
       </AppContainer>
     );
   }

@@ -2,45 +2,34 @@ import styled from "styled-components";
 
 export const AppContainer = styled.div`
   display: flex;
-  height: 100%;
-  width: 100%;
+  min-height: 100vh;
+  flex-direction: column;
 `;
 
-export const Navigation = styled.div`
-  width: 220px;
-  flex-shrink: 0;
+export const AppBody = styled.div`
+  display: flex;
+  flex: 1;
+`;
+
+export const AppContent = styled.div`
+  flex: 1;
   background: #fff;
-  height: 100vh;
+  padding: 5px;
+`;
+
+export const AppNav = styled.div`
+  flex: 0 0 20em;
+  max-width: 40em;
+  order: -1;
   border-right: 1px solid rgba(0, 0, 0, 0.125);
 `;
-export const Body = styled.div`
-  padding: 12px;
-  height: 100vh;
-`;
+
 
 export const Title = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
   padding: 12px;
+  font-size: 130%;
 `;
 
-export const ExampleContainer = styled.div`
-  background: #fff;
-  border: 1px solid #e5e5e5;
-  height: calc(100vh - 40px);
-`;
-
-export const ExampleNavigation = styled(Navigation)`
-  height: 100%;
-  margin-right: 4px;
-  border: 1px solid rgba(0, 0, 0, 0.125);
-`;
-
-export const ExampleBody = styled.div`
-  background: #fff;
-  margin: 12px;
-  padding: 12px;
-  width: 100%;
-  border: 1px solid rgba(0, 0, 0, 0.125);
-`;
