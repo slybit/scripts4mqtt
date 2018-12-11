@@ -35,7 +35,7 @@ export class RuleList extends React.Component {
                 defaultSelectedPath={this.props.data[0].key}
                 theme={theme}
                 onItemSelection={this.onItemSelection} >
-                
+
                 {items}
             </SideNav>
         );
