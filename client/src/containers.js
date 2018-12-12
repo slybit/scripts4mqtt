@@ -33,3 +33,10 @@ export const Title = styled.div`
   font-size: 130%;
 `;
 
+export const Container = styled.div`  
+  border: 1px solid #0000DD;
+  background: #e9e9e9;
+  padding: 2px;
+  margin: 8px;
+`;
+
