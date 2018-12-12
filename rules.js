@@ -31,6 +31,10 @@ class Rules {
             }
         }
         for (let key in this.jsonContents) {
+            let parent = {path: []};
+            let list = [];
+            this.flattenConditions(this.jsonContents[key].condition, list, parent);
+            console.log(JSON.stringify(list, undefined, 4));
             try {
                 let rule = new Rule(this.jsonContents[key]);
                 this.rules[key] = rule;
@@ -39,6 +43,7 @@ class Rules {
                 logger.warn(e);
             }
         }
+        
     }
 
     saveRules() {
@@ -49,6 +54,18 @@ class Rules {
         } catch (e) {
             logger.warn(e);
         }
+    }
+
+    flattenConditions(nested, list, parent) {
+        let id = list.length > 0 ? list[list.length-1].id + 1 : 1;
+        let path = parent.path.slice(0);
+        if (parent.id) path.push(parent.id);
+        let item = {id: id, type: nested.type, path: path};
+        list.push(item);
+        if (nested.type == 'or' || nested.type == 'and') {
+            for (let n of nested.condition)
+                this.flattenConditions(n, list, item);
+        } 
     }
 
 
