@@ -1,30 +1,33 @@
 import React, { Component } from 'react';
-import { SideNav, Nav } from 'react-sidenav'
-import { AppContainer, AppNav, ExampleBody, AppBody, Title, AppContent } from "./containers";
+import { AppContainer, AppNav, AppBody, Title, AppContent } from "./containers";
 import { RuleList } from './RuleList';
-import RULELISTDATA from './data';
+import { EditRule } from './EditRule';
 import axios from 'axios';
-
-const AppNavigation = () => (
-  <SideNav defaultSelectedPath="1">
-      <Nav id="1">Item 1</Nav>
-      <Nav id="2">Item 2</Nav>
-      <Nav id="3">Item 3</Nav>
-  </SideNav>
-)
 
 class App extends Component {
   constructor() {
     super();
     this.state = {
-      data: [{key:"1", name:"a"}],
+      rules: [],
+      selectedRule: undefined,
+      rule: {}
     };
   }
 
   loadRuleListFromServer() {
     axios.get('/api/rules')
     .then((response) => {
-      this.setState( { data: response.data });
+      this.setState( { rules: response.data });
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+  }
+
+  loadRuleFromServer(key) {
+    axios.get('/api/rule/' + key)
+    .then((response) => {
+      this.setState( { rule: response.data });
     })
     .catch((error) => {
       console.log(error);
@@ -35,19 +38,21 @@ class App extends Component {
     this.loadRuleListFromServer();
   }
 
+  handleRuleClick(key) {
+    this.setState({selectedRule: key});
+    this.loadRuleFromServer(key);
+  }
+
   render() {
     return (
       <AppContainer>
         <AppBody>
           <AppNav>
               <Title>Rules</Title>
-              <RuleList data={this.state.data}/>
+              <RuleList data={this.state.rules} onClick={this.handleRuleClick.bind(this)}/>
           </AppNav>
           <AppContent>
-
-            This simple example shows how you can use react-sidenav to create a
-              tree like structure
-
+            <EditRule id={this.state.selectedRule} rule={this.state.rule}/>
           </AppContent>
         </AppBody>
       </AppContainer>
