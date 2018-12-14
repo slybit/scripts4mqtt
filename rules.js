@@ -31,10 +31,6 @@ class Rules {
             }
         }
         for (let key in this.jsonContents) {
-            let parent = {path: []};
-            let list = [];
-            this.flattenConditions(this.jsonContents[key].condition, list, parent);
-            console.log(JSON.stringify(list, undefined, 4));
             try {
                 let rule = new Rule(this.jsonContents[key]);
                 this.rules[key] = rule;
@@ -43,7 +39,7 @@ class Rules {
                 logger.warn(e);
             }
         }
-        
+
     }
 
     saveRules() {
@@ -60,12 +56,50 @@ class Rules {
         let id = list.length > 0 ? list[list.length-1].id + 1 : 1;
         let path = parent.path.slice(0);
         if (parent.id) path.push(parent.id);
-        let item = {id: id, type: nested.type, path: path};
+        let item = {id: id, type: nested.type, options: nested.options, path: path};
         list.push(item);
         if (nested.type == 'or' || nested.type == 'and') {
             for (let n of nested.condition)
                 this.flattenConditions(n, list, item);
-        } 
+        }
+    }
+
+    nestConditions(flatened) {
+        if (!Array.isArray(flatened)) {
+            throw new TypeError('input must be of type Array');
+        }
+
+        // root (in our case, can only be one - the first "or")
+        const condition = {
+            "id" : flatened[0].id,
+            "type" : flatened[0].type,
+            "condition" : []
+        };
+
+        function insert(item, cond) {
+            console.log(cond.condition);
+            if (cond.id === item.path[item.path.length - 1]) {
+                console.log('found');
+                delete item.path;
+                if (item.type === 'or' || item.type === 'and') {
+                    item.condition = [];
+                } else {
+                    delete item.id;
+                }
+                cond.condition.push(item);
+                return;
+            }
+            else if (cond.type === 'or' || cond.type === 'and') {
+                for (let c of cond.condition) {
+                    insert(item, c)
+                }
+            }
+        }
+
+        for (let item of flatened.slice(1)) {
+            insert(item, condition);
+        }
+        return condition;
     }
 
 
@@ -128,7 +162,14 @@ class Rules {
     }
 
     getRule(id) {
-        return this.jsonContents[id];
+        let cloned = Object.assign({}, this.jsonContents[id]);
+        let list = [];
+        let parent = {path: []};
+        this.flattenConditions( this.jsonContents[id].condition, list, parent);
+        let c2 = JSON.parse(JSON.stringify(list));
+        console.log(JSON.stringify(this.nestConditions(c2), undefined, 4));
+        cloned.flatConditions = list;
+        return cloned;
     }
 
 }
@@ -175,7 +216,7 @@ class Rule {
 
     static evalLogic(logic) {
         if (logic.type === "or") {
-            let result = false;
+            let result = logic.condition.length === 0 ? true : false;
             for (let c of logic.condition) {
                 if (Rule.evalLogic(c)) {
                     result = true;
@@ -345,8 +386,8 @@ class MqttCondition extends Condition {
 
     constructor(json) {
         super(json);
-        this.topic = json.topic;
-        this.eval = json.eval;
+        this.topic = json.options ? json.options.topic : undefined;
+        this.eval = json.options ? json.options.eval : undefined;
         if (!(this.topic && this.eval))
             throw new Error('Mqtt condition missing topic or eval');
     }
@@ -376,7 +417,7 @@ class SimpleCondition extends Condition {
 
     constructor(json) {
         super(json);
-        this.state = (json.val == true);
+        this.state = json.options ? (json.options.val == true) : false;
     }
 
     evaluate() {

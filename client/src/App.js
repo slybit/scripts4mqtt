@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
-import { AppContainer, AppNav, AppBody, Title, AppContent } from "./containers";
+import { DragDropContext } from 'react-dnd';
+import HTML5Backend from 'react-dnd-html5-backend';
+import { AppContainer, AppNav, AppBody, AppEditor, AppFooter, Title, AppContent } from "./containers";
 import { RuleList } from './RuleList';
 import { EditRule } from './EditRule';
 import axios from 'axios';
@@ -43,6 +45,15 @@ class App extends Component {
     this.loadRuleFromServer(key);
   }
 
+  handleChange(items) {
+    // copy rule from state
+    let cloned = Object.assign({}, this.state.rule);
+    // adapt and put back in state
+    cloned.flatConditions = items ;
+    this.setState({ rule: cloned});
+    console.log(items);
+  }
+
   render() {
     return (
       <AppContainer>
@@ -52,12 +63,16 @@ class App extends Component {
               <RuleList data={this.state.rules} onClick={this.handleRuleClick.bind(this)}/>
           </AppNav>
           <AppContent>
-            <EditRule id={this.state.selectedRule} rule={this.state.rule}/>
+            <EditRule id={this.state.selectedRule} rule={this.state.rule} handleChange={this.handleChange.bind(this)}/>
           </AppContent>
+          <AppEditor>
+            test
+          </AppEditor>
         </AppBody>
+        <AppFooter>footer</AppFooter>
       </AppContainer>
     );
   }
 }
 
-export default App;
+export default DragDropContext(HTML5Backend)(App);

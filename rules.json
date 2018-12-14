@@ -6,9 +6,11 @@
             "condition": [
                 {
                     "type": "mqtt",
-                    "topic": "knx/status/0/1/201",
-                    "eval": "{{M.val}} == 1",
-                    "trigger": "on_flip_false"
+                    "options": {
+                        "topic": "knx/status/0/1/201",
+                        "eval": "{{M.val}} == 1",
+                        "trigger": "on_flip_false"
+                    }
                 }
             ]
         },
@@ -42,28 +44,38 @@
             "condition": [
                 {
                     "type": "simple",
-                    "val": true
+                    "options": {
+                        "val": true
+                    }
                 },
                 {
                     "type": "simple",
-                    "val": false
+                    "options": {
+                        "val": false
+                    }
                 },
                 {
                     "type": "and",
                     "condition": [
                         {
                             "type": "simple",
-                            "val": false
+                            "options": {
+                                "val": false
+                            }
                         },
                         {
                             "type": "simple",
-                            "val": true
+                            "options": {
+                                "val": true
+                            }
                         }
                     ]
                 },
                 {
                     "type": "simple",
-                    "val": false
+                    "options": {
+                        "val": false
+                    }
                 }
             ]
         }
@@ -75,27 +87,15 @@
             "condition": [
                 {
                     "type": "simple",
-                    "val": true
+                    "options": {
+                        "val": true
+                    }
                 },
                 {
                     "type": "simple",
-                    "val": false
-                }
-            ]
-        }
-    },
-    "659d231b1922": {
-        "name": "NewRule",
-        "condition": {
-            "type": "or",
-            "condition": [
-                {
-                    "type": "simple",
-                    "val": true
-                },
-                {
-                    "type": "simple",
-                    "val": false
+                    "options": {
+                        "val": false
+                    }
                 }
             ]
         }
