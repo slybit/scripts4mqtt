@@ -23,7 +23,7 @@ const engine = {
     store: store,
     vm: vm,
     runScript: function(script) {
-        logger.silly('running script\n%s', script);
+        logger.silly('running script:\n# ----- start script -----\n%s\n# -----  end script  -----', script);
         return vm.runInContext(script, sandbox);
     }
 

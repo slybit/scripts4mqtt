@@ -2,9 +2,11 @@ const fs = require('fs');
 const util = require('util');
 const crypto = require('crypto');
 const mustache = require('mustache');
+const sancronos = require('sancronos-validator');
 const logger = require('./logger.js');
 const engine = require('./engine.js');
 const config = require('./config.js').parse();
+const cronmatch = require('./cronmatch.js')
 
 const topicToArray = function(topic) {
     return topic.split('/');
@@ -13,8 +15,16 @@ const topicToArray = function(topic) {
 class Rules {
     constructor(config) {
         this.config = config;
+        this.lastMinutes = -1;
         this.loadRules();
         //console.log(JSON.stringify(this.rules, null, 4));
+
+        var date1 = new Date(2018, 6, 25, 15, 20, 25);
+        console.log(cronmatch.match('*/5 */2 */5 */5 5/2 1/2 2000/9', date1));
+        console.log(cronmatch.match('* * * * *', Date.now()));
+        this.scheduleTimerConditionChecker();
+
+
     }
 
     loadRules() {
@@ -27,16 +37,17 @@ class Rules {
                 var contents = fs.readFileSync(file);
                 this.jsonContents = JSON.parse(contents);
             } catch (e) {
-                logger.warn(e);
+                logger.error(e);
             }
         }
         for (let key in this.jsonContents) {
             try {
                 let rule = new Rule(this.jsonContents[key]);
                 this.rules[key] = rule;
-                logger.info(rule);
+                logger.info('loaded %s', rule.toString());
             } catch (e) {
-                logger.warn(e);
+                logger.error('Error loading rule %s', key);
+                logger.error(e);
             }
         }
 
@@ -48,73 +59,24 @@ class Rules {
         try {
             fs.writeFileSync(file, JSON.stringify(this.jsonContents));
         } catch (e) {
-            logger.warn(e);
+            logger.error(e);
         }
     }
 
-    flattenConditions(nested, list, parent) {
-        let id = list.length > 0 ? list[list.length-1].id + 1 : 1;
-        let path = parent.path.slice(0);
-        if (parent.id) path.push(parent.id);
-        let item = {id: id, type: nested.type, options: nested.options, path: path};
-        list.push(item);
-        if (nested.type == 'or' || nested.type == 'and') {
-            for (let n of nested.condition)
-                this.flattenConditions(n, list, item);
-        }
-    }
-
-    nestConditions(flatened) {
-        if (!Array.isArray(flatened)) {
-            throw new TypeError('input must be of type Array');
-        }
-
-        // root (in our case, can only be one - the first "or")
-        const condition = {
-            "id" : flatened[0].id,
-            "type" : flatened[0].type,
-            "condition" : []
-        };
-
-        function insert(item, cond) {
-            console.log(cond.condition);
-            if (cond.id === item.path[item.path.length - 1]) {
-                console.log('found');
-                delete item.path;
-                if (item.type === 'or' || item.type === 'and') {
-                    item.condition = [];
-                } else {
-                    delete item.id;
-                }
-                cond.condition.push(item);
-                return;
-            }
-            else if (cond.type === 'or' || cond.type === 'and') {
-                for (let c of cond.condition) {
-                    insert(item, c)
-                }
-            }
-        }
-
-        for (let item of flatened.slice(1)) {
-            insert(item, condition);
-        }
-        return condition;
-    }
-
+    
 
     /*
-    * This method is called by the mqtt library for every message that was recieved.
+      This method is called by the mqtt library for every message that was recieved.
       It will go over all MqttConditions in all rules and evaluate them.
       Only the topic of the message is provided, the data should be taken from 'engine.store'
     */
     mqttConditionChecker(topic) {
-        logger.silly('mqttConditionChecker called');
+        logger.silly('MQTT Condition Checker called for %s', topic);
         for (let key in this.rules) {
-            let rule = this.rules[key];
+            let rule = this.rules[key];            
             for (let c of rule.conditions)
                 if ((c instanceof MqttCondition) && (c.topic === topic)) {
-                    logger.silly('Mqtt %s received, evaluating rule %s', topic, rule.name);
+                    logger.silly('Rule [%s] matches topic [%s], evaluating...', rule.name, topic);
                     if (c.evaluate())
                         rule.scheduleActions()
                 }
@@ -122,7 +84,32 @@ class Rules {
 
     }
 
-    // REST APIs
+    /*
+    */
+    scheduleTimerConditionChecker() {
+        const date = new Date();
+        // calculate delay so next tick will be 5 seconds after the minute mark
+        const delay = 60 - ((Math.round(date.getTime() / 1000)-5) % 60);
+        const minutes = date.getMinutes();
+        // prevent a double tick in a single minute (is only possible in case tasks take very long or at startup)
+        if (minutes !== this.lastMinutes) {
+            console.log("boom in minute " + minutes);
+            for (let key in this.rules) {
+                let rule = this.rules[key];            
+                for (let c of rule.conditions)
+                    if ((c instanceof CronCondition)) {
+                        logger.silly('Cron tick, evaluating...', rule.name);
+                        if (c.evaluate())
+                            console.log(c.state);
+                    }
+                }
+        }
+        setTimeout(this.scheduleTimerConditionChecker.bind(this), delay*1000);
+    }
+
+    /*
+     * REST APIs
+     */ 
     listAllRules() {
         let list = [];
         for (let key in this.jsonContents) {
@@ -172,6 +159,59 @@ class Rules {
         return cloned;
     }
 
+    // Helper method, used by the web UI
+    flattenConditions(nested, list, parent) {
+        let id = list.length > 0 ? list[list.length-1].id + 1 : 1;
+        let path = parent.path.slice(0);
+        if (parent.id) path.push(parent.id);
+        let item = {id: id, type: nested.type, options: nested.options, path: path};
+        list.push(item);
+        if (nested.type == 'or' || nested.type == 'and') {
+            for (let n of nested.condition)
+                this.flattenConditions(n, list, item);
+        }
+    }
+
+    // Helper method, used by the web UI
+    nestConditions(flatened) {
+        if (!Array.isArray(flatened)) {
+            throw new TypeError('input must be of type Array');
+        }
+
+        // root (in our case, can only be one - the first "or")
+        const condition = {
+            "id" : flatened[0].id,
+            "type" : flatened[0].type,
+            "condition" : []
+        };
+
+        function insert(item, cond) {
+            console.log(cond.condition);
+            if (cond.id === item.path[item.path.length - 1]) {
+                console.log('found');
+                delete item.path;
+                if (item.type === 'or' || item.type === 'and') {
+                    item.condition = [];
+                } else {
+                    delete item.id;
+                }
+                cond.condition.push(item);
+                return;
+            }
+            else if (cond.type === 'or' || cond.type === 'and') {
+                for (let c of cond.condition) {
+                    insert(item, c)
+                }
+            }
+        }
+
+        for (let item of flatened.slice(1)) {
+            insert(item, condition);
+        }
+        return condition;
+    }
+
+
 }
 
 
@@ -179,8 +219,7 @@ class Rules {
 
 class Rule {
 
-    constructor(json) {
-        logger.info("Parsing rule %s", json.name);
+    constructor(json) {        
         this.name = json.name;
         this.conditions = [];
         this.logic = this.parseCondition(json.condition);
@@ -277,6 +316,10 @@ class Rule {
                     c = new MqttCondition(json);
                     this.conditions.push(c);
                     break;
+                case "cron":
+                    c = new CronCondition(json);
+                    this.conditions.push(c);
+                    break;
                 case "simple":
                     c = new SimpleCondition(json);
                     this.conditions.push(c);
@@ -287,10 +330,6 @@ class Rule {
             return c;
         }
     }
-
-
-
-
 
     toString() {
         return util.format("<Rule> %s - #conditions: %d, #onTrueActions: %d, #onFalseActions: %d", this.name, this.conditions.length, this.onTrueActions.length, this.onFalseActions.length);
@@ -319,8 +358,11 @@ class SetValueAction extends Action {
     }
 
     execute() {
-        engine.mqttClient.publish(this.topic, JSON.stringify(this.val));
-        logger.info('published %s -> %s', this.topic, this.val);
+        if (this.topic !== undefined && this.val !== undefined ) {
+            engine.mqttClient.publish(this.topic, JSON.stringify(this.val));
+            logger.info('published %s -> %s', this.topic, this.val);
+        }
+        
         //TODO: make value mustache expression
         //TODO: add option for retain true or false
     }
@@ -400,17 +442,60 @@ class MqttCondition extends Condition {
         data.M = engine.store.get(this.topic);
         data.T = topicToArray(this.topic);
         try {
-            let script = mustache.render(this.eval, data);
-            console.log(script);
+            let script = mustache.render(this.eval, data);            
             this.state = engine.runScript(script);
         } catch (err) {
             console.log(err);
         }
-        logger.debug("Rule state updated from %s to %s; triggered = %s", this.oldState, this.state, this.triggered());
+        logger.silly("MQTT Condition state updated from %s to %s; flipped = %s", this.oldState, this.state, this.flipped());
 
         return this.triggered();
     }
 
+}
+
+class CronCondition extends Condition {
+    constructor(json) {
+        super(json);
+        this.onExpression = json.options ? json.options.on : undefined;
+        this.offExpression = json.options ? json.options.off : undefined;
+        if (!(this.onExpression))
+            throw new Error('Cron condition missing on expression');
+        if (!this.validateExpression(this.onExpression))
+            throw new Error('Cron expression invalid: ' + this.onExpression);
+        if (!this.validateExpression(this.offExpression))
+            throw new Error('Cron expression invalid: ' + this.offExpression);
+    }
+
+    validateExpression(expression) {
+        if (expression === undefined) return true;
+        try {
+            let crontab = sancronos.isValid(expression, true);
+            return true;
+        } catch (err) {
+            return false;
+        }
+    }
+
+    evaluate() {
+        this.oldState = this.state;
+        let match = false;
+        const currTime = new Date();
+        // go over the onPatterns first
+        if (this.onExpression !== undefined && cronmatch.match(this.onExpression, currTime)) {
+            this.state = true;
+            match = true;
+        }
+            
+        // go over the offPatterns second
+        if (this.offExpression !== undefined && cronmatch.match(this.offExpression, currTime)) {
+            this.state = false;
+            match = true;
+        }
+
+        logger.info('cron evaluated: state: %s, match: %s, flipped: %s', this.state, match, this.flipped());
+        return match && this.triggered()
+    }
 }
 
 class SimpleCondition extends Condition {

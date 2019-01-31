@@ -33,7 +33,7 @@ let processMessage = function(topic, message) {
     if (!data) {
         logger.warn('did not understand message %s on topic %s', message, topic)
     } else {
-        engine.store.set(topic, data);
+        engine.store.set(topic, data);        
     }
 }
 
@@ -74,11 +74,19 @@ setMqttHandlers(mqttClient);
 engine.mqttClient = mqttClient;
 
 
-
+/*
 const code = "0 == 1";
 engine.store.set('b', 1000);
 console.log(engine.vm.runInContext(code, engine.sandbox));
 engine.runScript(code);
+*/
+
+//let topic = "knx/status/0/1/201";
+//let message = 1
+
+//processMessage(topic, message);
+//rules.mqttConditionChecker(topic);
+
 
 
 
