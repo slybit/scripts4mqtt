@@ -1,34 +1,56 @@
 const vm = require('vm');
 const logger = require('./logger.js');
 
-
-// Shared items
 const store = new Map();
 
-const sandbox = {
-    addToStore: function (key, value) {
-        store.set(key, value);
-    },
-    getFromStore: function(key) {
-        return store.get(key);
-    },
-    log: logger
-}
+class Engine {
+
+    constructor(mqttClient) {
+        this.mqttClient = mqttClient;
+        this.store = store;
+        this.vm = vm;
+        this.sandbox = {
+            log: logger,
+            store: this.store,
+            mqttClient: this.mqttClient,
+            vm: vm,
+            addToStore: function (key, value) {
+                store.set(key, value);
+            },
+            getFromStore: function(key) {
+                return store.get(key);
+            },
+            write: function(topic, message) {
+                return mqttClient.publish(topic, message);
+            }
+            
+        }
+        vm.createContext(this.sandbox);
 
 
-const engine = {
+    }
 
-
-    sandbox: sandbox,
-    store: store,
-    vm: vm,
-    runScript: function(script) {
+    runScript(script) {
         logger.silly('running script:\n# ----- start script -----\n%s\n# -----  end script  -----', script);
-        return vm.runInContext(script, sandbox);
+        return vm.runInContext(script, this.sandbox);
     }
 
 }
 
-vm.createContext(sandbox);
 
-module.exports = engine;
+class Singleton {
+  
+    static getInstance(mqttClient) {
+        if (!Singleton.instance) {
+            if (mqttClient !== undefined) {
+                Singleton.instance = new Engine(mqttClient);
+            } else {
+                throw new Error('Engine singleton should first be initialized with an MQTT client.');
+            }
+        }
+        return Singleton.instance;
+    }
+  
+  }
+
+module.exports = Singleton;

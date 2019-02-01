@@ -1,13 +1,17 @@
 'use strict'
 
 const logger = require('./logger.js');
-const engine = require('./engine.js');
+const Engine = require('./engine.js');
 const config = require('./config.js').parse();
 const mqtt = require('mqtt');
 //const {Rules, Rule} = require('./rules.js');
 const rules = require('./rules.js');
 
 let justStarted = true;
+
+const mqttClient = mqtt.connect(config.mqtt.url, config.mqtt.options);
+const engine = Engine.getInstance(mqttClient);
+
 
 let processMessage = function(topic, message) {
     // message is a Buffer, so first convert it to a String
@@ -69,17 +73,17 @@ let setMqttHandlers = function(mqttClient) {
 }
 
 
-const mqttClient = mqtt.connect(config.mqtt.url, config.mqtt.options);
+
 setMqttHandlers(mqttClient);
-engine.mqttClient = mqttClient;
+//engine.mqttClient = mqttClient;
 
 
-/*
-const code = "0 == 1";
+
+const code = "log.error(write('b', '10'));";
 engine.store.set('b', 1000);
-console.log(engine.vm.runInContext(code, engine.sandbox));
+//console.log(engine.vm.runInContext(code, engine.sandbox));
 engine.runScript(code);
-*/
+
 
 //let topic = "knx/status/0/1/201";
 //let message = 1

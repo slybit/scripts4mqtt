@@ -4,7 +4,7 @@ const crypto = require('crypto');
 const mustache = require('mustache');
 const sancronos = require('sancronos-validator');
 const logger = require('./logger.js');
-const engine = require('./engine.js');
+const Engine = require('./engine.js');
 const config = require('./config.js').parse();
 const cronmatch = require('./cronmatch.js')
 
@@ -359,7 +359,7 @@ class SetValueAction extends Action {
 
     execute() {
         if (this.topic !== undefined && this.val !== undefined ) {
-            engine.mqttClient.publish(this.topic, JSON.stringify(this.val));
+            Engine.getInstance().mqttClient.publish(this.topic, JSON.stringify(this.val));
             logger.info('published %s -> %s', this.topic, this.val);
         }
         
@@ -439,11 +439,11 @@ class MqttCondition extends Condition {
         this.state = false;
 
         let data = {};
-        data.M = engine.store.get(this.topic);
+        data.M = Engine.getInstance().store.get(this.topic);
         data.T = topicToArray(this.topic);
         try {
             let script = mustache.render(this.eval, data);            
-            this.state = engine.runScript(script);
+            this.state = Engine.getInstance().runScript(script);
         } catch (err) {
             console.log(err);
         }
