@@ -69,7 +69,7 @@ let setMqttHandlers = function(mqttClient) {
 }
 
 
-let mqttClient = mqtt.connect(config.mqtt.url, config.mqtt.options);
+const mqttClient = mqtt.connect(config.mqtt.url, config.mqtt.options);
 setMqttHandlers(mqttClient);
 engine.mqttClient = mqttClient;
 
