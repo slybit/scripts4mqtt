@@ -2,25 +2,36 @@ const vm = require('vm');
 const logger = require('./logger.js');
 
 const store = new Map();
+const mqttStore = new Map();
 
 class Engine {
 
     constructor(mqttClient) {
         this.mqttClient = mqttClient;
         this.store = store;
+        this.mqttStore = mqttStore;
         this.vm = vm;
         this.sandbox = {
             log: logger,
             store: this.store,
+            mqttStore: this.mqttStore,
             mqttClient: this.mqttClient,
             vm: vm,
-            addToStore: function (key, value) {
+            put: function (key, value) {
                 store.set(key, value);
             },
-            getFromStore: function(key) {
-                return store.get(key);
+            get: function(key, defaultValue) {
+                if (store.get(key) === undefined) {
+                    return defaultValue;
+                } else {
+                    return store.get(key);
+                }
+            },
+            read: function(topic) {
+                return mqttStore.get(topic);
             },
             write: function(topic, message) {
+                logger.info('ScriptAction published %s -> %s', topic, message);
                 return mqttClient.publish(topic, message);
             }
             

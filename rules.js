@@ -1,4 +1,5 @@
 const fs = require('fs');
+const yaml = require('js-yaml');
 const util = require('util');
 const crypto = require('crypto');
 const mustache = require('mustache');
@@ -7,6 +8,9 @@ const logger = require('./logger.js');
 const Engine = require('./engine.js');
 const config = require('./config.js').parse();
 const cronmatch = require('./cronmatch.js')
+const { SMTPTransporter } = require('./utils.js')
+
+const filename = process.env.MQTT4SCRIPTS_RULES || 'rules.yaml';
 
 const topicToArray = function(topic) {
     return topic.split('/');
@@ -17,27 +21,18 @@ class Rules {
         this.config = config;
         this.lastMinutes = -1;
         this.loadRules();
-        //console.log(JSON.stringify(this.rules, null, 4));
-
-        var date1 = new Date(2018, 6, 25, 15, 20, 25);
-        console.log(cronmatch.match('*/5 */2 */5 */5 5/2 1/2 2000/9', date1));
-        console.log(cronmatch.match('* * * * *', Date.now()));
-        this.scheduleTimerConditionChecker();
-
-
+        this.saveRules();
     }
 
     loadRules() {
-        logger.info("parsing rules");
-        const file = process.env.MQTT4SCRIPTS_RULES || 'rules.json';
+        logger.info("parsing rules");        
         this.jsonContents = {};
         this.rules = {};
-        if (fs.existsSync(file)) {
+        if (fs.existsSync(filename)) {
             try {
-                var contents = fs.readFileSync(file);
-                this.jsonContents = JSON.parse(contents);
+                this.jsonContents = yaml.safeLoad(fs.readFileSync(filename, 'utf8'));
             } catch (e) {
-                logger.error(e);
+                logger.error(e.toString());
             }
         }
         for (let key in this.jsonContents) {
@@ -47,17 +42,16 @@ class Rules {
                 logger.info('loaded %s', rule.toString());
             } catch (e) {
                 logger.error('Error loading rule %s', key);
-                logger.error(e);
+                logger.error(e.toString());
             }
         }
 
     }
 
     saveRules() {
-        logger.info("saving rules");
-        const file = process.env.MQTT4SCRIPTS_RULES || 'rules.json';
-        try {
-            fs.writeFileSync(file, JSON.stringify(this.jsonContents));
+        logger.info("saving rules");        
+        try {            
+            fs.writeFileSync(filename, yaml.safeDump(this.jsonContents));            
         } catch (e) {
             logger.error(e);
         }
@@ -68,7 +62,7 @@ class Rules {
     /*
       This method is called by the mqtt library for every message that was recieved.
       It will go over all MqttConditions in all rules and evaluate them.
-      Only the topic of the message is provided, the data should be taken from 'engine.store'
+      Only the topic of the message is provided, the data should be taken from 'engine.mqttStore'
     */
     mqttConditionChecker(topic) {
         logger.silly('MQTT Condition Checker called for %s', topic);
@@ -78,8 +72,9 @@ class Rules {
                 if ((c instanceof MqttCondition) && (c.topic === topic)) {
                     logger.silly('Rule [%s] matches topic [%s], evaluating...', rule.name, topic);
                     if (c.evaluate())
-                        rule.scheduleActions()
+                        rule.scheduleActions();
                 }
+                // TODO: add wildcard topics in the condition
             }
 
     }
@@ -100,7 +95,7 @@ class Rules {
                     if ((c instanceof CronCondition)) {
                         logger.silly('Cron tick, evaluating...', rule.name);
                         if (c.evaluate())
-                            console.log(c.state);
+                            rule.scheduleActions();
                     }
                 }
         }
@@ -246,6 +241,12 @@ class Rule {
                 case "mqtt":
                     result.push(new SetValueAction(a));
                     break;
+                case "script":
+                    result.push(new ScriptAction(a));
+                    break;
+                case "email":
+                    result.push(new EMailAction(a));
+                    break;
                 default:
                     throw new Error('Unknown action type ' + a.type);
             }
@@ -360,11 +361,60 @@ class SetValueAction extends Action {
     execute() {
         if (this.topic !== undefined && this.val !== undefined ) {
             Engine.getInstance().mqttClient.publish(this.topic, JSON.stringify(this.val));
-            logger.info('published %s -> %s', this.topic, this.val);
+            logger.info('SetValueAction published %s -> %s', this.topic, this.val);
         }
         
         //TODO: make value mustache expression
         //TODO: add option for retain true or false
+    }
+
+}
+
+class ScriptAction extends Action {
+
+    constructor(json) {
+        super();
+        this.topic = json.topic;
+        this.script = json.script;
+    }
+
+    execute() {
+        logger.info('executing ScriptAction');
+        try {
+            Engine.getInstance().runScript(this.script);
+        } catch (err) {
+            logger.error('ERROR running script:\n# ----- start script -----\n%s\n# -----  end script  -----', this.script);
+            logger.error(err);
+        }
+    }
+
+}
+
+class EMailAction extends Action {
+
+    constructor(json) {
+        super();
+        this.to = json.to;
+        this.subject = json.subject;
+        this.body = json.body;
+    }
+
+    execute() {
+        logger.info('executing EMailAction');
+        const mailOptions = {
+            from: config.email.from,
+            to: this.to, 
+            subject: this.subject, 
+            html: this.body
+        };        
+        
+        SMTPTransporter.sendMail(mailOptions, function (err, info) {
+            if (err) {
+                logger.error('ERROR sending email');
+                logger.error(err);
+            } else
+                logger.info('mail sent succesfully');
+        });
     }
 
 }
@@ -439,7 +489,7 @@ class MqttCondition extends Condition {
         this.state = false;
 
         let data = {};
-        data.M = Engine.getInstance().store.get(this.topic);
+        data.M = Engine.getInstance().mqttStore.get(this.topic);
         data.T = topicToArray(this.topic);
         try {
             let script = mustache.render(this.eval, data);            
