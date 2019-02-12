@@ -1,24 +1,126 @@
-2aa39194692c:
-  name: Test
+TimeDateUpdate:
+  name: TimeDateUpdate
   condition:
-    type: or
+    type: cron
+    trigger: always
+    options:
+      'on': '*/5 * * * *'
+  ontrue:
+    - type: script
+      script: 'write(''knx/write/15/1/0'', new Date().toString());'
+    - type: script
+      script: 'write(''knx/write/15/1/1'', new Date().toString());'
+
+Bel:
+  name: Bel
+  condition:
+    type: mqtt
+    trigger: on_flip_true
+    options:
+      topic: knx/status/15/2/3
+      eval: '{{M.val}} == 1'
+  ontrue:
+    - type: pushover
+      msg:
+        message: Notification from script4mqtt
+        title: Bel! Bel!
+        sound: bike
+        priority: 1  
+
+Achtergevel:
+  name: Afdak_achteraan
+  condition:
+    type: and
     condition:
       - type: mqtt
-        trigger: ontrue
         options:
-          topic: knx/status/14/1/2
-          eval: '{{M.val}} == 0'
+          topic: knx/status/15/2/30
+          eval: '{{M.val}} == 1'
+      - type: or
+        condition:
+        - type: mqtt
+          trigger: always
+          options:
+            topic: knx/status/14/0/14
+            eval: '{{M.val}} == 0'
+        - type: mqtt
+          trigger: always
+          options:
+            topic: knx/status/14/0/15
+            eval: '{{M.val}} == 0'
   ontrue:
-    - type: email
-      to: seys.stefaan@gmail.com
-      subject: test from scripts4mqtt
-      body: <b>Boom!</b>
-  onfalse:
-    - type: script
-      script: 'var a = get(''a'', 0); a = a+1; put(''a'', a); log.info(a);'
     - type: mqtt
-      topic: knx/set/0/0/108
+      topic: knx/set/0/0/208
+      val: 1
+  onfalse:
+    - type: mqtt
+      topic: knx/set/0/0/208
       val: 0
+
+Voordeur:
+  name: Voordeur
+  condition:
+    type: and
+    condition:
+      - type: mqtt
+        options:
+          topic: knx/status/15/2/30
+          eval: '{{M.val}} == 1'
+      - type: mqtt
+        trigger: always
+        options:
+          topic: knx/status/14/0/1
+          eval: '{{M.val}} == 0'      
+  ontrue:
+    - type: mqtt
+      topic: knx/set/0/0/200
+      val: 1
+    - type: mqtt
+      topic: knx/set/0/0/201
+      val: 1
+    - type: mqtt
+      topic: knx/set/0/0/202
+      val: 1
+
+Afdak:
+  name: Afdak
+  condition:
+    type: mqtt
+    trigger: always
+    options:
+      topic: knx/status/15/2/10
+      eval: '{{M.val}} == 1' 
+  ontrue:
+    - type: script
+      script: |-
+        var a = get("mode", 0);
+        a = (a + 1) % 4;
+        put("mode", a);
+        log.info(a);        
+        switch (a) {
+          case 0:
+            write("knx/write/0/0/207", 0);
+            write("knx/write/0/0/208", 0);
+            break;
+          case 1:
+            write("knx/write/0/0/207", "1");
+            write("knx/write/0/0/208", "0");
+            break;
+          case 2:
+            write("knx/write/0/0/207", "1");
+            write("knx/write/0/0/208", "1");
+            break;
+          case 3:
+            write("knx/write/0/0/207", "0");
+            write("knx/write/0/0/208", "1");
+            break;
+        }
+
+
+
+
+
+  
 ebf4db710972:
   name: SimpleTest
   condition:
@@ -41,6 +143,16 @@ ebf4db710972:
       - type: simple
         options:
           val: false
+  onfalse:
+    - type: script
+      script: 'var a = get(''a'', 0); a = a+1; put(''a'', a); log.info(a);'
+    - type: mqtt
+      topic: knx/set/0/0/108
+      val: 0
+    - type: email
+      to: seys.stefaan@gmail.com
+      subject: test from scripts4mqtt
+      body: <b>Boom!</b>
 242b2914a9bf:
   name: SuperDuperRule
   condition:

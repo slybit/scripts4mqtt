@@ -20,7 +20,7 @@ rules.scheduleTimerConditionChecker();
 
 let processMessage = function (topic, message, packet) {
     // message is a Buffer, so first convert it to a String
-    message.toString();
+    message = message.toString();
     logger.silly("MQTT received %s : %s", topic, message);
     // now parse the data
     let data = {};
@@ -32,6 +32,7 @@ let processMessage = function (topic, message, packet) {
         try {
             data = JSON.parse(message);
         } catch (err) {
+            logger.error('could not parse message to json: %s', message);
             data.val = message; // will be a string
         }
     } else {
@@ -42,7 +43,7 @@ let processMessage = function (topic, message, packet) {
     if (!data) {
         logger.warn('did not understand message %s on topic %s', message, topic)
     } else {
-        engine.store.set(topic, { 'data': data, 'packet': packet });
+        engine.mqttStore.set(topic, { 'data': data, 'packet': packet });
     }
 }
 
@@ -79,11 +80,12 @@ let setMqttHandlers = function (mqttClient) {
 
 
 
-//setMqttHandlers(mqttClient);
+setMqttHandlers(mqttClient);
 
 
 
 //const code = "log.error(write('b', '10'));";
+//const code = "0==1";
 //engine.store.set('b', 1000);
 //console.log(engine.vm.runInContext(code, engine.sandbox));
 //engine.runScript(code);
@@ -103,7 +105,7 @@ let setMqttHandlers = function (mqttClient) {
 
 
 
-
+/*
    
 var msg = {
     // These values correspond to the parameters detailed on https://pushover.net/api
@@ -122,3 +124,5 @@ pushover.send( msg, function( err, result ) {
    
     console.log( result )
   })
+
+  */

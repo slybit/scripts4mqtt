@@ -31,6 +31,7 @@ class Engine {
                 return mqttStore.get(topic);
             },
             write: function(topic, message) {
+                if (!isNaN(message)) message = message.toString();
                 logger.info('ScriptAction published %s -> %s', topic, message);
                 return mqttClient.publish(topic, message);
             }
@@ -42,7 +43,7 @@ class Engine {
     }
 
     runScript(script) {
-        logger.silly('running script:\n# ----- start script -----\n%s\n# -----  end script  -----', script);
+        logger.debug('running script:\n# ----- start script -----\n%s\n# -----  end script  -----', script);
         return vm.runInContext(script, this.sandbox);
     }
 

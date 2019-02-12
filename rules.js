@@ -8,7 +8,7 @@ const logger = require('./logger.js');
 const Engine = require('./engine.js');
 const config = require('./config.js').parse();
 const cronmatch = require('./cronmatch.js')
-const { SMTPTransporter } = require('./utils.js')
+const { SMTPTransporter, pushover } = require('./utils.js')
 
 const filename = process.env.MQTT4SCRIPTS_RULES || 'rules.yaml';
 
@@ -21,7 +21,6 @@ class Rules {
         this.config = config;
         this.lastMinutes = -1;
         this.loadRules();
-        this.saveRules();
     }
 
     loadRules() {
@@ -33,6 +32,7 @@ class Rules {
                 this.jsonContents = yaml.safeLoad(fs.readFileSync(filename, 'utf8'));
             } catch (e) {
                 logger.error(e.toString());
+                process.exit(1);
             }
         }
         for (let key in this.jsonContents) {
@@ -43,6 +43,7 @@ class Rules {
             } catch (e) {
                 logger.error('Error loading rule %s', key);
                 logger.error(e.toString());
+                process.exit(1);
             }
         }
 
@@ -87,8 +88,7 @@ class Rules {
         const delay = 60 - ((Math.round(date.getTime() / 1000)-5) % 60);
         const minutes = date.getMinutes();
         // prevent a double tick in a single minute (is only possible in case tasks take very long or at startup)
-        if (minutes !== this.lastMinutes) {
-            console.log("boom in minute " + minutes);
+        if (minutes !== this.lastMinutes) {            
             for (let key in this.rules) {
                 let rule = this.rules[key];            
                 for (let c of rule.conditions)
@@ -247,6 +247,9 @@ class Rule {
                 case "email":
                     result.push(new EMailAction(a));
                     break;
+                case "pushover":
+                    result.push(new PushoverAction(a));
+                    break;
                 default:
                     throw new Error('Unknown action type ' + a.type);
             }
@@ -273,7 +276,7 @@ class Rule {
                 }
             }
             return result;
-        } else {
+        } else {                    
             return logic.state;
         }
     }
@@ -281,11 +284,23 @@ class Rule {
     scheduleActions() {
         logger.info('Scheduling actions for rule %s', this.name);
         let actions = [];
-        if (Rule.evalLogic(this.logic))
+        if (Rule.evalLogic(this.logic)) {            
             actions = this.onTrueActions;
-        else
+        } else {
             actions = this.onFalseActions;
-        for (let a of actions) a.execute();
+        }        
+        for (let a of actions) {
+            if (a.pending !== undefined) {
+                clearTimeout(a.pending);
+                a.pending = undefined;
+            }
+            if (a.delay > 0) {
+                a.pending = setTimeout(a.execute.bind(a), a.delay);
+                logger.info('delayed execution for %s in %d millesecs', typeof(a), a.delay);
+            } else {            
+                a.execute();
+            }
+        } 
     }
 
     // json can be either an array of conditions, or a single (nested) condition
@@ -341,8 +356,9 @@ class Rule {
 }
 
 class Action {
-    constructor() {
-        this.delay = 0;
+    constructor(json) {
+        this.delay = json.delay ? json.delay : 0;
+        this.pending = undefined;
     }
 
     execute() {
@@ -353,7 +369,7 @@ class Action {
 class SetValueAction extends Action {
 
     constructor(json) {
-        super();
+        super(json);
         this.topic = json.topic;
         this.val = json.val;
     }
@@ -373,14 +389,16 @@ class SetValueAction extends Action {
 class ScriptAction extends Action {
 
     constructor(json) {
-        super();
+        super(json);
         this.topic = json.topic;
         this.script = json.script;
+        console.log(typeof(this.script));
     }
 
     execute() {
         logger.info('executing ScriptAction');
-        try {
+        try {    
+            console.log(this.script);        
             Engine.getInstance().runScript(this.script);
         } catch (err) {
             logger.error('ERROR running script:\n# ----- start script -----\n%s\n# -----  end script  -----', this.script);
@@ -393,7 +411,8 @@ class ScriptAction extends Action {
 class EMailAction extends Action {
 
     constructor(json) {
-        super();
+        super(json);
+        // TODO: turn this into a msg like for the pushoveraction
         this.to = json.to;
         this.subject = json.subject;
         this.body = json.body;
@@ -414,6 +433,26 @@ class EMailAction extends Action {
                 logger.error(err);
             } else
                 logger.info('mail sent succesfully');
+        });
+    }
+
+}
+
+class PushoverAction extends Action {
+
+    constructor(json) {
+        super(json);
+        this.msg = json.msg;        
+    }
+
+    execute() {
+        logger.info('executing PushoverAction');          
+        pushover.send( this.msg, function( err, result ) {
+            if (err) {
+                logger.error('ERROR sending Pushover notification');
+                logger.error(err);
+            } else
+                logger.info('Pushover notification sent succesfully');
         });
     }
 
@@ -489,15 +528,16 @@ class MqttCondition extends Condition {
         this.state = false;
 
         let data = {};
-        data.M = Engine.getInstance().mqttStore.get(this.topic);
+        data.M = Engine.getInstance().mqttStore.get(this.topic).data;
         data.T = topicToArray(this.topic);
         try {
-            let script = mustache.render(this.eval, data);            
+            let script = mustache.render(this.eval, data);   
+            logger.debug('evaluating script:\n# ----- start script -----\n%s\n# -----  end script  -----', script);
             this.state = Engine.getInstance().runScript(script);
         } catch (err) {
-            console.log(err);
+            logger.error(err);
         }
-        logger.silly("MQTT Condition state updated from %s to %s; flipped = %s", this.oldState, this.state, this.flipped());
+        logger.debug("MQTT Condition state updated from %s to %s; flipped = %s", this.oldState, this.state, this.flipped());
 
         return this.triggered();
     }
