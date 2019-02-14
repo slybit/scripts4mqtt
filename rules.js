@@ -65,14 +65,14 @@ class Rules {
       It will go over all MqttConditions in all rules and evaluate them.
       Only the topic of the message is provided, the data should be taken from 'engine.mqttStore'
     */
-    mqttConditionChecker(topic) {
+    mqttConditionChecker(topic, withActions = true) {
         logger.silly('MQTT Condition Checker called for %s', topic);
         for (let key in this.rules) {
             let rule = this.rules[key];            
             for (let c of rule.conditions)
                 if ((c instanceof MqttCondition) && (c.topic === topic)) {
                     logger.silly('Rule [%s] matches topic [%s], evaluating...', rule.name, topic);
-                    if (c.evaluate())
+                    if (c.evaluate() && withActions)
                         rule.scheduleActions();
                 }
                 // TODO: add wildcard topics in the condition

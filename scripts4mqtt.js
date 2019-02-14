@@ -69,12 +69,9 @@ let setMqttHandlers = function (mqttClient) {
         processMessage(topic, message, packet); // this will update the store with the values
         // ignore the initial retained messages
         if (!packet.retain) justStarted = false;
-        if (!justStarted || config.retained) {
-            // send the message to the rule engine
-            rules.mqttConditionChecker(topic);
-        } else {
-            logger.silly("MQTT ignored initial retained  %s : %s", topic, message)
-        }
+        let withActions = !justStarted || config.retained
+        // send the message to the rule engine
+        rules.mqttConditionChecker(topic, withActions);        
     });
 }
 
