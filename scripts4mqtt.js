@@ -5,6 +5,9 @@ const Engine = require('./engine.js');
 const config = require('./config.js').parse();
 const { pushover } = require('./utils.js');
 
+// starts the API server
+require('./server.js');
+
 //const {Rules, Rule} = require('./rules.js');
 const rules = require('./rules.js');
 

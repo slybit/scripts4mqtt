@@ -24,7 +24,7 @@ class Rules {
     }
 
     loadRules() {
-        logger.info("parsing rules");        
+        logger.info("Parsing rules");        
         this.jsonContents = {};
         this.rules = {};
         if (fs.existsSync(filename)) {
@@ -41,7 +41,7 @@ class Rules {
                 this.rules[key] = rule;
                 logger.info('loaded %s', rule.toString());
             } catch (e) {
-                logger.error('Error loading rule %s', key);
+                logger.error('Error loading rule [%s]', key);
                 logger.error(e.toString());
                 process.exit(1);
             }
@@ -58,7 +58,7 @@ class Rules {
         }
     }
 
-    
+   
 
     /*
       This method is called by the mqtt library for every message that was recieved.
@@ -105,6 +105,45 @@ class Rules {
     /*
      * REST APIs
      */ 
+
+    reload() {
+        try {
+            this.validateRulesFile();
+        } catch (err) {
+            return ({ 
+                'error' : 'rules validation error',
+                'message' : err.message
+            });
+        }
+        // validation ok
+        this.loadRules();
+        return ({ 
+            'status' : 'success'
+        });
+    }
+
+    validateRulesFile() {
+        logger.info("Validating rules file");        
+        if (fs.existsSync(filename)) {
+            try {
+                this.jsonContents = yaml.safeLoad(fs.readFileSync(filename, 'utf8'));
+            } catch (e) {
+                logger.error('Error while validating rules file: could not read rules file');
+                throw(new Error('Could not read rules file'));
+            }
+        }
+        for (let key in this.jsonContents) {
+            try {
+                new Rule(this.jsonContents[key]);                
+            } catch (e) {
+                logger.error('Error while validating rule [%s]', key);
+                logger.error(e.toString());
+                throw(new Error('Error while validating rule [' + key + ']'));
+            }
+        }
+    } 
+
+
     listAllRules() {
         let list = [];
         for (let key in this.jsonContents) {
