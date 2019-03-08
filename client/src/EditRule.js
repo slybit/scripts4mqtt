@@ -1,7 +1,7 @@
 import React from "react";
 import { Title, Container } from "./containers";
 import { Button } from 'reactstrap';
-import Sortly from 'react-sortly';
+import Sortly, { convert, add, insert, remove } from 'react-sortly';
 
 
 const itemStyle = {
@@ -50,10 +50,22 @@ class MyApp extends React.Component {
         }
     }
 
+    handleClickAddNewItem = () => {
+        const items = this.props.data;        
+        const newItemData =  {"id":20,"type":"and","path":[]};        
+        this.props.handleChange( add(items, newItemData) );
+
+    
+        //this.setState({ items: add(this.state.items, newItemData) });
+        //this.setState({ activeItemId: id });
+        console.log(JSON.stringify(add(items, newItemData)));
+      }
+
     render() {
         const items = this.props.data;
         return (
             <Container>
+                <button type="button" className="btn btn-primary" onClick={this.handleClickAddNewItem}>Add New Item</button>
                 <Sortly
                     items={items}
                     itemRenderer={ItemRenderer}
