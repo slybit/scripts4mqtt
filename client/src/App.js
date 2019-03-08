@@ -61,13 +61,8 @@ class App extends Component {
           <AppNav>
               <Title>Rules</Title>
               <RuleList data={this.state.rules} onClick={this.handleRuleClick.bind(this)}/>
-          </AppNav>
-          <AppContent>
-            <EditRule id={this.state.selectedRule} rule={this.state.rule} handleChange={this.handleChange.bind(this)}/>
-          </AppContent>
-          <AppEditor>
-            test
-          </AppEditor>
+          </AppNav>          
+          <EditRule id={this.state.selectedRule} rule={this.state.rule} handleChange={this.handleChange.bind(this)}/>          
         </AppBody>
         <AppFooter>footer</AppFooter>
       </AppContainer>

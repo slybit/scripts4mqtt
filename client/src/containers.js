@@ -6,6 +6,8 @@ export const AppContainer = styled.div`
   flex-direction: column;
 `;
 
+// -----------------------------------
+
 export const AppBody = styled.div`
   display: flex;
   flex: 1 1 auto;
@@ -13,6 +15,25 @@ export const AppBody = styled.div`
 
 export const AppFooter = styled.div`
   flex: none;
+`;
+
+// -----------------------------------
+
+export const AppNav = styled.div`
+  flex: 0 0 20em;
+  max-width: 40em;
+  order: -1;
+  border-right: 1px solid rgba(0, 0, 0, 0.125);
+`;
+
+export const AppMain = styled.div`    
+    display: flex;
+    flex: 1 1 auto;    
+    background: #fff;
+    padding: 5px;
+    overflow-y: auto;
+    min-height: 0px;
+    border: 2px solid orange;
 `;
 
 export const AppContent = styled.div`
@@ -25,12 +46,7 @@ export const AppContent = styled.div`
   border: 2px solid green;
 `;
 
-export const AppNav = styled.div`
-  flex: 0 0 20em;
-  max-width: 40em;
-  order: -1;
-  border-right: 1px solid rgba(0, 0, 0, 0.125);
-`;
+
 
 export const AppEditor = styled.div`
   flex: 1;

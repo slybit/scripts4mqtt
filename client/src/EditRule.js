@@ -1,5 +1,5 @@
 import React from "react";
-import { Title, Container } from "./containers";
+import { Title, Container, AppEditor, AppContent, AppMain } from "./containers";
 import { Button } from 'reactstrap';
 import Sortly, { convert, add, insert, remove } from 'react-sortly';
 
@@ -33,7 +33,7 @@ const ItemRenderer = (props) => {
 class MyApp extends React.Component {
 
     handleChange = (items) => {
-        this.props.handleChange( items );
+        this.props.handleChange(items);
     }
 
     handleMove = (items, index, newIndex) => {
@@ -51,19 +51,20 @@ class MyApp extends React.Component {
     }
 
     handleClickAddNewItem = () => {
-        const items = this.props.data;        
-        const newItemData =  {"id":20,"type":"and","path":[]};        
-        this.props.handleChange( add(items, newItemData) );
+        const items = this.props.data;
+        const newItemData = { "id": 20, "type": "and", "path": [] };
+        this.props.handleChange(add(items, newItemData));
 
-    
+
         //this.setState({ items: add(this.state.items, newItemData) });
         //this.setState({ activeItemId: id });
         console.log(JSON.stringify(add(items, newItemData)));
-      }
+    }
 
     render() {
         const items = this.props.data;
         return (
+
             <Container>
                 <button type="button" className="btn btn-primary" onClick={this.handleClickAddNewItem}>Add New Item</button>
                 <Sortly
@@ -71,9 +72,9 @@ class MyApp extends React.Component {
                     itemRenderer={ItemRenderer}
                     onChange={this.handleChange}
                     onMove={this.handleMove}
-
                 />
             </Container>
+
         );
     }
 }
@@ -84,26 +85,31 @@ export class EditRule extends React.Component {
     render() {
         console.log(this.props);
         return (
-            <div>
-                <Title>
-                    <Button>Delete Rule</Button>
-                    {this.props.id ? this.props.id : 'Please select a rule from the list to edit or create a new rule.'}
-                </Title>
-                <pre className='code'>
-                    {JSON.stringify(this.props.rule.flatConditions, undefined, 4)}
-                </pre>
+            <AppMain>
+                <AppContent>
+                    <Title>
+                        <Button>Delete Rule</Button>
+                        {this.props.id ? this.props.id : 'Please select a rule from the list to edit or create a new rule.'}
+                    </Title>
+                    <pre className='code'>
+                        {JSON.stringify(this.props.rule.flatConditions, undefined, 4)}
+                    </pre>
 
-                {this.props.rule.name &&
+                    {this.props.rule.name &&
                         <_Condition data={this.props.rule.condition} />
-                }
+                    }
 
 
-                {this.props.rule.name &&
+                    {this.props.rule.name &&
                         <MyApp data={this.props.rule.flatConditions} handleChange={this.props.handleChange} />
-                }
+                    }
 
 
-            </div>
+                </AppContent>
+                <AppEditor>
+                    test
+          </AppEditor>
+            </AppMain>
         );
     }
 }
