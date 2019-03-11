@@ -3,6 +3,42 @@ import { Title, Container, AppEditor, AppContent, AppMain } from "./containers";
 import { Button } from 'reactstrap';
 import Sortly, { convert, add, insert, remove } from 'react-sortly';
 
+export class EditRule extends React.Component {
+    render() {
+        console.log(this.props);
+        return (
+            <AppMain>
+                <AppContent>
+                    <Title>
+                        <Button>Delete Rule</Button>
+                        {this.props.id ? this.props.id : 'Please select a rule from the list to edit or create a new rule.'}
+                    </Title>
+                    <pre className='code'>
+                        {JSON.stringify(this.props.rule.flatConditions, undefined, 4)}
+                    </pre>
+
+                    {false && this.props.rule.name &&
+                        <_Condition data={this.props.rule.condition} />
+                    }
+
+
+                    {this.props.rule.name &&
+                        <ConditionTree data={this.props.rule.flatConditions} handleChange={this.props.handleChange} />
+                    }
+
+
+                </AppContent>
+                <AppEditor>
+                    <div className="form-group">
+                        <label for="exampleFormControlTextarea1">Example textarea</label>
+                        <textarea className="form-control" id="exampleFormControlTextarea1" rows="3">test123</textarea>
+                    </div>
+                </AppEditor>
+            </AppMain>
+        );
+    }
+}
+
 
 const itemStyle = {
     border: '1px solid #ccc',
@@ -18,19 +54,24 @@ const muteStyle = {
 const ItemRenderer = (props) => {
     const {
         type, path, connectDragSource, connectDropTarget,
-        isDragging, isClosestDragging,
+        isDragging, isClosestDragging, index
     } = props;
     const style = {
         ...itemStyle,
         ...(isDragging || isClosestDragging ? muteStyle : null),
         marginLeft: path.length * 30,
     };
-    const el = <div style={style}>{type}</div>;
+
+    const handleClick = () => {
+        console.log(index);
+    }
+
+    const el = <div style={style} onClick={handleClick}>{type}</div>;
     return connectDragSource(connectDropTarget(el));
 };
 
 
-class MyApp extends React.Component {
+class ConditionTree extends React.Component {
 
     handleChange = (items) => {
         this.props.handleChange(items);
@@ -61,6 +102,8 @@ class MyApp extends React.Component {
         console.log(JSON.stringify(add(items, newItemData)));
     }
 
+    
+
     render() {
         const items = this.props.data;
         return (
@@ -81,38 +124,7 @@ class MyApp extends React.Component {
 
 
 
-export class EditRule extends React.Component {
-    render() {
-        console.log(this.props);
-        return (
-            <AppMain>
-                <AppContent>
-                    <Title>
-                        <Button>Delete Rule</Button>
-                        {this.props.id ? this.props.id : 'Please select a rule from the list to edit or create a new rule.'}
-                    </Title>
-                    <pre className='code'>
-                        {JSON.stringify(this.props.rule.flatConditions, undefined, 4)}
-                    </pre>
 
-                    {this.props.rule.name &&
-                        <_Condition data={this.props.rule.condition} />
-                    }
-
-
-                    {this.props.rule.name &&
-                        <MyApp data={this.props.rule.flatConditions} handleChange={this.props.handleChange} />
-                    }
-
-
-                </AppContent>
-                <AppEditor>
-                    test
-          </AppEditor>
-            </AppMain>
-        );
-    }
-}
 
 class _Condition extends React.Component {
 
