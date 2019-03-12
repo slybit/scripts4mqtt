@@ -2,8 +2,30 @@ import React from "react";
 import { Title, Container, AppEditor, AppContent, AppMain } from "./containers";
 import { Button } from 'reactstrap';
 import Sortly, { convert, add, insert, remove } from 'react-sortly';
+import axios from 'axios';
 
 export class EditRule extends React.Component {
+
+    componentDidUpdate(prevProps) {
+        console.log(this.props.id);
+        if (prevProps.id !== this.props.id) {
+          this.loadRuleFromServer(this.props.id);
+        }
+      }
+    
+    loadRuleFromServer(key) {
+        axios.get('/api/rule/' + key)
+        .then((response) => {
+          this.setState( { rule: response.data });
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
+
+    
+
+
     render() {
         console.log(this.props);
         return (
@@ -14,7 +36,7 @@ export class EditRule extends React.Component {
                         {this.props.id ? this.props.id : 'Please select a rule from the list to edit or create a new rule.'}
                     </Title>
                     <pre className='code'>
-                        {JSON.stringify(this.props.rule.flatConditions, undefined, 4)}
+                        {JSON.stringify(this.state.rule.flatConditions, undefined, 4)}
                     </pre>
 
                     {false && this.props.rule.name &&

@@ -26,15 +26,7 @@ class App extends Component {
     });
   }
 
-  loadRuleFromServer(key) {
-    axios.get('/api/rule/' + key)
-    .then((response) => {
-      this.setState( { rule: response.data });
-    })
-    .catch((error) => {
-      console.log(error);
-    });
-  }
+  
 
   componentDidMount() {
     this.loadRuleListFromServer();
@@ -42,7 +34,7 @@ class App extends Component {
 
   handleRuleClick(key) {
     this.setState({selectedRule: key});
-    this.loadRuleFromServer(key);
+    //this.loadRuleFromServer(key);
   }
 
   handleChange(items) {
@@ -62,7 +54,7 @@ class App extends Component {
               <Title>Rules</Title>
               <RuleList data={this.state.rules} onClick={this.handleRuleClick.bind(this)}/>
           </AppNav>          
-          <EditRule id={this.state.selectedRule} rule={this.state.rule} handleChange={this.handleChange.bind(this)}/>          
+          <EditRule id={this.state.selectedRule}  handleChange={this.handleChange.bind(this)}/>          
         </AppBody>
         <AppFooter>footer</AppFooter>
       </AppContainer>
