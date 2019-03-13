@@ -35,7 +35,7 @@ let processMessage = function (topic, message, packet) {
         try {
             data = JSON.parse(message);
         } catch (err) {
-            logger.error('could not parse message to json: %s', message);
+            //logger.error('could not parse message to json: %s', message);
             data.val = message; // will be a string
         }
     } else {

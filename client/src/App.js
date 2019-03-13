@@ -53,8 +53,10 @@ class App extends Component {
           <AppNav>
               <Title>Rules</Title>
               <RuleList data={this.state.rules} onClick={this.handleRuleClick.bind(this)}/>
-          </AppNav>          
-          <EditRule id={this.state.selectedRule}  handleChange={this.handleChange.bind(this)}/>          
+          </AppNav>
+          {this.state.selectedRule &&          
+            <EditRule id={this.state.selectedRule}  handleChange={this.handleChange.bind(this)}/>          
+          }
         </AppBody>
         <AppFooter>footer</AppFooter>
       </AppContainer>

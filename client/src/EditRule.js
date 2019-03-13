@@ -1,33 +1,90 @@
 import React from "react";
 import { Title, Container, AppEditor, AppContent, AppMain } from "./containers";
-import { Button } from 'reactstrap';
+import { Button, Form, FormGroup, Label, Input, Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 import Sortly, { convert, add, insert, remove } from 'react-sortly';
 import axios from 'axios';
 
 export class EditRule extends React.Component {
 
+    constructor(props) {
+        super(props);
+        this.state = {
+            selectedConditionOptions: {},
+            selectedConditionId: undefined,
+            rule: {},
+            typeDropdownValue: '?',
+            typeDropdownOptions: [
+                {
+                    name: 'Select…',
+                    value: null,
+                },
+                {
+                    name: 'A',
+                    value: 'a',
+                },
+                {
+                    name: 'B',
+                    value: 'b',
+                },
+                {
+                    name: 'C',
+                    value: 'c',
+                },
+            ],
+        };
+    }
+
+    componentDidMount() {
+        console.log(this.props.id);
+        this.loadRuleFromServer(this.props.id);
+    }
+
     componentDidUpdate(prevProps) {
         console.log(this.props.id);
         if (prevProps.id !== this.props.id) {
-          this.loadRuleFromServer(this.props.id);
+            this.loadRuleFromServer(this.props.id);
         }
-      }
-    
-    loadRuleFromServer(key) {
-        axios.get('/api/rule/' + key)
-        .then((response) => {
-          this.setState( { rule: response.data });
-        })
-        .catch((error) => {
-          console.log(error);
-        });
     }
 
-    
+    loadRuleFromServer(key) {
+        axios.get('/api/rule/' + key)
+            .then((response) => {
+                this.setState({ rule: response.data });
+                this.setState({ selectedConditionOptions: {}, selectedConditionId: undefined });
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+    }
+
+    handleConditionClick(id) {
+        console.log(id);
+        this.findCondition(id);
+        if (window.confirm('Are you sure you want to save this thing into the database?')) {
+            // Save it!
+        } else {
+            // Do nothing!
+        }
+    }
+
+    findCondition(id) {
+        for (let c of this.state.rule.flatConditions) {
+            if (c.id == id) {
+                console.log("set state");
+                console.log(JSON.stringify(c.options));
+                this.setState({ selectedConditionOptions: c.options, selectedConditionId: id });
+            }
+        }
+    }
+
+    handleTypeDropdownChange = (event) => {
+        this.setState({ typeDropdownValue: event.target.value });
+    }
 
 
     render() {
         console.log(this.props);
+        console.log(this.state.selectedCondition);
         return (
             <AppMain>
                 <AppContent>
@@ -39,22 +96,35 @@ export class EditRule extends React.Component {
                         {JSON.stringify(this.state.rule.flatConditions, undefined, 4)}
                     </pre>
 
-                    {false && this.props.rule.name &&
-                        <_Condition data={this.props.rule.condition} />
+                    {false && this.state.rule &&
+                        <_Condition data={this.state.rule.condition} />
                     }
 
 
-                    {this.props.rule.name &&
-                        <ConditionTree data={this.props.rule.flatConditions} handleChange={this.props.handleChange} />
+                    {this.state.rule.name &&
+                        <ConditionTree data={this.state.rule.flatConditions} handleChange={this.props.handleChange} handleConditionClick={this.handleConditionClick.bind(this)} />
                     }
 
 
                 </AppContent>
                 <AppEditor>
-                    <div className="form-group">
-                        <label for="exampleFormControlTextarea1">Example textarea</label>
-                        <textarea className="form-control" id="exampleFormControlTextarea1" rows="3">test123</textarea>
-                    </div>
+                    <Form>
+                        <FormGroup >
+                            <Label for="typeDropdown">Condition Type:</Label>
+                            <select id="typeDropdown" className="form-control col-sm-4" onChange={this.handleTypeDropdownChange} value={this.state.typeDropdownValue}>
+                                {this.state.typeDropdownOptions.map(item => (
+                                    <option key={item.value} value={item.value}>
+                                        {item.name}
+                                    </option>
+                                ))}
+                            </select>
+                        </FormGroup>
+                        <FormGroup>
+                            <Label for="exampleFormControlTextarea1">Condition Options</Label>
+                            <Input type="textarea" id="exampleFormControlTextarea1" rows="10" value={JSON.stringify(this.state.selectedConditionOptions, undefined, 4)}></Input>
+                        </FormGroup>
+                        <Button color="primary">Save</Button>{' '}<Button color="danger">Cancel</Button>
+                    </Form>
                 </AppEditor>
             </AppMain>
         );
@@ -73,24 +143,7 @@ const muteStyle = {
     opacity: .3,
 }
 
-const ItemRenderer = (props) => {
-    const {
-        type, path, connectDragSource, connectDropTarget,
-        isDragging, isClosestDragging, index
-    } = props;
-    const style = {
-        ...itemStyle,
-        ...(isDragging || isClosestDragging ? muteStyle : null),
-        marginLeft: path.length * 30,
-    };
 
-    const handleClick = () => {
-        console.log(index);
-    }
-
-    const el = <div style={style} onClick={handleClick}>{type}</div>;
-    return connectDragSource(connectDropTarget(el));
-};
 
 
 class ConditionTree extends React.Component {
@@ -124,17 +177,37 @@ class ConditionTree extends React.Component {
         console.log(JSON.stringify(add(items, newItemData)));
     }
 
-    
+    ItemRenderer = (props) => {
+        const {
+            type, path, id, connectDragSource, connectDropTarget,
+            isDragging, isClosestDragging
+        } = props;
+        const style = {
+            ...itemStyle,
+            ...(isDragging || isClosestDragging ? muteStyle : null),
+            marginLeft: path.length * 30,
+        };
+
+        const handleClick = () => {
+            console.log(id);
+            this.props.handleConditionClick(id);
+        }
+
+        const el = <div style={style} onClick={handleClick}>{type}</div>;
+        return connectDragSource(connectDropTarget(el));
+    };
+
+
 
     render() {
         const items = this.props.data;
         return (
 
             <Container>
-                <button type="button" className="btn btn-primary" onClick={this.handleClickAddNewItem}>Add New Item</button>
+                <Button onClick={this.handleClickAddNewItem}>Add New Item</Button>
                 <Sortly
                     items={items}
-                    itemRenderer={ItemRenderer}
+                    itemRenderer={this.ItemRenderer}
                     onChange={this.handleChange}
                     onMove={this.handleMove}
                 />

@@ -30,10 +30,10 @@ class Engine {
             read: function(topic) {
                 return mqttStore.get(topic);
             },
-            write: function(topic, message) {
+            write: function(topic, message, retain = false) {
                 if (!isNaN(message)) message = message.toString();
                 logger.info('ScriptAction published %s -> %s', topic, message);
-                return mqttClient.publish(topic, message);
+                return mqttClient.publish(topic, message, {'retain' : retain});
             }
             
         }

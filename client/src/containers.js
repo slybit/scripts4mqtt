@@ -37,8 +37,8 @@ export const AppMain = styled.div`
 `;
 
 export const AppContent = styled.div`
-  flex: 0 0 60em;
-  max-width: 80em;
+  flex: 0 0 40em;
+  max-width: 40em;
   background: #fff;
   padding: 5px;
   overflow-y: auto;
@@ -51,6 +51,7 @@ export const AppContent = styled.div`
 export const AppEditor = styled.div`
   flex: 1;
   order: 100;
+  padding: 10px;
   border-left: 1px solid rgba(0, 0, 0, 0.125);
 `;
 
