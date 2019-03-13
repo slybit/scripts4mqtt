@@ -1,0 +1,15 @@
+conditions:
+  - name: "MQTT"
+    value: "mqtt"
+  - name: "Cron expression"
+    value: "cron"
+actions:
+  - name: "MQTT"
+    value: "mqtt"
+  - name: "Script"
+    value: "script"
+  - name: "Email"
+    value: "email"
+  - name: "Pushover"
+    value: "pushover"
+            

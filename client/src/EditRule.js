@@ -1,6 +1,6 @@
 import React from "react";
 import { Title, Container, AppEditor, AppContent, AppMain } from "./containers";
-import { Button, Form, FormGroup, Label, Input, Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
+import { Button, Form, FormGroup, Label, Input,  FormFeedback } from 'reactstrap';
 import Sortly, { convert, add, insert, remove } from 'react-sortly';
 import axios from 'axios';
 
@@ -9,28 +9,8 @@ export class EditRule extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            selectedConditionOptions: {},
-            selectedConditionId: undefined,
+            condition: {         },
             rule: {},
-            typeDropdownValue: '?',
-            typeDropdownOptions: [
-                {
-                    name: 'Select…',
-                    value: null,
-                },
-                {
-                    name: 'A',
-                    value: 'a',
-                },
-                {
-                    name: 'B',
-                    value: 'b',
-                },
-                {
-                    name: 'C',
-                    value: 'c',
-                },
-            ],
         };
     }
 
@@ -50,7 +30,8 @@ export class EditRule extends React.Component {
         axios.get('/api/rule/' + key)
             .then((response) => {
                 this.setState({ rule: response.data });
-                this.setState({ selectedConditionOptions: {}, selectedConditionId: undefined });
+                this.setState({ condition: {optionsValid: true} });
+
             })
             .catch((error) => {
                 console.log(error);
@@ -60,31 +41,71 @@ export class EditRule extends React.Component {
     handleConditionClick(id) {
         console.log(id);
         this.findCondition(id);
-        if (window.confirm('Are you sure you want to save this thing into the database?')) {
+        //if (window.confirm('Are you sure you want to save this thing into the database?')) {
             // Save it!
-        } else {
+        //} else {
             // Do nothing!
-        }
+        //}
     }
+
+     
 
     findCondition(id) {
         for (let c of this.state.rule.flatConditions) {
-            if (c.id == id) {
-                console.log("set state");
-                console.log(JSON.stringify(c.options));
-                this.setState({ selectedConditionOptions: c.options, selectedConditionId: id });
+            if (c.id == id) {                
+                this.setState({
+                    condition: {
+                        id: id,
+                        type: c.type,
+                        options: JSON.stringify(c.options, undefined, 4),
+                        optionsValid: true                        
+                    }
+                });
+                break;
             }
         }
     }
 
     handleTypeDropdownChange = (event) => {
-        this.setState({ typeDropdownValue: event.target.value });
+        this.setState({ condition: { ...this.state.condition, type: event.target.value} });        
+    }
+
+    handleConditionOptionsChange = (event) => {
+        this.setState({ condition: { ...this.state.condition, options: event.target.value} });
+    }
+
+    handleConditionSaveClick = () => {
+        // check if all is ok
+        let optionsValid = this.checkConditionOptions(this.state.condition.options);        
+        this.setState({ condition: { ...this.state.condition, optionsValid: optionsValid} });
+        if (optionsValid) {
+            // copy rule from state
+            let cloned = Object.assign({}, this.state.rule);
+            for (let c of cloned.flatConditions) {
+                if (c.id == this.state.condition.id) {
+                    c.type = this.state.condition.type;
+                    c.options = JSON.parse(this.state.condition.options);
+                    break;
+                }
+            }
+            // put back in state        
+            this.setState({ rule: cloned});
+            console.log(JSON.stringify(cloned, undefined, 4));
+        }
+    }
+
+    checkConditionOptions(options) {
+        try {
+            JSON.parse(options);            
+            return true;
+        } catch (e) {            
+            return false;
+        }
     }
 
 
     render() {
         console.log(this.props);
-        console.log(this.state.selectedCondition);
         return (
             <AppMain>
                 <AppContent>
@@ -102,17 +123,17 @@ export class EditRule extends React.Component {
 
 
                     {this.state.rule.name &&
-                        <ConditionTree data={this.state.rule.flatConditions} handleChange={this.props.handleChange} handleConditionClick={this.handleConditionClick.bind(this)} />
+                        <ConditionTree selectedId={this.state.condition.id} data={this.state.rule.flatConditions} handleChange={this.props.handleChange} handleConditionClick={this.handleConditionClick.bind(this)} />
                     }
 
 
                 </AppContent>
                 <AppEditor>
-                    <Form>
+                    <Form className="form">
                         <FormGroup >
                             <Label for="typeDropdown">Condition Type:</Label>
-                            <select id="typeDropdown" className="form-control col-sm-4" onChange={this.handleTypeDropdownChange} value={this.state.typeDropdownValue}>
-                                {this.state.typeDropdownOptions.map(item => (
+                            <select id="typeDropdown" className="form-control col-sm-4" onChange={this.handleTypeDropdownChange} value={this.state.condition.type}>
+                                {this.props.static.conditions.map(item => (
                                     <option key={item.value} value={item.value}>
                                         {item.name}
                                     </option>
@@ -121,9 +142,10 @@ export class EditRule extends React.Component {
                         </FormGroup>
                         <FormGroup>
                             <Label for="exampleFormControlTextarea1">Condition Options</Label>
-                            <Input type="textarea" id="exampleFormControlTextarea1" rows="10" value={JSON.stringify(this.state.selectedConditionOptions, undefined, 4)}></Input>
+                            <Input invalid={!this.state.condition.optionsValid} style={textInputStyle} type="textarea" id="exampleFormControlTextarea1" rows="10" value={this.state.condition.options} onChange={this.handleConditionOptionsChange}></Input>
+                            <FormFeedback>Oh noes! that name is already taken</FormFeedback>
                         </FormGroup>
-                        <Button color="primary">Save</Button>{' '}<Button color="danger">Cancel</Button>
+                        <Button color="primary" onClick={this.handleConditionSaveClick}>Save</Button>{' '}<Button color="danger">Cancel</Button>
                     </Form>
                 </AppEditor>
             </AppMain>
@@ -131,6 +153,10 @@ export class EditRule extends React.Component {
     }
 }
 
+const textInputStyle = {
+    fontFamily: 'monospace',
+    fontSize: '1.1rem'
+}
 
 const itemStyle = {
     border: '1px solid #ccc',
@@ -143,10 +169,19 @@ const muteStyle = {
     opacity: .3,
 }
 
+const selectedStyle = {
+    border: '3px solid green',
+}
+
 
 
 
 class ConditionTree extends React.Component {
+
+    constructor(props) {
+        super(props);
+    }
+
 
     handleChange = (items) => {
         this.props.handleChange(items);
@@ -177,29 +212,18 @@ class ConditionTree extends React.Component {
         console.log(JSON.stringify(add(items, newItemData)));
     }
 
-    ItemRenderer = (props) => {
-        const {
-            type, path, id, connectDragSource, connectDropTarget,
-            isDragging, isClosestDragging
-        } = props;
-        const style = {
-            ...itemStyle,
-            ...(isDragging || isClosestDragging ? muteStyle : null),
-            marginLeft: path.length * 30,
-        };
-
-        const handleClick = () => {
-            console.log(id);
-            this.props.handleConditionClick(id);
-        }
-
-        const el = <div style={style} onClick={handleClick}>{type}</div>;
-        return connectDragSource(connectDropTarget(el));
-    };
+    renderItem = props => (
+        <ItemRenderer
+          {...props}
+          isMarked={props.id === this.props.selectedId}
+          handleConditionClick={this.props.handleConditionClick}      
+        />
+      )
 
 
 
     render() {
+        console.log("Render called");
         const items = this.props.data;
         return (
 
@@ -207,7 +231,7 @@ class ConditionTree extends React.Component {
                 <Button onClick={this.handleClickAddNewItem}>Add New Item</Button>
                 <Sortly
                     items={items}
-                    itemRenderer={this.ItemRenderer}
+                    itemRenderer={this.renderItem}
                     onChange={this.handleChange}
                     onMove={this.handleMove}
                 />
@@ -217,6 +241,33 @@ class ConditionTree extends React.Component {
     }
 }
 
+
+
+class ItemRenderer extends React.Component {
+
+    handleClick = () => {        
+        console.log("is marked:" + this.props.isMarked);
+        this.props.handleConditionClick(this.props.id);        
+    }
+
+    render() {    
+        const {
+            type, path, isMarked, connectDragSource, connectDropTarget,
+            isDragging, isClosestDragging
+        } = this.props;
+        
+        const style = {
+            ...itemStyle,
+            ...(isDragging || isClosestDragging ? muteStyle : null),
+            ...(isMarked ? selectedStyle : null),
+            marginLeft: path.length * 30,
+        };
+
+        const el = <div style={style} onClick={this.handleClick}>{type} {isMarked}</div>;
+        return connectDragSource(connectDropTarget(el));
+    }
+    
+}
 
 
 

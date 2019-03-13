@@ -10,6 +10,7 @@ class App extends Component {
   constructor() {
     super();
     this.state = {
+      static: {},
       rules: [],
       selectedRule: undefined,
       rule: {}
@@ -26,10 +27,22 @@ class App extends Component {
     });
   }
 
+
+  loadStaticDataFromServer() {
+    axios.get('/api/static')
+    .then((response) => {
+      this.setState( { static: response.data });
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+  }
+
   
 
   componentDidMount() {
     this.loadRuleListFromServer();
+    this.loadStaticDataFromServer();
   }
 
   handleRuleClick(key) {
@@ -55,7 +68,7 @@ class App extends Component {
               <RuleList data={this.state.rules} onClick={this.handleRuleClick.bind(this)}/>
           </AppNav>
           {this.state.selectedRule &&          
-            <EditRule id={this.state.selectedRule}  handleChange={this.handleChange.bind(this)}/>          
+            <EditRule id={this.state.selectedRule} static={this.state.static} handleChange={this.handleChange.bind(this)}/>          
           }
         </AppBody>
         <AppFooter>footer</AppFooter>

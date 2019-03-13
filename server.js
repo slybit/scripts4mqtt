@@ -4,6 +4,7 @@ const morgan = require('morgan');
 const bodyParser = require('body-parser');
 const logger = require('./logger.js');
 const config = require('./config.js').parse();
+const static = require('./static.js').parse();
 const rules = require('./rules.js');
 
 const app = express();
@@ -38,6 +39,10 @@ router.put('/rule/:ruleId', (req, res) => {
 
 router.delete('/rule/:ruleId', (req, res) => {
     res.json(rules.deleteRule(req.params.ruleId));
+});
+
+router.get('/static', (req, res) => {
+    res.json(static);
 });
 
 app.use('/api', router);
