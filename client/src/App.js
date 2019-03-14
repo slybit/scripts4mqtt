@@ -50,14 +50,7 @@ class App extends Component {
     //this.loadRuleFromServer(key);
   }
 
-  handleChange(items) {
-    // copy rule from state
-    let cloned = Object.assign({}, this.state.rule);
-    // adapt and put back in state
-    cloned.flatConditions = items ;
-    this.setState({ rule: cloned});
-    console.log(items);
-  }
+ 
 
   render() {
     return (
@@ -68,7 +61,7 @@ class App extends Component {
               <RuleList data={this.state.rules} onClick={this.handleRuleClick.bind(this)}/>
           </AppNav>
           {this.state.selectedRule &&          
-            <EditRule id={this.state.selectedRule} static={this.state.static} handleChange={this.handleChange.bind(this)}/>          
+            <EditRule id={this.state.selectedRule} static={this.state.static} />          
           }
         </AppBody>
         <AppFooter>footer</AppFooter>

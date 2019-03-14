@@ -9,7 +9,7 @@ export class EditRule extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            condition: {         },
+            condition: {},
             rule: {},
         };
     }
@@ -19,9 +19,9 @@ export class EditRule extends React.Component {
         this.loadRuleFromServer(this.props.id);
     }
 
-    componentDidUpdate(prevProps) {
-        console.log(this.props.id);
+    componentDidUpdate(prevProps) {        
         if (prevProps.id !== this.props.id) {
+            console.log("Loading from server: " + this.props.id);
             this.loadRuleFromServer(this.props.id);
         }
     }
@@ -38,9 +38,9 @@ export class EditRule extends React.Component {
             });
     }
 
-    handleConditionClick(id) {
+    handleConditionClick = (id) => {
         console.log(id);
-        this.findCondition(id);
+        this.selectCondition(id);
         //if (window.confirm('Are you sure you want to save this thing into the database?')) {
             // Save it!
         //} else {
@@ -50,20 +50,24 @@ export class EditRule extends React.Component {
 
      
 
-    findCondition(id) {
-        for (let c of this.state.rule.flatConditions) {
-            if (c.id == id) {                
-                this.setState({
+    selectCondition = (id) => {
+        let cloned = Object.assign({}, this.state.rule);
+        for (let c of cloned.flatConditions) {
+            if (c.id == id) {
+                c.isMarked = true;                
+                /*this.setState({
                     condition: {
                         id: id,
                         type: c.type,
                         options: JSON.stringify(c.options, undefined, 4),
                         optionsValid: true                        
                     }
-                });
-                break;
+                });*/                
+            } else {
+                c.isMarked = false;
             }
         }
+        this.setState({ rule: cloned });
     }
 
     handleTypeDropdownChange = (event) => {
@@ -104,8 +108,50 @@ export class EditRule extends React.Component {
     }
 
 
+
+    handleChange = (items) => {
+        // copy rule from state
+        let cloned = Object.assign({}, this.state.rule);
+        // adapt and put back in state
+        cloned.flatConditions = items ;
+        this.setState({ rule: cloned});
+        console.log(items);
+      }
+
+    handleMove = (items, index, newIndex) => {
+        const { path } = items[newIndex];
+
+
+        const parent = items.find(item => item.id === path[path.length - 1]);
+
+        // parent must be OR or AND and not the root (so "no parent" is not allowed)
+        if (!parent || (parent.type !== 'or' && parent.type !== 'and')) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    handleClickAddNewItem = () => {
+        const items = this.props.data;
+        const newItemData = { "id": 20, "type": "and", "path": [] };
+        this.props.handleChange(add(items, newItemData));
+
+
+        //this.setState({ items: add(this.state.items, newItemData) });
+        //this.setState({ activeItemId: id });
+        console.log(JSON.stringify(add(items, newItemData)));
+    }
+
+    renderItem = stuff => (
+        <ItemRenderer
+          {...stuff}          
+          handleConditionClick={this.handleConditionClick}      
+        />
+      )
+
+
     render() {
-        console.log(this.props);
         return (
             <AppMain>
                 <AppContent>
@@ -113,18 +159,21 @@ export class EditRule extends React.Component {
                         <Button>Delete Rule</Button>
                         {this.props.id ? this.props.id : 'Please select a rule from the list to edit or create a new rule.'}
                     </Title>
+
+                    {this.state.rule.name &&
+                        <Container>
+                        <Button onClick={this.handleClickAddNewItem}>Add New Item</Button>
+                        <Sortly
+                            items={this.state.rule.flatConditions}
+                            itemRenderer={this.renderItem}
+                            onChange={this.handleChange}
+                            onMove={this.handleMove}
+                        />
+                        </Container>
+                    }
                     <pre className='code'>
                         {JSON.stringify(this.state.rule.flatConditions, undefined, 4)}
                     </pre>
-
-                    {false && this.state.rule &&
-                        <_Condition data={this.state.rule.condition} />
-                    }
-
-
-                    {this.state.rule.name &&
-                        <ConditionTree selectedId={this.state.condition.id} data={this.state.rule.flatConditions} handleChange={this.props.handleChange} handleConditionClick={this.handleConditionClick.bind(this)} />
-                    }
 
 
                 </AppContent>
@@ -153,6 +202,11 @@ export class EditRule extends React.Component {
     }
 }
 
+/* --------------------------------------------------------------------------------------------------------------------
+  Styles
+-------------------------------------------------------------------------------------------------------------------- */
+
+
 const textInputStyle = {
     fontFamily: 'monospace',
     fontSize: '1.1rem'
@@ -176,77 +230,16 @@ const selectedStyle = {
 
 
 
-class ConditionTree extends React.Component {
-
-    constructor(props) {
-        super(props);
-    }
-
-
-    handleChange = (items) => {
-        this.props.handleChange(items);
-    }
-
-    handleMove = (items, index, newIndex) => {
-        const { path } = items[newIndex];
-
-
-        const parent = items.find(item => item.id === path[path.length - 1]);
-
-        // parent must be OR or AND and not the root (so "no parent" is not allowed)
-        if (!parent || (parent.type !== 'or' && parent.type !== 'and')) {
-            return false;
-        } else {
-            return true;
-        }
-    }
-
-    handleClickAddNewItem = () => {
-        const items = this.props.data;
-        const newItemData = { "id": 20, "type": "and", "path": [] };
-        this.props.handleChange(add(items, newItemData));
-
-
-        //this.setState({ items: add(this.state.items, newItemData) });
-        //this.setState({ activeItemId: id });
-        console.log(JSON.stringify(add(items, newItemData)));
-    }
-
-    renderItem = props => (
-        <ItemRenderer
-          {...props}
-          isMarked={props.id === this.props.selectedId}
-          handleConditionClick={this.props.handleConditionClick}      
-        />
-      )
-
-
-
-    render() {
-        console.log("Render called");
-        const items = this.props.data;
-        return (
-
-            <Container>
-                <Button onClick={this.handleClickAddNewItem}>Add New Item</Button>
-                <Sortly
-                    items={items}
-                    itemRenderer={this.renderItem}
-                    onChange={this.handleChange}
-                    onMove={this.handleMove}
-                />
-            </Container>
-
-        );
-    }
-}
 
 
 
 class ItemRenderer extends React.Component {
 
-    handleClick = () => {        
-        console.log("is marked:" + this.props.isMarked);
+    constructor(props) {
+        super(props);
+    }
+
+    handleClick = () => {                
         this.props.handleConditionClick(this.props.id);        
     }
 
@@ -263,7 +256,7 @@ class ItemRenderer extends React.Component {
             marginLeft: path.length * 30,
         };
 
-        const el = <div style={style} onClick={this.handleClick}>{type} {isMarked}</div>;
+        const el = <div style={style} onClick={this.handleClick}>{type} {isMarked ? "Y" : "N"}</div>;
         return connectDragSource(connectDropTarget(el));
     }
     
