@@ -64,7 +64,7 @@ class App extends Component {
             <EditRule id={this.state.selectedRule} static={this.state.static} />          
           }
         </AppBody>
-        <AppFooter>footer</AppFooter>
+        
       </AppContainer>
     );
   }

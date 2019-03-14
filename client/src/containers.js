@@ -12,6 +12,7 @@ export const AppContainer = styled.div`
 export const AppBody = styled.div`
   display: flex;
   flex: 1 1 auto;
+  height: 100vh;
 `;
 
 export const AppFooter = styled.div`
@@ -34,7 +35,7 @@ export const AppMain = styled.div`
     padding: 5px;
     overflow-y: auto;
     min-height: 0px;
-    border: 2px solid orange;
+    border: 0px solid orange;
 `;
 
 export const AppContent = styled.div`
@@ -44,7 +45,7 @@ export const AppContent = styled.div`
   padding: 5px;
   overflow-y: auto;
   min-height: 0px;
-  border: 2px solid green;
+  border: 1px solid rgba(0, 0, 0, 0.125);
 `;
 
 
@@ -53,7 +54,9 @@ export const AppEditor = styled.div`
   flex: 1;
   order: 100;
   padding: 10px;
-  border-left: 1px solid rgba(0, 0, 0, 0.125);
+  overflow-y: auto;
+  min-height: 0px;
+  border: 1px solid rgba(0, 0, 0, 0.125);  
 `;
 
 export const Title = styled.div`
