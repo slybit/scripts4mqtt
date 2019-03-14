@@ -1,17 +1,30 @@
 import React from "react";
 import { Title, Container, AppEditor, AppContent, AppMain } from "./containers";
-import { Button, Form, FormGroup, Label, Input,  FormFeedback } from 'reactstrap';
+import { Button, Form, FormGroup, Label, Input, FormFeedback } from 'reactstrap';
 import Sortly, { convert, add, insert, remove } from 'react-sortly';
+import { flattenConditions } from './utils';
 import axios from 'axios';
 
 export class EditRule extends React.Component {
 
+    defaultCondition = {
+        disabled: true,
+        optionsValid: true,
+        id: undefined,
+        options: '',
+        type: undefined
+    }
+
     constructor(props) {
         super(props);
         this.state = {
-            condition: {},
-            rule: {},
+            ruleId: undefined,
+            onTrue: [],
+            onFalse:  [],
+            flatConditions: [],
+            condition: { ...this.defaultCondition }            
         };
+        console.log(this.state.condition);
     }
 
     componentDidMount() {
@@ -19,7 +32,7 @@ export class EditRule extends React.Component {
         this.loadRuleFromServer(this.props.id);
     }
 
-    componentDidUpdate(prevProps) {        
+    componentDidUpdate(prevProps) {
         if (prevProps.id !== this.props.id) {
             console.log("Loading from server: " + this.props.id);
             this.loadRuleFromServer(this.props.id);
@@ -29,9 +42,14 @@ export class EditRule extends React.Component {
     loadRuleFromServer(key) {
         axios.get('/api/rule/' + key)
             .then((response) => {
-                this.setState({ rule: response.data });
-                this.setState({ condition: {optionsValid: true} });
-
+                console.log(response.data);
+                this.setState({ 
+                    ruleId: response.data.id,
+                    onTrue: response.data.ontrue,
+                    onFalse:  response.data.onfalse,
+                    flatConditions: flattenConditions(response.data.condition),
+                    condition: { ...this.defaultCondition }
+                });                
             })
             .catch((error) => {
                 console.log(error);
@@ -42,50 +60,50 @@ export class EditRule extends React.Component {
         console.log(id);
         this.selectCondition(id);
         //if (window.confirm('Are you sure you want to save this thing into the database?')) {
-            // Save it!
+        // Save it!
         //} else {
-            // Do nothing!
+        // Do nothing!
         //}
     }
 
-     
+
 
     selectCondition = (id) => {
-        let cloned = Object.assign({}, this.state.rule);
-        for (let c of cloned.flatConditions) {
+        let condition = {};
+        let cloned = Object.assign([], this.state.flatConditions);
+        for (let c of cloned) {
             if (c.id == id) {
                 c.isMarked = true;                
-                /*this.setState({
-                    condition: {
-                        id: id,
-                        type: c.type,
-                        options: JSON.stringify(c.options, undefined, 4),
-                        optionsValid: true                        
-                    }
-                });*/                
+                condition = {
+                    id: id,
+                    type: c.type,
+                    options: JSON.stringify(c.options, undefined, 4),
+                    optionsValid: true,
+                    disabled: false
+                };
             } else {
                 c.isMarked = false;
             }
         }
-        this.setState({ rule: cloned });
+        this.setState({ flatConditions: cloned, condition: condition });
     }
 
     handleTypeDropdownChange = (event) => {
-        this.setState({ condition: { ...this.state.condition, type: event.target.value} });        
+        this.setState({ condition: { ...this.state.condition, type: event.target.value } });
     }
 
     handleConditionOptionsChange = (event) => {
-        this.setState({ condition: { ...this.state.condition, options: event.target.value} });
+        this.setState({ condition: { ...this.state.condition, options: event.target.value } });
     }
 
     handleConditionSaveClick = () => {
         // check if all is ok
-        let optionsValid = this.checkConditionOptions(this.state.condition.options);        
-        this.setState({ condition: { ...this.state.condition, optionsValid: optionsValid} });
+        let optionsValid = this.checkConditionOptions(this.state.condition.options);
+        this.setState({ condition: { ...this.state.condition, optionsValid: optionsValid } });
         if (optionsValid) {
             // copy rule from state
-            let cloned = Object.assign({}, this.state.rule);
-            for (let c of cloned.flatConditions) {
+            let cloned = Object.assign([], this.state.flatConditions);
+            for (let c of cloned) {
                 if (c.id == this.state.condition.id) {
                     c.type = this.state.condition.type;
                     c.options = JSON.parse(this.state.condition.options);
@@ -93,16 +111,16 @@ export class EditRule extends React.Component {
                 }
             }
             // put back in state        
-            this.setState({ rule: cloned});
+            this.setState({ flatConditions: cloned });
             console.log(JSON.stringify(cloned, undefined, 4));
         }
     }
 
     checkConditionOptions(options) {
         try {
-            JSON.parse(options);            
+            JSON.parse(options);
             return true;
-        } catch (e) {            
+        } catch (e) {
             return false;
         }
     }
@@ -111,12 +129,12 @@ export class EditRule extends React.Component {
 
     handleChange = (items) => {
         // copy rule from state
-        let cloned = Object.assign({}, this.state.rule);
+        //let cloned = Object.assign({}, this.state.flatConditions);
         // adapt and put back in state
-        cloned.flatConditions = items ;
-        this.setState({ rule: cloned});
+        //cloned.flatConditions = items;
+        this.setState({ flatConditions: items });
         console.log(items);
-      }
+    }
 
     handleMove = (items, index, newIndex) => {
         const { path } = items[newIndex];
@@ -145,10 +163,10 @@ export class EditRule extends React.Component {
 
     renderItem = stuff => (
         <ItemRenderer
-          {...stuff}          
-          handleConditionClick={this.handleConditionClick}      
+            {...stuff}
+            handleConditionClick={this.handleConditionClick}
         />
-      )
+    )
 
 
     render() {
@@ -160,19 +178,19 @@ export class EditRule extends React.Component {
                         {this.props.id ? this.props.id : 'Please select a rule from the list to edit or create a new rule.'}
                     </Title>
 
-                    {this.state.rule.name &&
-                        <Container>
+                    
+                    <Container>
                         <Button onClick={this.handleClickAddNewItem}>Add New Item</Button>
                         <Sortly
-                            items={this.state.rule.flatConditions}
+                            items={this.state.flatConditions}
                             itemRenderer={this.renderItem}
                             onChange={this.handleChange}
                             onMove={this.handleMove}
                         />
-                        </Container>
-                    }
+                    </Container>
+                    
                     <pre className='code'>
-                        {JSON.stringify(this.state.rule.flatConditions, undefined, 4)}
+                        {JSON.stringify(this.state.flatConditions, undefined, 4)}
                     </pre>
 
 
@@ -181,7 +199,7 @@ export class EditRule extends React.Component {
                     <Form className="form">
                         <FormGroup >
                             <Label for="typeDropdown">Condition Type:</Label>
-                            <select id="typeDropdown" className="form-control col-sm-4" onChange={this.handleTypeDropdownChange} value={this.state.condition.type}>
+                            <select disabled={this.state.condition.disabled} id="typeDropdown" className="form-control col-sm-4" onChange={this.handleTypeDropdownChange} value={this.state.condition.type}>
                                 {this.props.static.conditions.map(item => (
                                     <option key={item.value} value={item.value}>
                                         {item.name}
@@ -191,10 +209,11 @@ export class EditRule extends React.Component {
                         </FormGroup>
                         <FormGroup>
                             <Label for="exampleFormControlTextarea1">Condition Options</Label>
-                            <Input invalid={!this.state.condition.optionsValid} style={textInputStyle} type="textarea" id="exampleFormControlTextarea1" rows="10" value={this.state.condition.options} onChange={this.handleConditionOptionsChange}></Input>
+                            <Input disabled={this.state.condition.disabled} invalid={!this.state.condition.optionsValid} style={textInputStyle} type="textarea" id="exampleFormControlTextarea1" rows="10" value={this.state.condition.options} onChange={this.handleConditionOptionsChange}></Input>
                             <FormFeedback>Oh noes! that name is already taken</FormFeedback>
                         </FormGroup>
-                        <Button color="primary" onClick={this.handleConditionSaveClick}>Save</Button>{' '}<Button color="danger">Cancel</Button>
+                        <Button disabled={this.state.condition.disabled} color="primary" onClick={this.handleConditionSaveClick}>Save</Button>{' '}
+                        <Button disabled={this.state.condition.disabled} color="danger">Cancel</Button>
                     </Form>
                 </AppEditor>
             </AppMain>
@@ -239,16 +258,16 @@ class ItemRenderer extends React.Component {
         super(props);
     }
 
-    handleClick = () => {                
-        this.props.handleConditionClick(this.props.id);        
+    handleClick = () => {
+        this.props.handleConditionClick(this.props.id);
     }
 
-    render() {    
+    render() {
         const {
             type, path, isMarked, connectDragSource, connectDropTarget,
             isDragging, isClosestDragging
         } = this.props;
-        
+
         const style = {
             ...itemStyle,
             ...(isDragging || isClosestDragging ? muteStyle : null),
@@ -259,7 +278,7 @@ class ItemRenderer extends React.Component {
         const el = <div style={style} onClick={this.handleClick}>{type} {isMarked ? "Y" : "N"}</div>;
         return connectDragSource(connectDropTarget(el));
     }
-    
+
 }
 
 

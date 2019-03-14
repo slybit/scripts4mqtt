@@ -182,6 +182,7 @@ class Rules {
         return {success : true};
     }
 
+    /*
     getRule(id) {
         let cloned = Object.assign({}, this.jsonContents[id]);
         let list = [];
@@ -192,8 +193,16 @@ class Rules {
         cloned.flatConditions = list;
         return cloned;
     }
+    */
+    getRule(id) {
+        return {
+            ...this.jsonContents[id],
+            "id": id
+        };
+    }
 
     // Helper method, used by the web UI
+    /*
     flattenConditions(nested, list, parent) {
         let id = list.length > 0 ? list[list.length-1].id + 1 : 1;
         let path = parent.path.slice(0);
@@ -205,6 +214,7 @@ class Rules {
                 this.flattenConditions(n, list, item);
         }
     }
+    */
 
     // Helper method, used by the web UI
     nestConditions(flatened) {

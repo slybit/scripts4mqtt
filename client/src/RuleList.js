@@ -1,6 +1,6 @@
 import React from "react";
 import Icon from '@mdi/react'
-import { mdiProgressClock, mdiOwl } from '@mdi/js'
+import { mdiProgressClock, mdiOwl, mdiDelete } from '@mdi/js'
 
 export class RuleList extends React.Component {
     onItemSelection = arg => {
@@ -19,6 +19,8 @@ export class RuleList extends React.Component {
             <span style={pushRightStyle}>
                 <Icon path={mdiProgressClock} size={1} color="grey" onClick={() => this.props.onClick(rule.key)} />
                 <Icon path={mdiOwl} size={1} color="grey"/>
+                {' '}
+                <Icon path={mdiDelete} size={1} color="grey"/>
             </span>
             </li>
         ));
