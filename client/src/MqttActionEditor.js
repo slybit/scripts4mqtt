@@ -60,7 +60,7 @@ export class MqttActionEditor extends React.Component {
                 <FormGroup row>
                     <Label for="value" sm={2}>Value</Label>
                     <Col sm={10}>
-                        <Input  type="text" id="value" value={this.state.val} onChange={(e)=>{this.onChange(e, "val")}}></Input>                    
+                        <Input  type="text" id="value" value={this.state.value} onChange={(e)=>{this.onChange(e, "value")}}></Input>                    
                     </Col>
                 </FormGroup>
                 <Form className="form">                    

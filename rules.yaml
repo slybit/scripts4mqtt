@@ -51,11 +51,11 @@ Achtergevel:
   ontrue:
     - type: mqtt
       topic: knx/set/0/0/208
-      val: 1
+      value: 1
   onfalse:
     - type: mqtt
       topic: knx/set/0/0/208
-      val: 0
+      value: 0
 
 Voordeur:
   name: Voordeur
@@ -74,13 +74,13 @@ Voordeur:
   ontrue:
     - type: mqtt
       topic: knx/set/0/0/200
-      val: 1
+      value: 1
     - type: mqtt
       topic: knx/set/0/0/201
-      val: 1
+      value: 1
     - type: mqtt
       topic: knx/set/0/0/202
-      val: 1
+      value: 1
 
 Afdak:
   name: Afdak
@@ -201,21 +201,21 @@ BadkamerVentilatie:
   ontrue:
     - type: mqtt
       topic: knx/set/2/0/0
-      val: 1
+      value: 1
     - type: mqtt
       topic: knx/set/2/2/3
-      val: 1
+      value: 1
     - type: mqtt
       topic: knx/set/2/1/4
-      val: 1
+      value: 1
       delay: 500  
     - type: mqtt
       topic: hass/ventilation
-      val: low
+      value: low
       delay: 600000
     - type: mqtt
       topic: knx/set/2/1/4
-      val: 0
+      value: 0
       delay: 600000
 
 Ventilatie:

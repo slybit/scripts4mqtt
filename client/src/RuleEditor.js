@@ -4,7 +4,7 @@ import { mdiProgressClock, mdiOwl, mdiDelete, mdiUnfoldMoreVertical } from '@mdi
 import { Title, Container, AppEditor, AppContent, AppMain } from "./containers";
 import { Button } from 'reactstrap';
 import Sortly, { convert, add, insert, remove } from 'react-sortly';
-import { flattenConditions, deleteCondition, staticData } from './utils';
+import { addIds, flattenConditions, deleteCondition, staticData } from './utils';
 import { ConditionEditor } from './ConditionEditor'
 import { MqttActionEditor } from './MqttActionEditor'
 import axios from 'axios';
@@ -49,8 +49,8 @@ export class RuleEditor extends React.Component {
                 console.log(response.data);
                 this.setState({ 
                     ruleId: response.data.id,
-                    onTrue: response.data.ontrue ? response.data.ontrue : [],
-                    onFalse:  response.data.onfalse ? response.data.onfalse : [],
+                    onTrue: response.data.ontrue ? addIds(response.data.ontrue, "onTrue") : [],
+                    onFalse:  response.data.onfalse ? addIds(response.data.onfalse, "onFalse") : [],
                     flatConditions: flattenConditions(response.data.condition),
                     condition: { ...this.defaultCondition }
                 });                
@@ -66,8 +66,6 @@ export class RuleEditor extends React.Component {
     }
 
     handleActionClick = (index) => {
-        console.log("setting action: ");
-        console.log(this.state.onTrue[index]);
         this.setState( { action: this.state.onTrue[index] } );
     }
 
@@ -161,14 +159,12 @@ export class RuleEditor extends React.Component {
         // update the UI so that the user can see that the input is invalid
         this.setState({ condition: { ...this.state.condition, optionsValid: optionsValid } });
         if (optionsValid) {
-            // copy rule from state
+            // copy the flatConditions from state
             let cloned = Object.assign([], this.state.flatConditions);
-            for (let c of cloned) {
-                if (c.id == this.state.condition.id) {
-                    c.type = this.state.condition.type;
-                    c.options = JSON.parse(this.state.condition.options);
-                    break;
-                }
+            let c = cloned.find(condition => condition.id === this.state.condition.id);
+            if (c !== undefined) {
+                c.type = this.state.condition.type;
+                c.options = JSON.parse(this.state.condition.options);
             }
             // put back in state        
             this.setState({ flatConditions: cloned });
@@ -190,13 +186,13 @@ export class RuleEditor extends React.Component {
 
     render() {
         const onTrueActions = this.state.onTrue.map((action, index) => (
-            <li className="list-group-item" key={index} id={index} onClick={() => this.handleActionClick(index)}> 
+            <li className="list-group-item" key={action._id} id={action._id} onClick={() => this.handleActionClick(index)}> 
                 {action.type}             
             </li>
         ));
         
         const onFalseActions = this.state.onFalse.map((action, index) => (
-            <li className="list-group-item" key={index} id={index}> 
+            <li className="list-group-item" key={action._id} id={action._id}> 
                 {action.type}             
             </li>
         ));
@@ -231,7 +227,7 @@ export class RuleEditor extends React.Component {
                         </ul>
                     </Container>
                     
-                    {false && <pre className='code'>{JSON.stringify(this.state.flatConditions, undefined, 4)}</pre>}
+                    {true && <pre className='code'>{JSON.stringify(this.state.flatConditions, undefined, 4)}</pre>}
 
 
                 </AppContent>
@@ -249,7 +245,7 @@ export class RuleEditor extends React.Component {
                 { this.state.action &&
                     <MqttActionEditor
                         action={this.state.action}
-                        key={this.state.action.type}
+                        key={this.state.action._id}
                     />
                 }
 

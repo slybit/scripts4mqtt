@@ -52,7 +52,7 @@ export class ConditionEditor extends React.Component {
                     <Label for="typeDropdown">Condition Type:</Label>
                     <select disabled={this.props.condition.disabled} id="typeDropdown" className="form-control col-sm-4" onChange={this.props.handleConditionTypeDropdownChange} value={this.props.condition.type}>
                         {Object.keys(staticData.conditions).map(key => (
-                            <option key={key} value={staticData.conditions[key]}>
+                            <option key={key} value={key}>
                                 {staticData.conditions[key]}
                             </option>
                         ))}

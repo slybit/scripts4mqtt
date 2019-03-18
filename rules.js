@@ -430,13 +430,13 @@ class SetValueAction extends Action {
     constructor(json) {
         super(json);
         this.topic = json.topic;
-        this.val = json.val;
+        this.value = json.value;
     }
 
     execute() {
-        if (this.topic !== undefined && this.val !== undefined ) {
-            Engine.getInstance().mqttClient.publish(this.topic, JSON.stringify(this.val));
-            logger.info('SetValueAction published %s -> %s', this.topic, this.val);
+        if (this.topic !== undefined && this.value !== undefined ) {
+            Engine.getInstance().mqttClient.publish(this.topic, JSON.stringify(this.value));
+            logger.info('SetValueAction published %s -> %s', this.topic, this.value);
         }
         
         //TODO: make value mustache expression
@@ -651,7 +651,7 @@ class SimpleCondition extends Condition {
 
     constructor(json) {
         super(json);
-        this.state = json.options ? (json.options.val == true) : false;
+        this.state = json.options ? (json.options.value == true) : false;
     }
 
     evaluate() {
