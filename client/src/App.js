@@ -3,14 +3,13 @@ import { DragDropContext } from 'react-dnd';
 import HTML5Backend from 'react-dnd-html5-backend';
 import { AppContainer, AppNav, AppBody, AppEditor, AppFooter, Title, AppContent } from "./containers";
 import { RuleList } from './RuleList';
-import { EditRule } from './EditRule';
+import { RuleEditor } from './RuleEditor';
 import axios from 'axios';
 
 class App extends Component {
   constructor() {
     super();
-    this.state = {
-      static: {},
+    this.state = {      
       rules: [],
       selectedRule: undefined,
       rule: {}
@@ -20,18 +19,11 @@ class App extends Component {
   loadRuleListFromServer() {
     axios.get('/api/rules')
     .then((response) => {
-      this.setState( { rules: response.data });
-    })
-    .catch((error) => {
-      console.log(error);
-    });
-  }
-
-
-  loadStaticDataFromServer() {
-    axios.get('/api/static')
-    .then((response) => {
-      this.setState( { static: response.data });
+      console.log(response.data);
+      this.setState( {         
+        rules: response.data,
+        selectedRule: response.data[0].key
+      });
     })
     .catch((error) => {
       console.log(error);
@@ -42,7 +34,6 @@ class App extends Component {
 
   componentDidMount() {
     this.loadRuleListFromServer();
-    this.loadStaticDataFromServer();
   }
 
   handleRuleClick(key) {
@@ -61,7 +52,7 @@ class App extends Component {
               <RuleList data={this.state.rules} onClick={this.handleRuleClick.bind(this)}/>
           </AppNav>
           {this.state.selectedRule &&          
-            <EditRule id={this.state.selectedRule} static={this.state.static} />          
+            <RuleEditor id={this.state.selectedRule} />          
           }
         </AppBody>
         

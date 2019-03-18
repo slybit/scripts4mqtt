@@ -307,6 +307,16 @@ class Rule {
     }
 
     static evalLogic(logic) {
+        // logic can only be an array in the first iteration
+        // we just turn in in an "or"
+        if (Array.isArray(logic)) {
+            console.log("was array");
+            return Rule.evalLogic({
+                type: "or",
+                condition: logic
+            });
+        }
+
         if (logic.type === "or") {
             let result = logic.condition.length === 0 ? true : false;
             for (let c of logic.condition) {

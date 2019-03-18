@@ -4,7 +4,7 @@ TimeDateUpdate:
     type: cron
     trigger: always
     options:
-      'on': '2 * * * *'
+      'on': '2 * * * *'    
   ontrue:
     - type: script
       script: 'write(''knx/write/15/1/0'', new Date().toString());'

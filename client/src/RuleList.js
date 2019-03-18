@@ -2,16 +2,18 @@ import React from "react";
 import Icon from '@mdi/react'
 import { mdiProgressClock, mdiOwl, mdiDelete } from '@mdi/js'
 
+const pushRightStyle = {
+    float: 'right',
+    cursor: 'pointer'
+};
+
 export class RuleList extends React.Component {
     onItemSelection = arg => {
         //this.setState({ selectedPath: arg.path });
     };
 
     render() {
-        const pushRightStyle = {
-            float: 'right',
-            cursor: 'pointer'
-        };
+        
 
         const items = this.props.data.map(rule => (
             <li className="list-group-item" key={rule.key} id={rule.key}> 

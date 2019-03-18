@@ -53,7 +53,7 @@ export const AppContent = styled.div`
 export const AppEditor = styled.div`
   flex: 1;
   order: 100;
-  padding: 10px;
+  padding: 5px;
   overflow-y: auto;
   min-height: 0px;
   border: 1px solid rgba(0, 0, 0, 0.125);  
@@ -64,13 +64,11 @@ export const Title = styled.div`
   justify-content: center;
   align-items: center;
   padding: 12px;
-  font-size: 130%;
+  font-size: 110%;  
 `;
 
 export const Container = styled.div`
-  border: 1px solid #0000DD;
-  background: #e9e9e9;
-  padding: 2px;
-  margin: 8px;
+  border: 1px solid #0000DD;  
+  padding: 10px;  
 `;
 
