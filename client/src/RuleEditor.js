@@ -6,6 +6,7 @@ import { Button } from 'reactstrap';
 import Sortly, { convert, add, insert, remove } from 'react-sortly';
 import { flattenConditions, deleteCondition, staticData } from './utils';
 import { ConditionEditor } from './ConditionEditor'
+import { MqttActionEditor } from './MqttActionEditor'
 import axios from 'axios';
 
 export class RuleEditor extends React.Component {
@@ -62,6 +63,12 @@ export class RuleEditor extends React.Component {
     handleConditionClick = (id) => {
         console.log(id);
         this.selectCondition(id);
+    }
+
+    handleActionClick = (index) => {
+        console.log("setting action: ");
+        console.log(this.state.onTrue[index]);
+        this.setState( { action: this.state.onTrue[index] } );
     }
 
     
@@ -183,7 +190,7 @@ export class RuleEditor extends React.Component {
 
     render() {
         const onTrueActions = this.state.onTrue.map((action, index) => (
-            <li className="list-group-item" key={index} id={index}> 
+            <li className="list-group-item" key={index} id={index} onClick={() => this.handleActionClick(index)}> 
                 {action.type}             
             </li>
         ));
@@ -194,7 +201,8 @@ export class RuleEditor extends React.Component {
             </li>
         ));
         
-
+        // TODO: get unique key for the action element
+        // TODO: mix onTrue and onFalse actions
         return (
             <AppMain>
                 <AppContent>
@@ -234,6 +242,14 @@ export class RuleEditor extends React.Component {
                         handleConditionOptionsChange={this.handleConditionOptionsChange}
                         handleConditionSaveClick={this.handleConditionSaveClick}
                         handleConditionDeleteClick={this.handleConditionDeleteClick}
+                    />
+                }
+
+                
+                { this.state.action &&
+                    <MqttActionEditor
+                        action={this.state.action}
+                        key={this.state.action.type}
                     />
                 }
 
