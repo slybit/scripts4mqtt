@@ -43,6 +43,7 @@ export class RuleEditor extends React.Component {
         }
     }
 
+    // TODO: flatten "options"
     loadRuleFromServer(key) {
         axios.get('/api/rule/' + key)
             .then((response) => {
@@ -142,7 +143,7 @@ export class RuleEditor extends React.Component {
     renderItem = props => (
         <ItemRenderer
             {...props}
-            handleConditionClick={this.handleConditionClick}
+            handleConditionClick={this.handleActionClick}
         />
     )    
 
@@ -299,7 +300,9 @@ class ItemRenderer extends React.Component {
     }
 
     handleClick = () => {
-        this.props.handleConditionClick(this.props.id);
+        console.log(this.props.type);
+        this.props.handleConditionClick(this.props.index, "flatConditions", staticData.editor.condition[this.props.type]);
+        //this.handleActionClick(props.index, "flatConditions", staticData.editor.condition[props.type])}
     }
 
     handleDeleteClick = (e) => {

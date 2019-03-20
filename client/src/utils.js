@@ -13,7 +13,7 @@ function flattenConditionsIteratively(nested, list, parent) {
     let id = list.length > 0 ? list[list.length-1].id + 1 : 1;
     let path = parent.path.slice(0);
     if (parent.id) path.push(parent.id);
-    let item = {id: id, type: nested.type, options: nested.options, path: path, isMarked: false};
+    let item = {_id: uuid(), id: id, type: nested.type, options: nested.options, path: path, isMarked: false};
     list.push(item);
     if (nested.type === 'or' || nested.type === 'and') {
         for (let n of nested.condition)
@@ -52,7 +52,13 @@ export const staticData = {
     },
     editor: {
         condition: {
-            logic: [
+            or: [
+                { key: "type", label: "Logic Operator", type: "select", options: [
+                    {value: "or", label: "OR"},
+                    {value: "and", label: "AND"}     
+                ] },
+            ],
+            and: [
                 { key: "type", label: "Logic Operator", type: "select", options: [
                     {value: "or", label: "OR"},
                     {value: "and", label: "AND"}     
@@ -63,7 +69,14 @@ export const staticData = {
                     {value: "mqtt", label: "MQTT"},
                     {value: "cron", label: "Cron expression"}     
                 ] },
-                { key: "options", label: "Condition Options", type: "textarea", props: {rows: 10} }
+                { key: "options", label: "Mqtt Options", type: "textarea", props: {rows: 10} }
+            ],
+            cron: [
+                { key: "type", label: "Condition Type", type: "select", options: [
+                    {value: "mqtt", label: "MQTT"},
+                    {value: "cron", label: "Cron expression"}     
+                ] },
+                { key: "options", label: "Cron Options", type: "textarea", props: {rows: 10} }
             ],
         },
         action: {
