@@ -1,22 +1,15 @@
 import React from "react";
-import Icon from '@mdi/react'
-import { mdiProgressClock, mdiOwl, mdiDelete, mdiUnfoldMoreVertical } from '@mdi/js'
-import { Title, Container, AppEditor, AppContent, AppMain } from "./containers";
+import { Title, Container, AppContent, AppMain } from "./containers";
 import { Button } from 'reactstrap';
-import Sortly, { convert, add, insert, remove } from 'react-sortly';
+import Sortly, { add } from 'react-sortly';
 import { addIds, flattenConditions, deleteCondition, staticData } from './utils';
-import { ConditionEditor } from './ConditionEditor'
 import { DynamicEditor } from './DynamicEditor'
 import axios from 'axios';
 
 export class RuleEditor extends React.Component {
 
-    defaultCondition = {
-        disabled: true,
-        optionsValid: true,
-        id: undefined,
-        options: '',
-        type: undefined
+    defaultEditorData = {
+        _id: ''
     }
 
     constructor(props) {
@@ -26,7 +19,8 @@ export class RuleEditor extends React.Component {
             onTrue: [],
             onFalse:  [],
             flatConditions: [],
-            condition: { ...this.defaultCondition }            
+            editorData: { ...this.defaultEditorData },
+            editorVisible: false            
         };
         console.log(this.state.condition);
     }
@@ -43,7 +37,6 @@ export class RuleEditor extends React.Component {
         }
     }
 
-    // TODO: flatten "options"
     loadRuleFromServer(key) {
         axios.get('/api/rule/' + key)
             .then((response) => {
@@ -64,40 +57,36 @@ export class RuleEditor extends React.Component {
     
  
 
-    handleActionClick = (index, itemType, model) => {
+    handleEditableItemClick = (index, itemType, model) => {
+        const cloned = {
+            onTrue: Object.assign([], this.state.onTrue),
+            onFalse: Object.assign([], this.state.onFalse),
+            flatConditions: Object.assign([], this.state.flatConditions)
+        }
+        this.clearMarkers(cloned);
+        cloned[itemType][index].isMarked = true;
         this.setState( { 
+            editorVisible: true,
             editorData: this.state[itemType][index],    
             editorModel: model,
             editorItemIndex: index,
-            editorItemType: itemType
+            editorItemType: itemType,
+            ...cloned
         });
     }
 
-    
-
-
-    handleConditionClick = (id) => {
-        let condition = {};
-        let cloned = Object.assign([], this.state.flatConditions);
-        for (let c of cloned) {
-            if (c.id == id) {
-                c.isMarked = true;                
-                condition = {
-                    id: id,
-                    type: c.type,
-                    options: JSON.stringify(c.options, undefined, 4),
-                    optionsValid: true,
-                    disabled: false
-                };
-            } else {
-                c.isMarked = false;
+    //TODO: move to utils
+    clearMarkers(cloned) {
+        for (let A of Object.values(cloned)) {
+            for (let i of A) {
+                i.isMarked = false;
             }
         }
-        this.setState({ flatConditions: cloned, condition: condition });
     }
 
-    
 
+    
+    //TODO: move to utils
     checkConditionOptions(options) {
         try {
             JSON.parse(options);
@@ -110,10 +99,6 @@ export class RuleEditor extends React.Component {
 
 
     handleChange = (items) => {
-        // copy rule from state
-        //let cloned = Object.assign({}, this.state.flatConditions);
-        // adapt and put back in state
-        //cloned.flatConditions = items;
         this.setState({ flatConditions: items });
         console.log(items);
     }
@@ -143,20 +128,13 @@ export class RuleEditor extends React.Component {
     renderItem = props => (
         <ItemRenderer
             {...props}
-            handleConditionClick={this.handleActionClick}
+            onEditableItemClick={this.handleEditableItemClick}
         />
     )    
 
     /* -------  Callback methods of ConditionEditor  ------- */
 
-    handleConditionTypeDropdownChange = (event) => {
-        this.setState({ condition: { ...this.state.condition, type: event.target.value } });
-    }
-
-    handleConditionOptionsChange = (event) => {
-        this.setState({ condition: { ...this.state.condition, options: event.target.value } });
-    }
-
+    // TODO: create validator for generic editor
     handleConditionSaveClick = () => {
         // check if all is ok
         let optionsValid = this.checkConditionOptions(this.state.condition.options);
@@ -176,6 +154,7 @@ export class RuleEditor extends React.Component {
         }
     }
 
+    // TODO: create generic editorItem delete
     handleConditionDeleteClick = () => {
         //if (window.confirm('Are you sure you want to save this thing into the database?')) {
         // Save it!
@@ -199,19 +178,17 @@ export class RuleEditor extends React.Component {
 
     render() {
         const onTrueActions = this.state.onTrue.map((action, index) => (
-            <li className="list-group-item" key={action._id} id={action._id} onClick={() => this.handleActionClick(index, "onTrue", staticData.editor.action[action.type])}> 
+            <li className="list-group-item" key={action._id} id={action._id} onClick={() => this.handleEditableItemClick(index, "onTrue", staticData.editor.action[action.type])}> 
                 {action.type}             
             </li>
         ));
         
         const onFalseActions = this.state.onFalse.map((action, index) => (
-            <li className="list-group-item" key={action._id} id={action._id} onClick={() => this.handleActionClick(index, "onFalse", staticData.editor.action[action.type])}> 
+            <li className="list-group-item" key={action._id} id={action._id} onClick={() => this.handleEditableItemClick(index, "onFalse", staticData.editor.action[action.type])}> 
                 {action.type}             
             </li>
         ));
         
-        // TODO: get unique key for the action element
-        // TODO: mix onTrue and onFalse actions
         return (
             <AppMain>
                 <AppContent>
@@ -244,18 +221,8 @@ export class RuleEditor extends React.Component {
 
 
                 </AppContent>
-                { !this.state.condition.disabled &&
-                    <ConditionEditor 
-                        condition={this.state.condition}
-                        handleConditionTypeDropdownChange={this.handleConditionTypeDropdownChange}
-                        handleConditionOptionsChange={this.handleConditionOptionsChange}
-                        handleConditionSaveClick={this.handleConditionSaveClick}
-                        handleConditionDeleteClick={this.handleConditionDeleteClick}
-                    />
-                }
 
-                
-                { this.state.editorData &&
+                { this.state.editorVisible &&
                     <DynamicEditor
                         editorData={this.state.editorData}
                         model={this.state.editorModel}
@@ -301,12 +268,12 @@ class ItemRenderer extends React.Component {
 
     handleClick = () => {
         console.log(this.props.type);
-        this.props.handleConditionClick(this.props.index, "flatConditions", staticData.editor.condition[this.props.type]);
-        //this.handleActionClick(props.index, "flatConditions", staticData.editor.condition[props.type])}
+        this.props.onEditableItemClick(this.props.index, "flatConditions", staticData.editor.condition[this.props.type]);
     }
 
     handleDeleteClick = (e) => {
         e.stopPropagation();
+        // TODO: generic delete
         this.props.handleConditionDeleteClick(this.props.id);
     }
 
@@ -315,6 +282,8 @@ class ItemRenderer extends React.Component {
             type, path, isMarked, connectDragSource, connectDropTarget,
             isDragging, isClosestDragging
         } = this.props;
+
+        console.log(this.props.editorData);
         
         let label = "";
         switch (type) {
@@ -345,27 +314,3 @@ class ItemRenderer extends React.Component {
 
 
 
-class _Condition extends React.Component {
-
-    renderUI() {
-        if (!this.props.data) {
-            return (<div>No condition</div>);
-        }
-        if (this.props.data.type === 'or' || this.props.data.type === 'and') {
-            let ui = [];
-            for (let i in this.props.data.condition) {
-                ui.push(<_Condition key={i} data={this.props.data.condition[i]} />);
-            }
-            return ui;
-        }
-    }
-
-    render() {
-        return (
-            <Container>
-                {this.props.data.type}
-                {this.renderUI()}
-            </Container>
-        );
-    }
-}
