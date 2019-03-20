@@ -21,11 +21,10 @@ Bel:
       eval: '{{M.val}} == 1'
   ontrue:
     - type: pushover
-      msg:
-        message: Notification from script4mqtt
-        title: Bel! Bel!
-        sound: bike
-        priority: 1  
+      message: Notification from script4mqtt
+      title: Bel! Bel!
+      sound: bike
+      priority: 1  
 
 Achtergevel:
   name: Afdak_achteraan

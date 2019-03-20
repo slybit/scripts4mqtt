@@ -52,7 +52,7 @@ class Rules {
     saveRules() {
         logger.info("saving rules");        
         try {            
-            fs.writeFileSync(filename, yaml.safeDump(this.jsonContents));            
+            fs.writeFileSync("newrules.yaml", yaml.safeDump(this.jsonContents));            
         } catch (e) {
             logger.error(e);
         }
@@ -501,7 +501,12 @@ class PushoverAction extends Action {
 
     constructor(json) {
         super(json);
-        this.msg = json.msg;        
+        this.msg = {
+            message: json.message,
+            title:  json.title,
+            sound: json.sound ? json.sound : "none",
+            priority: json.priority ? json.priority : 0
+        }
     }
 
     execute() {

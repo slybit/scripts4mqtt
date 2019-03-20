@@ -6,7 +6,7 @@ import { Button } from 'reactstrap';
 import Sortly, { convert, add, insert, remove } from 'react-sortly';
 import { addIds, flattenConditions, deleteCondition, staticData } from './utils';
 import { ConditionEditor } from './ConditionEditor'
-import { MqttActionEditor } from './MqttActionEditor'
+import { DynamicEditor } from './DynamicEditor'
 import axios from 'axios';
 
 export class RuleEditor extends React.Component {
@@ -60,19 +60,22 @@ export class RuleEditor extends React.Component {
             });
     }
 
-    handleConditionClick = (id) => {
-        console.log(id);
-        this.selectCondition(id);
-    }
+    
+ 
 
-    handleActionClick = (index) => {
-        this.setState( { action: this.state.onTrue[index] } );
+    handleActionClick = (index, itemType, model) => {
+        this.setState( { 
+            editorData: this.state[itemType][index],    
+            editorModel: model,
+            editorItemIndex: index,
+            editorItemType: itemType
+        });
     }
 
     
 
 
-    selectCondition = (id) => {
+    handleConditionClick = (id) => {
         let condition = {};
         let cloned = Object.assign([], this.state.flatConditions);
         for (let c of cloned) {
@@ -181,18 +184,27 @@ export class RuleEditor extends React.Component {
         this.setState({ flatConditions: deleteCondition(this.state.flatConditions, this.state.condition.id), condition: { ...this.defaultCondition } });
     }
 
+    editorHandleSaveClick = (newData) => {        
+        // copy the relevant array from state
+        let cloned = Object.assign([], this.state[this.state.editorItemType]);
+        // update the relevant item
+        cloned[this.state.editorItemIndex] = newData;
+        // put back in state
+        this.setState({ [this.state.editorItemType]: cloned });        
+    }
+
 
 
 
     render() {
         const onTrueActions = this.state.onTrue.map((action, index) => (
-            <li className="list-group-item" key={action._id} id={action._id} onClick={() => this.handleActionClick(index)}> 
+            <li className="list-group-item" key={action._id} id={action._id} onClick={() => this.handleActionClick(index, "onTrue", staticData.editor.action[action.type])}> 
                 {action.type}             
             </li>
         ));
         
         const onFalseActions = this.state.onFalse.map((action, index) => (
-            <li className="list-group-item" key={action._id} id={action._id}> 
+            <li className="list-group-item" key={action._id} id={action._id} onClick={() => this.handleActionClick(index, "onFalse", staticData.editor.action[action.type])}> 
                 {action.type}             
             </li>
         ));
@@ -227,7 +239,7 @@ export class RuleEditor extends React.Component {
                         </ul>
                     </Container>
                     
-                    {true && <pre className='code'>{JSON.stringify(this.state.flatConditions, undefined, 4)}</pre>}
+                    {true && <pre className='code'>{JSON.stringify(this.state, undefined, 4)}</pre>}
 
 
                 </AppContent>
@@ -242,10 +254,12 @@ export class RuleEditor extends React.Component {
                 }
 
                 
-                { this.state.action &&
-                    <MqttActionEditor
-                        action={this.state.action}
-                        key={this.state.action._id}
+                { this.state.editorData &&
+                    <DynamicEditor
+                        editorData={this.state.editorData}
+                        model={this.state.editorModel}
+                        key={this.state.editorData._id}                                                
+                        editorHandleSaveClick={this.editorHandleSaveClick}
                     />
                 }
 

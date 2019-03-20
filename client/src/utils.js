@@ -49,6 +49,72 @@ export const staticData = {
     conditions: {        
         mqtt: "MQTT",
         cron: "Cron expression"
+    },
+    editor: {
+        condition: {
+            logic: [
+                { key: "type", label: "Logic Operator", type: "select", options: [
+                    {value: "or", label: "OR"},
+                    {value: "and", label: "AND"}     
+                ] },
+            ],
+            mqtt: [
+                { key: "type", label: "Condition Type", type: "select", options: [
+                    {value: "mqtt", label: "MQTT"},
+                    {value: "cron", label: "Cron expression"}     
+                ] },
+                { key: "options", label: "Condition Options", type: "textarea", props: {rows: 10} }
+            ],
+        },
+        action: {
+            mqtt: [
+                { key: "topic", label: "Topic", props: {required: true} },
+                { key: "value", label: "Value", props: {required: true} },
+            ],
+            pushover: [
+                { key: "title", label: "Title", props: {required: true} },
+                { key: "message", label: "Message", type: "textarea", props: {rows: 5} },
+                { key: "sound", label: "Sound", type: "select", options: [
+                    {value: "pushover", label: "Pushover"},
+                    {value: "bike", label: "Bike"},
+                    {value: "bugle", label: "Bugle"},
+                    {value: "cashregister", label: "Cash Register"},
+                    {value: "classical", label: "Classical"},
+                    {value: "cosmic", label: "Cosmic"},
+                    {value: "falling", label: "Falling"},
+                    {value: "gamelan", label: "Gamelan"},
+                    {value: "incoming", label: "Incoming"},
+                    {value: "intermission", label: "Intermission"},
+                    {value: "magic", label: "Magic"},
+                    {value: "mechanical", label: "Mechanical"},
+                    {value: "pianobar", label: "Piano Bar"},
+                    {value: "siren", label: "Siren"},
+                    {value: "spacealarm", label: "Space Alarm"},
+                    {value: "tugboat", label: "Tug Boat"},
+                    {value: "alien", label: "Alien Alarm (long)"},
+                    {value: "climb", label: "Climb (long)"},
+                    {value: "persistent", label: "Persistent (long)"},
+                    {value: "echo", label: "Pushover Echo (long)"},
+                    {value: "updown", label: "Up Down (long)"},
+                    {value: "none", label: "None (silent)"}                
+                ] },
+                { key: "priority", label: "Priority", type: "select", options: [
+                    {value: "2", label: "Emergency"},
+                    {value: "1", label: "High"},
+                    {value: "0", label: "Normal"},
+                    {value: "-1", label: "Low"},
+                    {value: "-2", label: "Lowest"}                
+                ] }
+            ],
+            email: [
+                { key: "to", label: "To", props: {required: true} },
+                { key: "subject", label: "Subject" },
+                { key: "body", label: "Body", type: "textarea", props: {rows: 10} }
+            ],
+            script: [            
+                { key: "script", label: "Script", type: "textarea", props: {rows: 30, style: {fontFamily: 'monospace', fontSize: '1rem'}} }
+            ]
+        }
     }
 }
 
