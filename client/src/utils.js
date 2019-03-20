@@ -69,6 +69,13 @@ export const staticData = {
                     {value: "mqtt", label: "MQTT"},
                     {value: "cron", label: "Cron expression"}     
                 ] },
+                { key: "trigger", label: "Trigger", type: "select", options: [
+                    {value: "no", label: "No"},
+                    {value: "on_flip", label: "On flip"},
+                    {value: "on_flip_true", label: "On flip to True"},
+                    {value: "on_flip_false", label: "On flip to False"},
+                    {value: "always", label: "Always"}
+                ] },
                 { key: "topic", label: "Topic", props: {required: true} },
                 { key: "eval", label: "Eval", props: {required: true} }
             ],
@@ -76,6 +83,13 @@ export const staticData = {
                 { key: "type", label: "Condition Type", type: "select", options: [
                     {value: "mqtt", label: "MQTT"},
                     {value: "cron", label: "Cron expression"}     
+                ] },
+                { key: "trigger", label: "Trigger", type: "select", options: [
+                    {value: "no", label: "No"},
+                    {value: "on_flip", label: "On flip"},
+                    {value: "on_flip_true", label: "On flip to True"},
+                    {value: "on_flip_false", label: "On flip to False"},
+                    {value: "always", label: "Always"}
                 ] },
                 { key: "on", label: "On expression", props: {required: true} },
                 { key: "off", label: "Off expression" }
