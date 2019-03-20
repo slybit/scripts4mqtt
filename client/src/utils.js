@@ -13,7 +13,7 @@ function flattenConditionsIteratively(nested, list, parent) {
     let id = list.length > 0 ? list[list.length-1].id + 1 : 1;
     let path = parent.path.slice(0);
     if (parent.id) path.push(parent.id);
-    let item = {_id: uuid(), id: id, type: nested.type, options: nested.options, path: path, isMarked: false};
+    let item = {_id: uuid(), id: id, path: path, isMarked: false, ...nested};
     list.push(item);
     if (nested.type === 'or' || nested.type === 'and') {
         for (let n of nested.condition)
@@ -69,14 +69,16 @@ export const staticData = {
                     {value: "mqtt", label: "MQTT"},
                     {value: "cron", label: "Cron expression"}     
                 ] },
-                { key: "options", label: "Mqtt Options", type: "textarea", props: {rows: 10} }
+                { key: "topic", label: "Topic", props: {required: true} },
+                { key: "eval", label: "Eval", props: {required: true} }
             ],
             cron: [
                 { key: "type", label: "Condition Type", type: "select", options: [
                     {value: "mqtt", label: "MQTT"},
                     {value: "cron", label: "Cron expression"}     
                 ] },
-                { key: "options", label: "Cron Options", type: "textarea", props: {rows: 10} }
+                { key: "on", label: "On expression", props: {required: true} },
+                { key: "off", label: "Off expression" }
             ],
         },
         action: {

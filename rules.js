@@ -581,8 +581,8 @@ class MqttCondition extends Condition {
 
     constructor(json) {
         super(json);
-        this.topic = json.options ? json.options.topic : undefined;
-        this.eval = json.options ? json.options.eval : undefined;
+        this.topic = json.topic;
+        this.eval = json.eval;
         if (!(this.topic && this.eval))
             throw new Error('Mqtt condition missing topic or eval');
     }
@@ -611,8 +611,8 @@ class MqttCondition extends Condition {
 class CronCondition extends Condition {
     constructor(json) {
         super(json);
-        this.onExpression = json.options ? json.options.on : undefined;
-        this.offExpression = json.options ? json.options.off : undefined;
+        this.onExpression = json.on;
+        this.offExpression = json.off;
         if (!(this.onExpression))
             throw new Error('Cron condition missing on expression');
         if (!this.validateExpression(this.onExpression))
@@ -656,7 +656,7 @@ class SimpleCondition extends Condition {
 
     constructor(json) {
         super(json);
-        this.state = json.options ? (json.options.value == true) : false;
+        this.state = json.value ? true : false;
     }
 
     evaluate() {
