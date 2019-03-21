@@ -1,0 +1,241 @@
+TimeDateUpdate:
+  name: TimeDateUpdate
+  condition:
+    type: cron
+    trigger: always
+    'on': 2 * * * *
+  ontrue:
+    - type: script
+      script: |-
+        write('knx/write/15/1/0', new Date().toString());
+        log.info('test');
+      isMarked: true
+    - type: script
+      script: |
+        write('knx/write/15/1/1', new Date().toString());
+      isMarked: false
+Bel:
+  name: Bel
+  condition:
+    type: mqtt
+    trigger: on_flip_true
+    topic: knx/status/15/2/3
+    eval: '{{M.val}} == 1'
+  ontrue:
+    - type: pushover
+      message: Notification from script4mqtt
+      title: Bel! Bel!
+      sound: bike
+      priority: 1
+Achtergevel:
+  name: Afdak_achteraan
+  condition:
+    type: and
+    condition:
+      - type: mqtt
+        topic: knx/status/15/2/30
+        eval: '{{M.val}} == "0x01"'
+      - type: or
+        condition:
+          - type: mqtt
+            trigger: always
+            topic: knx/status/14/0/14
+            eval: '{{M.val}} == 0'
+          - type: mqtt
+            trigger: always
+            topic: knx/status/14/0/15
+            eval: '{{M.val}} == 0'
+  ontrue:
+    - type: mqtt
+      topic: knx/set/0/0/208
+      value: 1
+  onfalse:
+    - type: mqtt
+      topic: knx/set/0/0/208
+      value: 0
+Voordeur:
+  name: Voordeur
+  condition:
+    type: and
+    condition:
+      - type: mqtt
+        topic: knx/status/15/2/30
+        eval: '{{M.val}} == "0x01"'
+      - type: mqtt
+        trigger: always
+        topic: knx/status/14/0/1
+        eval: '{{M.val}} == 0'
+  ontrue:
+    - type: mqtt
+      topic: knx/set/0/0/200
+      value: 1
+    - type: mqtt
+      topic: knx/set/0/0/201
+      value: 1
+    - type: mqtt
+      topic: knx/set/0/0/202
+      value: 1
+Afdak:
+  name: Afdak
+  condition:
+    type: mqtt
+    trigger: always
+    topic: knx/status/15/2/10
+    eval: '{{M.val}} == 1'
+  ontrue:
+    - type: script
+      script: |-
+        var a = get("mode", 0);
+        a = (a + 1) % 4;
+        put("mode", a);
+        log.info(a);        
+        switch (a) {
+          case 0:
+            write("knx/write/0/0/207", 0);
+            write("knx/write/0/0/208", 0);
+            break;
+          case 1:
+            write("knx/write/0/0/207", "1");
+            write("knx/write/0/0/208", "0");
+            break;
+          case 2:
+            write("knx/write/0/0/207", "1");
+            write("knx/write/0/0/208", "1");
+            break;
+          case 3:
+            write("knx/write/0/0/207", "0");
+            write("knx/write/0/0/208", "1");
+            break;
+        }
+StatusBeneden:
+  name: StatusBeneden
+  condition:
+    type: or
+    condition:
+      - type: mqtt
+        trigger: always
+        topic: knx/status/0/0/15
+        eval: '{{M.val}} == 1'
+      - type: mqtt
+        trigger: always
+        topic: knx/status/0/0/16
+        eval: '{{M.val}} == 1'
+      - type: mqtt
+        trigger: always
+        topic: knx/status/0/0/17
+        eval: '{{M.val}} == 1'
+      - type: mqtt
+        trigger: always
+        topic: knx/status/0/0/18
+        eval: '{{M.val}} == 1'
+      - type: mqtt
+        trigger: always
+        topic: knx/status/0/0/19
+        eval: '{{M.val}} == 1'
+      - type: mqtt
+        trigger: always
+        topic: knx/status/0/0/20
+        eval: '{{M.val}} == 1'
+      - type: mqtt
+        trigger: always
+        topic: knx/status/0/0/22
+        eval: '{{M.val}} == 1'
+      - type: mqtt
+        trigger: always
+        topic: knx/status/0/0/23
+        eval: '{{M.val}} == 1'
+      - type: mqtt
+        trigger: always
+        topic: knx/status/0/0/207
+        eval: '{{M.val}} == 1'
+      - type: mqtt
+        trigger: always
+        topic: knx/status/0/0/208
+        eval: '{{M.val}} == 1'
+      - type: mqtt
+        trigger: always
+        topic: knx/status/0/0/211
+        eval: '{{M.val}} == 1'
+      - type: mqtt
+        trigger: always
+        topic: knx/status/0/0/212
+        eval: '{{M.val}} == 1'
+  ontrue:
+    - type: mqtt
+      topic: knx/set/0/6/1
+      value: 1
+  onfalse:
+    - type: mqtt
+      topic: knx/set/0/6/1
+      value: 0
+BadkamerVentilatie:
+  name: BadkamerVentilatie
+  condition:
+    type: mqtt
+    trigger: always
+    topic: knx/status/15/2/6
+    eval: '{{M.val}} == 1'
+  ontrue:
+    - type: mqtt
+      topic: knx/set/2/0/0
+      value: 1
+    - type: mqtt
+      topic: knx/set/2/2/3
+      value: 1
+    - type: mqtt
+      topic: knx/set/2/1/4
+      value: 1
+      delay: 500
+    - type: mqtt
+      topic: hass/ventilation
+      value: low
+      delay: 600000
+    - type: mqtt
+      topic: knx/set/2/1/4
+      value: 0
+      delay: 600000
+Ventilatie:
+  name: Ventilatie
+  condition:
+    type: mqtt
+    trigger: always
+    topic: hass/write/ventilation
+    eval: 'true'
+  ontrue:
+    - type: script
+      script: |-
+        var mode = read("hass/write/ventilation").data.val;        
+        log.info(JSON.stringify(mode));        
+        switch (mode) {
+          case "off":
+            write("knx/write/2/0/0", 0);
+            write("hass/status/ventilation/off", 1, true);
+            write("hass/status/ventilation/low", 0, true);
+            write("hass/status/ventilation/medium", 0, true);
+            write("hass/status/ventilation/high", 0, true);
+            break;
+          case "low":
+            write("knx/write/2/0/0", "1");
+            write("knx/write/2/2/1", "1");
+            write("hass/status/ventilation/off", 0, true);
+            write("hass/status/ventilation/low", 1, true);
+            write("hass/status/ventilation/medium", 0, true);
+            write("hass/status/ventilation/high", 0, true);
+            break;
+          case "medium":
+            write("knx/write/2/0/0", "1");
+            write("knx/write/2/2/2", "1");
+            write("hass/status/ventilation/off", 0, true);
+            write("hass/status/ventilation/low", 0, true);
+            write("hass/status/ventilation/medium", 1, true);
+            write("hass/status/ventilation/high", 0, true);
+            break;
+          case "high":
+            write("knx/write/2/0/0", "1");
+            write("knx/write/2/2/3", "1");
+            write("hass/status/ventilation/off", 0, true);
+            write("hass/status/ventilation/low", 0, true);
+            write("hass/status/ventilation/medium", 0, true);
+            write("hass/status/ventilation/high", 1, true);
+            break;
+        }  

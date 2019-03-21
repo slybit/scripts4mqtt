@@ -161,6 +161,7 @@ class Rules {
         return this.updateRule(id, input);
     }
 
+    /*
     updateRule(id, input) {
         try {
             const rule = new Rule(input);
@@ -168,6 +169,19 @@ class Rules {
             this.jsonContents[id] = input;
             this.saveRules();
             console.log(JSON.stringify(this.jsonContents));
+            return id;
+        } catch (err) {
+            logger.warn(err);
+            return err.message;
+        }
+    }
+    */
+    updateRule(id, input) {
+        try {            
+            Object.assign(this.jsonContents[id], input);
+            const rule = new Rule(this.jsonContents[id]);
+            this.rules[id] = rule;
+            this.saveRules();            
             return id;
         } catch (err) {
             logger.warn(err);
@@ -308,7 +322,7 @@ class Rule {
 
     static evalLogic(logic) {
         // logic can only be an array in the first iteration
-        // we just turn in in an "or"
+        // we just turn it in an "or"
         if (Array.isArray(logic)) {
             console.log("was array");
             return Rule.evalLogic({

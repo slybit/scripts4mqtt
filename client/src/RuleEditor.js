@@ -2,24 +2,21 @@ import React from "react";
 import { Title, Container, AppContent, AppMain } from "./containers";
 import { Button } from 'reactstrap';
 import Sortly, { add } from 'react-sortly';
-import { addIds, flattenConditions, deleteCondition, staticData } from './utils';
+import { addIds, stripIds, flattenConditions, deleteCondition, staticData  } from './utils';
 import { DynamicEditor } from './DynamicEditor'
 import axios from 'axios';
 
 export class RuleEditor extends React.Component {
 
-    defaultEditorData = {
-        _id: ''
-    }
+    
 
     constructor(props) {
         super(props);
         this.state = {
             ruleId: undefined,
-            onTrue: [],
-            onFalse:  [],
-            flatConditions: [],
-            editorData: { ...this.defaultEditorData },
+            ontrue: [],
+            onfalse:  [],
+            flatConditions: [],    
             editorVisible: false            
         };
         console.log(this.state.condition);
@@ -37,17 +34,34 @@ export class RuleEditor extends React.Component {
         }
     }
 
-    loadRuleFromServer(key) {
-        axios.get('/api/rule/' + key)
+    loadRuleFromServer(id) {
+        axios.get('/api/rule/' + id)
             .then((response) => {
                 console.log(response.data);
                 this.setState({ 
                     ruleId: response.data.id,
-                    onTrue: response.data.ontrue ? addIds(response.data.ontrue, "onTrue") : [],
-                    onFalse:  response.data.onfalse ? addIds(response.data.onfalse, "onFalse") : [],
-                    flatConditions: flattenConditions(response.data.condition),
-                    condition: { ...this.defaultCondition }
+                    ontrue: response.data.ontrue ? addIds(response.data.ontrue) : [],
+                    onfalse:  response.data.onfalse ? addIds(response.data.onfalse) : [],
+                    flatConditions: flattenConditions(response.data.condition)
                 });                
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+    }
+
+    /* 
+      Pushes one or more fields of a rule to the server.
+      Item should be an object with one or more of these fields:
+      - name
+      - condition
+      - ontrue
+      - onfalse
+    */
+    updateRuleToServer(id, item) {
+        axios.put('/api/rule/' + id, item)
+            .then((response) => {
+                console.log(response.data);                
             })
             .catch((error) => {
                 console.log(error);
@@ -59,8 +73,8 @@ export class RuleEditor extends React.Component {
 
     handleEditableItemClick = (index, itemType, model) => {
         const cloned = {
-            onTrue: Object.assign([], this.state.onTrue),
-            onFalse: Object.assign([], this.state.onFalse),
+            ontrue: Object.assign([], this.state.ontrue),
+            onfalse: Object.assign([], this.state.onfalse),
             flatConditions: Object.assign([], this.state.flatConditions)
         }
         this.clearMarkers(cloned);
@@ -164,27 +178,34 @@ export class RuleEditor extends React.Component {
         this.setState({ flatConditions: deleteCondition(this.state.flatConditions, this.state.condition.id), condition: { ...this.defaultCondition } });
     }
 
-    editorHandleSaveClick = (newData) => {        
+    editorHandleSaveClick = (newData) => {
         // copy the relevant array from state
         let cloned = Object.assign([], this.state[this.state.editorItemType]);
         // update the relevant item
         cloned[this.state.editorItemIndex] = newData;
+        // we first try to push it to the server
+        let item = { [this.state.editorItemType] : stripIds(cloned)}                
+        this.updateRuleToServer(this.state.ruleId, item);
         // put back in state
-        this.setState({ [this.state.editorItemType]: cloned });        
+        this.setState({ [this.state.editorItemType]: cloned });     
+           
     }
 
 
 
 
     render() {
-        const onTrueActions = this.state.onTrue.map((action, index) => (
-            <li className="list-group-item" key={action._id} id={action._id} onClick={() => this.handleEditableItemClick(index, "onTrue", staticData.editor.action[action.type])}> 
-                {action.type}             
+        const ontrueActions = this.state.ontrue.map((action, index) => (
+            <li className="list-group-item" 
+                key={action._id} id={action._id} 
+                style={action.isMarked ? selectedStyle : {}}
+                onClick={() => this.handleEditableItemClick(index, "ontrue", staticData.editor.action[action.type])}> 
+                    {action.type}             
             </li>
         ));
         
-        const onFalseActions = this.state.onFalse.map((action, index) => (
-            <li className="list-group-item" key={action._id} id={action._id} onClick={() => this.handleEditableItemClick(index, "onFalse", staticData.editor.action[action.type])}> 
+        const onfalseActions = this.state.onfalse.map((action, index) => (
+            <li className="list-group-item" key={action._id} id={action._id} onClick={() => this.handleEditableItemClick(index, "onfalse", staticData.editor.action[action.type])}> 
                 {action.type}             
             </li>
         ));
@@ -209,11 +230,11 @@ export class RuleEditor extends React.Component {
                     <Container>
                         <p><b>On True:</b></p>
                         <ul className="list-group">
-                            {onTrueActions}                
+                            {ontrueActions}                
                         </ul>
                         <p><b>On False:</b></p>
                         <ul className="list-group">
-                            {onFalseActions}                
+                            {onfalseActions}                
                         </ul>
                     </Container>
                     
@@ -253,8 +274,9 @@ const muteStyle = {
 }
 
 const selectedStyle = {
-    border: '1px solid black',
-    background: 'orange'
+    background: '#e2edff',
+    color: 'blue',
+    fontWeight: 600,    
 }
 
 

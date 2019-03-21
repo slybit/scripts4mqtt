@@ -1,25 +1,71 @@
 export function flattenConditions(nested) {    
     let list = [];
     let parent = {path: []};
+
+    function flattenConditionsIteratively(nested, list, parent) {
+        let id = list.length > 0 ? list[list.length-1].id + 1 : 1;
+        let path = parent.path.slice(0);
+        if (parent.id) path.push(parent.id);
+        let item = {_id: uuid(), id: id, path: path, isMarked: false, ...nested};
+        list.push(item);
+        if (nested.type === 'or' || nested.type === 'and') {
+            for (let n of nested.condition)
+                flattenConditionsIteratively(n, list, item);
+        }
+    }
+
     if (Array.isArray(nested)) {
         for (let n of nested)
             flattenConditionsIteratively(n, list, parent);
     } else 
         flattenConditionsIteratively(nested, list, parent);
+
+    console.log(JSON.stringify(nestConditions(stripIds(list)), undefined, 4));
+
+    
     return list;
 }
 
-function flattenConditionsIteratively(nested, list, parent) {
-    let id = list.length > 0 ? list[list.length-1].id + 1 : 1;
-    let path = parent.path.slice(0);
-    if (parent.id) path.push(parent.id);
-    let item = {_id: uuid(), id: id, path: path, isMarked: false, ...nested};
-    list.push(item);
-    if (nested.type === 'or' || nested.type === 'and') {
-        for (let n of nested.condition)
-            flattenConditionsIteratively(n, list, item);
+
+
+export function nestConditions(flattened) {
+    if (!Array.isArray(flattened)) {
+        throw new TypeError('input must be of type Array');
     }
+    
+    const condition = {
+        "id" : "__root__",
+        "type" : "or",
+        "condition" : []
+    };
+
+    function insert(item, cond) {
+        //console.log(cond.condition);
+        if (cond.id === item.path[item.path.length - 1] || cond.id === "__root__") {
+            console.log('found');
+            delete item.path;
+            if (item.type === 'or' || item.type === 'and') {
+                item.condition = [];
+            } else {
+                delete item.id;
+            }
+            cond.condition.push(item);
+            return;
+        }
+        else if (cond.type === 'or' || cond.type === 'and') {
+            for (let c of cond.condition) {
+                insert(item, c)
+            }
+        }
+    }
+
+    for (let item of flattened) {
+        insert(item, condition);
+    }
+    return condition;
 }
+
+
 
 export function deleteCondition(flatList, id) {
     console.log("deleting " + id);
@@ -33,12 +79,17 @@ export function deleteCondition(flatList, id) {
     return newList;
 }
 
-export function addIds(list, itemType) {
-    for (let item of list) {
+export function addIds(list) {
+    for (let item of list)
         item._id = uuid();
-        item._type = itemType;
-    }
     return list;
+}
+
+export function stripIds(list) {
+    const cloned = JSON.parse(JSON.stringify(list));
+    for (let item of cloned)
+        delete item._id;
+    return cloned;
 }
 
 export function uuid(a) {
