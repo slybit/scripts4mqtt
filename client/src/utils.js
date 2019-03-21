@@ -1,18 +1,21 @@
-export function flattenConditions(nested) {    
-    let list = [];
-    let parent = {path: []};
 
-    function flattenConditionsIteratively(nested, list, parent) {
+
+export function flattenConditions(nested) {  
+    const flattenConditionsIteratively = (nested, list, parent) => {
         let id = list.length > 0 ? list[list.length-1].id + 1 : 1;
         let path = parent.path.slice(0);
         if (parent.id) path.push(parent.id);
-        let item = {_id: uuid(), id: id, path: path, isMarked: false, ...nested};
+        let item = {id: id, path: path, ...nested};
+        delete item.condition; // otherwise the nested conditions all stay in
         list.push(item);
         if (nested.type === 'or' || nested.type === 'and') {
             for (let n of nested.condition)
                 flattenConditionsIteratively(n, list, item);
         }
     }
+    
+    let list = [];
+    let parent = {path: []};
 
     if (Array.isArray(nested)) {
         for (let n of nested)
@@ -20,50 +23,30 @@ export function flattenConditions(nested) {
     } else 
         flattenConditionsIteratively(nested, list, parent);
 
-    console.log(JSON.stringify(nestConditions(stripIds(list)), undefined, 4));
-
-    
     return list;
 }
 
 
 
-export function nestConditions(flattened) {
-    if (!Array.isArray(flattened)) {
-        throw new TypeError('input must be of type Array');
-    }
-    
-    const condition = {
-        "id" : "__root__",
-        "type" : "or",
-        "condition" : []
+export function buildTree(items) {
+    const buildItem = (item) => {
+      const { path, isMarked, id, ...data } = item;
+      const result = {
+        ...data,
+        condition: items
+          .filter(child => child.path[child.path.length - 1] === item.id)
+          .map(child => buildItem(child)),
+      };
+      if (result.condition.length === 0) delete result.condition;
+      return result;
     };
-
-    function insert(item, cond) {
-        //console.log(cond.condition);
-        if (cond.id === item.path[item.path.length - 1] || cond.id === "__root__") {
-            console.log('found');
-            delete item.path;
-            if (item.type === 'or' || item.type === 'and') {
-                item.condition = [];
-            } else {
-                delete item.id;
-            }
-            cond.condition.push(item);
-            return;
-        }
-        else if (cond.type === 'or' || cond.type === 'and') {
-            for (let c of cond.condition) {
-                insert(item, c)
-            }
-        }
-    }
-
-    for (let item of flattened) {
-        insert(item, condition);
-    }
-    return condition;
-}
+    const tree = items
+      .filter(item => item.path.length === 0)
+      .map(item => buildItem(item));
+  
+    return tree;
+  }
+  
 
 
 
@@ -87,8 +70,10 @@ export function addIds(list) {
 
 export function stripIds(list) {
     const cloned = JSON.parse(JSON.stringify(list));
-    for (let item of cloned)
+    for (let item of cloned) {
         delete item._id;
+        delete item.isMarked;
+    }
     return cloned;
 }
 
@@ -116,10 +101,6 @@ export const staticData = {
                 ] },
             ],
             mqtt: [
-                { key: "type", label: "Condition Type", type: "select", options: [
-                    {value: "mqtt", label: "MQTT"},
-                    {value: "cron", label: "Cron expression"}     
-                ] },
                 { key: "trigger", label: "Trigger", type: "select", options: [
                     {value: "no", label: "No"},
                     {value: "on_flip", label: "On flip"},
@@ -131,10 +112,6 @@ export const staticData = {
                 { key: "eval", label: "Eval", props: {required: true} }
             ],
             cron: [
-                { key: "type", label: "Condition Type", type: "select", options: [
-                    {value: "mqtt", label: "MQTT"},
-                    {value: "cron", label: "Cron expression"}     
-                ] },
                 { key: "trigger", label: "Trigger", type: "select", options: [
                     {value: "no", label: "No"},
                     {value: "on_flip", label: "On flip"},

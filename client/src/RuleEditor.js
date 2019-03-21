@@ -2,7 +2,7 @@ import React from "react";
 import { Title, Container, AppContent, AppMain } from "./containers";
 import { Button } from 'reactstrap';
 import Sortly, { add } from 'react-sortly';
-import { addIds, stripIds, flattenConditions, deleteCondition, staticData  } from './utils';
+import { addIds, stripIds, flattenConditions, buildTree, deleteCondition, staticData  } from './utils';
 import { DynamicEditor } from './DynamicEditor'
 import axios from 'axios';
 
@@ -42,7 +42,7 @@ export class RuleEditor extends React.Component {
                     ruleId: response.data.id,
                     ontrue: response.data.ontrue ? addIds(response.data.ontrue) : [],
                     onfalse:  response.data.onfalse ? addIds(response.data.onfalse) : [],
-                    flatConditions: flattenConditions(response.data.condition)
+                    flatConditions: addIds(flattenConditions(response.data.condition))
                 });                
             })
             .catch((error) => {
@@ -184,7 +184,13 @@ export class RuleEditor extends React.Component {
         // update the relevant item
         cloned[this.state.editorItemIndex] = newData;
         // we first try to push it to the server
-        let item = { [this.state.editorItemType] : stripIds(cloned)}                
+        let item = {};
+        if (this.state.editorItemType === 'flatConditions') {
+            item = { condition: buildTree(stripIds(cloned)) }
+        }
+        else
+            item = { [this.state.editorItemType] : stripIds(cloned)}  
+        console.log(JSON.stringify(item, undefined, 2));              
         this.updateRuleToServer(this.state.ruleId, item);
         // put back in state
         this.setState({ [this.state.editorItemType]: cloned });     
@@ -304,8 +310,6 @@ class ItemRenderer extends React.Component {
             type, path, isMarked, connectDragSource, connectDropTarget,
             isDragging, isClosestDragging
         } = this.props;
-
-        console.log(this.props.editorData);
         
         let label = "";
         switch (type) {

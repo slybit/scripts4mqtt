@@ -180,6 +180,7 @@ class Rules {
         try {            
             Object.assign(this.jsonContents[id], input);
             const rule = new Rule(this.jsonContents[id]);
+            console.log(JSON.stringify(this.jsonContents[id], undefined, 2));
             this.rules[id] = rule;
             this.saveRules();            
             return id;

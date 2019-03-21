@@ -6,14 +6,9 @@ TimeDateUpdate:
     'on': 2 * * * *
   ontrue:
     - type: script
-      script: |-
-        write('knx/write/15/1/0', new Date().toString());
-        log.info('test');
-      isMarked: true
+      script: 'write(''knx/write/15/1/0'', new Date().toString());'
     - type: script
-      script: |
-        write('knx/write/15/1/1', new Date().toString());
-      isMarked: false
+      script: 'write(''knx/write/15/1/1'', new Date().toString());'
 Bel:
   name: Bel
   condition:
@@ -30,21 +25,21 @@ Bel:
 Achtergevel:
   name: Afdak_achteraan
   condition:
-    type: and
-    condition:
-      - type: mqtt
-        topic: knx/status/15/2/30
-        eval: '{{M.val}} == "0x01"'
-      - type: or
-        condition:
-          - type: mqtt
-            trigger: always
-            topic: knx/status/14/0/14
-            eval: '{{M.val}} == 0'
-          - type: mqtt
-            trigger: always
-            topic: knx/status/14/0/15
-            eval: '{{M.val}} == 0'
+    - type: and
+      condition:
+        - type: mqtt
+          topic: knx/status/15/2/30
+          eval: '{{M.val}} == "0x01"'
+    - type: or
+      condition:
+        - type: mqtt
+          trigger: always
+          topic: knx/status/14/0/14
+          eval: '{{M.val}} == 0'
+        - type: mqtt
+          trigger: always
+          topic: knx/status/14/0/15
+          eval: '{{M.val}} == 0'
   ontrue:
     - type: mqtt
       topic: knx/set/0/0/208
