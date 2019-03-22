@@ -8,7 +8,7 @@ export function flattenConditions(nested) {
         let item = {id: id, path: path, ...nested};
         delete item.condition; // otherwise the nested conditions all stay in
         list.push(item);
-        if (nested.type === 'or' || nested.type === 'and') {
+        if ((nested.type === 'or' || nested.type === 'and') && nested.condition) {
             for (let n of nested.condition)
                 flattenConditionsIteratively(n, list, item);
         }

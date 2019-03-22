@@ -394,9 +394,13 @@ class Rule {
             switch (json.type.toLowerCase()) {
                 case "and":
                 case "or":
-                    if (!Array.isArray(json.condition)) {
-                        throw new Error("OR and AND conditions require an array in the condition field.");
+                    if (!json.condition) {
+                        logger.debug("Empty OR or AND provided, ignoring.");
+                        break;
                     }
+                    //if (!Array.isArray(json.condition)) {
+                    //    throw new Error("OR and AND conditions require an array in the condition field.");
+                    //}
                     c = {
                         'type': json.type.toLowerCase(),
                         'condition': this.parseCondition(json.condition)

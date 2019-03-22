@@ -1,7 +1,7 @@
 import React from "react";
 import { AppEditor, Title } from "./containers";
-import { Modal, Button, Form, FormGroup, Label, Input, FormFeedback } from 'reactstrap';
-import { staticData } from './utils'
+import { Button, Form, FormGroup, Label, Input, Alert, FormFeedback } from 'reactstrap';
+
 
 /* --------------------------------------------------------------------------------------------------------------------
   Styles
@@ -76,12 +76,12 @@ export class DynamicEditor extends React.Component {
                 console.log("Select default: ", value);
                 input = <select className="form-control" value={value} onChange={(e)=>{this.onChange(e, target)}}>{options}</select>;
             }
-
-            // TODO: add other types of input
+           
+            
             return (
                 <FormGroup key={'g' + key}>
                     <Label for={key}>{label}</Label>
-                    {input}
+                    {input}                    
                 </FormGroup>
             );
         });
@@ -94,13 +94,13 @@ export class DynamicEditor extends React.Component {
     render() {
         return (            
             <AppEditor>
-                <Title>MQTT Action</Title>
-                
-                
-                
+                <Title>{this.props.title}</Title>
                 
                 <Form className="form">                    
                     {this.renderForm()}
+                    <Alert color="danger" isOpen={this.props.alertVisible === true}>
+                        {this.props.alert}
+                    </Alert>
                     <FormGroup style={spacerStyle}>
                         <Button color="danger" outline >Delete</Button>
                         <span>
@@ -116,23 +116,3 @@ export class DynamicEditor extends React.Component {
 
 }
 
-/*
-<FormGroup row>
-                    <Label for="topic" sm={2}>Topic</Label>
-                    <Col sm={10}>
-                        <Input  type="text" id="topic" value={this.state.topic} onChange={(e)=>{this.onChange(e, "topic")}}></Input>
-                    </Col>
-                </FormGroup>
-                <FormGroup row>
-                    <Label for="value" sm={2}>Value</Label>
-                    <Col sm={10}>
-                        <Input  type="text" id="value" value={this.state.value} onChange={(e)=>{this.onChange(e, "value")}}></Input>                    
-                    </Col>
-                </FormGroup>
-
-<FormGroup row key={'g' + key}>
-                    <Label for={key} sm={2}>{label}</Label>
-                    <Col sm={10}>{input}</Col>
-                </FormGroup>
-
-                */

@@ -85,6 +85,8 @@ export class RuleEditor extends React.Component {
             editorModel: model,
             editorItemIndex: index,
             editorItemType: itemType,
+            editorTitle: itemType,
+            editorAlertVisible: false,
             ...cloned
         });
     }
@@ -191,9 +193,9 @@ export class RuleEditor extends React.Component {
         else
             item = { [this.state.editorItemType] : stripIds(cloned)}  
         console.log(JSON.stringify(item, undefined, 2));              
-        this.updateRuleToServer(this.state.ruleId, item);
+        //this.updateRuleToServer(this.state.ruleId, item);
         // put back in state
-        this.setState({ [this.state.editorItemType]: cloned });     
+        this.setState({ [this.state.editorItemType]: cloned, editorAlertVisible: !this.state.editorAlertVisible });     
            
     }
 
@@ -255,6 +257,8 @@ export class RuleEditor extends React.Component {
                         model={this.state.editorModel}
                         key={this.state.editorData._id}                                                
                         editorHandleSaveClick={this.editorHandleSaveClick}
+                        alertVisible={this.state.editorAlertVisible}
+                        alert={this.state.editorAlertMessage}
                     />
                 }
 
