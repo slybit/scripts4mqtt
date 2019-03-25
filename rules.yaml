@@ -2,10 +2,6 @@ TEST:
   name: TEST
   condition:
     - type: and
-    - type: and
-      condition:
-          - type: and
-    - type: and
       condition:
         - type: mqtt
           topic: knx/status/15/2/30
@@ -20,9 +16,7 @@ TEST:
             trigger: always
             topic: knx/status/14/0/15
             eval: '{{M.val}} == 0'
-  ontrue:
-    - type: script
-      script: 'write(''knx/write/15/1/0'', new Date().toString());'
+  
 
 TimeDateUpdate:
   name: TimeDateUpdate

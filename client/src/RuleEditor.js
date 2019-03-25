@@ -64,6 +64,7 @@ export class RuleEditor extends React.Component {
                 console.log(response.data);                
             })
             .catch((error) => {
+                console.log("error returned from server");
                 console.log(error);
             });
     }
@@ -193,7 +194,7 @@ export class RuleEditor extends React.Component {
         else
             item = { [this.state.editorItemType] : stripIds(cloned)}  
         console.log(JSON.stringify(item, undefined, 2));              
-        //this.updateRuleToServer(this.state.ruleId, item);
+        this.updateRuleToServer(this.state.ruleId, item);
         // put back in state
         this.setState({ [this.state.editorItemType]: cloned, editorAlertVisible: !this.state.editorAlertVisible });     
            
@@ -253,6 +254,7 @@ export class RuleEditor extends React.Component {
 
                 { this.state.editorVisible &&
                     <DynamicEditor
+                        title={this.state.editorTitle}
                         editorData={this.state.editorData}
                         model={this.state.editorModel}
                         key={this.state.editorData._id}                                                

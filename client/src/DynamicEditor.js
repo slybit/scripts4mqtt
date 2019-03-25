@@ -73,7 +73,7 @@ export class DynamicEditor extends React.Component {
                 const options = m.options.map((o) => {                                
                     return (<option key={o.value} value={o.value}>{o.label}</option>);
                 });                
-                console.log("Select default: ", value);
+                //console.log("Select default: ", value);
                 input = <select className="form-control" value={value} onChange={(e)=>{this.onChange(e, target)}}>{options}</select>;
             }
            

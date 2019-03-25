@@ -111,14 +111,14 @@ class Rules {
             this.validateRulesFile();
         } catch (err) {
             return ({ 
-                'error' : 'rules validation error',
-                'message' : err.message
+                'success' : false,
+                'error' : err.message
             });
         }
         // validation ok
         this.loadRules();
         return ({ 
-            'status' : 'success'
+            'success' : true
         });
     }
 
@@ -177,17 +177,26 @@ class Rules {
     }
     */
     updateRule(id, input) {
-        try {            
+        try {
+            // test the update, this will throw an exception if not ok
+            this.testRuleUpdate(id, input);
+            // if we got here, all should be well
             Object.assign(this.jsonContents[id], input);
             const rule = new Rule(this.jsonContents[id]);
-            console.log(JSON.stringify(this.jsonContents[id], undefined, 2));
             this.rules[id] = rule;
             this.saveRules();            
-            return id;
+            return { "success" : true};
         } catch (err) {
             logger.warn(err);
-            return err.message;
+            return { "success" : false, "error" : err.message };
         }
+    }
+
+    testRuleUpdate(id, input) {
+        // make a hard copy, apply changes and test
+        const cloned = JSON.parse(JSON.stringify(this.jsonContents[id]));
+        Object.assign(cloned, input);
+        new Rule(cloned);
     }
 
     deleteRule(id) {
@@ -394,13 +403,12 @@ class Rule {
             switch (json.type.toLowerCase()) {
                 case "and":
                 case "or":
-                    if (!json.condition) {
-                        logger.debug("Empty OR or AND provided, ignoring.");
-                        break;
-                    }
                     //if (!Array.isArray(json.condition)) {
                     //    throw new Error("OR and AND conditions require an array in the condition field.");
                     //}
+                    if (!json.condition) {
+                        throw new Error("OR and AND conditions cannot be empty.");
+                    }
                     c = {
                         'type': json.type.toLowerCase(),
                         'condition': this.parseCondition(json.condition)
