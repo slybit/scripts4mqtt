@@ -9,7 +9,7 @@ const { pushover } = require('./utils.js');
 require('./server.js');
 
 //const {Rules, Rule} = require('./rules.js');
-const rules = require('./rules.js');
+const { rules } = require('./rules.js');
 
 let justStarted = true;
 

@@ -2,6 +2,7 @@ const vm = require('vm');
 const logger = require('./logger.js');
 
 const store = new Map();
+const testStore = new Map(); // only used for testing scripts
 const mqttStore = new Map();
 
 class Engine {
@@ -37,7 +38,33 @@ class Engine {
             }
             
         }
+        this.testbox = {
+            log: logger,
+            testStore: this.testStore,
+            mqttStore: this.mqttStore,            
+            vm: vm,
+            put: function (key, value) {
+                testStore.set(key, value);
+            },
+            get: function(key, defaultValue) {
+                if (testStore.get(key) === undefined) {
+                    return defaultValue;
+                } else {
+                    return testStore.get(key);
+                }
+            },
+            read: function(topic) {
+                return mqttStore.get(topic);
+            },
+            write: function(topic, message, retain = false) {
+                if (!isNaN(message)) message = message.toString();
+                logger.info('TESTING script result: ScriptAction published %s -> %s', topic, message);
+                return true;
+            }
+            
+        }
         vm.createContext(this.sandbox);
+        vm.createContext(this.testbox);
 
 
     }
@@ -45,6 +72,11 @@ class Engine {
     runScript(script) {
         logger.debug('running script:\n# ----- start script -----\n%s\n# -----  end script  -----', script);
         return vm.runInContext(script, this.sandbox);
+    }
+
+    testScript(script) {
+        logger.debug('testing script:\n# ----- start script -----\n%s\n# -----  end script  -----', script);
+        return vm.runInContext(script, this.testbox);
     }
 
 }

@@ -5,7 +5,8 @@ const bodyParser = require('body-parser');
 const logger = require('./logger.js');
 const config = require('./config.js').parse();
 const static = require('./static.js').parse();
-const rules = require('./rules.js');
+const { rules } = require('./rules.js');
+const validator = require('./validator.js');
 
 const app = express();
 const router = express.Router();
@@ -43,6 +44,10 @@ router.delete('/rule/:ruleId', (req, res) => {
 
 router.get('/static', (req, res) => {
     res.json(static);
+});
+
+router.post('/validate', (req, res) => {
+    res.json(validator.validate(req.body));
 });
 
 app.use('/api', router);

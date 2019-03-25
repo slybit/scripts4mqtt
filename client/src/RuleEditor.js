@@ -69,6 +69,16 @@ export class RuleEditor extends React.Component {
             });
     }
 
+    validateByServer(data) {
+        axios.post('/api/validate/', data)
+            .then((response) => {
+                console.log(response.data);                
+            })
+            .catch((error) => {
+                console.log("error returned from server");
+                console.log(error);
+            });
+    }
     
  
 
@@ -182,6 +192,13 @@ export class RuleEditor extends React.Component {
     }
 
     editorHandleSaveClick = (newData) => {
+        /* editorItemType can be
+           - flatConditions
+           - ontrue
+           - onfalse
+        */
+
+
         // copy the relevant array from state
         let cloned = Object.assign([], this.state[this.state.editorItemType]);
         // update the relevant item
@@ -193,8 +210,10 @@ export class RuleEditor extends React.Component {
         }
         else
             item = { [this.state.editorItemType] : stripIds(cloned)}  
-        console.log(JSON.stringify(item, undefined, 2));              
-        this.updateRuleToServer(this.state.ruleId, item);
+        console.log(JSON.stringify(item, undefined, 2));            
+        this.validateByServer( { editorItemType: this.state.editorItemType, ...newData});       
+
+        //this.updateRuleToServer(this.state.ruleId, item);
         // put back in state
         this.setState({ [this.state.editorItemType]: cloned, editorAlertVisible: !this.state.editorAlertVisible });     
            

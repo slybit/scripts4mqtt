@@ -611,7 +611,18 @@ class MqttCondition extends Condition {
         this.topic = json.topic;
         this.eval = json.eval;
         if (!(this.topic && this.eval))
+            throw new Error('Mqtt condition missing topic or eval');        
+    }
+
+    static validate(json) {
+        logger.info("validating MqttCondition");
+        if ((json.topic.trim() === '' || json.eval.trim() === ''))
             throw new Error('Mqtt condition missing topic or eval');
+        let data = {};
+        data.M = Engine.getInstance().mqttStore.get(json.topic) ? Engine.getInstance().mqttStore.get(json.topic).data : undefined;
+        data.T = topicToArray(json.topic);        
+        let script = mustache.render(json.eval, data);               
+        Engine.getInstance().testScript(script);        
     }
 
     evaluate() {
@@ -619,11 +630,11 @@ class MqttCondition extends Condition {
         this.state = false;
 
         let data = {};
-        data.M = Engine.getInstance().mqttStore.get(this.topic).data;
+        data.M = Engine.getInstance().mqttStore.get(json.topic) ? Engine.getInstance().mqttStore.get(json.topic).data : undefined;
         data.T = topicToArray(this.topic);
         try {
             let script = mustache.render(this.eval, data);   
-            logger.debug('evaluating script:\n# ----- start script -----\n%s\n# -----  end script  -----', script);
+            //logger.debug('evaluating script:\n# ----- start script -----\n%s\n# -----  end script  -----', script);
             this.state = Engine.getInstance().runScript(script);
         } catch (err) {
             logger.error(err);
@@ -700,4 +711,4 @@ class SimpleCondition extends Condition {
 const rules = new Rules(config);
 
 //module.exports = {Rules, Rule}
-module.exports = rules;
+module.exports = {rules, MqttCondition};
