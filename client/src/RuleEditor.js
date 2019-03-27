@@ -180,6 +180,16 @@ export class RuleEditor extends React.Component {
         this.setState({ editorAlertVisible: false, editorVisible: false });
     }
 
+    editorHandleDeleteClick = () => {
+        // TODO: warn user and delete full block of logic block + children
+        const children = this.state.flatConditions.filter(child => child.path[child.path.length - 1] === this.state.flatConditions[this.state.editorItemIndex].id);
+        if (children.length > 0) {
+            console.log('cannot delete non-empty logic block');
+        } 
+
+        //this.setState({ editorAlertVisible: false, editorVisible: false });
+    }
+
     editorHandleSaveClick = (newData) => {
         // first let server validate
         axios.post('/api/validate/', { editorItemType: this.state.editorItemType, ...newData })
@@ -293,6 +303,7 @@ export class RuleEditor extends React.Component {
                         alert={this.state.editorAlertMessage}
                         editorHandleSaveClick={this.editorHandleSaveClick}
                         editorHandleCancelClick={this.editorHandleCancelClick}
+                        editorHandleDeleteClick={this.editorHandleDeleteClick}
                     />
                 }
 

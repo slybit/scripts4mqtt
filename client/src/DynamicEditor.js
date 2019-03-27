@@ -94,23 +94,21 @@ export class DynamicEditor extends React.Component {
     render() {
         return (            
             <AppEditor>
-                <Title>{this.props.title}</Title>
-                
+                <Title>{this.props.title}</Title>                
                 <Form className="form">                    
                     {this.renderForm()}
                     <Alert color="danger" isOpen={this.props.alertVisible === true}>
                         {this.props.alert}
                     </Alert>
                     <FormGroup style={spacerStyle}>
-                        <Button color="danger" outline >Delete</Button>
+                        <Button color="danger" outline onClick={this.props.editorHandleDeleteClick}>Delete</Button>
                         <span>
-                            <Button color="primary" onClick={this.handleSaveClick} >Save</Button>{' '}
+                            <Button color="primary" onClick={this.handleSaveClick}>Save</Button>{' '}
                             <Button color="primary" outline={true} onClick={this.props.editorHandleCancelClick}>Cancel</Button>
                         </span>
                     </FormGroup>
                 </Form>
-            </AppEditor>
-            
+            </AppEditor>            
         );
     }
 
