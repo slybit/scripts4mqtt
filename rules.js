@@ -3,7 +3,7 @@ const yaml = require('js-yaml');
 const util = require('util');
 const crypto = require('crypto');
 const mustache = require('mustache');
-const sancronos = require('sancronos-validator');
+const {validateMqttCondition, validateMqttAction, validateCronCondition, validateEmailAction } = require('./validator');
 const logger = require('./logger.js');
 const Engine = require('./engine.js');
 const config = require('./config.js').parse();
@@ -458,6 +458,7 @@ class SetValueAction extends Action {
         super(json);
         this.topic = json.topic;
         this.value = json.value;
+        validateMqttAction(json);
     }
 
     execute() {
@@ -498,19 +499,19 @@ class EMailAction extends Action {
 
     constructor(json) {
         super(json);
-        // TODO: turn this into a msg like for the pushoveraction
-        this.to = json.to;
-        this.subject = json.subject;
-        this.body = json.body;
+        this.msg = {
+            to: json.to,
+            subject: json.subject,
+            body: json.body,
+        }
+        validateEmailAction(json);
     }
 
     execute() {
         logger.info('executing EMailAction');
         const mailOptions = {
             from: config.email.from,
-            to: this.to, 
-            subject: this.subject, 
-            html: this.body
+            ...this.msg
         };        
         
         SMTPTransporter.sendMail(mailOptions, function (err, info) {
@@ -610,19 +611,7 @@ class MqttCondition extends Condition {
         super(json);
         this.topic = json.topic;
         this.eval = json.eval;
-        if (!(this.topic && this.eval))
-            throw new Error('Mqtt condition missing topic or eval');        
-    }
-
-    static validate(json) {
-        logger.info("validating MqttCondition");
-        if ((json.topic.trim() === '' || json.eval.trim() === ''))
-            throw new Error('Mqtt condition missing topic or eval');
-        let data = {};
-        data.M = Engine.getInstance().mqttStore.get(json.topic) ? Engine.getInstance().mqttStore.get(json.topic).data : undefined;
-        data.T = topicToArray(json.topic);        
-        let script = mustache.render(json.eval, data);               
-        Engine.getInstance().testScript(script);        
+        validateMqttCondition(json);       
     }
 
     evaluate() {
@@ -630,7 +619,7 @@ class MqttCondition extends Condition {
         this.state = false;
 
         let data = {};
-        data.M = Engine.getInstance().mqttStore.get(json.topic) ? Engine.getInstance().mqttStore.get(json.topic).data : undefined;
+        data.M = Engine.getInstance().mqttStore.get(this.topic) ? Engine.getInstance().mqttStore.get(this.topic).data : undefined;
         data.T = topicToArray(this.topic);
         try {
             let script = mustache.render(this.eval, data);   
@@ -651,22 +640,7 @@ class CronCondition extends Condition {
         super(json);
         this.onExpression = json.on;
         this.offExpression = json.off;
-        if (!(this.onExpression))
-            throw new Error('Cron condition missing on expression');
-        if (!this.validateExpression(this.onExpression))
-            throw new Error('Cron expression invalid: ' + this.onExpression);
-        if (!this.validateExpression(this.offExpression))
-            throw new Error('Cron expression invalid: ' + this.offExpression);
-    }
-
-    validateExpression(expression) {
-        if (expression === undefined) return true;
-        try {
-            let crontab = sancronos.isValid(expression, true);
-            return true;
-        } catch (err) {
-            return false;
-        }
+        validateCronCondition(json);
     }
 
     evaluate() {
@@ -711,4 +685,4 @@ class SimpleCondition extends Condition {
 const rules = new Rules(config);
 
 //module.exports = {Rules, Rule}
-module.exports = {rules, MqttCondition};
+module.exports = rules;

@@ -105,7 +105,7 @@ export class DynamicEditor extends React.Component {
                         <Button color="danger" outline >Delete</Button>
                         <span>
                             <Button color="primary" onClick={this.handleSaveClick} >Save</Button>{' '}
-                            <Button color="primary" outline={true}>Cancel</Button>
+                            <Button color="primary" outline={true} onClick={this.props.editorHandleCancelClick}>Cancel</Button>
                         </span>
                     </FormGroup>
                 </Form>

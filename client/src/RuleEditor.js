@@ -2,22 +2,22 @@ import React from "react";
 import { Title, Container, AppContent, AppMain } from "./containers";
 import { Button } from 'reactstrap';
 import Sortly, { add } from 'react-sortly';
-import { addIds, stripIds, flattenConditions, buildTree, deleteCondition, staticData  } from './utils';
+import { addIds, stripIds, flattenConditions, buildTree, deleteCondition, staticData } from './utils';
 import { DynamicEditor } from './DynamicEditor'
 import axios from 'axios';
 
 export class RuleEditor extends React.Component {
 
-    
+
 
     constructor(props) {
         super(props);
         this.state = {
             ruleId: undefined,
             ontrue: [],
-            onfalse:  [],
-            flatConditions: [],    
-            editorVisible: false            
+            onfalse: [],
+            flatConditions: [],
+            editorVisible: false
         };
         console.log(this.state.condition);
     }
@@ -38,12 +38,12 @@ export class RuleEditor extends React.Component {
         axios.get('/api/rule/' + id)
             .then((response) => {
                 console.log(response.data);
-                this.setState({ 
+                this.setState({
                     ruleId: response.data.id,
                     ontrue: response.data.ontrue ? addIds(response.data.ontrue) : [],
-                    onfalse:  response.data.onfalse ? addIds(response.data.onfalse) : [],
+                    onfalse: response.data.onfalse ? addIds(response.data.onfalse) : [],
                     flatConditions: addIds(flattenConditions(response.data.condition))
-                });                
+                });
             })
             .catch((error) => {
                 console.log(error);
@@ -59,28 +59,12 @@ export class RuleEditor extends React.Component {
       - onfalse
     */
     updateRuleToServer(id, item) {
-        axios.put('/api/rule/' + id, item)
-            .then((response) => {
-                console.log(response.data);                
-            })
-            .catch((error) => {
-                console.log("error returned from server");
-                console.log(error);
-            });
+
     }
 
-    validateByServer(data) {
-        axios.post('/api/validate/', data)
-            .then((response) => {
-                console.log(response.data);                
-            })
-            .catch((error) => {
-                console.log("error returned from server");
-                console.log(error);
-            });
-    }
-    
- 
+
+
+
 
     handleEditableItemClick = (index, itemType, model) => {
         const cloned = {
@@ -90,9 +74,9 @@ export class RuleEditor extends React.Component {
         }
         this.clearMarkers(cloned);
         cloned[itemType][index].isMarked = true;
-        this.setState( { 
+        this.setState({
             editorVisible: true,
-            editorData: this.state[itemType][index],    
+            editorData: this.state[itemType][index],
             editorModel: model,
             editorItemIndex: index,
             editorItemType: itemType,
@@ -112,7 +96,7 @@ export class RuleEditor extends React.Component {
     }
 
 
-    
+
     //TODO: move to utils
     checkConditionOptions(options) {
         try {
@@ -131,6 +115,7 @@ export class RuleEditor extends React.Component {
     }
 
     handleMove = (items, index, newIndex) => {
+        if (this.state.editorVisible) return false;
         const { path } = items[newIndex];
         const parent = items.find(item => item.id === path[path.length - 1]);
         // parent must be OR or AND or root (so "no parent")
@@ -157,7 +142,7 @@ export class RuleEditor extends React.Component {
             {...props}
             onEditableItemClick={this.handleEditableItemClick}
         />
-    )    
+    )
 
     /* -------  Callback methods of ConditionEditor  ------- */
 
@@ -191,61 +176,88 @@ export class RuleEditor extends React.Component {
         this.setState({ flatConditions: deleteCondition(this.state.flatConditions, this.state.condition.id), condition: { ...this.defaultCondition } });
     }
 
+    editorHandleCancelClick = () => {
+        this.setState({ editorAlertVisible: false, editorVisible: false });
+    }
+
     editorHandleSaveClick = (newData) => {
-        /* editorItemType can be
-           - flatConditions
-           - ontrue
-           - onfalse
-        */
+        // first let server validate
+        axios.post('/api/validate/', { editorItemType: this.state.editorItemType, ...newData })
+            .then((response) => {
+                if (!response.data.success) {
+                    this.setState({ editorAlertMessage: response.data.message, editorAlertVisible: true });
+                    console.log(response.data);
+                    return;
+                } else {
+                    this.pushUpdateToServer(newData)
+                        .then((response) => {
+                            // update the state
+                            if (response.data.success) {                                
+                                let cloned = Object.assign([], this.state[this.state.editorItemType]);        
+                                cloned[this.state.editorItemIndex] = newData;
+                                this.setState({ [this.state.editorItemType]: cloned, editorAlertVisible: false, editorVisible: false });
+                            } else {
+                                this.setState({ editorAlertMessage: response.data.message, editorAlertVisible: true });
+                                console.log(response.data);
+                            }
+                        })
+                        .catch((error) => {
+                            // TODO: alert user
+                            console.log(error);
+                        });
+                }
+            })
+            .catch((error) => {
+                // TODO: alert user
+                console.log(error);
+            });
+    }
 
-
+    pushUpdateToServer = (newData) => {
         // copy the relevant array from state
         let cloned = Object.assign([], this.state[this.state.editorItemType]);
         // update the relevant item
         cloned[this.state.editorItemIndex] = newData;
-        // we first try to push it to the server
+        // because of the stripIds(), item will be a real deep copy        
         let item = {};
         if (this.state.editorItemType === 'flatConditions') {
             item = { condition: buildTree(stripIds(cloned)) }
         }
         else
-            item = { [this.state.editorItemType] : stripIds(cloned)}  
-        console.log(JSON.stringify(item, undefined, 2));            
-        this.validateByServer( { editorItemType: this.state.editorItemType, ...newData});       
-
-        //this.updateRuleToServer(this.state.ruleId, item);
-        // put back in state
-        this.setState({ [this.state.editorItemType]: cloned, editorAlertVisible: !this.state.editorAlertVisible });     
-           
+            item = { [this.state.editorItemType]: stripIds(cloned) }
+        return axios.put('/api/rule/' + this.state.ruleId, item);
     }
+
+
+
 
 
 
 
     render() {
         const ontrueActions = this.state.ontrue.map((action, index) => (
-            <li className="list-group-item" 
-                key={action._id} id={action._id} 
+            <li className="list-group-item"
+                key={action._id} id={action._id}
                 style={action.isMarked ? selectedStyle : {}}
-                onClick={() => this.handleEditableItemClick(index, "ontrue", staticData.editor.action[action.type])}> 
-                    {action.type}             
+                onClick={() => this.handleEditableItemClick(index, "ontrue", staticData.editor.action[action.type])}>
+                {action.type}
             </li>
         ));
-        
+
         const onfalseActions = this.state.onfalse.map((action, index) => (
-            <li className="list-group-item" key={action._id} id={action._id} onClick={() => this.handleEditableItemClick(index, "onfalse", staticData.editor.action[action.type])}> 
-                {action.type}             
+            <li className="list-group-item" key={action._id} id={action._id} onClick={() => this.handleEditableItemClick(index, "onfalse", staticData.editor.action[action.type])}>
+                {action.type}
             </li>
         ));
-        
+
         return (
             <AppMain>
                 <AppContent>
-                    <Title>                        
+                    <Title>
                         {this.props.id ? this.props.id : 'Please select a rule from the list to edit or create a new rule.'}
                     </Title>
 
-                    
+
                     <Container>
                         <Button onClick={this.handleClickAddNewItem}>Add New Item</Button>
                         <Sortly
@@ -258,28 +270,29 @@ export class RuleEditor extends React.Component {
                     <Container>
                         <p><b>On True:</b></p>
                         <ul className="list-group">
-                            {ontrueActions}                
+                            {ontrueActions}
                         </ul>
                         <p><b>On False:</b></p>
                         <ul className="list-group">
-                            {onfalseActions}                
+                            {onfalseActions}
                         </ul>
                     </Container>
-                    
+
                     {true && <pre className='code'>{JSON.stringify(this.state, undefined, 4)}</pre>}
 
 
                 </AppContent>
 
-                { this.state.editorVisible &&
+                {this.state.editorVisible &&
                     <DynamicEditor
                         title={this.state.editorTitle}
                         editorData={this.state.editorData}
                         model={this.state.editorModel}
-                        key={this.state.editorData._id}                                                
-                        editorHandleSaveClick={this.editorHandleSaveClick}
+                        key={this.state.editorData._id}                        
                         alertVisible={this.state.editorAlertVisible}
                         alert={this.state.editorAlertMessage}
+                        editorHandleSaveClick={this.editorHandleSaveClick}
+                        editorHandleCancelClick={this.editorHandleCancelClick}
                     />
                 }
 
@@ -295,8 +308,8 @@ export class RuleEditor extends React.Component {
 
 const itemStyle = {
     border: '1px solid #ccc',
-    cursor: 'move',    
-    padding: 10,    
+    cursor: 'move',
+    padding: 10,
     marginBottom: 4,
 };
 
@@ -307,7 +320,7 @@ const muteStyle = {
 const selectedStyle = {
     background: '#e2edff',
     color: 'blue',
-    fontWeight: 600,    
+    fontWeight: 600,
 }
 
 
@@ -335,18 +348,18 @@ class ItemRenderer extends React.Component {
             type, path, isMarked, connectDragSource, connectDropTarget,
             isDragging, isClosestDragging
         } = this.props;
-        
+
         let label = "";
         switch (type) {
             case "and":
-              label = "AND"
-              break;
+                label = "AND"
+                break;
             case "or":
-              label = "OR";
-              break;
+                label = "OR";
+                break;
             default:
-              label = staticData.conditions[type];
-              break;
+                label = staticData.conditions[type];
+                break;
         }
 
         const style = {

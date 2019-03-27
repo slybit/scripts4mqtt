@@ -19,9 +19,10 @@ TEST:
 TimeDateUpdate:
   name: TimeDateUpdate
   condition:
-    type: cron
-    trigger: always
-    'on': 2 * * * *
+    - type: cron
+      trigger: always
+      'on': 2 * * * *
+      'off': 1 1 * * *
   ontrue:
     - type: script
       script: 'write(''knx/write/15/1/0'', new Date().toString());'
@@ -30,16 +31,16 @@ TimeDateUpdate:
 Bel:
   name: Bel
   condition:
-    type: mqtt
-    trigger: on_flip_true
-    topic: knx/status/15/2/3
-    eval: '{{M.val}} == 1'
+    - type: mqtt
+      trigger: always
+      topic: knx/status/15/2/3
+      eval: '{{M.val}} == 1'
   ontrue:
     - type: pushover
-      message: Notification from script4mqtt
+      message: Notification from script4mqtt;ll;;;;;;;;;;;;;;;;
       title: Bel! Bel!
       sound: bike
-      priority: 1
+      priority: '0'
 Achtergevel:
   name: Afdak_achteraan
   condition:

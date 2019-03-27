@@ -5,7 +5,7 @@ const bodyParser = require('body-parser');
 const logger = require('./logger.js');
 const config = require('./config.js').parse();
 const static = require('./static.js').parse();
-const { rules } = require('./rules.js');
+const rules = require('./rules.js');
 const validator = require('./validator.js');
 
 const app = express();
