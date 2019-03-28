@@ -3,6 +3,7 @@ import { AppEditor, Title } from "./containers";
 import { Button, Form, FormGroup, Label, Input, Alert, FormFeedback } from 'reactstrap';
 
 
+
 /* --------------------------------------------------------------------------------------------------------------------
   Styles
 
@@ -61,7 +62,7 @@ export class DynamicEditor extends React.Component {
             let value = this.state[target];
 
             let input = (<div></div>);
-            if (type == "text" || type == "textarea") {
+            if (type === "text" || type === "textarea") {
                 input = <Input {...props}
                     type={type}                
                     id={key}
@@ -69,7 +70,7 @@ export class DynamicEditor extends React.Component {
                     value={value}
                     onChange={(e)=>{this.onChange(e, target)}}
                     />;
-            } else if (type == "select") {
+            } else if (type === "select") {
                 const options = m.options.map((o) => {                                
                     return (<option key={o.value} value={o.value}>{o.label}</option>);
                 });                

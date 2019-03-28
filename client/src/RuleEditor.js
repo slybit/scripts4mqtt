@@ -1,7 +1,7 @@
 import React from "react";
 import { Title, Container, AppContent, AppMain } from "./containers";
 import { Button } from 'reactstrap';
-import Sortly, { add } from 'react-sortly';
+import Sortly, { add, remove, findDescendants } from 'react-sortly';
 import { addIds, stripIds, flattenConditions, buildTree, deleteCondition, staticData } from './utils';
 import { DynamicEditor } from './DynamicEditor'
 import axios from 'axios';
@@ -38,28 +38,22 @@ export class RuleEditor extends React.Component {
         axios.get('/api/rule/' + id)
             .then((response) => {
                 console.log(response.data);
-                this.setState({
-                    ruleId: response.data.id,
-                    ontrue: response.data.ontrue ? addIds(response.data.ontrue) : [],
-                    onfalse: response.data.onfalse ? addIds(response.data.onfalse) : [],
-                    flatConditions: addIds(flattenConditions(response.data.condition))
-                });
+                this.setStateFromServerData(response.data);
             })
             .catch((error) => {
                 console.log(error);
             });
     }
 
-    /* 
-      Pushes one or more fields of a rule to the server.
-      Item should be an object with one or more of these fields:
-      - name
-      - condition
-      - ontrue
-      - onfalse
-    */
-    updateRuleToServer(id, item) {
-
+    setStateFromServerData(data) {
+        this.setState({
+            ruleId: data.id,
+            ontrue: data.ontrue ? addIds(data.ontrue) : [],
+            onfalse: data.onfalse ? addIds(data.onfalse) : [],
+            flatConditions: addIds(flattenConditions(data.condition)),
+            editorVisible: false,
+            editorAlertVisible: false,
+        });
     }
 
 
@@ -119,7 +113,7 @@ export class RuleEditor extends React.Component {
         const { path } = items[newIndex];
         const parent = items.find(item => item.id === path[path.length - 1]);
         // parent must be OR or AND or root (so "no parent")
-        if (!parent || (parent.type == 'or' || parent.type == 'and')) {
+        if (!parent || (parent.type === 'or' || parent.type === 'and')) {
             return true;
         } else {
             return false;
@@ -145,27 +139,6 @@ export class RuleEditor extends React.Component {
     )
 
     /* -------  Callback methods of ConditionEditor  ------- */
-
-    // TODO: create validator for generic editor
-    handleConditionSaveClick = () => {
-        // check if all is ok
-        let optionsValid = this.checkConditionOptions(this.state.condition.options);
-        // update the UI so that the user can see that the input is invalid
-        this.setState({ condition: { ...this.state.condition, optionsValid: optionsValid } });
-        if (optionsValid) {
-            // copy the flatConditions from state
-            let cloned = Object.assign([], this.state.flatConditions);
-            let c = cloned.find(condition => condition.id === this.state.condition.id);
-            if (c !== undefined) {
-                c.type = this.state.condition.type;
-                c.options = JSON.parse(this.state.condition.options);
-            }
-            // put back in state        
-            this.setState({ flatConditions: cloned });
-            console.log(JSON.stringify(cloned, undefined, 4));
-        }
-    }
-
     // TODO: create generic editorItem delete
     handleConditionDeleteClick = () => {
         //if (window.confirm('Are you sure you want to save this thing into the database?')) {
@@ -181,11 +154,29 @@ export class RuleEditor extends React.Component {
     }
 
     editorHandleDeleteClick = () => {
-        // TODO: warn user and delete full block of logic block + children
-        const children = this.state.flatConditions.filter(child => child.path[child.path.length - 1] === this.state.flatConditions[this.state.editorItemIndex].id);
-        if (children.length > 0) {
-            console.log('cannot delete non-empty logic block');
-        } 
+        if (this.state.editorItemType === 'flatConditions') {
+            const children = findDescendants(this.state.flatConditions, this.state.editorItemIndex);
+            if (children.length > 0 && window.confirm('Delete this logic block together with its children?')) {                
+                let newConditions = remove(this.state.flatConditions, this.state.editorItemIndex);                
+                axios.put('/api/rule/' + this.state.ruleId, { condition: buildTree(stripIds(newConditions)) })
+                        .then((response) => {
+                            // update the state
+                            console.log(response.data);
+                            if (response.data.success) {
+                                this.setStateFromServerData(response.data.newrule);
+                            } else {
+                                this.setState({ editorAlertMessage: response.data.message, editorAlertVisible: true });
+                                console.log(response.data);
+                            }
+                        })
+                        .catch((error) => {
+                            // TODO: alert user
+                            console.log(error);
+                        });
+            } else {
+                // Do nothing!
+            }            
+        }
 
         //this.setState({ editorAlertVisible: false, editorVisible: false });
     }
@@ -202,8 +193,8 @@ export class RuleEditor extends React.Component {
                     this.pushUpdateToServer(newData)
                         .then((response) => {
                             // update the state
-                            if (response.data.success) {                                
-                                let cloned = Object.assign([], this.state[this.state.editorItemType]);        
+                            if (response.data.success) {
+                                let cloned = Object.assign([], this.state[this.state.editorItemType]);
                                 cloned[this.state.editorItemIndex] = newData;
                                 this.setState({ [this.state.editorItemType]: cloned, editorAlertVisible: false, editorVisible: false });
                             } else {
@@ -224,11 +215,9 @@ export class RuleEditor extends React.Component {
     }
 
     pushUpdateToServer = (newData) => {
-        // copy the relevant array from state
-        let cloned = Object.assign([], this.state[this.state.editorItemType]);
-        // update the relevant item
-        cloned[this.state.editorItemIndex] = newData;
-        // because of the stripIds(), item will be a real deep copy        
+        // copy the relevant array from state as we do not want to update the state directly
+        let cloned = Object.assign([], this.state[this.state.editorItemType]);        
+        cloned[this.state.editorItemIndex] = newData;      
         let item = {};
         if (this.state.editorItemType === 'flatConditions') {
             item = { condition: buildTree(stripIds(cloned)) }
@@ -298,7 +287,7 @@ export class RuleEditor extends React.Component {
                         title={this.state.editorTitle}
                         editorData={this.state.editorData}
                         model={this.state.editorModel}
-                        key={this.state.editorData._id}                        
+                        key={this.state.editorData._id}
                         alertVisible={this.state.editorAlertVisible}
                         alert={this.state.editorAlertMessage}
                         editorHandleSaveClick={this.editorHandleSaveClick}
@@ -338,10 +327,6 @@ const selectedStyle = {
 
 
 class ItemRenderer extends React.Component {
-
-    constructor(props) {
-        super(props);
-    }
 
     handleClick = () => {
         console.log(this.props.type);

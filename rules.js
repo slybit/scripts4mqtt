@@ -162,19 +162,8 @@ class Rules {
     }
 
     /*
-    updateRule(id, input) {
-        try {
-            const rule = new Rule(input);
-            this.rules[id] = rule;
-            this.jsonContents[id] = input;
-            this.saveRules();
-            console.log(JSON.stringify(this.jsonContents));
-            return id;
-        } catch (err) {
-            logger.warn(err);
-            return err.message;
-        }
-    }
+    - id: identifier of the rule to update
+    - input: JSON with one or more properties (name, condition, ontrue, onfalse)
     */
     updateRule(id, input) {
         try {
@@ -185,10 +174,16 @@ class Rules {
             const rule = new Rule(this.jsonContents[id]);
             this.rules[id] = rule;
             this.saveRules();            
-            return { "success" : true};
+            return { 
+                success : true, 
+                newrule : {
+                    ...this.jsonContents[id],
+                    id: id
+                }
+            };
         } catch (err) {
             logger.warn(err);
-            return { "success" : false, "error" : err.message };
+            return { success : false, error : err.message };
         }
     }
 
