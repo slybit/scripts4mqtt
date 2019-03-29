@@ -92,7 +92,7 @@ export const staticData = {
                 type: "mqtt",
                 trigger: "no",
                 topic: "__REPLACE__",
-                eval: ""
+                eval: "{{true}}"
             },
             cron: {
                 type: "cron",

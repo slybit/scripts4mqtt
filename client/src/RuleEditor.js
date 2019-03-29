@@ -118,19 +118,37 @@ export class RuleEditor extends React.Component {
 
     /* -------  Callback methods of ConditionEditor  ------- */
 
-    addNewItem = (itemType, model) => {
-        // set the state
-        /*
-        this.setState({
-            editorVisible: true,
-            editorData: this.state[itemType][0],
-            editorModel: model,
-            editorItemIndex: index,
-            editorItemType: itemType,
-            editorTitle: itemType,
-            editorAlertVisible: false,
-            ...cloned
-        });*/
+    /*
+    itemType: ontrue, onfalse, flatConditions
+    subType: either one of the action types or condition types
+    */
+    addNewItem = (itemType, subType) => {
+        let itemUpdate = undefined;
+        if (itemType === 'flatConditions') {
+            const newItem = staticData.newItems.condition[subType];
+            itemUpdate = { condition: buildTree(stripIds(this.state.flatConditions)).concat(newItem) };
+        } else {
+            const newItem = staticData.newItems.action[subType];
+            itemUpdate = { [this.state.editorItemType]: stripIds(this.state[this.state.editorItemType]).concat(newItem) };
+        }
+
+        if (itemUpdate) {
+            axios.put('/api/rule/' + this.state.ruleId, itemUpdate)
+                .then((response) => {
+                    // update the state
+                    if (response.data.success) {
+                        this.setStateFromServerData(response.data.newrule);
+                    } else {
+                        // TODO: alert user, editor is not visible!
+                        console.log(response.data);
+                    }
+                })
+                .catch((error) => {
+                    // TODO: alert user
+                    console.log(error);
+                });
+        }
+
     }
 
 
@@ -148,6 +166,7 @@ export class RuleEditor extends React.Component {
                 itemUpdate = { condition: buildTree(stripIds(remove(this.state.flatConditions, this.state.editorItemIndex))) };
             }
         } else {
+            // TODO: can be simplified by first applying stripIds (as this creates a hard copy)
             itemUpdate = {
                 [this.state.editorItemType]: stripIds(
                     update(this.state[this.state.editorItemType], { $splice: [[this.state.editorItemIndex, 1]] })
@@ -255,7 +274,7 @@ export class RuleEditor extends React.Component {
                                 <DropdownItem>AND</DropdownItem>
                                 <DropdownItem divider />
                                 <DropdownItem header>Condition</DropdownItem>
-                                <DropdownItem>MQTT</DropdownItem>
+                                <DropdownItem onClick={() => {this.addNewItem("flatConditions", "mqtt")}}>MQTT</DropdownItem>
                                 <DropdownItem>Cron</DropdownItem>
                             </DropdownMenu>
                         </UncontrolledDropdown>

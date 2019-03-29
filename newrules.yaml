@@ -16,6 +16,10 @@ TEST:
               trigger: always
               topic: knx/status/14/0/15
               eval: '{{M.val}} == 0'
+    - type: mqtt
+      trigger: 'no'
+      topic: __REPLACE__
+      eval: '{{true}}'
 TimeDateUpdate:
   name: TimeDateUpdate
   condition:
