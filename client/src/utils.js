@@ -1,6 +1,6 @@
 
 
-export function flattenConditions(nested) {  
+export function flattenConditions(nested) {
     const flattenConditionsIteratively = (nested, list, parent) => {
         let id = list.length > 0 ? list[list.length-1].id + 1 : 1;
         let path = parent.path.slice(0);
@@ -13,14 +13,14 @@ export function flattenConditions(nested) {
                 flattenConditionsIteratively(n, list, item);
         }
     }
-    
+
     let list = [];
     let parent = {path: []};
 
     if (Array.isArray(nested)) {
         for (let n of nested)
             flattenConditionsIteratively(n, list, parent);
-    } else 
+    } else
         flattenConditionsIteratively(nested, list, parent);
 
     return list;
@@ -43,10 +43,10 @@ export function buildTree(items) {
     const tree = items
       .filter(item => item.path.length === 0)
       .map(item => buildItem(item));
-  
+
     return tree;
   }
-  
+
 
 
 
@@ -82,22 +82,38 @@ export function uuid(a) {
 }
 
 export const staticData = {
-    conditions: {        
+    conditions: {
         mqtt: "MQTT",
         cron: "Cron expression"
+    },
+    newItems: {
+        condition: {
+            mqtt: {
+                type: "mqtt",
+                trigger: "no",
+                topic: "__REPLACE__",
+                eval: ""
+            },
+            cron: {
+                type: "cron",
+                trigger: "no",
+                on: "0 0 * * *",
+                off: ""
+            }
+        }
     },
     editor: {
         condition: {
             or: [
                 { key: "type", label: "Logic Operator", type: "select", options: [
                     {value: "or", label: "OR"},
-                    {value: "and", label: "AND"}     
+                    {value: "and", label: "AND"}
                 ] },
             ],
             and: [
                 { key: "type", label: "Logic Operator", type: "select", options: [
                     {value: "or", label: "OR"},
-                    {value: "and", label: "AND"}     
+                    {value: "and", label: "AND"}
                 ] },
             ],
             mqtt: [
@@ -153,14 +169,14 @@ export const staticData = {
                     {value: "persistent", label: "Persistent (long)"},
                     {value: "echo", label: "Pushover Echo (long)"},
                     {value: "updown", label: "Up Down (long)"},
-                    {value: "none", label: "None (silent)"}                
+                    {value: "none", label: "None (silent)"}
                 ] },
                 { key: "priority", label: "Priority", type: "select", options: [
                     {value: "2", label: "Emergency"},
                     {value: "1", label: "High"},
                     {value: "0", label: "Normal"},
                     {value: "-1", label: "Low"},
-                    {value: "-2", label: "Lowest"}                
+                    {value: "-2", label: "Lowest"}
                 ] }
             ],
             email: [
@@ -168,7 +184,7 @@ export const staticData = {
                 { key: "subject", label: "Subject" },
                 { key: "body", label: "Body", type: "textarea", props: {rows: 10} }
             ],
-            script: [            
+            script: [
                 { key: "script", label: "Script", type: "textarea", props: {rows: 30, style: {fontFamily: 'monospace', fontSize: '1rem'}} }
             ]
         }

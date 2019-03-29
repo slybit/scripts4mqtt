@@ -1,6 +1,5 @@
 import React from "react";
-import { AppEditor, Title } from "./containers";
-import { Button, Form, FormGroup, Label, Input, Alert, FormFeedback } from 'reactstrap';
+import { Button, Form, FormGroup, Label, Input, Alert, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 
 
 
@@ -20,6 +19,7 @@ const textInputStyle = {
 
 const spacerStyle = {
     display: 'flex',
+    width: '100%',
     justifyContent: 'space-between',
 };
 
@@ -33,15 +33,15 @@ export class DynamicEditor extends React.Component {
         super(props);
         console.log(props);
         this.state = {};
-        Object.assign(this.state, props.editorData);        
+        Object.assign(this.state, props.editorData);
         console.log(this.state);
     }
 
-    onChange = (e, key,type="single") => {
+    onChange = (e, key, type = "single") => {
         console.log(`${key} changed ${e.target.value} type ${type}`);
         if (type === "single") {
             this.setState({
-                [key]: e.target.value  
+                [key]: e.target.value
             });
         }
     }
@@ -53,36 +53,36 @@ export class DynamicEditor extends React.Component {
     renderForm = () => {
         const model = this.props.model;
 
-        const formUI = model.map( (m) => {
+        const formUI = model.map((m) => {
             let key = m.key;
             let type = m.type || "text";
             let props = m.props || {};
-            let label= m.label;
-            let target = key;  
+            let label = m.label;
+            let target = key;
             let value = this.state[target];
 
             let input = (<div></div>);
             if (type === "text" || type === "textarea") {
                 input = <Input {...props}
-                    type={type}                
+                    type={type}
                     id={key}
                     name={key}
                     value={value}
-                    onChange={(e)=>{this.onChange(e, target)}}
-                    />;
+                    onChange={(e) => { this.onChange(e, target) }}
+                />;
             } else if (type === "select") {
-                const options = m.options.map((o) => {                                
+                const options = m.options.map((o) => {
                     return (<option key={o.value} value={o.value}>{o.label}</option>);
-                });                
+                });
                 //console.log("Select default: ", value);
-                input = <select className="form-control" value={value} onChange={(e)=>{this.onChange(e, target)}}>{options}</select>;
+                input = <select className="form-control" value={value} onChange={(e) => { this.onChange(e, target) }}>{options}</select>;
             }
-           
-            
+
+
             return (
                 <FormGroup key={'g' + key}>
                     <Label for={key}>{label}</Label>
-                    {input}                    
+                    {input}
                 </FormGroup>
             );
         });
@@ -93,14 +93,20 @@ export class DynamicEditor extends React.Component {
 
 
     render() {
-        return (            
-            <AppEditor>
-                <Title>{this.props.title}</Title>                
-                <Form className="form">                    
-                    {this.renderForm()}
+        return (
+            <Modal isOpen={this.props.visible} fade={false} toggle={this.props.editorHandleCancelClick}>
+                <ModalHeader toggle={this.props.editorHandleCancelClick}>{this.props.title}</ModalHeader>
+                <ModalBody>
+                    <Form className="form">
+                        {this.renderForm()}
+                    </Form>
                     <Alert color="danger" isOpen={this.props.alertVisible === true}>
                         {this.props.alert}
                     </Alert>
+                </ModalBody>
+                <ModalFooter>
+
+
                     <FormGroup style={spacerStyle}>
                         <Button color="danger" outline onClick={this.props.editorHandleDeleteClick}>Delete</Button>
                         <span>
@@ -108,8 +114,11 @@ export class DynamicEditor extends React.Component {
                             <Button color="primary" outline={true} onClick={this.props.editorHandleCancelClick}>Cancel</Button>
                         </span>
                     </FormGroup>
-                </Form>
-            </AppEditor>            
+
+                </ModalFooter>
+
+
+            </Modal>
         );
     }
 

@@ -28,9 +28,9 @@ export const AppNav = styled.div`
   border-right: 1px solid rgba(0, 0, 0, 0.125);
 `;
 
-export const AppMain = styled.div`    
+export const AppMain = styled.div`
     display: flex;
-    flex: 1 1 auto;    
+    flex: 1 1 auto;
     background: #fff;
     padding: 5px;
     overflow-y: auto;
@@ -56,7 +56,7 @@ export const AppEditor = styled.div`
   padding: 5px;
   overflow-y: auto;
   min-height: 0px;
-  border: 1px solid rgba(0, 0, 0, 0.125);  
+  border: 1px solid rgba(0, 0, 0, 0.125);
 `;
 
 export const Title = styled.div`
@@ -64,11 +64,19 @@ export const Title = styled.div`
   justify-content: center;
   align-items: center;
   padding: 12px;
-  font-size: 110%;  
+  font-size: 110%;
 `;
 
 export const Container = styled.div`
-  border: 1px solid #0000DD;  
-  padding: 10px;  
+  border: 1px solid #0000DD;
+  padding: 10px;
+`;
+
+export const HorizontalContainer = styled.div`
+  border: 1px solid #0000DD;
+  display: flex;
+  flex-direction: row;
+  padding: 10px;
+  justify-content: space-between;
 `;
 

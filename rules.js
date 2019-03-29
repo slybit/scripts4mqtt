@@ -24,7 +24,7 @@ class Rules {
     }
 
     loadRules() {
-        logger.info("Parsing rules");        
+        logger.info("Parsing rules");
         this.jsonContents = {};
         this.rules = {};
         if (fs.existsSync(filename)) {
@@ -50,15 +50,15 @@ class Rules {
     }
 
     saveRules() {
-        logger.info("saving rules");        
-        try {            
-            fs.writeFileSync("newrules.yaml", yaml.safeDump(this.jsonContents));            
+        logger.info("saving rules");
+        try {
+            fs.writeFileSync("newrules.yaml", yaml.safeDump(this.jsonContents));
         } catch (e) {
             logger.error(e);
         }
     }
 
-   
+
 
     /*
       This method is called by the mqtt library for every message that was recieved.
@@ -68,7 +68,7 @@ class Rules {
     mqttConditionChecker(topic, withActions = true) {
         logger.silly('MQTT Condition Checker called for %s', topic);
         for (let key in this.rules) {
-            let rule = this.rules[key];            
+            let rule = this.rules[key];
             for (let c of rule.conditions)
                 if ((c instanceof MqttCondition) && (c.topic === topic)) {
                     logger.silly('Rule [%s] matches topic [%s], evaluating...', rule.name, topic);
@@ -88,9 +88,9 @@ class Rules {
         const delay = 60 - ((Math.round(date.getTime() / 1000)-5) % 60);
         const minutes = date.getMinutes();
         // prevent a double tick in a single minute (is only possible in case tasks take very long or at startup)
-        if (minutes !== this.lastMinutes) {            
+        if (minutes !== this.lastMinutes) {
             for (let key in this.rules) {
-                let rule = this.rules[key];            
+                let rule = this.rules[key];
                 for (let c of rule.conditions)
                     if ((c instanceof CronCondition)) {
                         logger.silly('Cron tick, evaluating...', rule.name);
@@ -104,26 +104,26 @@ class Rules {
 
     /*
      * REST APIs
-     */ 
+     */
 
     reload() {
         try {
             this.validateRulesFile();
         } catch (err) {
-            return ({ 
+            return ({
                 'success' : false,
                 'error' : err.message
             });
         }
         // validation ok
         this.loadRules();
-        return ({ 
+        return ({
             'success' : true
         });
     }
 
     validateRulesFile() {
-        logger.info("Validating rules file");        
+        logger.info("Validating rules file");
         if (fs.existsSync(filename)) {
             try {
                 this.jsonContents = yaml.safeLoad(fs.readFileSync(filename, 'utf8'));
@@ -134,14 +134,14 @@ class Rules {
         }
         for (let key in this.jsonContents) {
             try {
-                new Rule(this.jsonContents[key]);                
+                new Rule(this.jsonContents[key]);
             } catch (e) {
                 logger.error('Error while validating rule [%s]', key);
                 logger.error(e.toString());
                 throw(new Error('Error while validating rule [' + key + ']'));
             }
         }
-    } 
+    }
 
 
     listAllRules() {
@@ -173,9 +173,9 @@ class Rules {
             Object.assign(this.jsonContents[id], input);
             const rule = new Rule(this.jsonContents[id]);
             this.rules[id] = rule;
-            this.saveRules();            
-            return { 
-                success : true, 
+            this.saveRules();
+            return {
+                success : true,
                 newrule : {
                     ...this.jsonContents[id],
                     id: id
@@ -215,8 +215,8 @@ class Rules {
     */
     getRule(id) {
         return {
-            ...this.jsonContents[id],
-            "id": id
+            "id": id,
+            ...this.jsonContents[id]
         };
     }
 
@@ -282,7 +282,7 @@ class Rules {
 
 class Rule {
 
-    constructor(json) {        
+    constructor(json) {
         this.name = json.name;
         this.conditions = [];
         this.logic = this.parseCondition(json.condition);
@@ -354,7 +354,7 @@ class Rule {
                 }
             }
             return result;
-        } else {                    
+        } else {
             return logic.state;
         }
     }
@@ -362,11 +362,11 @@ class Rule {
     scheduleActions() {
         logger.info('Scheduling actions for rule %s', this.name);
         let actions = [];
-        if (Rule.evalLogic(this.logic)) {            
+        if (Rule.evalLogic(this.logic)) {
             actions = this.onTrueActions;
         } else {
             actions = this.onFalseActions;
-        }        
+        }
         for (let a of actions) {
             if (a.pending !== undefined) {
                 clearTimeout(a.pending);
@@ -375,10 +375,10 @@ class Rule {
             if (a.delay > 0) {
                 a.pending = setTimeout(a.execute.bind(a), a.delay);
                 logger.info('delayed execution for %s in %d millesecs', typeof(a), a.delay);
-            } else {            
+            } else {
                 a.execute();
             }
-        } 
+        }
     }
 
     // json can be either an array of conditions, or a single (nested) condition
@@ -461,7 +461,7 @@ class SetValueAction extends Action {
             Engine.getInstance().mqttClient.publish(this.topic, JSON.stringify(this.value));
             logger.info('SetValueAction published %s -> %s', this.topic, this.value);
         }
-        
+
         //TODO: make value mustache expression
         //TODO: add option for retain true or false
     }
@@ -479,8 +479,8 @@ class ScriptAction extends Action {
 
     execute() {
         logger.info('executing ScriptAction');
-        try {    
-            console.log(this.script);        
+        try {
+            console.log(this.script);
             Engine.getInstance().runScript(this.script);
         } catch (err) {
             logger.error('ERROR running script:\n# ----- start script -----\n%s\n# -----  end script  -----', this.script);
@@ -507,8 +507,8 @@ class EMailAction extends Action {
         const mailOptions = {
             from: config.email.from,
             ...this.msg
-        };        
-        
+        };
+
         SMTPTransporter.sendMail(mailOptions, function (err, info) {
             if (err) {
                 logger.error('ERROR sending email');
@@ -533,7 +533,7 @@ class PushoverAction extends Action {
     }
 
     execute() {
-        logger.info('executing PushoverAction');          
+        logger.info('executing PushoverAction');
         pushover.send( this.msg, function( err, result ) {
             if (err) {
                 logger.error('ERROR sending Pushover notification');
@@ -606,7 +606,7 @@ class MqttCondition extends Condition {
         super(json);
         this.topic = json.topic;
         this.eval = json.eval;
-        validateMqttCondition(json);       
+        validateMqttCondition(json);
     }
 
     evaluate() {
@@ -617,7 +617,7 @@ class MqttCondition extends Condition {
         data.M = Engine.getInstance().mqttStore.get(this.topic) ? Engine.getInstance().mqttStore.get(this.topic).data : undefined;
         data.T = topicToArray(this.topic);
         try {
-            let script = mustache.render(this.eval, data);   
+            let script = mustache.render(this.eval, data);
             //logger.debug('evaluating script:\n# ----- start script -----\n%s\n# -----  end script  -----', script);
             this.state = Engine.getInstance().runScript(script);
         } catch (err) {
@@ -647,7 +647,7 @@ class CronCondition extends Condition {
             this.state = true;
             match = true;
         }
-            
+
         // go over the offPatterns second
         if (this.offExpression !== undefined && cronmatch.match(this.offExpression, currTime)) {
             this.state = false;
