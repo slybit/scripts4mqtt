@@ -177,8 +177,8 @@ class Rules {
             return {
                 success : true,
                 newrule : {
-                    ...this.jsonContents[id],
-                    id: id
+                    id: id,
+                    ...this.jsonContents[id]                    
                 }
             };
         } catch (err) {

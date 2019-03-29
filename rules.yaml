@@ -16,6 +16,8 @@ TEST:
             trigger: always
             topic: knx/status/14/0/15
             eval: '{{M.val}} == 0'
+          - type: and
+            condition: []
   
 
 TimeDateUpdate:

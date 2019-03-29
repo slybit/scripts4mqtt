@@ -4,15 +4,14 @@ import { Button, UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownIte
 import Icon from '@mdi/react'
 import { mdiPencilOutline } from '@mdi/js'
 import update from 'immutability-helper';
-import ReactJson from 'react-json-view'
+import ReactJson from 'react-json-view';
+import format from 'string-format';
 import Sortly, { add, remove, findDescendants } from 'react-sortly';
 import { addIds, stripIds, flattenConditions, buildTree, deleteCondition, staticData } from './utils';
 import { DynamicEditor } from './DynamicEditor'
 import axios from 'axios';
 
 export class RuleEditor extends React.Component {
-
-
 
     constructor(props) {
         super(props);
@@ -125,11 +124,15 @@ export class RuleEditor extends React.Component {
     addNewItem = (itemType, subType) => {
         let itemUpdate = undefined;
         if (itemType === 'flatConditions') {
-            const newItem = staticData.newItems.condition[subType];
+            let newItem = staticData.newItems.condition[subType];
+            if (subType === "or")
+               newItem = {type: "or", condition: []};
+            else if (subType === "and")
+               newItem = {type: "and", condition: []};
             itemUpdate = { condition: buildTree(stripIds(this.state.flatConditions)).concat(newItem) };
         } else {
             const newItem = staticData.newItems.action[subType];
-            itemUpdate = { [this.state.editorItemType]: stripIds(this.state[this.state.editorItemType]).concat(newItem) };
+            itemUpdate = { [itemType]: stripIds(this.state[itemType]).concat(newItem) };
         }
 
         if (itemUpdate) {
@@ -255,6 +258,18 @@ export class RuleEditor extends React.Component {
             </li>
         ));
 
+        const newConditions = Object.keys(staticData.newItems.condition).map((condition) => (
+            <DropdownItem onClick={() => {this.addNewItem("flatConditions", condition)}}>{staticData.conditions[condition]}</DropdownItem>
+        ));
+
+        const newOntrueActions = Object.keys(staticData.newItems.action).map((action) => (
+            <DropdownItem onClick={() => {this.addNewItem("ontrue", action)}}>{staticData.actions[action]}</DropdownItem>
+        ));
+
+        const newOnfalseActions = Object.keys(staticData.newItems.action).map((action) => (
+            <DropdownItem onClick={() => {this.addNewItem("onfalse", action)}}>{staticData.actions[action]}</DropdownItem>
+        ));
+
         return (
             <AppMain>
 
@@ -270,24 +285,20 @@ export class RuleEditor extends React.Component {
                             </DropdownToggle>
                             <DropdownMenu>
                                 <DropdownItem header>Logical</DropdownItem>
-                                <DropdownItem onClick={() => {console.log("OR")}}>OR</DropdownItem>
-                                <DropdownItem>AND</DropdownItem>
-                                <DropdownItem divider />
-                                <DropdownItem header>Condition</DropdownItem>
-                                <DropdownItem onClick={() => {this.addNewItem("flatConditions", "mqtt")}}>MQTT</DropdownItem>
-                                <DropdownItem>Cron</DropdownItem>
+                                <DropdownItem onClick={() => {this.addNewItem("flatConditions", "or")}}>OR</DropdownItem>
+                                <DropdownItem onClick={() => {this.addNewItem("flatConditions", "and")}}>AND</DropdownItem>
+                                <DropdownItem divider />                                
+                                <DropdownItem header>Condition</DropdownItem>                                
+                                {newConditions}
                             </DropdownMenu>
                         </UncontrolledDropdown>
                         {' '}
                         <UncontrolledDropdown>
                             <DropdownToggle caret>
-                                Add Action
+                                Add OnTrue Action
                             </DropdownToggle>
                             <DropdownMenu>
-                                <DropdownItem>MQTT</DropdownItem>
-                                <DropdownItem>Script</DropdownItem>
-                                <DropdownItem>Email</DropdownItem>
-                                <DropdownItem>Pushover</DropdownItem>
+                                {newOntrueActions}
                             </DropdownMenu>
                         </UncontrolledDropdown>
 
@@ -363,6 +374,11 @@ const selectedStyle = {
     fontWeight: 600,
 }
 
+const newStyle = {
+    background: '#e8ffbc',
+    color: 'green',
+    fontWeight: 600,
+}
 
 const pushRightStyle = {
     float: 'right',
@@ -393,6 +409,7 @@ class ItemRenderer extends React.Component {
         } = this.props;
 
         let label = "";
+        let isNew = false;
         switch (type) {
             case "and":
                 label = "AND"
@@ -400,15 +417,24 @@ class ItemRenderer extends React.Component {
             case "or":
                 label = "OR";
                 break;
+            case "mqtt":
+                const { topic } = this.props;                
+                label = format("MQTT [{}]", topic);
+                isNew = (topic === staticData.newItems.condition.mqtt.topic);
+                break;
             default:
                 label = staticData.conditions[type];
                 break;
+        }
+        if (isNew) {
+            label = "* " + label;
         }
 
         const style = {
             ...itemStyle,
             ...(isDragging || isClosestDragging ? muteStyle : null),
             ...(isMarked ? selectedStyle : null),
+            ...(isNew ? newStyle : null),
             marginLeft: path.length * 30,
         };
 

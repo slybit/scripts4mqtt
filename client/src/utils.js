@@ -37,7 +37,7 @@ export function buildTree(items) {
           .filter(child => child.path[child.path.length - 1] === item.id)
           .map(child => buildItem(child)),
       };
-      if (result.condition.length === 0) delete result.condition;
+      if (result.type !== 'or' && result.type !== 'and' && result.condition.length === 0) delete result.condition;
       return result;
     };
     const tree = items
@@ -86,8 +86,14 @@ export const staticData = {
         mqtt: "MQTT",
         cron: "Cron expression"
     },
+    actions: {
+        mqtt: "MQTT",
+        script: "Script",
+        email: "Email",
+        pushover: "Pushover",
+    },
     newItems: {
-        condition: {
+        condition: {            
             mqtt: {
                 type: "mqtt",
                 trigger: "no",
@@ -97,8 +103,14 @@ export const staticData = {
             cron: {
                 type: "cron",
                 trigger: "no",
-                on: "0 0 * * *",
-                off: ""
+                on: "0 0 * * *"                
+            }
+        },
+        action: {
+            mqtt: {
+                type: "mqtt",
+                topic: "__REPLACE__",
+                value: "__REPLACE__"
             }
         }
     },
