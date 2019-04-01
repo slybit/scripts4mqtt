@@ -66,14 +66,6 @@ export class RuleEditor extends React.Component {
 
 
     handleEditableItemClick = (index, itemType, model) => {
-        // set the marker without mutating the state
-        let cloned = { ontrue: this.state.ontrue, onfalse: this.state.onfalse, flatConditions: this.state.flatConditions };
-        for (let key of Object.keys(cloned)) {
-            cloned[key] = cloned[key].map((item, i) => {
-                return Object.assign({}, item, { isMarked: (key === itemType && i === index) });
-            });
-        }
-        // set the state
         this.setState({
             editorVisible: true,
             editorData: this.state[itemType][index],
@@ -81,8 +73,7 @@ export class RuleEditor extends React.Component {
             editorItemIndex: index,
             editorItemType: itemType,
             editorTitle: itemType,
-            editorAlertVisible: false,
-            ...cloned
+            editorAlertVisible: false
         });
     }
 
@@ -386,12 +377,6 @@ const muteStyle = {
     opacity: .3,
 }
 
-const selectedStyle = {
-    background: '#e2edff',
-    color: 'blue',
-    fontWeight: 600,
-}
-
 const newStyle = {
     background: '#e8ffbc',
     color: 'green',
@@ -449,7 +434,7 @@ class ConditionItemRendererClass extends React.Component {
 
     render() {
         const {
-            type, path, isMarked, connectDragSource, connectDropTarget,
+            type, path, connectDragSource, connectDropTarget,
             isDragging, isClosestDragging
         } = this.props;
 
@@ -469,8 +454,6 @@ class ConditionItemRendererClass extends React.Component {
                 break;
             case "cron":
                 isNew = isNewItem(this.props, "condition", type);
-            //const { on, off } = this.props;
-            //isNew = (on === staticData.newItems.condition.cron.on) && (off === undefined);
             default:
                 label = staticData.conditions[type];
                 break;
@@ -482,7 +465,6 @@ class ConditionItemRendererClass extends React.Component {
         const style = {
             ...itemStyle,
             ...(isDragging || isClosestDragging ? muteStyle : null),
-            ...(isMarked ? selectedStyle : null),
             ...(isNew ? newStyle : null),
             marginLeft: path.length * 30,
         };
