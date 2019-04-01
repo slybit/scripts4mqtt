@@ -128,8 +128,26 @@ export const staticData = {
                 type: "mqtt",
                 topic: "__REPLACE__",
                 value: "__REPLACE__"
+            },
+            pushover: {
+                type: "pushover",
+                title: "__REPLACE__",
+                message: "",
+                sound: "pushover",
+                priority: 0
+            },
+            email: {
+                type: "email",
+                to: "replace@mail.com",
+                subject: "__REPLACE__",
+                body: ""
+            },
+            script: {
+                type: "script",
+                script: ""
             }
         }
+        
     },
     editor: {
         condition: {

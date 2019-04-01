@@ -416,7 +416,8 @@ class ActionItemRendererClass extends React.Component {
 
         const ontrueActions = this.props.actions.map((action, index) => {
             const isNew = isNewItem(action, "action", action.type);  
-            const style = {                
+            const style = {  
+                cursor: 'pointer',              
                 ...(isNew ? newStyle : null)                
             };          
             return (
