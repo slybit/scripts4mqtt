@@ -2,7 +2,7 @@ import React from "react";
 import { Title, Container, HorizontalContainer, AppContent, AppMain, AppEditor, Header } from "./containers";
 import { Button, UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem, InputGroup, InputGroupAddon, Input } from 'reactstrap';
 import Icon from '@mdi/react'
-import { mdiPencilOutline } from '@mdi/js'
+import { mdiPencilOutline, mdiCancel, mdiCheck } from '@mdi/js'
 import update from 'immutability-helper';
 import ReactJson from 'react-json-view';
 import format from 'string-format';
@@ -17,6 +17,7 @@ export class RuleEditor extends React.Component {
         super(props);
         this.state = {            
             ruleId: undefined,
+            ruleName: "",
             ontrue: [],
             onfalse: [],
             flatConditions: [],
@@ -53,6 +54,8 @@ export class RuleEditor extends React.Component {
             source: JSON.parse(JSON.stringify(data)), // taking independant copy of the data
             ruleId: data.id,
             ruleName: data.name,
+            rulePrevName: data.name,
+            ruleNameHasChanged: false,
             ontrue: data.ontrue ? addIds(data.ontrue) : [],
             onfalse: data.onfalse ? addIds(data.onfalse) : [],
             flatConditions: addIds(flattenConditions(data.condition)),
@@ -79,7 +82,29 @@ export class RuleEditor extends React.Component {
     }
 
     onRuleNameChange = (e) => {                
-        this.setState({ ruleName: e.target.value, nameHasChanged: true });        
+        this.setState({ ruleName: e.target.value, ruleNameHasChanged: true });        
+    }
+
+    handleRuleNameCancelClick = () => {
+        this.setState({ ruleName: this.state.rulePrevName, ruleNameHasChanged: false });
+    }
+
+    handleRuleNameSaveClick = () => {
+        axios.put('/api/rule/' + this.state.ruleId, {name: this.state.ruleName})
+        .then((response) => {
+            // update the state
+            if (response.data.success) {
+                this.setStateFromServerData(response.data.newrule);
+                this.props.refreshNames();
+            } else {
+                // TODO: alert user, editor is not visible!
+                console.log(response.data);
+            }
+        })
+        .catch((error) => {
+            // TODO: alert user
+            console.log(error);
+        });
     }
 
 
@@ -260,8 +285,9 @@ export class RuleEditor extends React.Component {
                 <AppContent>
                     <InputGroup>
                         <Input value={this.state.ruleName} onChange={this.onRuleNameChange}/>
-                        {this.state.nameHasChanged && <InputGroupAddon addonType="append">
-                            <Button color="primary">Update</Button>
+                        {this.state.ruleNameHasChanged && <InputGroupAddon addonType="append">
+                            <Button color="secondary"><Icon path={mdiCheck} size={1} color="white" onClick={this.handleRuleNameSaveClick} /></Button>
+                            <Button color="secondary"><Icon path={mdiCancel} size={1} color="white" onClick={this.handleRuleNameCancelClick} /></Button>
                         </InputGroupAddon>}
                     </InputGroup>
                     <Title>

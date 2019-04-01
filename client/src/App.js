@@ -9,53 +9,61 @@ import axios from 'axios';
 class App extends Component {
   constructor() {
     super();
-    this.state = {      
+    this.state = {
       rules: [],
       selectedRule: undefined,
       rule: {}
     };
   }
 
-  loadRuleListFromServer() {
+  loadRuleListFromServer = (refreshEditor = true) => {
     axios.get('/api/rules')
-    .then((response) => {
-      console.log(response.data);
-      this.setState( {         
-        rules: response.data,
-        selectedRule: response.data[0].key
+      .then((response) => {
+        console.log(response.data);
+        if (refreshEditor) {
+          this.setState({
+            rules: response.data,
+            selectedRule: response.data[0].key
+          });
+        } else {
+          this.setState({
+            rules: response.data
+          });
+        }
+      })
+      .catch((error) => {
+        console.log(error);
       });
-    })
-    .catch((error) => {
-      console.log(error);
-    });
   }
 
-  
+
 
   componentDidMount() {
     this.loadRuleListFromServer();
   }
 
   handleRuleClick(key) {
-    this.setState({selectedRule: key});
+    this.setState({ selectedRule: key });
     //this.loadRuleFromServer(key);
   }
 
- 
+
 
   render() {
     return (
       <AppContainer>
         <AppBody>
           <AppNav>
-              <Title>Rules</Title>
-              <RuleList data={this.state.rules} onClick={this.handleRuleClick.bind(this)}/>
+            <Title>Rules</Title>
+            <RuleList data={this.state.rules}
+              onClick={this.handleRuleClick.bind(this)}
+            />
           </AppNav>
-          {this.state.selectedRule &&          
-            <RuleEditor id={this.state.selectedRule} />          
+          {this.state.selectedRule &&
+            <RuleEditor id={this.state.selectedRule} refreshNames={() => {this.loadRuleListFromServer(false)}}/>
           }
         </AppBody>
-        
+
       </AppContainer>
     );
   }
