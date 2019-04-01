@@ -37,13 +37,11 @@ export class DynamicEditor extends React.Component {
         console.log(this.state);
     }
 
-    onChange = (e, key, type = "single") => {
-        console.log(`${key} changed ${e.target.value} type ${type}`);
-        if (type === "single") {
-            this.setState({
-                [key]: e.target.value
-            });
-        }
+    onChange = (e, key) => {        
+        this.setState({
+            [key]: e.target.value
+        });
+        
     }
 
     handleSaveClick = () => {

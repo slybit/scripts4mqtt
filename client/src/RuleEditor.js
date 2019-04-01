@@ -1,6 +1,6 @@
 import React from "react";
 import { Title, Container, HorizontalContainer, AppContent, AppMain, AppEditor, Header } from "./containers";
-import { Button, UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
+import { Button, UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem, InputGroup, InputGroupAddon, Input } from 'reactstrap';
 import Icon from '@mdi/react'
 import { mdiPencilOutline } from '@mdi/js'
 import update from 'immutability-helper';
@@ -15,7 +15,7 @@ export class RuleEditor extends React.Component {
 
     constructor(props) {
         super(props);
-        this.state = {
+        this.state = {            
             ruleId: undefined,
             ontrue: [],
             onfalse: [],
@@ -52,6 +52,7 @@ export class RuleEditor extends React.Component {
         this.setState({
             source: JSON.parse(JSON.stringify(data)), // taking independant copy of the data
             ruleId: data.id,
+            ruleName: data.name,
             ontrue: data.ontrue ? addIds(data.ontrue) : [],
             onfalse: data.onfalse ? addIds(data.onfalse) : [],
             flatConditions: addIds(flattenConditions(data.condition)),
@@ -75,6 +76,10 @@ export class RuleEditor extends React.Component {
             editorTitle: itemType,
             editorAlertVisible: false
         });
+    }
+
+    onRuleNameChange = (e) => {                
+        this.setState({ ruleName: e.target.value, nameHasChanged: true });        
     }
 
 
@@ -253,11 +258,17 @@ export class RuleEditor extends React.Component {
             <AppMain>
 
                 <AppContent>
+                    <InputGroup>
+                        <Input value={this.state.ruleName} onChange={this.onRuleNameChange}/>
+                        {this.state.nameHasChanged && <InputGroupAddon addonType="append">
+                            <Button color="primary">Update</Button>
+                        </InputGroupAddon>}
+                    </InputGroup>
                     <Title>
                         {this.props.id ? this.props.id : 'Please select a rule from the list to edit or create a new rule.'}
                     </Title>
                     <HorizontalContainer>
-
+                        <Header>Conditions:</Header>
                         <UncontrolledDropdown>
                             <DropdownToggle caret>
                                 Add Condition
@@ -271,17 +282,6 @@ export class RuleEditor extends React.Component {
                                 {newConditions}
                             </DropdownMenu>
                         </UncontrolledDropdown>
-                        {' '}
-                        <UncontrolledDropdown>
-                            <DropdownToggle caret>
-                                Add OnTrue Action
-                            </DropdownToggle>
-                            <DropdownMenu>
-                                {newOntrueActions}
-                            </DropdownMenu>
-                        </UncontrolledDropdown>
-
-
                     </HorizontalContainer>
 
 
@@ -396,15 +396,12 @@ const pushRightStyle = {
 
 class ActionItemRendererClass extends React.Component {
     render() {
-
-       
-
         const ontrueActions = this.props.actions.map((action, index) => {
-            const isNew = isNewItem(action, "action", action.type);  
-            const style = {  
-                cursor: 'pointer',              
-                ...(isNew ? newStyle : null)                
-            };          
+            const isNew = isNewItem(action, "action", action.type);
+            const style = {
+                cursor: 'pointer',
+                ...(isNew ? newStyle : null)
+            };
             return (
                 <li className="list-group-item"
                     key={action._id} id={action._id}
