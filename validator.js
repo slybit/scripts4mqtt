@@ -121,9 +121,9 @@ function validateCronCondition(json) {
 }
 
 function validateExpression(expression) {
-    if (expression === undefined) return true;
+    if (expression === undefined || expression.trim() === "" || expression.trim() === "-") return true;
     try {
-        sancronos.isValid(expression, true);
+        sancronos.isValid(expression.trim(), true);
         return true;
     } catch (err) {
         return false;

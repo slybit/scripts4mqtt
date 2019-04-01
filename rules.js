@@ -633,8 +633,8 @@ class MqttCondition extends Condition {
 class CronCondition extends Condition {
     constructor(json) {
         super(json);
-        this.onExpression = json.on;
-        this.offExpression = json.off;
+        this.onExpression = json.on ? json.on.trim() : undefined;
+        this.offExpression = json.off ? json.off.trim() : undefined;
         validateCronCondition(json);
     }
 
@@ -643,13 +643,13 @@ class CronCondition extends Condition {
         let match = false;
         const currTime = new Date();
         // go over the onPatterns first
-        if (this.onExpression !== undefined && cronmatch.match(this.onExpression, currTime)) {
+        if (this.onExpression !== undefined && this.onExpression !== "" && this.onExpression !== "-" && cronmatch.match(this.onExpression, currTime)) {
             this.state = true;
             match = true;
         }
 
         // go over the offPatterns second
-        if (this.offExpression !== undefined && cronmatch.match(this.offExpression, currTime)) {
+        if (this.offExpression !== undefined && this.offExpression !== "" && this.offExpression !== "-" && cronmatch.match(this.offExpression, currTime)) {
             this.state = false;
             match = true;
         }

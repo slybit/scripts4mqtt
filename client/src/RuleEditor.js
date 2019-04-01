@@ -1,5 +1,5 @@
 import React from "react";
-import { Title, Container, HorizontalContainer, AppContent, AppMain, AppEditor } from "./containers";
+import { Title, Container, HorizontalContainer, AppContent, AppMain, AppEditor, Header } from "./containers";
 import { Button, UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 import Icon from '@mdi/react'
 import { mdiPencilOutline } from '@mdi/js'
@@ -7,7 +7,7 @@ import update from 'immutability-helper';
 import ReactJson from 'react-json-view';
 import format from 'string-format';
 import Sortly, { add, remove, findDescendants } from 'react-sortly';
-import { addIds, stripIds, flattenConditions, buildTree, deleteCondition, staticData } from './utils';
+import { addIds, stripIds, flattenConditions, buildTree, deleteCondition, staticData, isNewItem } from './utils';
 import { DynamicEditor } from './DynamicEditor'
 import axios from 'axios';
 
@@ -108,12 +108,7 @@ export class RuleEditor extends React.Component {
     }
 
 
-    renderItem = props => (
-        <ItemRenderer
-            {...props}
-            onEditableItemClick={this.handleEditableItemClick}
-        />
-    )
+
 
     /* -------  Callback methods of ConditionEditor  ------- */
 
@@ -126,9 +121,9 @@ export class RuleEditor extends React.Component {
         if (itemType === 'flatConditions') {
             let newItem = staticData.newItems.condition[subType];
             if (subType === "or")
-               newItem = {type: "or", condition: []};
+                newItem = { type: "or", condition: [] };
             else if (subType === "and")
-               newItem = {type: "and", condition: []};
+                newItem = { type: "and", condition: [] };
             itemUpdate = { condition: buildTree(stripIds(this.state.flatConditions)).concat(newItem) };
         } else {
             const newItem = staticData.newItems.action[subType];
@@ -242,32 +237,25 @@ export class RuleEditor extends React.Component {
     }
 
 
+
+    ConditionItemRenderer = props => (
+        <ConditionItemRendererClass
+            {...props}
+            onEditableItemClick={this.handleEditableItemClick}
+        />
+    )
+
     render() {
-        const ontrueActions = this.state.ontrue.map((action, index) => (
-            <li className="list-group-item"
-                key={action._id} id={action._id}
-                style={action.isMarked ? selectedStyle : {}}
-                onClick={() => this.handleEditableItemClick(index, "ontrue", staticData.editor.action[action.type])}>
-                {action.type}
-            </li>
-        ));
-
-        const onfalseActions = this.state.onfalse.map((action, index) => (
-            <li className="list-group-item" key={action._id} id={action._id} onClick={() => this.handleEditableItemClick(index, "onfalse", staticData.editor.action[action.type])}>
-                {action.type}
-            </li>
-        ));
-
         const newConditions = Object.keys(staticData.newItems.condition).map((condition) => (
-            <DropdownItem onClick={() => {this.addNewItem("flatConditions", condition)}}>{staticData.conditions[condition]}</DropdownItem>
+            <DropdownItem key={condition} onClick={() => { this.addNewItem("flatConditions", condition) }}>{staticData.conditions[condition]}</DropdownItem>
         ));
 
         const newOntrueActions = Object.keys(staticData.newItems.action).map((action) => (
-            <DropdownItem onClick={() => {this.addNewItem("ontrue", action)}}>{staticData.actions[action]}</DropdownItem>
+            <DropdownItem key={action} onClick={() => { this.addNewItem("ontrue", action) }}>{staticData.actions[action]}</DropdownItem>
         ));
 
         const newOnfalseActions = Object.keys(staticData.newItems.action).map((action) => (
-            <DropdownItem onClick={() => {this.addNewItem("onfalse", action)}}>{staticData.actions[action]}</DropdownItem>
+            <DropdownItem key={action} onClick={() => { this.addNewItem("onfalse", action) }}>{staticData.actions[action]}</DropdownItem>
         ));
 
         return (
@@ -285,10 +273,10 @@ export class RuleEditor extends React.Component {
                             </DropdownToggle>
                             <DropdownMenu>
                                 <DropdownItem header>Logical</DropdownItem>
-                                <DropdownItem onClick={() => {this.addNewItem("flatConditions", "or")}}>OR</DropdownItem>
-                                <DropdownItem onClick={() => {this.addNewItem("flatConditions", "and")}}>AND</DropdownItem>
-                                <DropdownItem divider />                                
-                                <DropdownItem header>Condition</DropdownItem>                                
+                                <DropdownItem onClick={() => { this.addNewItem("flatConditions", "or") }}>OR</DropdownItem>
+                                <DropdownItem onClick={() => { this.addNewItem("flatConditions", "and") }}>AND</DropdownItem>
+                                <DropdownItem divider />
+                                <DropdownItem header>Condition</DropdownItem>
                                 {newConditions}
                             </DropdownMenu>
                         </UncontrolledDropdown>
@@ -310,20 +298,50 @@ export class RuleEditor extends React.Component {
 
                         <Sortly
                             items={this.state.flatConditions}
-                            itemRenderer={this.renderItem}
+                            itemRenderer={this.ConditionItemRenderer}
                             onChange={this.handleChange}
                             onMove={this.handleMove}
                         />
                     </Container>
                     <Container>
-                        <p><b>On True:</b></p>
+                        <HorizontalContainer>
+                            <Header>On True:</Header>
+                            <UncontrolledDropdown>
+                                <DropdownToggle caret>
+                                    Add OnTrue Action
+                                </DropdownToggle>
+                                <DropdownMenu>
+                                    {newOntrueActions}
+                                </DropdownMenu>
+                            </UncontrolledDropdown>
+                        </HorizontalContainer>
                         <ul className="list-group">
-                            {ontrueActions}
+                            <ActionItemRendererClass
+                                actions={this.state.ontrue}
+                                type="ontrue"
+                                handleEditableItemClick={this.handleEditableItemClick}
+                            />
                         </ul>
-                        <p><b>On False:</b></p>
+
+                        <HorizontalContainer>
+                            <Header>On False:</Header>
+                            <UncontrolledDropdown>
+                                <DropdownToggle caret>
+                                    Add OnFalse Action
+                                </DropdownToggle>
+                                <DropdownMenu>
+                                    {newOnfalseActions}
+                                </DropdownMenu>
+                            </UncontrolledDropdown>
+                        </HorizontalContainer>
                         <ul className="list-group">
-                            {onfalseActions}
+                            <ActionItemRendererClass
+                                actions={this.state.onfalse}
+                                type="onfalse"
+                                handleEditableItemClick={this.handleEditableItemClick}
+                            />
                         </ul>
+
                     </Container>
 
                     {false && <pre className='code'>{JSON.stringify(this.state, undefined, 4)}</pre>}
@@ -387,9 +405,35 @@ const pushRightStyle = {
 
 
 
+/* --------------------------------------------------------------------------------------------------------------------
+  Condition and Action item renderers
+-------------------------------------------------------------------------------------------------------------------- */
 
+class ActionItemRendererClass extends React.Component {
+    render() {
 
-class ItemRenderer extends React.Component {
+       
+
+        const ontrueActions = this.props.actions.map((action, index) => {
+            const isNew = isNewItem(action, "action", action.type);  
+            const style = {                
+                ...(isNew ? newStyle : null)                
+            };          
+            return (
+                <li className="list-group-item"
+                    key={action._id} id={action._id}
+                    style={style}
+                    onClick={() => this.props.handleEditableItemClick(index, this.props.type, staticData.editor.action[action.type])}>
+                    {isNew ? "* " : ""} {action.type}
+                </li>
+            )
+        }
+        );
+        return ontrueActions;
+    }
+}
+
+class ConditionItemRendererClass extends React.Component {
 
     handleClick = () => {
         console.log(this.props.type);
@@ -418,10 +462,14 @@ class ItemRenderer extends React.Component {
                 label = "OR";
                 break;
             case "mqtt":
-                const { topic } = this.props;                
+                isNew = isNewItem(this.props, "condition", type);
+                const { topic } = this.props;
                 label = format("MQTT [{}]", topic);
-                isNew = (topic === staticData.newItems.condition.mqtt.topic);
                 break;
+            case "cron":
+                isNew = isNewItem(this.props, "condition", type);
+            //const { on, off } = this.props;
+            //isNew = (on === staticData.newItems.condition.cron.on) && (off === undefined);
             default:
                 label = staticData.conditions[type];
                 break;

@@ -73,10 +73,15 @@ export const Container = styled.div`
 `;
 
 export const HorizontalContainer = styled.div`
-  border: 1px solid #0000DD;
   display: flex;
   flex-direction: row;
   padding: 10px;
   justify-content: space-between;
+  align-items: center;
+`;
+
+export const Header = styled.div`    
+  font-size: 120%;
+  font-weight: 800; 
 `;
 
