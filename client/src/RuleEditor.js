@@ -6,8 +6,8 @@ import { mdiPencilOutline, mdiCancel, mdiCheck } from '@mdi/js'
 import update from 'immutability-helper';
 import ReactJson from 'react-json-view';
 import format from 'string-format';
-import Sortly, { add, remove, findDescendants } from 'react-sortly';
-import { addIds, stripIds, flattenConditions, buildTree, deleteCondition, staticData, isNewItem } from './utils';
+import Sortly, { remove, findDescendants } from 'react-sortly';
+import { addIds, stripIds, flattenConditions, buildTree, staticData, isNewItem } from './utils';
 import { DynamicEditor } from './DynamicEditor'
 import axios from 'axios';
 
@@ -15,7 +15,7 @@ export class RuleEditor extends React.Component {
 
     constructor(props) {
         super(props);
-        this.state = {            
+        this.state = {
             ruleId: undefined,
             ruleName: "",
             ontrue: [],
@@ -23,7 +23,6 @@ export class RuleEditor extends React.Component {
             flatConditions: [],
             editorVisible: false
         };
-        console.log(this.state.condition);
     }
 
     componentDidMount() {
@@ -81,8 +80,8 @@ export class RuleEditor extends React.Component {
         });
     }
 
-    onRuleNameChange = (e) => {                
-        this.setState({ ruleName: e.target.value, ruleNameHasChanged: true });        
+    onRuleNameChange = (e) => {
+        this.setState({ ruleName: e.target.value, ruleNameHasChanged: true });
     }
 
     handleRuleNameCancelClick = () => {
@@ -290,9 +289,6 @@ export class RuleEditor extends React.Component {
                             <Button color="secondary"><Icon path={mdiCancel} size={1} color="white" onClick={this.handleRuleNameCancelClick} /></Button>
                         </InputGroupAddon>}
                     </InputGroup>
-                    <Title>
-                        {this.props.id ? this.props.id : 'Please select a rule from the list to edit or create a new rule.'}
-                    </Title>
                     <HorizontalContainer>
                         <Header>Conditions:</Header>
                         <UncontrolledDropdown>
@@ -495,7 +491,7 @@ class ConditionItemRendererClass extends React.Component {
         const el = <div style={style}>
             {label}
             <span style={pushRightStyle}>
-                <Icon path={mdiPencilOutline} size={1} color="grey" onClick={this.handleClick} />
+                <Icon path={mdiPencilOutline} size={1} className="editIcon" onClick={this.handleClick} />
             </span></div>;
         return connectDragSource(connectDropTarget(el));
     }

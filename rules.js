@@ -3,7 +3,7 @@ const yaml = require('js-yaml');
 const util = require('util');
 const crypto = require('crypto');
 const mustache = require('mustache');
-const {validateMqttCondition, validateMqttAction, validateCronCondition, validateEmailAction } = require('./validator');
+const { validateMqttCondition, validateMqttAction, validateCronCondition, validateEmailAction } = require('./validator');
 const logger = require('./logger.js');
 const Engine = require('./engine.js');
 const config = require('./config.js').parse();
@@ -12,7 +12,7 @@ const { SMTPTransporter, pushover } = require('./utils.js')
 
 const filename = process.env.MQTT4SCRIPTS_RULES || 'rules.yaml';
 
-const topicToArray = function(topic) {
+const topicToArray = function (topic) {
     return topic.split('/');
 }
 
@@ -75,8 +75,8 @@ class Rules {
                     if (c.evaluate() && withActions)
                         rule.scheduleActions();
                 }
-                // TODO: add wildcard topics in the condition
-            }
+            // TODO: add wildcard topics in the condition
+        }
 
     }
 
@@ -85,7 +85,7 @@ class Rules {
     scheduleTimerConditionChecker() {
         const date = new Date();
         // calculate delay so next tick will be 5 seconds after the minute mark
-        const delay = 60 - ((Math.round(date.getTime() / 1000)-5) % 60);
+        const delay = 60 - ((Math.round(date.getTime() / 1000) - 5) % 60);
         const minutes = date.getMinutes();
         // prevent a double tick in a single minute (is only possible in case tasks take very long or at startup)
         if (minutes !== this.lastMinutes) {
@@ -97,9 +97,9 @@ class Rules {
                         if (c.evaluate())
                             rule.scheduleActions();
                     }
-                }
+            }
         }
-        setTimeout(this.scheduleTimerConditionChecker.bind(this), delay*1000);
+        setTimeout(this.scheduleTimerConditionChecker.bind(this), delay * 1000);
     }
 
     /*
@@ -111,14 +111,14 @@ class Rules {
             this.validateRulesFile();
         } catch (err) {
             return ({
-                'success' : false,
-                'error' : err.message
+                'success': false,
+                'error': err.message
             });
         }
         // validation ok
         this.loadRules();
         return ({
-            'success' : true
+            'success': true
         });
     }
 
@@ -129,7 +129,7 @@ class Rules {
                 this.jsonContents = yaml.safeLoad(fs.readFileSync(filename, 'utf8'));
             } catch (e) {
                 logger.error('Error while validating rules file: could not read rules file');
-                throw(new Error('Could not read rules file'));
+                throw (new Error('Could not read rules file'));
             }
         }
         for (let key in this.jsonContents) {
@@ -138,7 +138,7 @@ class Rules {
             } catch (e) {
                 logger.error('Error while validating rule [%s]', key);
                 logger.error(e.toString());
-                throw(new Error('Error while validating rule [' + key + ']'));
+                throw (new Error('Error while validating rule [' + key + ']'));
             }
         }
     }
@@ -149,7 +149,7 @@ class Rules {
         for (let key in this.jsonContents) {
             list.push({
                 key: key,
-                name : this.jsonContents[key].name,
+                name: this.jsonContents[key].name,
             });
 
         }
@@ -158,32 +158,43 @@ class Rules {
 
     createRule(input) {
         const id = Rule.generateId();
-        return this.updateRule(id, input);
+        try {
+            // test the input, this will throw an exception if not ok
+            new Rule(input);
+        } catch (err) {
+            logger.warn(err);
+            return { success: false, error: err.message };
+        }
+        return this.updateRule(id, input, true);
     }
 
     /*
     - id: identifier of the rule to update
     - input: JSON with one or more properties (name, condition, ontrue, onfalse)
     */
-    updateRule(id, input) {
+    updateRule(id, input, newrule = false) {
         try {
-            // test the update, this will throw an exception if not ok
-            this.testRuleUpdate(id, input);
-            // if we got here, all should be well
-            Object.assign(this.jsonContents[id], input);
+
+            if (newrule) {
+                this.jsonContents[id] = input;
+            } else {
+                // test the update, this will throw an exception if not ok
+                this.testRuleUpdate(id, input);
+                Object.assign(this.jsonContents[id], input);
+            }
             const rule = new Rule(this.jsonContents[id]);
             this.rules[id] = rule;
             this.saveRules();
             return {
-                success : true,
-                newrule : {
+                success: true,
+                newrule: {
                     id: id,
-                    ...this.jsonContents[id]                    
+                    ...this.jsonContents[id]
                 }
             };
         } catch (err) {
             logger.warn(err);
-            return { success : false, error : err.message };
+            return { success: false, error: err.message };
         }
     }
 
@@ -198,7 +209,7 @@ class Rules {
         delete this.rules[id];
         delete this.jsonContents[id];
         this.saveRules();
-        return {success : true};
+        return { success: true };
     }
 
     /*
@@ -243,9 +254,9 @@ class Rules {
 
         // root (in our case, can only be one - the first "or")
         const condition = {
-            "id" : flatened[0].id,
-            "type" : flatened[0].type,
-            "condition" : []
+            "id": flatened[0].id,
+            "type": flatened[0].type,
+            "condition": []
         };
 
         function insert(item, cond) {
@@ -374,7 +385,7 @@ class Rule {
             }
             if (a.delay > 0) {
                 a.pending = setTimeout(a.execute.bind(a), a.delay);
-                logger.info('delayed execution for %s in %d millesecs', typeof(a), a.delay);
+                logger.info('delayed execution for %s in %d millesecs', typeof (a), a.delay);
             } else {
                 a.execute();
             }
@@ -457,7 +468,7 @@ class SetValueAction extends Action {
     }
 
     execute() {
-        if (this.topic !== undefined && this.value !== undefined ) {
+        if (this.topic !== undefined && this.value !== undefined) {
             Engine.getInstance().mqttClient.publish(this.topic, JSON.stringify(this.value));
             logger.info('SetValueAction published %s -> %s', this.topic, this.value);
         }
@@ -474,7 +485,7 @@ class ScriptAction extends Action {
         super(json);
         this.topic = json.topic;
         this.script = json.script;
-        console.log(typeof(this.script));
+        console.log(typeof (this.script));
     }
 
     execute() {
@@ -526,7 +537,7 @@ class PushoverAction extends Action {
         super(json);
         this.msg = {
             message: json.message,
-            title:  json.title,
+            title: json.title,
             sound: json.sound ? json.sound : "none",
             priority: json.priority ? json.priority : 0
         }
@@ -534,7 +545,7 @@ class PushoverAction extends Action {
 
     execute() {
         logger.info('executing PushoverAction');
-        pushover.send( this.msg, function( err, result ) {
+        pushover.send(this.msg, function (err, result) {
             if (err) {
                 logger.error('ERROR sending Pushover notification');
                 logger.error(err);
@@ -582,9 +593,9 @@ class Condition {
 
     triggered() {
         return (this.trigger == Trigger.always) ||
-               (this.trigger == Trigger.on_flip && this.flipped()) ||
-               (this.trigger == Trigger.on_flip_true && this.flippedTrue()) ||
-               (this.trigger == Trigger.on_flip_false && this.flippedFalse());
+            (this.trigger == Trigger.on_flip && this.flipped()) ||
+            (this.trigger == Trigger.on_flip_true && this.flippedTrue()) ||
+            (this.trigger == Trigger.on_flip_false && this.flippedFalse());
     }
 
     /*

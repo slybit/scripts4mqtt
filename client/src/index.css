@@ -16,5 +16,20 @@ body {
   border: 1px solid rgba(0, 0, 0, 0.125);
 }
 
+.deleteIcon {
+  fill: grey
+}
+
+.deleteIcon:hover {
+  fill: orangered
+}
+
+.editIcon {
+  fill: grey
+}
+
+.editIcon:hover {
+  fill: cornflowerblue
+}
 
 

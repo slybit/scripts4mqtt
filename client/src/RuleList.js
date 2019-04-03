@@ -1,34 +1,45 @@
 import React from "react";
 import Icon from '@mdi/react'
-import { mdiProgressClock, mdiOwl, mdiDelete } from '@mdi/js'
+import { mdiDelete } from '@mdi/js'
 
 const pushRightStyle = {
     float: 'right',
     cursor: 'pointer'
 };
 
+const selectedStyle = {
+    background: 'lightskyblue',
+    color: 'black'
+};
+
 export class RuleList extends React.Component {
-    onItemSelection = arg => {
-        //this.setState({ selectedPath: arg.path });
-    };
+
+    handleDeleteClick = (e, key) => {
+        e.stopPropagation();
+        this.props.onDeleteClick(key);
+    }
 
     render() {
-        
 
-        const items = this.props.data.map(rule => (
-            <li className="list-group-item" key={rule.key} id={rule.key}> 
-            {rule.name} 
-            <span style={pushRightStyle}>
-                <Icon path={mdiProgressClock} size={1} color="grey" onClick={() => this.props.onClick(rule.key)} />
-                <Icon path={mdiOwl} size={1} color="grey"/>
-                {' '}
-                <Icon path={mdiDelete} size={1} color="grey"/>
-            </span>
-            </li>
-        ));
+        const items = this.props.data.map(rule => {
+
+            const style = {
+                cursor: 'pointer',
+                ...(rule.key === this.props.selectedRule ? selectedStyle: null)
+            }
+
+            return (
+                <li className="list-group-item" key={rule.key} id={rule.key} style={style} onClick={() => this.props.onClick(rule.key)}>
+                {rule.name}
+                <span style={pushRightStyle}>
+                    <Icon path={mdiDelete} size={1} className="deleteIcon" onClick={(e) => this.handleDeleteClick(e, rule.key)}/>
+                </span>
+                </li>
+            )
+        });
         return (
             <ul className="list-group">
-                {items}                
+                {items}
             </ul>
         );
     }

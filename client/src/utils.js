@@ -49,19 +49,6 @@ export function buildTree(items) {
 
 
 
-
-export function deleteCondition(flatList, id) {
-    console.log("deleting " + id);
-    const newList = flatList.filter(item => {
-        if (item.id === id || item.path.indexOf(id) !== -1)
-            return false;
-        else
-            return true;
-    });
-    console.log(newList);
-    return newList;
-}
-
 export function addIds(list) {
     for (let item of list)
         item._id = uuid();
@@ -147,7 +134,7 @@ export const staticData = {
                 script: ""
             }
         }
-        
+
     },
     editor: {
         condition: {
