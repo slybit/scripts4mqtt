@@ -96,6 +96,11 @@ export const staticData = {
         pushover: "Pushover",
     },
     newItems: {
+        rule: {
+            name: "new_rule",
+            enabled: true,
+            condition: []
+        },
         condition: {
             mqtt: {
                 type: "mqtt",

@@ -2,10 +2,12 @@ import React, { Component } from 'react';
 import { DragDropContext } from 'react-dnd';
 import HTML5Backend from 'react-dnd-html5-backend';
 import { AppContainer, AppNav, AppBody, Title, HorizontalContainer } from "./containers";
-import { Button, UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem, InputGroup, InputGroupAddon, Input } from 'reactstrap';
+import { Button } from 'reactstrap';
+import { staticData } from './utils';
 import { RuleList } from './RuleList';
 import { RuleEditor } from './RuleEditor';
 import axios from 'axios';
+import update from 'immutability-helper';
 
 class App extends Component {
   constructor() {
@@ -50,13 +52,28 @@ class App extends Component {
       });
   }
 
-  newRule = {
-    name: "new_rule",
-    condition: []
+  handleEnableRuleClick = (index) => {
+    axios.put('/api/rule/' + this.state.rules[index].key, {enabled: !this.state.rules[index].enabled})
+        .then((response) => {
+            // update the state
+            if (response.data.success) {
+                this.setState({ rules: update(this.state.rules, {[index]: { $toggle : ['enabled'] }}) });
+            } else {
+                // TODO: alert user, editor is not visible!
+                console.log(response.data);
+            }
+        })
+        .catch((error) => {
+            // TODO: alert user
+            console.log(error);
+        });
+
+
+
   }
 
   handleAddRuleClick = () => {
-    axios.post('/api/rules', this.newRule)
+    axios.post('/api/rules', staticData.newItems.rule)
       .then((response) => {
         console.log(response);
         this.loadRuleListFromServer(false);
@@ -98,6 +115,7 @@ class App extends Component {
               selectedRule={this.state.selectedRule}
               onClick={this.handleRuleClick.bind(this)}
               onDeleteClick={this.handleDeleteRuleClick}
+              onEnableClick={this.handleEnableRuleClick}
             />
           </AppNav>
           {this.state.selectedRule &&

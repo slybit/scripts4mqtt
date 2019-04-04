@@ -1,6 +1,6 @@
 import React from "react";
 import Icon from '@mdi/react'
-import { mdiDelete } from '@mdi/js'
+import { mdiDelete, mdiCheckboxBlankOutline, mdiCheckBoxOutline } from '@mdi/js'
 
 const pushRightStyle = {
     float: 'right',
@@ -8,8 +8,7 @@ const pushRightStyle = {
 };
 
 const selectedStyle = {
-    background: 'lightskyblue',
-    color: 'black'
+    color: 'blue'
 };
 
 export class RuleList extends React.Component {
@@ -19,9 +18,16 @@ export class RuleList extends React.Component {
         this.props.onDeleteClick(key);
     }
 
+    handleEnableClick = (e, index) => {
+        e.stopPropagation();
+        this.props.onEnableClick(index);
+    }
+
+
+
     render() {
 
-        const items = this.props.data.map(rule => {
+        const items = this.props.data.map((rule, index) => {
 
             const style = {
                 cursor: 'pointer',
@@ -29,8 +35,10 @@ export class RuleList extends React.Component {
             }
 
             return (
+
                 <li className="list-group-item" key={rule.key} id={rule.key} style={style} onClick={() => this.props.onClick(rule.key)}>
-                {rule.name}
+                <Icon path={rule.enabled ? mdiCheckBoxOutline : mdiCheckboxBlankOutline} className="editIcon" size={1} onClick={(e) => this.handleEnableClick(e, index)}/>
+                {' '}{rule.name}
                 <span style={pushRightStyle}>
                     <Icon path={mdiDelete} size={1} className="deleteIcon" onClick={(e) => this.handleDeleteClick(e, rule.key)}/>
                 </span>

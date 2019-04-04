@@ -146,10 +146,11 @@ class Rules {
 
     listAllRules() {
         let list = [];
-        for (let key in this.jsonContents) {
+        for (let key in this.rules) {
             list.push({
                 key: key,
-                name: this.jsonContents[key].name,
+                name: this.rules[key].name,
+                enabled: this.rules[key].enabled
             });
 
         }
@@ -295,6 +296,7 @@ class Rule {
 
     constructor(json) {
         this.name = json.name;
+        this.enabled = json.enabled === undefined ? true : json.enabled;
         this.conditions = [];
         this.logic = this.parseCondition(json.condition);
         this.onFalseActions = Rule.parseActions(json.onfalse);
@@ -371,6 +373,10 @@ class Rule {
     }
 
     scheduleActions() {
+        if (!this.enabled) {
+            logger.silly('Rule disabled, not scheduling actions for rule %s', this.name);
+            return;
+        }
         logger.info('Scheduling actions for rule %s', this.name);
         let actions = [];
         if (Rule.evalLogic(this.logic)) {
