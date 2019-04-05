@@ -5,6 +5,8 @@ const Engine = require('./engine.js');
 const config = require('./config.js').parse();
 const { pushover } = require('./utils.js');
 
+logger.error("test %s %d", 'bla', 10);
+
 // starts the API server
 require('./server.js');
 
@@ -73,7 +75,7 @@ let setMqttHandlers = function (mqttClient) {
         if (!packet.retain) justStarted = false;
         let withActions = !justStarted || config.retained
         // send the message to the rule engine
-        rules.mqttConditionChecker(topic, withActions);        
+        rules.mqttConditionChecker(topic, withActions);
     });
 }
 
@@ -105,7 +107,7 @@ setMqttHandlers(mqttClient);
 
 
 /*
-   
+
 var msg = {
     // These values correspond to the parameters detailed on https://pushover.net/api
     // 'message' is required. All other values are optional.
@@ -115,12 +117,12 @@ var msg = {
     device: 'devicename',
     priority: 1
 }
-   
+
 pushover.send( msg, function( err, result ) {
     if ( err ) {
       throw err
     }
-   
+
     console.log( result )
   })
 

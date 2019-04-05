@@ -15,7 +15,8 @@
     "nodemon": "^1.18.7",
     "pushover-notifications": "^1.2.0",
     "sancronos-validator": "^1.2.0",
-    "winston": "^3.1.0"
+    "winston": "^3.1.0",
+    "winston-daily-rotate-file": "^3.8.0"
   },
   "devDependencies": {},
   "scripts": {
