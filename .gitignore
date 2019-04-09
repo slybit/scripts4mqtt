@@ -1,3 +1,5 @@
 node_modules
 newrules.yaml
 combined.log
+default.log
+rules.log

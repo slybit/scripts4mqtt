@@ -702,3 +702,6 @@
 {"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 01:41:05"}
 {"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 01:41:05"}
 {"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T11:42:05.370Z","match":true,"state":false,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 01:42:05"}
+{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T11:43:05.374Z","match":true,"state":true,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 01:43:05"}
+{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 01:43:05"}
+{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 01:43:05"}

@@ -7293,3 +7293,11 @@
 {"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T11:42:30.584Z"}
 {"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T11:43:00.588Z"}
 {"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T11:43:01.592Z"}
+{"level":"info","message":"cron evaluated: state: true, match: true, flipped: true","timestamp":"2019-04-09T11:43:05.375Z"}
+{"level":"info","message":"Scheduling actions for rule TimeDateUpdate","timestamp":"2019-04-09T11:43:05.375Z"}
+{"message":"executing ScriptAction","level":"info","timestamp":"2019-04-09T11:43:05.375Z"}
+{"level":"debug","message":"running script:\n# ----- start script -----\nwrite('knx/write/15/1/0', new Date().toString());\n# -----  end script  -----","timestamp":"2019-04-09T11:43:05.375Z"}
+{"level":"info","message":"ScriptAction published knx/write/15/1/0 -> Tue Apr 09 2019 13:43:05 GMT+0200 (Central European Summer Time)","timestamp":"2019-04-09T11:43:05.376Z"}
+{"message":"executing ScriptAction","level":"info","timestamp":"2019-04-09T11:43:05.376Z"}
+{"level":"debug","message":"running script:\n# ----- start script -----\nwrite('knx/write/15/1/1', new Date().toString());\n# -----  end script  -----","timestamp":"2019-04-09T11:43:05.376Z"}
+{"level":"info","message":"ScriptAction published knx/write/15/1/1 -> Tue Apr 09 2019 13:43:05 GMT+0200 (Central European Summer Time)","timestamp":"2019-04-09T11:43:05.376Z"}
