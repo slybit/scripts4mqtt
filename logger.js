@@ -39,15 +39,25 @@ const logger = createLogger({
 */
 
 const logger = createLogger({
+  level: config.loglevel,
   transports: [
     new transports.Console({
       format: consoleFormat
     }),
     new transports.File({
-      filename: 'combined.log', level: 'debug',
-      format: format.combine(format.splat(), format.json()),
+      filename: 'default.log',
+      format: format.combine(format.timestamp(), format.splat(), format.json()),
     }),
   ],
 });
 
-module.exports = logger;
+const jsonlogger = createLogger({
+  transports: [    
+    new transports.File({
+      filename: 'rules.log', level: 'debug',
+      format: format.combine(format.timestamp({format:'YYYY-MM-DD hh:mm:ss'}), format.json()),
+    }),
+  ],
+});
+
+module.exports = {logger, jsonlogger};

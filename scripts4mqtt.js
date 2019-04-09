@@ -1,11 +1,11 @@
 'use strict'
 const mqtt = require('mqtt');
-const logger = require('./logger.js');
+const {logger, jsonlogger} = require('./logger.js');
 const Engine = require('./engine.js');
 const config = require('./config.js').parse();
 const { pushover } = require('./utils.js');
 
-logger.error("test %s %d", 'bla', 10);
+//jsonlogger.error("test", {test: 'hallo', bla: 'adsf'});
 
 // starts the API server
 require('./server.js');

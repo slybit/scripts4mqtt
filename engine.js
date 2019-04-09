@@ -1,5 +1,5 @@
 const vm = require('vm');
-const logger = require('./logger.js');
+const {logger, jsonlogger} = require('./logger.js');
 
 const store = new Map();
 const testStore = new Map(); // only used for testing scripts

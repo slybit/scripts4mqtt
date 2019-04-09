@@ -2,7 +2,7 @@ const express = require('express');
 // TODO: use winston express middleware instead of morgan? worth it?
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
-const logger = require('./logger.js');
+const {logger, jsonlogger} = require('./logger.js');
 const config = require('./config.js').parse();
 const static = require('./static.js').parse();
 const rules = require('./rules.js');
@@ -11,7 +11,6 @@ const validator = require('./validator.js');
 const app = express();
 const router = express.Router();
 
-console.log(config.port);
 const API_PORT = process.env.API_PORT || config.port || 4000;
 
 app.use(bodyParser.urlencoded({ extended: false }));

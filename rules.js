@@ -4,7 +4,7 @@ const util = require('util');
 const crypto = require('crypto');
 const mustache = require('mustache');
 const { validateMqttCondition, validateMqttAction, validateCronCondition, validateEmailAction } = require('./validator');
-const logger = require('./logger.js');
+const {logger, jsonlogger} = require('./logger.js');
 const Engine = require('./engine.js');
 const config = require('./config.js').parse();
 const cronmatch = require('./cronmatch.js')
@@ -36,15 +36,15 @@ class Rules {
             }
         }
         for (let key in this.jsonContents) {
-            try {
-                let rule = new Rule(this.jsonContents[key]);
+            //try {
+                let rule = new Rule(key, this.jsonContents[key]);
                 this.rules[key] = rule;
                 logger.info('loaded %s', rule.toString());
-            } catch (e) {
-                logger.error('Error loading rule [%s]', key);
-                logger.error(e.toString());
-                process.exit(1);
-            }
+            //} catch (e) {
+            //    logger.error('Error loading rule [%s]', key);
+             //   logger.error(e.toString());
+             //   process.exit(1);
+            //}
         }
 
     }
@@ -81,6 +81,7 @@ class Rules {
     }
 
     /*
+      This runs every minute. It will go over all CronConditions in all rules and evaluate them.
     */
     scheduleTimerConditionChecker() {
         const date = new Date();
@@ -134,7 +135,7 @@ class Rules {
         }
         for (let key in this.jsonContents) {
             try {
-                new Rule(this.jsonContents[key]);
+                new Rule(key, this.jsonContents[key]);
             } catch (e) {
                 logger.error('Error while validating rule [%s]', key);
                 logger.error(e.toString());
@@ -161,7 +162,7 @@ class Rules {
         const id = Rule.generateId();
         try {
             // test the input, this will throw an exception if not ok
-            new Rule(input);
+            new Rule(id, input);
         } catch (err) {
             logger.warn(err);
             return { success: false, error: err.message };
@@ -183,7 +184,7 @@ class Rules {
                 this.testRuleUpdate(id, input);
                 Object.assign(this.jsonContents[id], input);
             }
-            const rule = new Rule(this.jsonContents[id]);
+            const rule = new Rule(id, this.jsonContents[id]);
             this.rules[id] = rule;
             this.saveRules();
             return {
@@ -203,7 +204,7 @@ class Rules {
         // make a hard copy, apply changes and test
         const cloned = JSON.parse(JSON.stringify(this.jsonContents[id]));
         Object.assign(cloned, input);
-        new Rule(cloned);
+        new Rule(id, cloned);
     }
 
     deleteRule(id) {
@@ -294,7 +295,8 @@ class Rules {
 
 class Rule {
 
-    constructor(json) {
+    constructor(id, json) {
+        this.id = id;
         this.name = json.name;
         this.enabled = json.enabled === undefined ? true : json.enabled;
         this.conditions = [];
@@ -320,16 +322,16 @@ class Rule {
         for (let a of actions) {
             switch (a.type.toLowerCase()) {
                 case "mqtt":
-                    result.push(new SetValueAction(a));
+                    result.push(new SetValueAction(a, this));
                     break;
                 case "script":
-                    result.push(new ScriptAction(a));
+                    result.push(new ScriptAction(a, this));
                     break;
                 case "email":
-                    result.push(new EMailAction(a));
+                    result.push(new EMailAction(a, this));
                     break;
                 case "pushover":
-                    result.push(new PushoverAction(a));
+                    result.push(new PushoverAction(a, this));
                     break;
                 default:
                     throw new Error('Unknown action type ' + a.type);
@@ -341,8 +343,7 @@ class Rule {
     static evalLogic(logic) {
         // logic can only be an array in the first iteration
         // we just turn it in an "or"
-        if (Array.isArray(logic)) {
-            console.log("was array");
+        if (Array.isArray(logic)) {            
             return Rule.evalLogic({
                 type: "or",
                 condition: logic
@@ -400,7 +401,7 @@ class Rule {
 
     // json can be either an array of conditions, or a single (nested) condition
     // a condition has a 'type' and a 'condition' -> itself again an array (for 'or' and 'and') or a nested condition
-    parseCondition(json) {
+    parseCondition(json) {        
         if (Array.isArray(json)) {
             let result = [];
             for (let c of json) {
@@ -427,15 +428,15 @@ class Rule {
                     };
                     break;
                 case "mqtt":
-                    c = new MqttCondition(json);
+                    c = new MqttCondition(json, this);
                     this.conditions.push(c);
                     break;
                 case "cron":
-                    c = new CronCondition(json);
+                    c = new CronCondition(json, this);
                     this.conditions.push(c);
                     break;
                 case "simple":
-                    c = new SimpleCondition(json);
+                    c = new SimpleCondition(json, this);
                     this.conditions.push(c);
                     break;
                 default:
@@ -454,7 +455,8 @@ class Rule {
 }
 
 class Action {
-    constructor(json) {
+    constructor(json, rule) {
+        this.rule = rule;
         this.delay = json.delay ? json.delay : 0;
         this.pending = undefined;
     }
@@ -466,8 +468,8 @@ class Action {
 
 class SetValueAction extends Action {
 
-    constructor(json) {
-        super(json);
+    constructor(json, rule) {
+        super(json, rule);
         this.topic = json.topic;
         this.value = json.value;
         validateMqttAction(json);
@@ -477,6 +479,7 @@ class SetValueAction extends Action {
         if (this.topic !== undefined && this.value !== undefined) {
             Engine.getInstance().mqttClient.publish(this.topic, JSON.stringify(this.value));
             logger.info('SetValueAction published %s -> %s', this.topic, this.value);
+            jsonlogger.info("SetValueAction executed", {ruleId: this.rule.id, type: "action", action: "mqtt", topic: this.topic, value: this.value});
         }
 
         //TODO: make value mustache expression
@@ -487,18 +490,17 @@ class SetValueAction extends Action {
 
 class ScriptAction extends Action {
 
-    constructor(json) {
-        super(json);
+    constructor(json, rule) {
+        super(json, rule);
         this.topic = json.topic;
-        this.script = json.script;
-        console.log(typeof (this.script));
+        this.script = json.script;        
     }
 
     execute() {
         logger.info('executing ScriptAction');
-        try {
-            console.log(this.script);
+        try {            
             Engine.getInstance().runScript(this.script);
+            jsonlogger.info("ScriptAction executed", {ruleId: this.rule.id, type: "action", action: "script"});
         } catch (err) {
             logger.error('ERROR running script:\n# ----- start script -----\n%s\n# -----  end script  -----', this.script);
             logger.error(err);
@@ -509,8 +511,8 @@ class ScriptAction extends Action {
 
 class EMailAction extends Action {
 
-    constructor(json) {
-        super(json);
+    constructor(json, rule) {
+        super(json, rule);
         this.msg = {
             to: json.to,
             subject: json.subject,
@@ -530,8 +532,10 @@ class EMailAction extends Action {
             if (err) {
                 logger.error('ERROR sending email');
                 logger.error(err);
-            } else
+            } else {
                 logger.info('mail sent succesfully');
+                jsonlogger.info("EMailAction executed", {ruleId: this.rule.id, type: "action", action: "email", subject: this.msg.subject});
+            }
         });
     }
 
@@ -539,8 +543,8 @@ class EMailAction extends Action {
 
 class PushoverAction extends Action {
 
-    constructor(json) {
-        super(json);
+    constructor(json, rule) {
+        super(json), rule;
         this.msg = {
             message: json.message,
             title: json.title,
@@ -555,8 +559,10 @@ class PushoverAction extends Action {
             if (err) {
                 logger.error('ERROR sending Pushover notification');
                 logger.error(err);
-            } else
+            } else {
                 logger.info('Pushover notification sent succesfully');
+                jsonlogger.info("PushoverAction executed", {ruleId: this.rule.id, type: "action", action: "pushover", subject: this.msg.title});
+            }
         });
     }
 
@@ -579,7 +585,8 @@ const Trigger = Object.freeze({
 
 class Condition {
 
-    constructor(json) {
+    constructor(json, rule) {
+        this.rule = rule;        
         this.trigger = Trigger[json.trigger] ? Trigger[json.trigger] : Trigger["no"];
         this.oldState = undefined;
         this.state = undefined;
@@ -619,8 +626,8 @@ class Condition {
 
 class MqttCondition extends Condition {
 
-    constructor(json) {
-        super(json);
+    constructor(json, rule) {
+        super(json, rule);
         this.topic = json.topic;
         this.eval = json.eval;
         validateMqttCondition(json);
@@ -641,15 +648,16 @@ class MqttCondition extends Condition {
             logger.error(err);
         }
         logger.debug("MQTT Condition state updated from %s to %s; flipped = %s", this.oldState, this.state, this.flipped());
-
+        jsonlogger.info("MQTT condition evaluated", {ruleId: this.rule.id, type: "condition", condition: "mqtt", topic: this.topic, value: data.M, oldState: this.oldState, state: this.state, flipped: this.flipped()});
         return this.triggered();
     }
 
 }
 
 class CronCondition extends Condition {
-    constructor(json) {
-        super(json);
+
+    constructor(json, rule) {
+        super(json, rule);
         this.onExpression = json.on ? json.on.trim() : undefined;
         this.offExpression = json.off ? json.off.trim() : undefined;
         validateCronCondition(json);
@@ -671,15 +679,18 @@ class CronCondition extends Condition {
             match = true;
         }
 
-        logger.info('cron evaluated: state: %s, match: %s, flipped: %s', this.state, match, this.flipped());
+        if (match) {
+            logger.info('cron evaluated: state: %s, match: %s, flipped: %s', this.state, match, this.flipped());
+            jsonlogger.info("Cron condition evaluated", {ruleId: this.rule.id, type: "condition", condition: "cron", time: currTime, match: match, state: this.state, flipped: this.flipped()});
+        }
         return match && this.triggered()
     }
 }
 
 class SimpleCondition extends Condition {
 
-    constructor(json) {
-        super(json);
+    constructor(json, rule) {
+        super(json, rule);
         this.state = json.value ? true : false;
     }
 
