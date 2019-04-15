@@ -343,7 +343,7 @@ class Rule {
     static evalLogic(logic) {
         // logic can only be an array in the first iteration
         // we just turn it in an "or"
-        if (Array.isArray(logic)) {            
+        if (Array.isArray(logic)) {
             return Rule.evalLogic({
                 type: "or",
                 condition: logic
@@ -401,7 +401,7 @@ class Rule {
 
     // json can be either an array of conditions, or a single (nested) condition
     // a condition has a 'type' and a 'condition' -> itself again an array (for 'or' and 'and') or a nested condition
-    parseCondition(json) {        
+    parseCondition(json) {
         if (Array.isArray(json)) {
             let result = [];
             for (let c of json) {
@@ -479,7 +479,7 @@ class SetValueAction extends Action {
         if (this.topic !== undefined && this.value !== undefined) {
             Engine.getInstance().mqttClient.publish(this.topic, JSON.stringify(this.value));
             logger.info('SetValueAction published %s -> %s', this.topic, this.value);
-            jsonlogger.info("SetValueAction executed", {ruleId: this.rule.id, type: "action", action: "mqtt", topic: this.topic, value: this.value});
+            jsonlogger.info("SetValueAction executed", {ruleId: this.rule.id, type: "action", subtype: "mqtt", details: `"${this.value}" to ${this.topic}`});
         }
 
         //TODO: make value mustache expression
@@ -493,14 +493,14 @@ class ScriptAction extends Action {
     constructor(json, rule) {
         super(json, rule);
         this.topic = json.topic;
-        this.script = json.script;        
+        this.script = json.script;
     }
 
     execute() {
         logger.info('executing ScriptAction');
-        try {            
+        try {
             Engine.getInstance().runScript(this.script);
-            jsonlogger.info("ScriptAction executed", {ruleId: this.rule.id, type: "action", action: "script"});
+            jsonlogger.info("ScriptAction executed", {ruleId: this.rule.id, type: "action", subtype: "script"});
         } catch (err) {
             logger.error('ERROR running script:\n# ----- start script -----\n%s\n# -----  end script  -----', this.script);
             logger.error(err);
@@ -534,7 +534,7 @@ class EMailAction extends Action {
                 logger.error(err);
             } else {
                 logger.info('mail sent succesfully');
-                jsonlogger.info("EMailAction executed", {ruleId: this.rule.id, type: "action", action: "email", subject: this.msg.subject});
+                jsonlogger.info("EMailAction executed", {ruleId: this.rule.id, type: "action", subtype: "email", details: `subject: ${this.msg.subject}`});
             }
         });
     }
@@ -561,7 +561,7 @@ class PushoverAction extends Action {
                 logger.error(err);
             } else {
                 logger.info('Pushover notification sent succesfully');
-                jsonlogger.info("PushoverAction executed", {ruleId: this.rule.id, type: "action", action: "pushover", subject: this.msg.title});
+                jsonlogger.info("PushoverAction executed", {ruleId: this.rule.id, type: "action", subtype: "pushover", details: `subject: ${this.msg.title}`});
             }
         });
     }
@@ -586,7 +586,7 @@ const Trigger = Object.freeze({
 class Condition {
 
     constructor(json, rule) {
-        this.rule = rule;        
+        this.rule = rule;
         this.trigger = Trigger[json.trigger] ? Trigger[json.trigger] : Trigger["no"];
         this.oldState = undefined;
         this.state = undefined;
@@ -648,7 +648,7 @@ class MqttCondition extends Condition {
             logger.error(err);
         }
         logger.debug("MQTT Condition state updated from %s to %s; flipped = %s", this.oldState, this.state, this.flipped());
-        jsonlogger.info("MQTT condition evaluated", {ruleId: this.rule.id, type: "condition", condition: "mqtt", topic: this.topic, value: data.M, oldState: this.oldState, state: this.state, flipped: this.flipped()});
+        jsonlogger.info("MQTT condition evaluated", {ruleId: this.rule.id, type: "condition", subtype: "mqtt", details: `topic: ${this.topic}, value: ${data.M}, oldState: ${this.oldState}, state: ${this.state}, flipped: ${this.flipped()}`});
         return this.triggered();
     }
 
@@ -681,7 +681,7 @@ class CronCondition extends Condition {
 
         if (match) {
             logger.info('cron evaluated: state: %s, match: %s, flipped: %s', this.state, match, this.flipped());
-            jsonlogger.info("Cron condition evaluated", {ruleId: this.rule.id, type: "condition", condition: "cron", time: currTime, match: match, state: this.state, flipped: this.flipped()});
+            jsonlogger.info("Cron condition evaluated", {ruleId: this.rule.id, type: "condition", subtype: "cron", details: `match: ${match}, state: ${this.state}, flipped: ${this.flipped()}`});
         }
         return match && this.triggered()
     }

@@ -7293,3 +7293,1139 @@
 {"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T11:42:30.584Z"}
 {"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T11:43:00.588Z"}
 {"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T11:43:01.592Z"}
+{"message":"Parsing rules","level":"info","timestamp":"2019-04-09T11:48:59.660Z"}
+{"level":"info","message":"loaded <Rule> TEST - #conditions: 3, #onTrueActions: 0, #onFalseActions: 0","timestamp":"2019-04-09T11:48:59.676Z"}
+{"level":"info","message":"loaded <Rule> TimeDateUpdate - #conditions: 1, #onTrueActions: 2, #onFalseActions: 0","timestamp":"2019-04-09T11:48:59.691Z"}
+{"level":"info","message":"loaded <Rule> Bel - #conditions: 1, #onTrueActions: 1, #onFalseActions: 0","timestamp":"2019-04-09T11:48:59.691Z"}
+{"level":"info","message":"loaded <Rule> Afdak_achteraan - #conditions: 3, #onTrueActions: 1, #onFalseActions: 1","timestamp":"2019-04-09T11:48:59.691Z"}
+{"level":"info","message":"loaded <Rule> Voordeur - #conditions: 2, #onTrueActions: 3, #onFalseActions: 0","timestamp":"2019-04-09T11:48:59.691Z"}
+{"level":"info","message":"loaded <Rule> Afdak - #conditions: 1, #onTrueActions: 1, #onFalseActions: 0","timestamp":"2019-04-09T11:48:59.691Z"}
+{"level":"info","message":"loaded <Rule> StatusBeneden - #conditions: 12, #onTrueActions: 1, #onFalseActions: 1","timestamp":"2019-04-09T11:48:59.691Z"}
+{"level":"info","message":"loaded <Rule> BadkamerVentilatie - #conditions: 1, #onTrueActions: 5, #onFalseActions: 0","timestamp":"2019-04-09T11:48:59.691Z"}
+{"level":"info","message":"loaded <Rule> Ventilatie - #conditions: 1, #onTrueActions: 1, #onFalseActions: 0","timestamp":"2019-04-09T11:48:59.691Z"}
+{"level":"info","message":"cron evaluated: state: false, match: true, flipped: true","timestamp":"2019-04-09T11:48:59.754Z"}
+{"level":"info","message":"Scheduling actions for rule TimeDateUpdate","timestamp":"2019-04-09T11:48:59.754Z"}
+{"level":"info","message":"Listening on port 4000","timestamp":"2019-04-09T11:48:59.754Z"}
+{"level":"info","message":"cron evaluated: state: true, match: true, flipped: true","timestamp":"2019-04-09T11:49:04.775Z"}
+{"level":"info","message":"Scheduling actions for rule TimeDateUpdate","timestamp":"2019-04-09T11:49:04.775Z"}
+{"message":"executing ScriptAction","level":"info","timestamp":"2019-04-09T11:49:04.775Z"}
+{"level":"debug","message":"running script:\n# ----- start script -----\nwrite('knx/write/15/1/0', new Date().toString());\n# -----  end script  -----","timestamp":"2019-04-09T11:49:04.775Z"}
+{"level":"info","message":"ScriptAction published knx/write/15/1/0 -> Tue Apr 09 2019 13:49:04 GMT+0200 (Central European Summer Time)","timestamp":"2019-04-09T11:49:04.775Z"}
+{"message":"executing ScriptAction","level":"info","timestamp":"2019-04-09T11:49:04.775Z"}
+{"level":"debug","message":"running script:\n# ----- start script -----\nwrite('knx/write/15/1/1', new Date().toString());\n# -----  end script  -----","timestamp":"2019-04-09T11:49:04.775Z"}
+{"level":"info","message":"ScriptAction published knx/write/15/1/1 -> Tue Apr 09 2019 13:49:04 GMT+0200 (Central European Summer Time)","timestamp":"2019-04-09T11:49:04.775Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T11:49:20.798Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T11:49:21.814Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T11:49:42.840Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T11:49:43.840Z"}
+{"level":"info","message":"cron evaluated: state: false, match: true, flipped: true","timestamp":"2019-04-09T11:50:04.802Z"}
+{"level":"info","message":"Scheduling actions for rule TimeDateUpdate","timestamp":"2019-04-09T11:50:04.802Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T11:50:04.865Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T11:50:05.865Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T11:50:26.869Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T11:50:27.868Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T11:50:48.886Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T11:50:49.886Z"}
+{"level":"info","message":"cron evaluated: state: true, match: true, flipped: true","timestamp":"2019-04-09T11:51:04.817Z"}
+{"level":"info","message":"Scheduling actions for rule TimeDateUpdate","timestamp":"2019-04-09T11:51:04.819Z"}
+{"message":"executing ScriptAction","level":"info","timestamp":"2019-04-09T11:51:04.819Z"}
+{"level":"debug","message":"running script:\n# ----- start script -----\nwrite('knx/write/15/1/0', new Date().toString());\n# -----  end script  -----","timestamp":"2019-04-09T11:51:04.821Z"}
+{"level":"info","message":"ScriptAction published knx/write/15/1/0 -> Tue Apr 09 2019 13:51:04 GMT+0200 (Central European Summer Time)","timestamp":"2019-04-09T11:51:04.822Z"}
+{"message":"executing ScriptAction","level":"info","timestamp":"2019-04-09T11:51:04.823Z"}
+{"level":"debug","message":"running script:\n# ----- start script -----\nwrite('knx/write/15/1/1', new Date().toString());\n# -----  end script  -----","timestamp":"2019-04-09T11:51:04.825Z"}
+{"level":"info","message":"ScriptAction published knx/write/15/1/1 -> Tue Apr 09 2019 13:51:04 GMT+0200 (Central European Summer Time)","timestamp":"2019-04-09T11:51:04.826Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T11:51:10.888Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T11:51:11.888Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T11:51:32.906Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T11:51:33.913Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T11:51:54.928Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T11:51:55.929Z"}
+{"level":"info","message":"cron evaluated: state: false, match: true, flipped: true","timestamp":"2019-04-09T11:52:04.839Z"}
+{"level":"info","message":"Scheduling actions for rule TimeDateUpdate","timestamp":"2019-04-09T11:52:04.839Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T11:52:16.948Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T11:52:17.949Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T11:52:38.970Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T11:52:39.971Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T11:53:00.984Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T11:53:01.983Z"}
+{"level":"info","message":"cron evaluated: state: true, match: true, flipped: true","timestamp":"2019-04-09T11:53:04.842Z"}
+{"level":"info","message":"Scheduling actions for rule TimeDateUpdate","timestamp":"2019-04-09T11:53:04.843Z"}
+{"message":"executing ScriptAction","level":"info","timestamp":"2019-04-09T11:53:04.843Z"}
+{"level":"debug","message":"running script:\n# ----- start script -----\nwrite('knx/write/15/1/0', new Date().toString());\n# -----  end script  -----","timestamp":"2019-04-09T11:53:04.845Z"}
+{"level":"info","message":"ScriptAction published knx/write/15/1/0 -> Tue Apr 09 2019 13:53:04 GMT+0200 (Central European Summer Time)","timestamp":"2019-04-09T11:53:04.846Z"}
+{"message":"executing ScriptAction","level":"info","timestamp":"2019-04-09T11:53:04.847Z"}
+{"level":"debug","message":"running script:\n# ----- start script -----\nwrite('knx/write/15/1/1', new Date().toString());\n# -----  end script  -----","timestamp":"2019-04-09T11:53:04.848Z"}
+{"level":"info","message":"ScriptAction published knx/write/15/1/1 -> Tue Apr 09 2019 13:53:04 GMT+0200 (Central European Summer Time)","timestamp":"2019-04-09T11:53:04.849Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T11:53:23.014Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T11:53:24.016Z"}
+{"message":"Parsing rules","level":"info","timestamp":"2019-04-09T11:53:41.165Z"}
+{"level":"info","message":"loaded <Rule> TEST - #conditions: 3, #onTrueActions: 0, #onFalseActions: 0","timestamp":"2019-04-09T11:53:41.196Z"}
+{"level":"info","message":"loaded <Rule> TimeDateUpdate - #conditions: 1, #onTrueActions: 2, #onFalseActions: 0","timestamp":"2019-04-09T11:53:41.196Z"}
+{"level":"info","message":"loaded <Rule> Bel - #conditions: 1, #onTrueActions: 1, #onFalseActions: 0","timestamp":"2019-04-09T11:53:41.196Z"}
+{"level":"info","message":"loaded <Rule> Afdak_achteraan - #conditions: 3, #onTrueActions: 1, #onFalseActions: 1","timestamp":"2019-04-09T11:53:41.196Z"}
+{"level":"info","message":"loaded <Rule> Voordeur - #conditions: 2, #onTrueActions: 3, #onFalseActions: 0","timestamp":"2019-04-09T11:53:41.196Z"}
+{"level":"info","message":"loaded <Rule> Afdak - #conditions: 1, #onTrueActions: 1, #onFalseActions: 0","timestamp":"2019-04-09T11:53:41.196Z"}
+{"level":"info","message":"loaded <Rule> StatusBeneden - #conditions: 12, #onTrueActions: 1, #onFalseActions: 1","timestamp":"2019-04-09T11:53:41.212Z"}
+{"level":"info","message":"loaded <Rule> BadkamerVentilatie - #conditions: 1, #onTrueActions: 5, #onFalseActions: 0","timestamp":"2019-04-09T11:53:41.212Z"}
+{"level":"info","message":"loaded <Rule> Ventilatie - #conditions: 1, #onTrueActions: 1, #onFalseActions: 0","timestamp":"2019-04-09T11:53:41.212Z"}
+{"level":"info","message":"cron evaluated: state: true, match: true, flipped: true","timestamp":"2019-04-09T11:53:41.274Z"}
+{"level":"info","message":"Scheduling actions for rule TimeDateUpdate","timestamp":"2019-04-09T11:53:41.274Z"}
+{"message":"executing ScriptAction","level":"info","timestamp":"2019-04-09T11:53:41.274Z"}
+{"level":"debug","message":"running script:\n# ----- start script -----\nwrite('knx/write/15/1/0', new Date().toString());\n# -----  end script  -----","timestamp":"2019-04-09T11:53:41.290Z"}
+{"level":"info","message":"ScriptAction published knx/write/15/1/0 -> Tue Apr 09 2019 13:53:41 GMT+0200 (Central European Summer Time)","timestamp":"2019-04-09T11:53:41.290Z"}
+{"message":"executing ScriptAction","level":"info","timestamp":"2019-04-09T11:53:41.290Z"}
+{"level":"debug","message":"running script:\n# ----- start script -----\nwrite('knx/write/15/1/1', new Date().toString());\n# -----  end script  -----","timestamp":"2019-04-09T11:53:41.290Z"}
+{"level":"info","message":"ScriptAction published knx/write/15/1/1 -> Tue Apr 09 2019 13:53:41 GMT+0200 (Central European Summer Time)","timestamp":"2019-04-09T11:53:41.290Z"}
+{"level":"info","message":"Listening on port 4000","timestamp":"2019-04-09T11:53:41.290Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T11:54:02.310Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T11:54:03.318Z"}
+{"level":"info","message":"cron evaluated: state: false, match: true, flipped: true","timestamp":"2019-04-09T11:54:05.308Z"}
+{"level":"info","message":"Scheduling actions for rule TimeDateUpdate","timestamp":"2019-04-09T11:54:05.308Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T11:54:24.334Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T11:54:25.337Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T11:54:46.342Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T11:54:47.342Z"}
+{"level":"info","message":"cron evaluated: state: true, match: true, flipped: true","timestamp":"2019-04-09T11:55:05.321Z"}
+{"level":"info","message":"Scheduling actions for rule TimeDateUpdate","timestamp":"2019-04-09T11:55:05.321Z"}
+{"message":"executing ScriptAction","level":"info","timestamp":"2019-04-09T11:55:05.321Z"}
+{"level":"debug","message":"running script:\n# ----- start script -----\nwrite('knx/write/15/1/0', new Date().toString());\n# -----  end script  -----","timestamp":"2019-04-09T11:55:05.321Z"}
+{"level":"info","message":"ScriptAction published knx/write/15/1/0 -> Tue Apr 09 2019 13:55:05 GMT+0200 (Central European Summer Time)","timestamp":"2019-04-09T11:55:05.321Z"}
+{"message":"executing ScriptAction","level":"info","timestamp":"2019-04-09T11:55:05.321Z"}
+{"level":"debug","message":"running script:\n# ----- start script -----\nwrite('knx/write/15/1/1', new Date().toString());\n# -----  end script  -----","timestamp":"2019-04-09T11:55:05.321Z"}
+{"level":"info","message":"ScriptAction published knx/write/15/1/1 -> Tue Apr 09 2019 13:55:05 GMT+0200 (Central European Summer Time)","timestamp":"2019-04-09T11:55:05.321Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T11:55:08.348Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T11:55:09.353Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T11:55:30.378Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T11:55:31.379Z"}
+{"message":"Parsing rules","level":"info","timestamp":"2019-04-09T11:55:38.813Z"}
+{"level":"info","message":"loaded <Rule> TEST - #conditions: 3, #onTrueActions: 0, #onFalseActions: 0","timestamp":"2019-04-09T11:55:38.829Z"}
+{"level":"info","message":"loaded <Rule> TimeDateUpdate - #conditions: 1, #onTrueActions: 2, #onFalseActions: 0","timestamp":"2019-04-09T11:55:38.829Z"}
+{"level":"info","message":"loaded <Rule> Bel - #conditions: 1, #onTrueActions: 1, #onFalseActions: 0","timestamp":"2019-04-09T11:55:38.829Z"}
+{"level":"info","message":"loaded <Rule> Afdak_achteraan - #conditions: 3, #onTrueActions: 1, #onFalseActions: 1","timestamp":"2019-04-09T11:55:38.829Z"}
+{"level":"info","message":"loaded <Rule> Voordeur - #conditions: 2, #onTrueActions: 3, #onFalseActions: 0","timestamp":"2019-04-09T11:55:38.829Z"}
+{"level":"info","message":"loaded <Rule> Afdak - #conditions: 1, #onTrueActions: 1, #onFalseActions: 0","timestamp":"2019-04-09T11:55:38.829Z"}
+{"level":"info","message":"loaded <Rule> StatusBeneden - #conditions: 12, #onTrueActions: 1, #onFalseActions: 1","timestamp":"2019-04-09T11:55:38.829Z"}
+{"level":"info","message":"loaded <Rule> BadkamerVentilatie - #conditions: 1, #onTrueActions: 5, #onFalseActions: 0","timestamp":"2019-04-09T11:55:38.845Z"}
+{"level":"info","message":"loaded <Rule> Ventilatie - #conditions: 1, #onTrueActions: 1, #onFalseActions: 0","timestamp":"2019-04-09T11:55:38.845Z"}
+{"level":"info","message":"cron evaluated: state: true, match: true, flipped: true","timestamp":"2019-04-09T11:55:38.877Z"}
+{"level":"info","message":"Scheduling actions for rule TimeDateUpdate","timestamp":"2019-04-09T11:55:38.877Z"}
+{"message":"executing ScriptAction","level":"info","timestamp":"2019-04-09T11:55:38.877Z"}
+{"level":"debug","message":"running script:\n# ----- start script -----\nwrite('knx/write/15/1/0', new Date().toString());\n# -----  end script  -----","timestamp":"2019-04-09T11:55:38.877Z"}
+{"level":"info","message":"ScriptAction published knx/write/15/1/0 -> Tue Apr 09 2019 13:55:38 GMT+0200 (Central European Summer Time)","timestamp":"2019-04-09T11:55:38.877Z"}
+{"message":"executing ScriptAction","level":"info","timestamp":"2019-04-09T11:55:38.877Z"}
+{"level":"debug","message":"running script:\n# ----- start script -----\nwrite('knx/write/15/1/1', new Date().toString());\n# -----  end script  -----","timestamp":"2019-04-09T11:55:38.877Z"}
+{"level":"info","message":"ScriptAction published knx/write/15/1/1 -> Tue Apr 09 2019 13:55:38 GMT+0200 (Central European Summer Time)","timestamp":"2019-04-09T11:55:38.877Z"}
+{"level":"info","message":"Listening on port 4000","timestamp":"2019-04-09T11:55:38.877Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T11:55:59.918Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T11:56:00.932Z"}
+{"level":"info","message":"cron evaluated: state: false, match: true, flipped: true","timestamp":"2019-04-09T11:56:04.905Z"}
+{"level":"info","message":"Scheduling actions for rule TimeDateUpdate","timestamp":"2019-04-09T11:56:04.905Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T11:56:21.962Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T11:56:22.970Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T11:56:43.978Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T11:56:44.986Z"}
+{"message":"Parsing rules","level":"info","timestamp":"2019-04-09T11:57:07.082Z"}
+{"level":"info","message":"loaded <Rule> TEST - #conditions: 3, #onTrueActions: 0, #onFalseActions: 0","timestamp":"2019-04-09T11:57:07.097Z"}
+{"level":"info","message":"loaded <Rule> TimeDateUpdate - #conditions: 1, #onTrueActions: 2, #onFalseActions: 0","timestamp":"2019-04-09T11:57:07.097Z"}
+{"level":"info","message":"loaded <Rule> Bel - #conditions: 1, #onTrueActions: 1, #onFalseActions: 0","timestamp":"2019-04-09T11:57:07.097Z"}
+{"level":"info","message":"loaded <Rule> Afdak_achteraan - #conditions: 3, #onTrueActions: 1, #onFalseActions: 1","timestamp":"2019-04-09T11:57:07.097Z"}
+{"level":"info","message":"loaded <Rule> Voordeur - #conditions: 2, #onTrueActions: 3, #onFalseActions: 0","timestamp":"2019-04-09T11:57:07.097Z"}
+{"level":"info","message":"loaded <Rule> Afdak - #conditions: 1, #onTrueActions: 1, #onFalseActions: 0","timestamp":"2019-04-09T11:57:07.097Z"}
+{"level":"info","message":"loaded <Rule> StatusBeneden - #conditions: 12, #onTrueActions: 1, #onFalseActions: 1","timestamp":"2019-04-09T11:57:07.097Z"}
+{"level":"info","message":"loaded <Rule> BadkamerVentilatie - #conditions: 1, #onTrueActions: 5, #onFalseActions: 0","timestamp":"2019-04-09T11:57:07.097Z"}
+{"level":"info","message":"loaded <Rule> Ventilatie - #conditions: 1, #onTrueActions: 1, #onFalseActions: 0","timestamp":"2019-04-09T11:57:07.097Z"}
+{"level":"info","message":"cron evaluated: state: true, match: true, flipped: true","timestamp":"2019-04-09T11:57:07.144Z"}
+{"level":"info","message":"Scheduling actions for rule TimeDateUpdate","timestamp":"2019-04-09T11:57:07.144Z"}
+{"message":"executing ScriptAction","level":"info","timestamp":"2019-04-09T11:57:07.144Z"}
+{"level":"debug","message":"running script:\n# ----- start script -----\nwrite('knx/write/15/1/0', new Date().toString());\n# -----  end script  -----","timestamp":"2019-04-09T11:57:07.144Z"}
+{"level":"info","message":"ScriptAction published knx/write/15/1/0 -> Tue Apr 09 2019 13:57:07 GMT+0200 (Central European Summer Time)","timestamp":"2019-04-09T11:57:07.144Z"}
+{"message":"executing ScriptAction","level":"info","timestamp":"2019-04-09T11:57:07.144Z"}
+{"level":"debug","message":"running script:\n# ----- start script -----\nwrite('knx/write/15/1/1', new Date().toString());\n# -----  end script  -----","timestamp":"2019-04-09T11:57:07.144Z"}
+{"level":"info","message":"ScriptAction published knx/write/15/1/1 -> Tue Apr 09 2019 13:57:07 GMT+0200 (Central European Summer Time)","timestamp":"2019-04-09T11:57:07.144Z"}
+{"level":"info","message":"Listening on port 4000","timestamp":"2019-04-09T11:57:07.144Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T11:57:28.183Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T11:57:29.187Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T11:57:50.212Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T11:57:51.225Z"}
+{"level":"info","message":"cron evaluated: state: false, match: true, flipped: true","timestamp":"2019-04-09T11:58:05.157Z"}
+{"level":"info","message":"Scheduling actions for rule TimeDateUpdate","timestamp":"2019-04-09T11:58:05.158Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T11:58:12.245Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T11:58:13.245Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T11:58:34.262Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T11:58:35.263Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T11:58:56.284Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T11:58:57.285Z"}
+{"level":"info","message":"cron evaluated: state: true, match: true, flipped: true","timestamp":"2019-04-09T11:59:05.171Z"}
+{"level":"info","message":"Scheduling actions for rule TimeDateUpdate","timestamp":"2019-04-09T11:59:05.171Z"}
+{"message":"executing ScriptAction","level":"info","timestamp":"2019-04-09T11:59:05.171Z"}
+{"level":"debug","message":"running script:\n# ----- start script -----\nwrite('knx/write/15/1/0', new Date().toString());\n# -----  end script  -----","timestamp":"2019-04-09T11:59:05.171Z"}
+{"level":"info","message":"ScriptAction published knx/write/15/1/0 -> Tue Apr 09 2019 13:59:05 GMT+0200 (Central European Summer Time)","timestamp":"2019-04-09T11:59:05.171Z"}
+{"message":"executing ScriptAction","level":"info","timestamp":"2019-04-09T11:59:05.171Z"}
+{"level":"debug","message":"running script:\n# ----- start script -----\nwrite('knx/write/15/1/1', new Date().toString());\n# -----  end script  -----","timestamp":"2019-04-09T11:59:05.171Z"}
+{"level":"info","message":"ScriptAction published knx/write/15/1/1 -> Tue Apr 09 2019 13:59:05 GMT+0200 (Central European Summer Time)","timestamp":"2019-04-09T11:59:05.171Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T11:59:18.307Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T11:59:19.310Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T11:59:40.326Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T11:59:41.334Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T12:00:02.371Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T12:00:03.373Z"}
+{"level":"info","message":"cron evaluated: state: false, match: true, flipped: true","timestamp":"2019-04-09T12:00:05.193Z"}
+{"level":"info","message":"Scheduling actions for rule TimeDateUpdate","timestamp":"2019-04-09T12:00:05.193Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T12:00:24.379Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T12:00:25.378Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T12:00:46.394Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T12:00:47.394Z"}
+{"level":"info","message":"cron evaluated: state: true, match: true, flipped: true","timestamp":"2019-04-09T12:01:05.206Z"}
+{"level":"info","message":"Scheduling actions for rule TimeDateUpdate","timestamp":"2019-04-09T12:01:05.206Z"}
+{"message":"executing ScriptAction","level":"info","timestamp":"2019-04-09T12:01:05.206Z"}
+{"level":"debug","message":"running script:\n# ----- start script -----\nwrite('knx/write/15/1/0', new Date().toString());\n# -----  end script  -----","timestamp":"2019-04-09T12:01:05.206Z"}
+{"level":"info","message":"ScriptAction published knx/write/15/1/0 -> Tue Apr 09 2019 14:01:05 GMT+0200 (Central European Summer Time)","timestamp":"2019-04-09T12:01:05.206Z"}
+{"message":"executing ScriptAction","level":"info","timestamp":"2019-04-09T12:01:05.206Z"}
+{"level":"debug","message":"running script:\n# ----- start script -----\nwrite('knx/write/15/1/1', new Date().toString());\n# -----  end script  -----","timestamp":"2019-04-09T12:01:05.206Z"}
+{"level":"info","message":"ScriptAction published knx/write/15/1/1 -> Tue Apr 09 2019 14:01:05 GMT+0200 (Central European Summer Time)","timestamp":"2019-04-09T12:01:05.206Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T12:01:08.403Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T12:01:09.406Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T12:01:30.421Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T12:01:31.428Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T12:01:52.445Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T12:01:53.444Z"}
+{"level":"info","message":"cron evaluated: state: false, match: true, flipped: true","timestamp":"2019-04-09T12:02:05.216Z"}
+{"level":"info","message":"Scheduling actions for rule TimeDateUpdate","timestamp":"2019-04-09T12:02:05.217Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T12:02:14.447Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T12:02:15.448Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T12:02:36.452Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T12:02:37.454Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T12:02:58.463Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T12:02:59.479Z"}
+{"level":"info","message":"cron evaluated: state: true, match: true, flipped: true","timestamp":"2019-04-09T12:03:05.227Z"}
+{"level":"info","message":"Scheduling actions for rule TimeDateUpdate","timestamp":"2019-04-09T12:03:05.227Z"}
+{"message":"executing ScriptAction","level":"info","timestamp":"2019-04-09T12:03:05.227Z"}
+{"level":"debug","message":"running script:\n# ----- start script -----\nwrite('knx/write/15/1/0', new Date().toString());\n# -----  end script  -----","timestamp":"2019-04-09T12:03:05.227Z"}
+{"level":"info","message":"ScriptAction published knx/write/15/1/0 -> Tue Apr 09 2019 14:03:05 GMT+0200 (Central European Summer Time)","timestamp":"2019-04-09T12:03:05.227Z"}
+{"message":"executing ScriptAction","level":"info","timestamp":"2019-04-09T12:03:05.227Z"}
+{"level":"debug","message":"running script:\n# ----- start script -----\nwrite('knx/write/15/1/1', new Date().toString());\n# -----  end script  -----","timestamp":"2019-04-09T12:03:05.227Z"}
+{"level":"info","message":"ScriptAction published knx/write/15/1/1 -> Tue Apr 09 2019 14:03:05 GMT+0200 (Central European Summer Time)","timestamp":"2019-04-09T12:03:05.227Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T12:03:20.502Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T12:03:21.507Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T12:03:42.525Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T12:03:43.532Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T12:04:04.552Z"}
+{"level":"info","message":"cron evaluated: state: false, match: true, flipped: true","timestamp":"2019-04-09T12:04:05.258Z"}
+{"level":"info","message":"Scheduling actions for rule TimeDateUpdate","timestamp":"2019-04-09T12:04:05.258Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T12:04:05.556Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T12:04:26.566Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T12:04:27.573Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T12:04:48.605Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T12:04:49.616Z"}
+{"level":"info","message":"cron evaluated: state: true, match: true, flipped: true","timestamp":"2019-04-09T12:05:05.262Z"}
+{"level":"info","message":"Scheduling actions for rule TimeDateUpdate","timestamp":"2019-04-09T12:05:05.262Z"}
+{"message":"executing ScriptAction","level":"info","timestamp":"2019-04-09T12:05:05.262Z"}
+{"level":"debug","message":"running script:\n# ----- start script -----\nwrite('knx/write/15/1/0', new Date().toString());\n# -----  end script  -----","timestamp":"2019-04-09T12:05:05.262Z"}
+{"level":"info","message":"ScriptAction published knx/write/15/1/0 -> Tue Apr 09 2019 14:05:05 GMT+0200 (Central European Summer Time)","timestamp":"2019-04-09T12:05:05.262Z"}
+{"message":"executing ScriptAction","level":"info","timestamp":"2019-04-09T12:05:05.262Z"}
+{"level":"debug","message":"running script:\n# ----- start script -----\nwrite('knx/write/15/1/1', new Date().toString());\n# -----  end script  -----","timestamp":"2019-04-09T12:05:05.262Z"}
+{"level":"info","message":"ScriptAction published knx/write/15/1/1 -> Tue Apr 09 2019 14:05:05 GMT+0200 (Central European Summer Time)","timestamp":"2019-04-09T12:05:05.262Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T12:05:10.629Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T12:05:11.629Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T12:05:32.649Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T12:05:33.649Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T12:05:54.652Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T12:05:55.653Z"}
+{"level":"info","message":"cron evaluated: state: false, match: true, flipped: true","timestamp":"2019-04-09T12:06:05.279Z"}
+{"level":"info","message":"Scheduling actions for rule TimeDateUpdate","timestamp":"2019-04-09T12:06:05.279Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T12:06:16.674Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T12:06:17.682Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T12:06:38.699Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T12:06:39.701Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T12:07:00.728Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T12:07:01.731Z"}
+{"level":"info","message":"cron evaluated: state: true, match: true, flipped: true","timestamp":"2019-04-09T12:07:05.291Z"}
+{"level":"info","message":"Scheduling actions for rule TimeDateUpdate","timestamp":"2019-04-09T12:07:05.291Z"}
+{"message":"executing ScriptAction","level":"info","timestamp":"2019-04-09T12:07:05.291Z"}
+{"level":"debug","message":"running script:\n# ----- start script -----\nwrite('knx/write/15/1/0', new Date().toString());\n# -----  end script  -----","timestamp":"2019-04-09T12:07:05.291Z"}
+{"level":"info","message":"ScriptAction published knx/write/15/1/0 -> Tue Apr 09 2019 14:07:05 GMT+0200 (Central European Summer Time)","timestamp":"2019-04-09T12:07:05.291Z"}
+{"message":"executing ScriptAction","level":"info","timestamp":"2019-04-09T12:07:05.291Z"}
+{"level":"debug","message":"running script:\n# ----- start script -----\nwrite('knx/write/15/1/1', new Date().toString());\n# -----  end script  -----","timestamp":"2019-04-09T12:07:05.291Z"}
+{"level":"info","message":"ScriptAction published knx/write/15/1/1 -> Tue Apr 09 2019 14:07:05 GMT+0200 (Central European Summer Time)","timestamp":"2019-04-09T12:07:05.291Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T12:07:22.752Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T12:07:23.763Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T12:07:44.786Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T12:07:45.790Z"}
+{"level":"info","message":"cron evaluated: state: false, match: true, flipped: true","timestamp":"2019-04-09T12:08:05.313Z"}
+{"level":"info","message":"Scheduling actions for rule TimeDateUpdate","timestamp":"2019-04-09T12:08:05.313Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T12:08:06.813Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T12:08:07.815Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T12:08:28.837Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T12:08:29.852Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T12:08:50.879Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T12:08:51.887Z"}
+{"level":"info","message":"cron evaluated: state: true, match: true, flipped: true","timestamp":"2019-04-09T12:09:05.320Z"}
+{"level":"info","message":"Scheduling actions for rule TimeDateUpdate","timestamp":"2019-04-09T12:09:05.320Z"}
+{"message":"executing ScriptAction","level":"info","timestamp":"2019-04-09T12:09:05.320Z"}
+{"level":"debug","message":"running script:\n# ----- start script -----\nwrite('knx/write/15/1/0', new Date().toString());\n# -----  end script  -----","timestamp":"2019-04-09T12:09:05.320Z"}
+{"level":"info","message":"ScriptAction published knx/write/15/1/0 -> Tue Apr 09 2019 14:09:05 GMT+0200 (Central European Summer Time)","timestamp":"2019-04-09T12:09:05.320Z"}
+{"message":"executing ScriptAction","level":"info","timestamp":"2019-04-09T12:09:05.320Z"}
+{"level":"debug","message":"running script:\n# ----- start script -----\nwrite('knx/write/15/1/1', new Date().toString());\n# -----  end script  -----","timestamp":"2019-04-09T12:09:05.320Z"}
+{"level":"info","message":"ScriptAction published knx/write/15/1/1 -> Tue Apr 09 2019 14:09:05 GMT+0200 (Central European Summer Time)","timestamp":"2019-04-09T12:09:05.320Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T12:09:12.911Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T12:09:13.916Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T12:09:34.932Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T12:09:35.932Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T12:09:56.955Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T12:09:57.956Z"}
+{"level":"info","message":"cron evaluated: state: false, match: true, flipped: true","timestamp":"2019-04-09T12:10:05.329Z"}
+{"level":"info","message":"Scheduling actions for rule TimeDateUpdate","timestamp":"2019-04-09T12:10:05.329Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T12:10:18.974Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T12:10:19.987Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T12:10:41.011Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T12:10:42.021Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T12:11:03.048Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T12:11:04.049Z"}
+{"level":"info","message":"cron evaluated: state: true, match: true, flipped: true","timestamp":"2019-04-09T12:11:05.333Z"}
+{"level":"info","message":"Scheduling actions for rule TimeDateUpdate","timestamp":"2019-04-09T12:11:05.334Z"}
+{"message":"executing ScriptAction","level":"info","timestamp":"2019-04-09T12:11:05.335Z"}
+{"level":"debug","message":"running script:\n# ----- start script -----\nwrite('knx/write/15/1/0', new Date().toString());\n# -----  end script  -----","timestamp":"2019-04-09T12:11:05.338Z"}
+{"level":"info","message":"ScriptAction published knx/write/15/1/0 -> Tue Apr 09 2019 14:11:05 GMT+0200 (Central European Summer Time)","timestamp":"2019-04-09T12:11:05.339Z"}
+{"message":"executing ScriptAction","level":"info","timestamp":"2019-04-09T12:11:05.340Z"}
+{"level":"debug","message":"running script:\n# ----- start script -----\nwrite('knx/write/15/1/1', new Date().toString());\n# -----  end script  -----","timestamp":"2019-04-09T12:11:05.342Z"}
+{"level":"info","message":"ScriptAction published knx/write/15/1/1 -> Tue Apr 09 2019 14:11:05 GMT+0200 (Central European Summer Time)","timestamp":"2019-04-09T12:11:05.343Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T12:11:25.059Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T12:11:26.059Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T12:11:47.080Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T12:11:48.086Z"}
+{"level":"info","message":"cron evaluated: state: false, match: true, flipped: true","timestamp":"2019-04-09T12:12:05.349Z"}
+{"level":"info","message":"Scheduling actions for rule TimeDateUpdate","timestamp":"2019-04-09T12:12:05.349Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T12:12:09.098Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T12:12:10.099Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T12:12:31.122Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T12:12:32.132Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T12:12:53.158Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T12:12:54.162Z"}
+{"level":"info","message":"cron evaluated: state: true, match: true, flipped: true","timestamp":"2019-04-09T12:13:05.362Z"}
+{"level":"info","message":"Scheduling actions for rule TimeDateUpdate","timestamp":"2019-04-09T12:13:05.362Z"}
+{"message":"executing ScriptAction","level":"info","timestamp":"2019-04-09T12:13:05.362Z"}
+{"level":"debug","message":"running script:\n# ----- start script -----\nwrite('knx/write/15/1/0', new Date().toString());\n# -----  end script  -----","timestamp":"2019-04-09T12:13:05.362Z"}
+{"level":"info","message":"ScriptAction published knx/write/15/1/0 -> Tue Apr 09 2019 14:13:05 GMT+0200 (Central European Summer Time)","timestamp":"2019-04-09T12:13:05.362Z"}
+{"message":"executing ScriptAction","level":"info","timestamp":"2019-04-09T12:13:05.362Z"}
+{"level":"debug","message":"running script:\n# ----- start script -----\nwrite('knx/write/15/1/1', new Date().toString());\n# -----  end script  -----","timestamp":"2019-04-09T12:13:05.362Z"}
+{"level":"info","message":"ScriptAction published knx/write/15/1/1 -> Tue Apr 09 2019 14:13:05 GMT+0200 (Central European Summer Time)","timestamp":"2019-04-09T12:13:05.362Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T12:13:15.185Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T12:13:16.200Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T12:13:37.228Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T12:13:38.228Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T12:13:59.264Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T12:14:00.280Z"}
+{"level":"info","message":"cron evaluated: state: false, match: true, flipped: true","timestamp":"2019-04-09T12:14:05.377Z"}
+{"level":"info","message":"Scheduling actions for rule TimeDateUpdate","timestamp":"2019-04-09T12:14:05.377Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T12:14:21.296Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T12:14:22.300Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T12:14:43.325Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T12:14:44.324Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T12:15:05.354Z"}
+{"level":"info","message":"cron evaluated: state: true, match: true, flipped: true","timestamp":"2019-04-09T12:15:05.385Z"}
+{"level":"info","message":"Scheduling actions for rule TimeDateUpdate","timestamp":"2019-04-09T12:15:05.385Z"}
+{"message":"executing ScriptAction","level":"info","timestamp":"2019-04-09T12:15:05.385Z"}
+{"level":"debug","message":"running script:\n# ----- start script -----\nwrite('knx/write/15/1/0', new Date().toString());\n# -----  end script  -----","timestamp":"2019-04-09T12:15:05.385Z"}
+{"level":"info","message":"ScriptAction published knx/write/15/1/0 -> Tue Apr 09 2019 14:15:05 GMT+0200 (Central European Summer Time)","timestamp":"2019-04-09T12:15:05.385Z"}
+{"message":"executing ScriptAction","level":"info","timestamp":"2019-04-09T12:15:05.385Z"}
+{"level":"debug","message":"running script:\n# ----- start script -----\nwrite('knx/write/15/1/1', new Date().toString());\n# -----  end script  -----","timestamp":"2019-04-09T12:15:05.385Z"}
+{"level":"info","message":"ScriptAction published knx/write/15/1/1 -> Tue Apr 09 2019 14:15:05 GMT+0200 (Central European Summer Time)","timestamp":"2019-04-09T12:15:05.385Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T12:15:06.358Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T12:15:27.374Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T12:15:28.374Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T12:15:49.390Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T12:15:50.391Z"}
+{"level":"info","message":"cron evaluated: state: false, match: true, flipped: true","timestamp":"2019-04-09T12:16:05.393Z"}
+{"level":"info","message":"Scheduling actions for rule TimeDateUpdate","timestamp":"2019-04-09T12:16:05.393Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T12:16:11.399Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T12:16:12.402Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T12:16:33.416Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T12:16:34.416Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T12:16:55.422Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T12:16:56.421Z"}
+{"level":"info","message":"cron evaluated: state: true, match: true, flipped: true","timestamp":"2019-04-09T12:17:05.396Z"}
+{"level":"info","message":"Scheduling actions for rule TimeDateUpdate","timestamp":"2019-04-09T12:17:05.397Z"}
+{"message":"executing ScriptAction","level":"info","timestamp":"2019-04-09T12:17:05.397Z"}
+{"level":"debug","message":"running script:\n# ----- start script -----\nwrite('knx/write/15/1/0', new Date().toString());\n# -----  end script  -----","timestamp":"2019-04-09T12:17:05.399Z"}
+{"level":"info","message":"ScriptAction published knx/write/15/1/0 -> Tue Apr 09 2019 14:17:05 GMT+0200 (Central European Summer Time)","timestamp":"2019-04-09T12:17:05.399Z"}
+{"message":"executing ScriptAction","level":"info","timestamp":"2019-04-09T12:17:05.400Z"}
+{"level":"debug","message":"running script:\n# ----- start script -----\nwrite('knx/write/15/1/1', new Date().toString());\n# -----  end script  -----","timestamp":"2019-04-09T12:17:05.402Z"}
+{"level":"info","message":"ScriptAction published knx/write/15/1/1 -> Tue Apr 09 2019 14:17:05 GMT+0200 (Central European Summer Time)","timestamp":"2019-04-09T12:17:05.402Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T12:17:17.427Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T12:17:18.426Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T12:17:39.429Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T12:17:40.428Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T12:18:01.432Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T12:18:02.432Z"}
+{"level":"info","message":"cron evaluated: state: false, match: true, flipped: true","timestamp":"2019-04-09T12:18:05.404Z"}
+{"level":"info","message":"Scheduling actions for rule TimeDateUpdate","timestamp":"2019-04-09T12:18:05.407Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T12:18:23.443Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T12:18:24.442Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T12:18:45.455Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T12:18:46.460Z"}
+{"level":"info","message":"cron evaluated: state: true, match: true, flipped: true","timestamp":"2019-04-09T12:19:05.414Z"}
+{"level":"info","message":"Scheduling actions for rule TimeDateUpdate","timestamp":"2019-04-09T12:19:05.414Z"}
+{"message":"executing ScriptAction","level":"info","timestamp":"2019-04-09T12:19:05.414Z"}
+{"level":"debug","message":"running script:\n# ----- start script -----\nwrite('knx/write/15/1/0', new Date().toString());\n# -----  end script  -----","timestamp":"2019-04-09T12:19:05.414Z"}
+{"level":"info","message":"ScriptAction published knx/write/15/1/0 -> Tue Apr 09 2019 14:19:05 GMT+0200 (Central European Summer Time)","timestamp":"2019-04-09T12:19:05.414Z"}
+{"message":"executing ScriptAction","level":"info","timestamp":"2019-04-09T12:19:05.414Z"}
+{"level":"debug","message":"running script:\n# ----- start script -----\nwrite('knx/write/15/1/1', new Date().toString());\n# -----  end script  -----","timestamp":"2019-04-09T12:19:05.414Z"}
+{"level":"info","message":"ScriptAction published knx/write/15/1/1 -> Tue Apr 09 2019 14:19:05 GMT+0200 (Central European Summer Time)","timestamp":"2019-04-09T12:19:05.414Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T12:19:07.471Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T12:19:08.479Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T12:19:29.514Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T12:19:30.514Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T12:19:51.525Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T12:19:52.526Z"}
+{"message":"Parsing rules","level":"info","timestamp":"2019-04-09T12:25:00.527Z"}
+{"level":"info","message":"loaded <Rule> TEST - #conditions: 3, #onTrueActions: 0, #onFalseActions: 0","timestamp":"2019-04-09T12:25:00.543Z"}
+{"level":"info","message":"loaded <Rule> TimeDateUpdate - #conditions: 1, #onTrueActions: 2, #onFalseActions: 0","timestamp":"2019-04-09T12:25:00.543Z"}
+{"level":"info","message":"loaded <Rule> Bel - #conditions: 1, #onTrueActions: 1, #onFalseActions: 0","timestamp":"2019-04-09T12:25:00.543Z"}
+{"level":"info","message":"loaded <Rule> Afdak_achteraan - #conditions: 3, #onTrueActions: 1, #onFalseActions: 1","timestamp":"2019-04-09T12:25:00.543Z"}
+{"level":"info","message":"loaded <Rule> Voordeur - #conditions: 2, #onTrueActions: 3, #onFalseActions: 0","timestamp":"2019-04-09T12:25:00.543Z"}
+{"level":"info","message":"loaded <Rule> Afdak - #conditions: 1, #onTrueActions: 1, #onFalseActions: 0","timestamp":"2019-04-09T12:25:00.543Z"}
+{"level":"info","message":"loaded <Rule> StatusBeneden - #conditions: 12, #onTrueActions: 1, #onFalseActions: 1","timestamp":"2019-04-09T12:25:00.543Z"}
+{"level":"info","message":"loaded <Rule> BadkamerVentilatie - #conditions: 1, #onTrueActions: 5, #onFalseActions: 0","timestamp":"2019-04-09T12:25:00.543Z"}
+{"level":"info","message":"loaded <Rule> Ventilatie - #conditions: 1, #onTrueActions: 1, #onFalseActions: 0","timestamp":"2019-04-09T12:25:00.543Z"}
+{"level":"info","message":"cron evaluated: state: true, match: true, flipped: true","timestamp":"2019-04-09T12:25:00.621Z"}
+{"level":"info","message":"Scheduling actions for rule TimeDateUpdate","timestamp":"2019-04-09T12:25:00.621Z"}
+{"message":"executing ScriptAction","level":"info","timestamp":"2019-04-09T12:25:00.621Z"}
+{"level":"debug","message":"running script:\n# ----- start script -----\nwrite('knx/write/15/1/0', new Date().toString());\n# -----  end script  -----","timestamp":"2019-04-09T12:25:00.621Z"}
+{"level":"info","message":"ScriptAction published knx/write/15/1/0 -> Tue Apr 09 2019 14:25:00 GMT+0200 (Central European Summer Time)","timestamp":"2019-04-09T12:25:00.637Z"}
+{"message":"executing ScriptAction","level":"info","timestamp":"2019-04-09T12:25:00.637Z"}
+{"level":"debug","message":"running script:\n# ----- start script -----\nwrite('knx/write/15/1/1', new Date().toString());\n# -----  end script  -----","timestamp":"2019-04-09T12:25:00.637Z"}
+{"level":"info","message":"ScriptAction published knx/write/15/1/1 -> Tue Apr 09 2019 14:25:00 GMT+0200 (Central European Summer Time)","timestamp":"2019-04-09T12:25:00.637Z"}
+{"level":"info","message":"Listening on port 4000","timestamp":"2019-04-09T12:25:00.637Z"}
+{"level":"info","message":"cron evaluated: state: true, match: true, flipped: false","timestamp":"2019-04-09T12:25:04.645Z"}
+{"level":"info","message":"Scheduling actions for rule TimeDateUpdate","timestamp":"2019-04-09T12:25:04.645Z"}
+{"message":"executing ScriptAction","level":"info","timestamp":"2019-04-09T12:25:04.645Z"}
+{"level":"debug","message":"running script:\n# ----- start script -----\nwrite('knx/write/15/1/0', new Date().toString());\n# -----  end script  -----","timestamp":"2019-04-09T12:25:04.645Z"}
+{"level":"info","message":"ScriptAction published knx/write/15/1/0 -> Tue Apr 09 2019 14:25:04 GMT+0200 (Central European Summer Time)","timestamp":"2019-04-09T12:25:04.645Z"}
+{"message":"executing ScriptAction","level":"info","timestamp":"2019-04-09T12:25:04.645Z"}
+{"level":"debug","message":"running script:\n# ----- start script -----\nwrite('knx/write/15/1/1', new Date().toString());\n# -----  end script  -----","timestamp":"2019-04-09T12:25:04.645Z"}
+{"level":"info","message":"ScriptAction published knx/write/15/1/1 -> Tue Apr 09 2019 14:25:04 GMT+0200 (Central European Summer Time)","timestamp":"2019-04-09T12:25:04.645Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T12:25:21.661Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T12:25:22.665Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T12:25:43.690Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T12:25:44.701Z"}
+{"level":"info","message":"cron evaluated: state: false, match: true, flipped: true","timestamp":"2019-04-09T12:26:04.655Z"}
+{"level":"info","message":"Scheduling actions for rule TimeDateUpdate","timestamp":"2019-04-09T12:26:04.656Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T12:26:05.745Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T12:26:06.761Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T12:26:27.776Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T12:26:28.790Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T12:26:49.802Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T12:26:50.805Z"}
+{"level":"info","message":"cron evaluated: state: true, match: true, flipped: true","timestamp":"2019-04-09T12:27:04.666Z"}
+{"level":"info","message":"Scheduling actions for rule TimeDateUpdate","timestamp":"2019-04-09T12:27:04.666Z"}
+{"message":"executing ScriptAction","level":"info","timestamp":"2019-04-09T12:27:04.666Z"}
+{"level":"debug","message":"running script:\n# ----- start script -----\nwrite('knx/write/15/1/0', new Date().toString());\n# -----  end script  -----","timestamp":"2019-04-09T12:27:04.666Z"}
+{"level":"info","message":"ScriptAction published knx/write/15/1/0 -> Tue Apr 09 2019 14:27:04 GMT+0200 (Central European Summer Time)","timestamp":"2019-04-09T12:27:04.666Z"}
+{"message":"executing ScriptAction","level":"info","timestamp":"2019-04-09T12:27:04.666Z"}
+{"level":"debug","message":"running script:\n# ----- start script -----\nwrite('knx/write/15/1/1', new Date().toString());\n# -----  end script  -----","timestamp":"2019-04-09T12:27:04.666Z"}
+{"level":"info","message":"ScriptAction published knx/write/15/1/1 -> Tue Apr 09 2019 14:27:04 GMT+0200 (Central European Summer Time)","timestamp":"2019-04-09T12:27:04.666Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T12:27:11.825Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T12:27:12.828Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T12:27:33.873Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T12:27:34.873Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T12:27:55.887Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T12:27:56.887Z"}
+{"level":"info","message":"cron evaluated: state: false, match: true, flipped: true","timestamp":"2019-04-09T12:28:04.687Z"}
+{"level":"info","message":"Scheduling actions for rule TimeDateUpdate","timestamp":"2019-04-09T12:28:04.687Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T12:28:17.904Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T12:28:18.906Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T12:28:39.923Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T12:28:40.934Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T12:29:01.954Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T12:29:02.962Z"}
+{"level":"info","message":"cron evaluated: state: true, match: true, flipped: true","timestamp":"2019-04-09T12:29:04.698Z"}
+{"level":"info","message":"Scheduling actions for rule TimeDateUpdate","timestamp":"2019-04-09T12:29:04.698Z"}
+{"message":"executing ScriptAction","level":"info","timestamp":"2019-04-09T12:29:04.698Z"}
+{"level":"debug","message":"running script:\n# ----- start script -----\nwrite('knx/write/15/1/0', new Date().toString());\n# -----  end script  -----","timestamp":"2019-04-09T12:29:04.698Z"}
+{"level":"info","message":"ScriptAction published knx/write/15/1/0 -> Tue Apr 09 2019 14:29:04 GMT+0200 (Central European Summer Time)","timestamp":"2019-04-09T12:29:04.698Z"}
+{"message":"executing ScriptAction","level":"info","timestamp":"2019-04-09T12:29:04.698Z"}
+{"level":"debug","message":"running script:\n# ----- start script -----\nwrite('knx/write/15/1/1', new Date().toString());\n# -----  end script  -----","timestamp":"2019-04-09T12:29:04.698Z"}
+{"level":"info","message":"ScriptAction published knx/write/15/1/1 -> Tue Apr 09 2019 14:29:04 GMT+0200 (Central European Summer Time)","timestamp":"2019-04-09T12:29:04.698Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T12:29:23.980Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T12:29:24.986Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T12:29:46.002Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T12:29:47.002Z"}
+{"level":"info","message":"cron evaluated: state: false, match: true, flipped: true","timestamp":"2019-04-09T12:30:04.703Z"}
+{"level":"info","message":"Scheduling actions for rule TimeDateUpdate","timestamp":"2019-04-09T12:30:04.704Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T12:30:08.018Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T12:30:09.017Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T12:30:30.019Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T12:30:31.018Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T12:30:52.024Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T12:30:53.023Z"}
+{"level":"info","message":"cron evaluated: state: true, match: true, flipped: true","timestamp":"2019-04-09T12:31:04.706Z"}
+{"level":"info","message":"Scheduling actions for rule TimeDateUpdate","timestamp":"2019-04-09T12:31:04.707Z"}
+{"message":"executing ScriptAction","level":"info","timestamp":"2019-04-09T12:31:04.707Z"}
+{"level":"debug","message":"running script:\n# ----- start script -----\nwrite('knx/write/15/1/0', new Date().toString());\n# -----  end script  -----","timestamp":"2019-04-09T12:31:04.709Z"}
+{"level":"info","message":"ScriptAction published knx/write/15/1/0 -> Tue Apr 09 2019 14:31:04 GMT+0200 (Central European Summer Time)","timestamp":"2019-04-09T12:31:04.710Z"}
+{"message":"executing ScriptAction","level":"info","timestamp":"2019-04-09T12:31:04.711Z"}
+{"level":"debug","message":"running script:\n# ----- start script -----\nwrite('knx/write/15/1/1', new Date().toString());\n# -----  end script  -----","timestamp":"2019-04-09T12:31:04.712Z"}
+{"level":"info","message":"ScriptAction published knx/write/15/1/1 -> Tue Apr 09 2019 14:31:04 GMT+0200 (Central European Summer Time)","timestamp":"2019-04-09T12:31:04.713Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T12:31:14.026Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T12:31:15.025Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T12:31:36.030Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T12:31:37.043Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T12:31:58.074Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T12:31:59.074Z"}
+{"level":"info","message":"cron evaluated: state: false, match: true, flipped: true","timestamp":"2019-04-09T12:32:04.726Z"}
+{"level":"info","message":"Scheduling actions for rule TimeDateUpdate","timestamp":"2019-04-09T12:32:04.726Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T12:32:20.110Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T12:32:21.110Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T12:32:42.119Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T12:32:43.120Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T12:33:04.134Z"}
+{"level":"info","message":"cron evaluated: state: true, match: true, flipped: true","timestamp":"2019-04-09T12:33:04.744Z"}
+{"level":"info","message":"Scheduling actions for rule TimeDateUpdate","timestamp":"2019-04-09T12:33:04.744Z"}
+{"message":"executing ScriptAction","level":"info","timestamp":"2019-04-09T12:33:04.744Z"}
+{"level":"debug","message":"running script:\n# ----- start script -----\nwrite('knx/write/15/1/0', new Date().toString());\n# -----  end script  -----","timestamp":"2019-04-09T12:33:04.744Z"}
+{"level":"info","message":"ScriptAction published knx/write/15/1/0 -> Tue Apr 09 2019 14:33:04 GMT+0200 (Central European Summer Time)","timestamp":"2019-04-09T12:33:04.744Z"}
+{"message":"executing ScriptAction","level":"info","timestamp":"2019-04-09T12:33:04.744Z"}
+{"level":"debug","message":"running script:\n# ----- start script -----\nwrite('knx/write/15/1/1', new Date().toString());\n# -----  end script  -----","timestamp":"2019-04-09T12:33:04.744Z"}
+{"level":"info","message":"ScriptAction published knx/write/15/1/1 -> Tue Apr 09 2019 14:33:04 GMT+0200 (Central European Summer Time)","timestamp":"2019-04-09T12:33:04.744Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T12:33:05.150Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T12:33:26.185Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T12:33:27.199Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T12:33:48.231Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T12:33:49.231Z"}
+{"level":"info","message":"cron evaluated: state: false, match: true, flipped: true","timestamp":"2019-04-09T12:34:04.760Z"}
+{"level":"info","message":"Scheduling actions for rule TimeDateUpdate","timestamp":"2019-04-09T12:34:04.760Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T12:34:10.254Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T12:34:11.254Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T12:34:32.265Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T12:34:33.265Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T12:34:54.308Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T12:34:55.308Z"}
+{"level":"info","message":"cron evaluated: state: true, match: true, flipped: true","timestamp":"2019-04-09T12:35:04.770Z"}
+{"level":"info","message":"Scheduling actions for rule TimeDateUpdate","timestamp":"2019-04-09T12:35:04.770Z"}
+{"message":"executing ScriptAction","level":"info","timestamp":"2019-04-09T12:35:04.770Z"}
+{"level":"debug","message":"running script:\n# ----- start script -----\nwrite('knx/write/15/1/0', new Date().toString());\n# -----  end script  -----","timestamp":"2019-04-09T12:35:04.770Z"}
+{"level":"info","message":"ScriptAction published knx/write/15/1/0 -> Tue Apr 09 2019 14:35:04 GMT+0200 (Central European Summer Time)","timestamp":"2019-04-09T12:35:04.770Z"}
+{"message":"executing ScriptAction","level":"info","timestamp":"2019-04-09T12:35:04.770Z"}
+{"level":"debug","message":"running script:\n# ----- start script -----\nwrite('knx/write/15/1/1', new Date().toString());\n# -----  end script  -----","timestamp":"2019-04-09T12:35:04.770Z"}
+{"level":"info","message":"ScriptAction published knx/write/15/1/1 -> Tue Apr 09 2019 14:35:04 GMT+0200 (Central European Summer Time)","timestamp":"2019-04-09T12:35:04.770Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T12:35:16.335Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T12:35:17.335Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T12:35:38.343Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T12:35:39.344Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T12:36:00.368Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T12:36:01.368Z"}
+{"level":"info","message":"cron evaluated: state: false, match: true, flipped: true","timestamp":"2019-04-09T12:36:04.779Z"}
+{"level":"info","message":"Scheduling actions for rule TimeDateUpdate","timestamp":"2019-04-09T12:36:04.779Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T12:36:22.378Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T12:36:23.383Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T12:36:44.397Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T12:36:45.399Z"}
+{"level":"info","message":"cron evaluated: state: true, match: true, flipped: true","timestamp":"2019-04-09T12:37:04.795Z"}
+{"level":"info","message":"Scheduling actions for rule TimeDateUpdate","timestamp":"2019-04-09T12:37:04.795Z"}
+{"message":"executing ScriptAction","level":"info","timestamp":"2019-04-09T12:37:04.795Z"}
+{"level":"debug","message":"running script:\n# ----- start script -----\nwrite('knx/write/15/1/0', new Date().toString());\n# -----  end script  -----","timestamp":"2019-04-09T12:37:04.795Z"}
+{"level":"info","message":"ScriptAction published knx/write/15/1/0 -> Tue Apr 09 2019 14:37:04 GMT+0200 (Central European Summer Time)","timestamp":"2019-04-09T12:37:04.795Z"}
+{"message":"executing ScriptAction","level":"info","timestamp":"2019-04-09T12:37:04.795Z"}
+{"level":"debug","message":"running script:\n# ----- start script -----\nwrite('knx/write/15/1/1', new Date().toString());\n# -----  end script  -----","timestamp":"2019-04-09T12:37:04.795Z"}
+{"level":"info","message":"ScriptAction published knx/write/15/1/1 -> Tue Apr 09 2019 14:37:04 GMT+0200 (Central European Summer Time)","timestamp":"2019-04-09T12:37:04.795Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T12:37:06.419Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T12:37:07.423Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T12:37:28.440Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T12:37:29.440Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T12:37:50.443Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T12:37:51.447Z"}
+{"level":"info","message":"cron evaluated: state: false, match: true, flipped: true","timestamp":"2019-04-09T12:38:04.802Z"}
+{"level":"info","message":"Scheduling actions for rule TimeDateUpdate","timestamp":"2019-04-09T12:38:04.803Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T12:38:12.450Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T12:38:13.451Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T12:38:34.459Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T12:38:35.458Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T12:38:56.463Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T12:38:57.463Z"}
+{"level":"info","message":"cron evaluated: state: true, match: true, flipped: true","timestamp":"2019-04-09T12:39:04.804Z"}
+{"level":"info","message":"Scheduling actions for rule TimeDateUpdate","timestamp":"2019-04-09T12:39:04.805Z"}
+{"message":"executing ScriptAction","level":"info","timestamp":"2019-04-09T12:39:04.805Z"}
+{"level":"debug","message":"running script:\n# ----- start script -----\nwrite('knx/write/15/1/0', new Date().toString());\n# -----  end script  -----","timestamp":"2019-04-09T12:39:04.808Z"}
+{"level":"info","message":"ScriptAction published knx/write/15/1/0 -> Tue Apr 09 2019 14:39:04 GMT+0200 (Central European Summer Time)","timestamp":"2019-04-09T12:39:04.809Z"}
+{"message":"executing ScriptAction","level":"info","timestamp":"2019-04-09T12:39:04.810Z"}
+{"level":"debug","message":"running script:\n# ----- start script -----\nwrite('knx/write/15/1/1', new Date().toString());\n# -----  end script  -----","timestamp":"2019-04-09T12:39:04.812Z"}
+{"level":"info","message":"ScriptAction published knx/write/15/1/1 -> Tue Apr 09 2019 14:39:04 GMT+0200 (Central European Summer Time)","timestamp":"2019-04-09T12:39:04.813Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T12:39:18.467Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T12:39:19.468Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T12:39:40.481Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T12:39:41.485Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T12:40:02.508Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T12:40:03.522Z"}
+{"level":"info","message":"cron evaluated: state: false, match: true, flipped: true","timestamp":"2019-04-09T12:40:04.825Z"}
+{"level":"info","message":"Scheduling actions for rule TimeDateUpdate","timestamp":"2019-04-09T12:40:04.825Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T12:40:24.561Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T12:40:25.576Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T12:40:46.610Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T12:40:47.611Z"}
+{"level":"info","message":"cron evaluated: state: true, match: true, flipped: true","timestamp":"2019-04-09T12:41:04.837Z"}
+{"level":"info","message":"Scheduling actions for rule TimeDateUpdate","timestamp":"2019-04-09T12:41:04.837Z"}
+{"message":"executing ScriptAction","level":"info","timestamp":"2019-04-09T12:41:04.837Z"}
+{"level":"debug","message":"running script:\n# ----- start script -----\nwrite('knx/write/15/1/0', new Date().toString());\n# -----  end script  -----","timestamp":"2019-04-09T12:41:04.837Z"}
+{"level":"info","message":"ScriptAction published knx/write/15/1/0 -> Tue Apr 09 2019 14:41:04 GMT+0200 (Central European Summer Time)","timestamp":"2019-04-09T12:41:04.837Z"}
+{"message":"executing ScriptAction","level":"info","timestamp":"2019-04-09T12:41:04.837Z"}
+{"level":"debug","message":"running script:\n# ----- start script -----\nwrite('knx/write/15/1/1', new Date().toString());\n# -----  end script  -----","timestamp":"2019-04-09T12:41:04.837Z"}
+{"level":"info","message":"ScriptAction published knx/write/15/1/1 -> Tue Apr 09 2019 14:41:04 GMT+0200 (Central European Summer Time)","timestamp":"2019-04-09T12:41:04.837Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T12:41:08.652Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T12:41:09.668Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T12:41:30.682Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T12:41:31.690Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T12:41:52.709Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T12:41:53.709Z"}
+{"level":"info","message":"cron evaluated: state: false, match: true, flipped: true","timestamp":"2019-04-09T12:42:04.847Z"}
+{"level":"info","message":"Scheduling actions for rule TimeDateUpdate","timestamp":"2019-04-09T12:42:04.848Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T12:42:14.711Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T12:42:15.711Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T12:42:36.715Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T12:42:37.715Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T12:42:58.720Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T12:42:59.719Z"}
+{"level":"info","message":"cron evaluated: state: true, match: true, flipped: true","timestamp":"2019-04-09T12:43:04.849Z"}
+{"level":"info","message":"Scheduling actions for rule TimeDateUpdate","timestamp":"2019-04-09T12:43:04.850Z"}
+{"message":"executing ScriptAction","level":"info","timestamp":"2019-04-09T12:43:04.850Z"}
+{"level":"debug","message":"running script:\n# ----- start script -----\nwrite('knx/write/15/1/0', new Date().toString());\n# -----  end script  -----","timestamp":"2019-04-09T12:43:04.852Z"}
+{"level":"info","message":"ScriptAction published knx/write/15/1/0 -> Tue Apr 09 2019 14:43:04 GMT+0200 (Central European Summer Time)","timestamp":"2019-04-09T12:43:04.853Z"}
+{"message":"executing ScriptAction","level":"info","timestamp":"2019-04-09T12:43:04.853Z"}
+{"level":"debug","message":"running script:\n# ----- start script -----\nwrite('knx/write/15/1/1', new Date().toString());\n# -----  end script  -----","timestamp":"2019-04-09T12:43:04.855Z"}
+{"level":"info","message":"ScriptAction published knx/write/15/1/1 -> Tue Apr 09 2019 14:43:04 GMT+0200 (Central European Summer Time)","timestamp":"2019-04-09T12:43:04.856Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T12:43:20.734Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T12:43:21.734Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T12:43:42.761Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T12:43:43.762Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T12:44:04.772Z"}
+{"level":"info","message":"cron evaluated: state: false, match: true, flipped: true","timestamp":"2019-04-09T12:44:04.864Z"}
+{"level":"info","message":"Scheduling actions for rule TimeDateUpdate","timestamp":"2019-04-09T12:44:04.864Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T12:44:05.772Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T12:44:26.806Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T12:44:27.807Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T12:44:48.810Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T12:44:49.811Z"}
+{"level":"info","message":"cron evaluated: state: true, match: true, flipped: true","timestamp":"2019-04-09T12:45:04.879Z"}
+{"level":"info","message":"Scheduling actions for rule TimeDateUpdate","timestamp":"2019-04-09T12:45:04.883Z"}
+{"message":"executing ScriptAction","level":"info","timestamp":"2019-04-09T12:45:04.884Z"}
+{"level":"debug","message":"running script:\n# ----- start script -----\nwrite('knx/write/15/1/0', new Date().toString());\n# -----  end script  -----","timestamp":"2019-04-09T12:45:04.886Z"}
+{"level":"info","message":"ScriptAction published knx/write/15/1/0 -> Tue Apr 09 2019 14:45:04 GMT+0200 (Central European Summer Time)","timestamp":"2019-04-09T12:45:04.887Z"}
+{"message":"executing ScriptAction","level":"info","timestamp":"2019-04-09T12:45:04.888Z"}
+{"level":"debug","message":"running script:\n# ----- start script -----\nwrite('knx/write/15/1/1', new Date().toString());\n# -----  end script  -----","timestamp":"2019-04-09T12:45:04.890Z"}
+{"level":"info","message":"ScriptAction published knx/write/15/1/1 -> Tue Apr 09 2019 14:45:04 GMT+0200 (Central European Summer Time)","timestamp":"2019-04-09T12:45:04.890Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T12:45:10.825Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T12:45:11.822Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T12:45:32.836Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T12:45:33.841Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T12:45:54.877Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T12:45:55.877Z"}
+{"level":"info","message":"cron evaluated: state: false, match: true, flipped: true","timestamp":"2019-04-09T12:46:04.900Z"}
+{"level":"info","message":"Scheduling actions for rule TimeDateUpdate","timestamp":"2019-04-09T12:46:04.900Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T12:46:16.886Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T12:46:17.886Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T12:46:38.889Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T12:46:39.889Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T12:47:00.893Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T12:47:01.894Z"}
+{"level":"info","message":"cron evaluated: state: true, match: true, flipped: true","timestamp":"2019-04-09T12:47:04.914Z"}
+{"level":"info","message":"Scheduling actions for rule TimeDateUpdate","timestamp":"2019-04-09T12:47:04.914Z"}
+{"message":"executing ScriptAction","level":"info","timestamp":"2019-04-09T12:47:04.914Z"}
+{"level":"debug","message":"running script:\n# ----- start script -----\nwrite('knx/write/15/1/0', new Date().toString());\n# -----  end script  -----","timestamp":"2019-04-09T12:47:04.914Z"}
+{"level":"info","message":"ScriptAction published knx/write/15/1/0 -> Tue Apr 09 2019 14:47:04 GMT+0200 (Central European Summer Time)","timestamp":"2019-04-09T12:47:04.914Z"}
+{"message":"executing ScriptAction","level":"info","timestamp":"2019-04-09T12:47:04.914Z"}
+{"level":"debug","message":"running script:\n# ----- start script -----\nwrite('knx/write/15/1/1', new Date().toString());\n# -----  end script  -----","timestamp":"2019-04-09T12:47:04.914Z"}
+{"level":"info","message":"ScriptAction published knx/write/15/1/1 -> Tue Apr 09 2019 14:47:04 GMT+0200 (Central European Summer Time)","timestamp":"2019-04-09T12:47:04.914Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T12:47:22.901Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T12:47:23.900Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T12:47:44.904Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T12:47:45.903Z"}
+{"level":"info","message":"cron evaluated: state: false, match: true, flipped: true","timestamp":"2019-04-09T12:48:04.928Z"}
+{"level":"info","message":"Scheduling actions for rule TimeDateUpdate","timestamp":"2019-04-09T12:48:04.929Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T12:48:06.906Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T12:48:07.906Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T12:48:28.928Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T12:48:29.929Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T12:48:50.957Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T12:48:51.959Z"}
+{"level":"info","message":"cron evaluated: state: true, match: true, flipped: true","timestamp":"2019-04-09T12:49:04.930Z"}
+{"level":"info","message":"Scheduling actions for rule TimeDateUpdate","timestamp":"2019-04-09T12:49:04.931Z"}
+{"message":"executing ScriptAction","level":"info","timestamp":"2019-04-09T12:49:04.932Z"}
+{"level":"debug","message":"running script:\n# ----- start script -----\nwrite('knx/write/15/1/0', new Date().toString());\n# -----  end script  -----","timestamp":"2019-04-09T12:49:04.934Z"}
+{"level":"info","message":"ScriptAction published knx/write/15/1/0 -> Tue Apr 09 2019 14:49:04 GMT+0200 (Central European Summer Time)","timestamp":"2019-04-09T12:49:04.935Z"}
+{"message":"executing ScriptAction","level":"info","timestamp":"2019-04-09T12:49:04.936Z"}
+{"level":"debug","message":"running script:\n# ----- start script -----\nwrite('knx/write/15/1/1', new Date().toString());\n# -----  end script  -----","timestamp":"2019-04-09T12:49:04.938Z"}
+{"level":"info","message":"ScriptAction published knx/write/15/1/1 -> Tue Apr 09 2019 14:49:04 GMT+0200 (Central European Summer Time)","timestamp":"2019-04-09T12:49:04.939Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T12:49:12.963Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T12:49:13.968Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T12:49:34.984Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T12:49:35.988Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T12:49:56.999Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T12:49:58.000Z"}
+{"level":"info","message":"cron evaluated: state: false, match: true, flipped: true","timestamp":"2019-04-09T12:50:04.943Z"}
+{"level":"info","message":"Scheduling actions for rule TimeDateUpdate","timestamp":"2019-04-09T12:50:04.943Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T12:50:19.028Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T12:50:20.030Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T12:50:41.052Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T12:50:42.053Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T12:51:03.083Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T12:51:04.086Z"}
+{"level":"info","message":"cron evaluated: state: true, match: true, flipped: true","timestamp":"2019-04-09T12:51:04.947Z"}
+{"level":"info","message":"Scheduling actions for rule TimeDateUpdate","timestamp":"2019-04-09T12:51:04.950Z"}
+{"message":"executing ScriptAction","level":"info","timestamp":"2019-04-09T12:51:04.950Z"}
+{"level":"debug","message":"running script:\n# ----- start script -----\nwrite('knx/write/15/1/0', new Date().toString());\n# -----  end script  -----","timestamp":"2019-04-09T12:51:04.950Z"}
+{"level":"info","message":"ScriptAction published knx/write/15/1/0 -> Tue Apr 09 2019 14:51:04 GMT+0200 (Central European Summer Time)","timestamp":"2019-04-09T12:51:04.950Z"}
+{"message":"executing ScriptAction","level":"info","timestamp":"2019-04-09T12:51:04.950Z"}
+{"level":"debug","message":"running script:\n# ----- start script -----\nwrite('knx/write/15/1/1', new Date().toString());\n# -----  end script  -----","timestamp":"2019-04-09T12:51:04.950Z"}
+{"level":"info","message":"ScriptAction published knx/write/15/1/1 -> Tue Apr 09 2019 14:51:04 GMT+0200 (Central European Summer Time)","timestamp":"2019-04-09T12:51:04.950Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T12:51:25.100Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T12:51:26.101Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T12:51:47.110Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T12:51:48.110Z"}
+{"level":"info","message":"cron evaluated: state: false, match: true, flipped: true","timestamp":"2019-04-09T12:52:04.958Z"}
+{"level":"info","message":"Scheduling actions for rule TimeDateUpdate","timestamp":"2019-04-09T12:52:04.958Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T12:52:09.121Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T12:52:10.132Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T12:52:31.167Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T12:52:32.167Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T12:52:53.181Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T12:52:54.189Z"}
+{"level":"info","message":"cron evaluated: state: true, match: true, flipped: true","timestamp":"2019-04-09T12:53:04.961Z"}
+{"level":"info","message":"Scheduling actions for rule TimeDateUpdate","timestamp":"2019-04-09T12:53:04.961Z"}
+{"message":"executing ScriptAction","level":"info","timestamp":"2019-04-09T12:53:04.961Z"}
+{"level":"debug","message":"running script:\n# ----- start script -----\nwrite('knx/write/15/1/0', new Date().toString());\n# -----  end script  -----","timestamp":"2019-04-09T12:53:04.961Z"}
+{"level":"info","message":"ScriptAction published knx/write/15/1/0 -> Tue Apr 09 2019 14:53:04 GMT+0200 (Central European Summer Time)","timestamp":"2019-04-09T12:53:04.961Z"}
+{"message":"executing ScriptAction","level":"info","timestamp":"2019-04-09T12:53:04.961Z"}
+{"level":"debug","message":"running script:\n# ----- start script -----\nwrite('knx/write/15/1/1', new Date().toString());\n# -----  end script  -----","timestamp":"2019-04-09T12:53:04.961Z"}
+{"level":"info","message":"ScriptAction published knx/write/15/1/1 -> Tue Apr 09 2019 14:53:04 GMT+0200 (Central European Summer Time)","timestamp":"2019-04-09T12:53:04.961Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T12:53:15.212Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T12:53:16.215Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T12:53:37.219Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T12:53:38.229Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T12:53:59.254Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T12:54:00.253Z"}
+{"level":"info","message":"cron evaluated: state: false, match: true, flipped: true","timestamp":"2019-04-09T12:54:04.970Z"}
+{"level":"info","message":"Scheduling actions for rule TimeDateUpdate","timestamp":"2019-04-09T12:54:04.971Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T12:54:21.261Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T12:54:22.275Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T12:54:43.291Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T12:54:44.291Z"}
+{"level":"info","message":"cron evaluated: state: true, match: true, flipped: true","timestamp":"2019-04-09T12:55:04.972Z"}
+{"level":"info","message":"Scheduling actions for rule TimeDateUpdate","timestamp":"2019-04-09T12:55:04.972Z"}
+{"message":"executing ScriptAction","level":"info","timestamp":"2019-04-09T12:55:04.973Z"}
+{"level":"debug","message":"running script:\n# ----- start script -----\nwrite('knx/write/15/1/0', new Date().toString());\n# -----  end script  -----","timestamp":"2019-04-09T12:55:04.975Z"}
+{"level":"info","message":"ScriptAction published knx/write/15/1/0 -> Tue Apr 09 2019 14:55:04 GMT+0200 (Central European Summer Time)","timestamp":"2019-04-09T12:55:04.976Z"}
+{"message":"executing ScriptAction","level":"info","timestamp":"2019-04-09T12:55:04.976Z"}
+{"level":"debug","message":"running script:\n# ----- start script -----\nwrite('knx/write/15/1/1', new Date().toString());\n# -----  end script  -----","timestamp":"2019-04-09T12:55:04.978Z"}
+{"level":"info","message":"ScriptAction published knx/write/15/1/1 -> Tue Apr 09 2019 14:55:04 GMT+0200 (Central European Summer Time)","timestamp":"2019-04-09T12:55:04.979Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T12:55:05.301Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T12:55:06.302Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T12:55:27.328Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T12:55:28.342Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T12:55:49.346Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T12:55:50.356Z"}
+{"level":"info","message":"cron evaluated: state: false, match: true, flipped: true","timestamp":"2019-04-09T12:56:04.980Z"}
+{"level":"info","message":"Scheduling actions for rule TimeDateUpdate","timestamp":"2019-04-09T12:56:04.981Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T12:56:11.374Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T12:56:12.374Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T12:56:33.394Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T12:56:34.379Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T12:56:55.384Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T12:56:56.385Z"}
+{"level":"info","message":"cron evaluated: state: true, match: true, flipped: true","timestamp":"2019-04-09T12:57:04.989Z"}
+{"level":"info","message":"Scheduling actions for rule TimeDateUpdate","timestamp":"2019-04-09T12:57:04.990Z"}
+{"message":"executing ScriptAction","level":"info","timestamp":"2019-04-09T12:57:04.991Z"}
+{"level":"debug","message":"running script:\n# ----- start script -----\nwrite('knx/write/15/1/0', new Date().toString());\n# -----  end script  -----","timestamp":"2019-04-09T12:57:04.993Z"}
+{"level":"info","message":"ScriptAction published knx/write/15/1/0 -> Tue Apr 09 2019 14:57:04 GMT+0200 (Central European Summer Time)","timestamp":"2019-04-09T12:57:04.994Z"}
+{"message":"executing ScriptAction","level":"info","timestamp":"2019-04-09T12:57:04.994Z"}
+{"level":"debug","message":"running script:\n# ----- start script -----\nwrite('knx/write/15/1/1', new Date().toString());\n# -----  end script  -----","timestamp":"2019-04-09T12:57:04.996Z"}
+{"level":"info","message":"ScriptAction published knx/write/15/1/1 -> Tue Apr 09 2019 14:57:04 GMT+0200 (Central European Summer Time)","timestamp":"2019-04-09T12:57:04.996Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T12:57:17.415Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T12:57:18.418Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T12:57:39.434Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T12:57:40.434Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T12:58:01.452Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T12:58:02.457Z"}
+{"level":"info","message":"cron evaluated: state: false, match: true, flipped: true","timestamp":"2019-04-09T12:58:05.003Z"}
+{"level":"info","message":"Scheduling actions for rule TimeDateUpdate","timestamp":"2019-04-09T12:58:05.003Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T12:58:23.481Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T12:58:24.486Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T12:58:45.503Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T12:58:46.504Z"}
+{"level":"info","message":"cron evaluated: state: true, match: true, flipped: true","timestamp":"2019-04-09T12:59:05.010Z"}
+{"level":"info","message":"Scheduling actions for rule TimeDateUpdate","timestamp":"2019-04-09T12:59:05.010Z"}
+{"message":"executing ScriptAction","level":"info","timestamp":"2019-04-09T12:59:05.010Z"}
+{"level":"debug","message":"running script:\n# ----- start script -----\nwrite('knx/write/15/1/0', new Date().toString());\n# -----  end script  -----","timestamp":"2019-04-09T12:59:05.010Z"}
+{"level":"info","message":"ScriptAction published knx/write/15/1/0 -> Tue Apr 09 2019 14:59:05 GMT+0200 (Central European Summer Time)","timestamp":"2019-04-09T12:59:05.010Z"}
+{"message":"executing ScriptAction","level":"info","timestamp":"2019-04-09T12:59:05.010Z"}
+{"level":"debug","message":"running script:\n# ----- start script -----\nwrite('knx/write/15/1/1', new Date().toString());\n# -----  end script  -----","timestamp":"2019-04-09T12:59:05.010Z"}
+{"level":"info","message":"ScriptAction published knx/write/15/1/1 -> Tue Apr 09 2019 14:59:05 GMT+0200 (Central European Summer Time)","timestamp":"2019-04-09T12:59:05.010Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T12:59:07.528Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T12:59:08.530Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T12:59:29.547Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T12:59:30.547Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T12:59:51.572Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T12:59:52.573Z"}
+{"level":"info","message":"cron evaluated: state: false, match: true, flipped: true","timestamp":"2019-04-09T13:00:05.018Z"}
+{"level":"info","message":"Scheduling actions for rule TimeDateUpdate","timestamp":"2019-04-09T13:00:05.018Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T13:00:13.599Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T13:00:14.602Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T13:00:35.630Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T13:00:36.634Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T13:00:57.668Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T13:00:58.671Z"}
+{"level":"info","message":"cron evaluated: state: true, match: true, flipped: true","timestamp":"2019-04-09T13:01:05.034Z"}
+{"level":"info","message":"Scheduling actions for rule TimeDateUpdate","timestamp":"2019-04-09T13:01:05.034Z"}
+{"message":"executing ScriptAction","level":"info","timestamp":"2019-04-09T13:01:05.034Z"}
+{"level":"debug","message":"running script:\n# ----- start script -----\nwrite('knx/write/15/1/0', new Date().toString());\n# -----  end script  -----","timestamp":"2019-04-09T13:01:05.034Z"}
+{"level":"info","message":"ScriptAction published knx/write/15/1/0 -> Tue Apr 09 2019 15:01:05 GMT+0200 (Central European Summer Time)","timestamp":"2019-04-09T13:01:05.034Z"}
+{"message":"executing ScriptAction","level":"info","timestamp":"2019-04-09T13:01:05.034Z"}
+{"level":"debug","message":"running script:\n# ----- start script -----\nwrite('knx/write/15/1/1', new Date().toString());\n# -----  end script  -----","timestamp":"2019-04-09T13:01:05.034Z"}
+{"level":"info","message":"ScriptAction published knx/write/15/1/1 -> Tue Apr 09 2019 15:01:05 GMT+0200 (Central European Summer Time)","timestamp":"2019-04-09T13:01:05.034Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T13:01:19.700Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T13:01:20.700Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T13:01:41.739Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T13:01:42.742Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T13:02:03.781Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T13:02:04.782Z"}
+{"level":"info","message":"cron evaluated: state: false, match: true, flipped: true","timestamp":"2019-04-09T13:02:05.047Z"}
+{"level":"info","message":"Scheduling actions for rule TimeDateUpdate","timestamp":"2019-04-09T13:02:05.047Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T13:02:25.801Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T13:02:26.804Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T13:02:47.817Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T13:02:48.826Z"}
+{"level":"info","message":"cron evaluated: state: true, match: true, flipped: true","timestamp":"2019-04-09T13:03:05.060Z"}
+{"level":"info","message":"Scheduling actions for rule TimeDateUpdate","timestamp":"2019-04-09T13:03:05.060Z"}
+{"message":"executing ScriptAction","level":"info","timestamp":"2019-04-09T13:03:05.060Z"}
+{"level":"debug","message":"running script:\n# ----- start script -----\nwrite('knx/write/15/1/0', new Date().toString());\n# -----  end script  -----","timestamp":"2019-04-09T13:03:05.060Z"}
+{"level":"info","message":"ScriptAction published knx/write/15/1/0 -> Tue Apr 09 2019 15:03:05 GMT+0200 (Central European Summer Time)","timestamp":"2019-04-09T13:03:05.060Z"}
+{"message":"executing ScriptAction","level":"info","timestamp":"2019-04-09T13:03:05.060Z"}
+{"level":"debug","message":"running script:\n# ----- start script -----\nwrite('knx/write/15/1/1', new Date().toString());\n# -----  end script  -----","timestamp":"2019-04-09T13:03:05.060Z"}
+{"level":"info","message":"ScriptAction published knx/write/15/1/1 -> Tue Apr 09 2019 15:03:05 GMT+0200 (Central European Summer Time)","timestamp":"2019-04-09T13:03:05.060Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T13:03:09.838Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T13:03:10.838Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T13:03:31.859Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T13:03:32.869Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T13:03:53.900Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T13:03:54.904Z"}
+{"level":"info","message":"cron evaluated: state: false, match: true, flipped: true","timestamp":"2019-04-09T13:04:05.078Z"}
+{"level":"info","message":"Scheduling actions for rule TimeDateUpdate","timestamp":"2019-04-09T13:04:05.078Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T13:04:15.926Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T13:04:16.937Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T13:04:37.980Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T13:04:38.983Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T13:05:00.013Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T13:05:01.014Z"}
+{"level":"info","message":"cron evaluated: state: true, match: true, flipped: true","timestamp":"2019-04-09T13:05:05.082Z"}
+{"level":"info","message":"Scheduling actions for rule TimeDateUpdate","timestamp":"2019-04-09T13:05:05.082Z"}
+{"message":"executing ScriptAction","level":"info","timestamp":"2019-04-09T13:05:05.082Z"}
+{"level":"debug","message":"running script:\n# ----- start script -----\nwrite('knx/write/15/1/0', new Date().toString());\n# -----  end script  -----","timestamp":"2019-04-09T13:05:05.082Z"}
+{"level":"info","message":"ScriptAction published knx/write/15/1/0 -> Tue Apr 09 2019 15:05:05 GMT+0200 (Central European Summer Time)","timestamp":"2019-04-09T13:05:05.082Z"}
+{"message":"executing ScriptAction","level":"info","timestamp":"2019-04-09T13:05:05.082Z"}
+{"level":"debug","message":"running script:\n# ----- start script -----\nwrite('knx/write/15/1/1', new Date().toString());\n# -----  end script  -----","timestamp":"2019-04-09T13:05:05.082Z"}
+{"level":"info","message":"ScriptAction published knx/write/15/1/1 -> Tue Apr 09 2019 15:05:05 GMT+0200 (Central European Summer Time)","timestamp":"2019-04-09T13:05:05.082Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T13:05:22.056Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T13:05:23.060Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T13:05:44.082Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T13:05:45.082Z"}
+{"level":"info","message":"cron evaluated: state: false, match: true, flipped: true","timestamp":"2019-04-09T13:06:05.099Z"}
+{"level":"info","message":"Scheduling actions for rule TimeDateUpdate","timestamp":"2019-04-09T13:06:05.099Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T13:06:06.099Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T13:06:07.102Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T13:06:28.150Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T13:06:29.153Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T13:06:50.194Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T13:06:51.198Z"}
+{"level":"info","message":"cron evaluated: state: true, match: true, flipped: true","timestamp":"2019-04-09T13:07:05.108Z"}
+{"level":"info","message":"Scheduling actions for rule TimeDateUpdate","timestamp":"2019-04-09T13:07:05.108Z"}
+{"message":"executing ScriptAction","level":"info","timestamp":"2019-04-09T13:07:05.108Z"}
+{"level":"debug","message":"running script:\n# ----- start script -----\nwrite('knx/write/15/1/0', new Date().toString());\n# -----  end script  -----","timestamp":"2019-04-09T13:07:05.108Z"}
+{"level":"info","message":"ScriptAction published knx/write/15/1/0 -> Tue Apr 09 2019 15:07:05 GMT+0200 (Central European Summer Time)","timestamp":"2019-04-09T13:07:05.108Z"}
+{"message":"executing ScriptAction","level":"info","timestamp":"2019-04-09T13:07:05.108Z"}
+{"level":"debug","message":"running script:\n# ----- start script -----\nwrite('knx/write/15/1/1', new Date().toString());\n# -----  end script  -----","timestamp":"2019-04-09T13:07:05.108Z"}
+{"level":"info","message":"ScriptAction published knx/write/15/1/1 -> Tue Apr 09 2019 15:07:05 GMT+0200 (Central European Summer Time)","timestamp":"2019-04-09T13:07:05.108Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T13:07:12.228Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T13:07:13.234Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T13:07:34.248Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T13:07:35.248Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T13:07:56.274Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T13:07:57.282Z"}
+{"level":"info","message":"cron evaluated: state: false, match: true, flipped: true","timestamp":"2019-04-09T13:08:05.124Z"}
+{"level":"info","message":"Scheduling actions for rule TimeDateUpdate","timestamp":"2019-04-09T13:08:05.124Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T13:08:18.301Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T13:08:19.305Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T13:08:40.313Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T13:08:41.315Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T13:09:02.337Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T13:09:03.337Z"}
+{"level":"info","message":"cron evaluated: state: true, match: true, flipped: true","timestamp":"2019-04-09T13:09:05.139Z"}
+{"level":"info","message":"Scheduling actions for rule TimeDateUpdate","timestamp":"2019-04-09T13:09:05.139Z"}
+{"message":"executing ScriptAction","level":"info","timestamp":"2019-04-09T13:09:05.139Z"}
+{"level":"debug","message":"running script:\n# ----- start script -----\nwrite('knx/write/15/1/0', new Date().toString());\n# -----  end script  -----","timestamp":"2019-04-09T13:09:05.139Z"}
+{"level":"info","message":"ScriptAction published knx/write/15/1/0 -> Tue Apr 09 2019 15:09:05 GMT+0200 (Central European Summer Time)","timestamp":"2019-04-09T13:09:05.139Z"}
+{"message":"executing ScriptAction","level":"info","timestamp":"2019-04-09T13:09:05.139Z"}
+{"level":"debug","message":"running script:\n# ----- start script -----\nwrite('knx/write/15/1/1', new Date().toString());\n# -----  end script  -----","timestamp":"2019-04-09T13:09:05.139Z"}
+{"level":"info","message":"ScriptAction published knx/write/15/1/1 -> Tue Apr 09 2019 15:09:05 GMT+0200 (Central European Summer Time)","timestamp":"2019-04-09T13:09:05.139Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T13:09:24.355Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T13:09:25.370Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T13:09:46.396Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T13:09:47.395Z"}
+{"level":"info","message":"cron evaluated: state: false, match: true, flipped: true","timestamp":"2019-04-09T13:10:05.160Z"}
+{"level":"info","message":"Scheduling actions for rule TimeDateUpdate","timestamp":"2019-04-09T13:10:05.160Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T13:10:08.432Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T13:10:09.432Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T13:10:30.464Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T13:10:31.465Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T13:10:52.485Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T13:10:53.501Z"}
+{"level":"info","message":"cron evaluated: state: true, match: true, flipped: true","timestamp":"2019-04-09T13:11:05.164Z"}
+{"level":"info","message":"Scheduling actions for rule TimeDateUpdate","timestamp":"2019-04-09T13:11:05.164Z"}
+{"message":"executing ScriptAction","level":"info","timestamp":"2019-04-09T13:11:05.164Z"}
+{"level":"debug","message":"running script:\n# ----- start script -----\nwrite('knx/write/15/1/0', new Date().toString());\n# -----  end script  -----","timestamp":"2019-04-09T13:11:05.164Z"}
+{"level":"info","message":"ScriptAction published knx/write/15/1/0 -> Tue Apr 09 2019 15:11:05 GMT+0200 (Central European Summer Time)","timestamp":"2019-04-09T13:11:05.164Z"}
+{"message":"executing ScriptAction","level":"info","timestamp":"2019-04-09T13:11:05.164Z"}
+{"level":"debug","message":"running script:\n# ----- start script -----\nwrite('knx/write/15/1/1', new Date().toString());\n# -----  end script  -----","timestamp":"2019-04-09T13:11:05.164Z"}
+{"level":"info","message":"ScriptAction published knx/write/15/1/1 -> Tue Apr 09 2019 15:11:05 GMT+0200 (Central European Summer Time)","timestamp":"2019-04-09T13:11:05.164Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T13:11:14.525Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T13:11:15.531Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T13:11:36.556Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T13:11:37.559Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T13:11:58.587Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T13:11:59.594Z"}
+{"level":"info","message":"cron evaluated: state: false, match: true, flipped: true","timestamp":"2019-04-09T13:12:05.188Z"}
+{"level":"info","message":"Scheduling actions for rule TimeDateUpdate","timestamp":"2019-04-09T13:12:05.188Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T13:12:20.624Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T13:12:21.630Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T13:12:42.653Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T13:12:43.654Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T13:13:04.682Z"}
+{"level":"info","message":"cron evaluated: state: true, match: true, flipped: true","timestamp":"2019-04-09T13:13:05.197Z"}
+{"level":"info","message":"Scheduling actions for rule TimeDateUpdate","timestamp":"2019-04-09T13:13:05.197Z"}
+{"message":"executing ScriptAction","level":"info","timestamp":"2019-04-09T13:13:05.197Z"}
+{"level":"debug","message":"running script:\n# ----- start script -----\nwrite('knx/write/15/1/0', new Date().toString());\n# -----  end script  -----","timestamp":"2019-04-09T13:13:05.197Z"}
+{"level":"info","message":"ScriptAction published knx/write/15/1/0 -> Tue Apr 09 2019 15:13:05 GMT+0200 (Central European Summer Time)","timestamp":"2019-04-09T13:13:05.197Z"}
+{"message":"executing ScriptAction","level":"info","timestamp":"2019-04-09T13:13:05.197Z"}
+{"level":"debug","message":"running script:\n# ----- start script -----\nwrite('knx/write/15/1/1', new Date().toString());\n# -----  end script  -----","timestamp":"2019-04-09T13:13:05.197Z"}
+{"level":"info","message":"ScriptAction published knx/write/15/1/1 -> Tue Apr 09 2019 15:13:05 GMT+0200 (Central European Summer Time)","timestamp":"2019-04-09T13:13:05.197Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T13:13:05.682Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T13:13:26.697Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T13:13:27.697Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T13:13:48.723Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T13:13:49.727Z"}
+{"level":"info","message":"cron evaluated: state: false, match: true, flipped: true","timestamp":"2019-04-09T13:14:05.208Z"}
+{"level":"info","message":"Scheduling actions for rule TimeDateUpdate","timestamp":"2019-04-09T13:14:05.208Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T13:14:10.732Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T13:14:11.744Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T13:14:32.779Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T13:14:33.780Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T13:14:54.791Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T13:14:55.791Z"}
+{"level":"info","message":"cron evaluated: state: true, match: true, flipped: true","timestamp":"2019-04-09T13:15:05.223Z"}
+{"level":"info","message":"Scheduling actions for rule TimeDateUpdate","timestamp":"2019-04-09T13:15:05.223Z"}
+{"message":"executing ScriptAction","level":"info","timestamp":"2019-04-09T13:15:05.223Z"}
+{"level":"debug","message":"running script:\n# ----- start script -----\nwrite('knx/write/15/1/0', new Date().toString());\n# -----  end script  -----","timestamp":"2019-04-09T13:15:05.223Z"}
+{"level":"info","message":"ScriptAction published knx/write/15/1/0 -> Tue Apr 09 2019 15:15:05 GMT+0200 (Central European Summer Time)","timestamp":"2019-04-09T13:15:05.223Z"}
+{"message":"executing ScriptAction","level":"info","timestamp":"2019-04-09T13:15:05.223Z"}
+{"level":"debug","message":"running script:\n# ----- start script -----\nwrite('knx/write/15/1/1', new Date().toString());\n# -----  end script  -----","timestamp":"2019-04-09T13:15:05.223Z"}
+{"level":"info","message":"ScriptAction published knx/write/15/1/1 -> Tue Apr 09 2019 15:15:05 GMT+0200 (Central European Summer Time)","timestamp":"2019-04-09T13:15:05.223Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T13:15:16.817Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T13:15:17.833Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T13:15:38.844Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T13:15:39.848Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T13:16:00.886Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T13:16:01.902Z"}
+{"level":"info","message":"cron evaluated: state: false, match: true, flipped: true","timestamp":"2019-04-09T13:16:05.235Z"}
+{"level":"info","message":"Scheduling actions for rule TimeDateUpdate","timestamp":"2019-04-09T13:16:05.235Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T13:16:22.947Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T13:16:23.959Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T13:16:44.989Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T13:16:45.992Z"}
+{"level":"info","message":"cron evaluated: state: true, match: true, flipped: true","timestamp":"2019-04-09T13:17:05.241Z"}
+{"level":"info","message":"Scheduling actions for rule TimeDateUpdate","timestamp":"2019-04-09T13:17:05.241Z"}
+{"message":"executing ScriptAction","level":"info","timestamp":"2019-04-09T13:17:05.241Z"}
+{"level":"debug","message":"running script:\n# ----- start script -----\nwrite('knx/write/15/1/0', new Date().toString());\n# -----  end script  -----","timestamp":"2019-04-09T13:17:05.259Z"}
+{"level":"info","message":"ScriptAction published knx/write/15/1/0 -> Tue Apr 09 2019 15:17:05 GMT+0200 (Central European Summer Time)","timestamp":"2019-04-09T13:17:05.259Z"}
+{"message":"executing ScriptAction","level":"info","timestamp":"2019-04-09T13:17:05.259Z"}
+{"level":"debug","message":"running script:\n# ----- start script -----\nwrite('knx/write/15/1/1', new Date().toString());\n# -----  end script  -----","timestamp":"2019-04-09T13:17:05.259Z"}
+{"level":"info","message":"ScriptAction published knx/write/15/1/1 -> Tue Apr 09 2019 15:17:05 GMT+0200 (Central European Summer Time)","timestamp":"2019-04-09T13:17:05.259Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T13:17:07.011Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T13:17:08.012Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T13:17:29.044Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T13:17:30.044Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T13:17:51.060Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T13:17:52.070Z"}
+{"level":"info","message":"cron evaluated: state: false, match: true, flipped: true","timestamp":"2019-04-09T13:18:05.267Z"}
+{"level":"info","message":"Scheduling actions for rule TimeDateUpdate","timestamp":"2019-04-09T13:18:05.268Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T13:18:13.080Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T13:18:14.080Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T13:18:35.111Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T13:18:36.125Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T13:18:57.138Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T13:18:58.138Z"}
+{"level":"info","message":"cron evaluated: state: true, match: true, flipped: true","timestamp":"2019-04-09T13:19:05.269Z"}
+{"level":"info","message":"Scheduling actions for rule TimeDateUpdate","timestamp":"2019-04-09T13:19:05.270Z"}
+{"message":"executing ScriptAction","level":"info","timestamp":"2019-04-09T13:19:05.270Z"}
+{"level":"debug","message":"running script:\n# ----- start script -----\nwrite('knx/write/15/1/0', new Date().toString());\n# -----  end script  -----","timestamp":"2019-04-09T13:19:05.272Z"}
+{"level":"info","message":"ScriptAction published knx/write/15/1/0 -> Tue Apr 09 2019 15:19:05 GMT+0200 (Central European Summer Time)","timestamp":"2019-04-09T13:19:05.273Z"}
+{"message":"executing ScriptAction","level":"info","timestamp":"2019-04-09T13:19:05.273Z"}
+{"level":"debug","message":"running script:\n# ----- start script -----\nwrite('knx/write/15/1/1', new Date().toString());\n# -----  end script  -----","timestamp":"2019-04-09T13:19:05.275Z"}
+{"level":"info","message":"ScriptAction published knx/write/15/1/1 -> Tue Apr 09 2019 15:19:05 GMT+0200 (Central European Summer Time)","timestamp":"2019-04-09T13:19:05.275Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T13:19:19.154Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T13:19:20.170Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T13:19:41.198Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T13:19:42.204Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T13:20:03.230Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T13:20:04.230Z"}
+{"level":"info","message":"cron evaluated: state: false, match: true, flipped: true","timestamp":"2019-04-09T13:20:05.277Z"}
+{"level":"info","message":"Scheduling actions for rule TimeDateUpdate","timestamp":"2019-04-09T13:20:05.277Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T13:20:25.249Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T13:20:26.251Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T13:20:47.265Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T13:20:48.267Z"}
+{"level":"info","message":"cron evaluated: state: true, match: true, flipped: true","timestamp":"2019-04-09T13:21:05.288Z"}
+{"level":"info","message":"Scheduling actions for rule TimeDateUpdate","timestamp":"2019-04-09T13:21:05.288Z"}
+{"message":"executing ScriptAction","level":"info","timestamp":"2019-04-09T13:21:05.288Z"}
+{"level":"debug","message":"running script:\n# ----- start script -----\nwrite('knx/write/15/1/0', new Date().toString());\n# -----  end script  -----","timestamp":"2019-04-09T13:21:05.288Z"}
+{"level":"info","message":"ScriptAction published knx/write/15/1/0 -> Tue Apr 09 2019 15:21:05 GMT+0200 (Central European Summer Time)","timestamp":"2019-04-09T13:21:05.288Z"}
+{"message":"executing ScriptAction","level":"info","timestamp":"2019-04-09T13:21:05.288Z"}
+{"level":"debug","message":"running script:\n# ----- start script -----\nwrite('knx/write/15/1/1', new Date().toString());\n# -----  end script  -----","timestamp":"2019-04-09T13:21:05.288Z"}
+{"level":"info","message":"ScriptAction published knx/write/15/1/1 -> Tue Apr 09 2019 15:21:05 GMT+0200 (Central European Summer Time)","timestamp":"2019-04-09T13:21:05.288Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T13:21:09.302Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T13:21:10.306Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T13:21:31.329Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T13:21:32.333Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T13:21:53.345Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T13:21:54.344Z"}
+{"level":"info","message":"cron evaluated: state: false, match: true, flipped: true","timestamp":"2019-04-09T13:22:05.310Z"}
+{"level":"info","message":"Scheduling actions for rule TimeDateUpdate","timestamp":"2019-04-09T13:22:05.310Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T13:22:15.366Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T13:22:16.366Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T13:22:37.381Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T13:22:38.380Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T13:22:59.383Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T13:23:00.382Z"}
+{"level":"info","message":"cron evaluated: state: true, match: true, flipped: true","timestamp":"2019-04-09T13:23:05.312Z"}
+{"level":"info","message":"Scheduling actions for rule TimeDateUpdate","timestamp":"2019-04-09T13:23:05.313Z"}
+{"message":"executing ScriptAction","level":"info","timestamp":"2019-04-09T13:23:05.313Z"}
+{"level":"debug","message":"running script:\n# ----- start script -----\nwrite('knx/write/15/1/0', new Date().toString());\n# -----  end script  -----","timestamp":"2019-04-09T13:23:05.314Z"}
+{"level":"info","message":"ScriptAction published knx/write/15/1/0 -> Tue Apr 09 2019 15:23:05 GMT+0200 (Central European Summer Time)","timestamp":"2019-04-09T13:23:05.314Z"}
+{"message":"executing ScriptAction","level":"info","timestamp":"2019-04-09T13:23:05.315Z"}
+{"level":"debug","message":"running script:\n# ----- start script -----\nwrite('knx/write/15/1/1', new Date().toString());\n# -----  end script  -----","timestamp":"2019-04-09T13:23:05.316Z"}
+{"level":"info","message":"ScriptAction published knx/write/15/1/1 -> Tue Apr 09 2019 15:23:05 GMT+0200 (Central European Summer Time)","timestamp":"2019-04-09T13:23:05.316Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T13:23:21.400Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T13:23:22.400Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T13:23:43.421Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T13:23:44.423Z"}
+{"level":"info","message":"cron evaluated: state: false, match: true, flipped: true","timestamp":"2019-04-09T13:24:05.318Z"}
+{"level":"info","message":"Scheduling actions for rule TimeDateUpdate","timestamp":"2019-04-09T13:24:05.319Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T13:24:05.427Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T13:24:06.426Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T13:24:27.431Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T13:24:28.432Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T13:24:49.433Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T13:24:50.437Z"}
+{"level":"info","message":"cron evaluated: state: true, match: true, flipped: true","timestamp":"2019-04-09T13:25:05.329Z"}
+{"level":"info","message":"Scheduling actions for rule TimeDateUpdate","timestamp":"2019-04-09T13:25:05.329Z"}
+{"message":"executing ScriptAction","level":"info","timestamp":"2019-04-09T13:25:05.329Z"}
+{"level":"debug","message":"running script:\n# ----- start script -----\nwrite('knx/write/15/1/0', new Date().toString());\n# -----  end script  -----","timestamp":"2019-04-09T13:25:05.329Z"}
+{"level":"info","message":"ScriptAction published knx/write/15/1/0 -> Tue Apr 09 2019 15:25:05 GMT+0200 (Central European Summer Time)","timestamp":"2019-04-09T13:25:05.329Z"}
+{"message":"executing ScriptAction","level":"info","timestamp":"2019-04-09T13:25:05.329Z"}
+{"level":"debug","message":"running script:\n# ----- start script -----\nwrite('knx/write/15/1/1', new Date().toString());\n# -----  end script  -----","timestamp":"2019-04-09T13:25:05.329Z"}
+{"level":"info","message":"ScriptAction published knx/write/15/1/1 -> Tue Apr 09 2019 15:25:05 GMT+0200 (Central European Summer Time)","timestamp":"2019-04-09T13:25:05.329Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T13:25:11.450Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T13:25:12.453Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T13:25:33.476Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T13:25:34.491Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T13:25:55.535Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T13:25:56.549Z"}
+{"level":"info","message":"cron evaluated: state: false, match: true, flipped: true","timestamp":"2019-04-09T13:26:05.339Z"}
+{"level":"info","message":"Scheduling actions for rule TimeDateUpdate","timestamp":"2019-04-09T13:26:05.340Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T13:26:17.578Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T13:26:18.582Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T13:26:39.613Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T13:26:40.614Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T13:27:01.629Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T13:27:02.630Z"}
+{"level":"info","message":"cron evaluated: state: true, match: true, flipped: true","timestamp":"2019-04-09T13:27:05.340Z"}
+{"level":"info","message":"Scheduling actions for rule TimeDateUpdate","timestamp":"2019-04-09T13:27:05.341Z"}
+{"message":"executing ScriptAction","level":"info","timestamp":"2019-04-09T13:27:05.342Z"}
+{"level":"debug","message":"running script:\n# ----- start script -----\nwrite('knx/write/15/1/0', new Date().toString());\n# -----  end script  -----","timestamp":"2019-04-09T13:27:05.343Z"}
+{"level":"info","message":"ScriptAction published knx/write/15/1/0 -> Tue Apr 09 2019 15:27:05 GMT+0200 (Central European Summer Time)","timestamp":"2019-04-09T13:27:05.344Z"}
+{"message":"executing ScriptAction","level":"info","timestamp":"2019-04-09T13:27:05.344Z"}
+{"level":"debug","message":"running script:\n# ----- start script -----\nwrite('knx/write/15/1/1', new Date().toString());\n# -----  end script  -----","timestamp":"2019-04-09T13:27:05.346Z"}
+{"level":"info","message":"ScriptAction published knx/write/15/1/1 -> Tue Apr 09 2019 15:27:05 GMT+0200 (Central European Summer Time)","timestamp":"2019-04-09T13:27:05.346Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T13:27:23.642Z"}
+{"message":"Parsing rules","level":"info","timestamp":"2019-04-09T13:27:31.739Z"}
+{"level":"info","message":"loaded <Rule> TEST - #conditions: 3, #onTrueActions: 0, #onFalseActions: 0","timestamp":"2019-04-09T13:27:31.739Z"}
+{"level":"info","message":"loaded <Rule> TimeDateUpdate - #conditions: 1, #onTrueActions: 2, #onFalseActions: 0","timestamp":"2019-04-09T13:27:31.754Z"}
+{"level":"info","message":"loaded <Rule> Bel - #conditions: 1, #onTrueActions: 1, #onFalseActions: 0","timestamp":"2019-04-09T13:27:31.754Z"}
+{"level":"info","message":"loaded <Rule> Afdak_achteraan - #conditions: 3, #onTrueActions: 1, #onFalseActions: 1","timestamp":"2019-04-09T13:27:31.754Z"}
+{"level":"info","message":"loaded <Rule> Voordeur - #conditions: 2, #onTrueActions: 3, #onFalseActions: 0","timestamp":"2019-04-09T13:27:31.754Z"}
+{"level":"info","message":"loaded <Rule> Afdak - #conditions: 1, #onTrueActions: 1, #onFalseActions: 0","timestamp":"2019-04-09T13:27:31.754Z"}
+{"level":"info","message":"loaded <Rule> StatusBeneden - #conditions: 12, #onTrueActions: 1, #onFalseActions: 1","timestamp":"2019-04-09T13:27:31.754Z"}
+{"level":"info","message":"loaded <Rule> BadkamerVentilatie - #conditions: 1, #onTrueActions: 5, #onFalseActions: 0","timestamp":"2019-04-09T13:27:31.754Z"}
+{"level":"info","message":"loaded <Rule> Ventilatie - #conditions: 1, #onTrueActions: 1, #onFalseActions: 0","timestamp":"2019-04-09T13:27:31.754Z"}
+{"level":"info","message":"cron evaluated: state: true, match: true, flipped: true","timestamp":"2019-04-09T13:27:31.786Z"}
+{"level":"info","message":"Scheduling actions for rule TimeDateUpdate","timestamp":"2019-04-09T13:27:31.786Z"}
+{"message":"executing ScriptAction","level":"info","timestamp":"2019-04-09T13:27:31.786Z"}
+{"level":"debug","message":"running script:\n# ----- start script -----\nwrite('knx/write/15/1/0', new Date().toString());\n# -----  end script  -----","timestamp":"2019-04-09T13:27:31.786Z"}
+{"level":"info","message":"ScriptAction published knx/write/15/1/0 -> Tue Apr 09 2019 15:27:31 GMT+0200 (Central European Summer Time)","timestamp":"2019-04-09T13:27:31.786Z"}
+{"message":"executing ScriptAction","level":"info","timestamp":"2019-04-09T13:27:31.801Z"}
+{"level":"debug","message":"running script:\n# ----- start script -----\nwrite('knx/write/15/1/1', new Date().toString());\n# -----  end script  -----","timestamp":"2019-04-09T13:27:31.801Z"}
+{"level":"info","message":"ScriptAction published knx/write/15/1/1 -> Tue Apr 09 2019 15:27:31 GMT+0200 (Central European Summer Time)","timestamp":"2019-04-09T13:27:31.801Z"}
+{"level":"info","message":"Listening on port 4000","timestamp":"2019-04-09T13:27:31.801Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T13:27:52.829Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T13:27:53.831Z"}
+{"level":"info","message":"cron evaluated: state: false, match: true, flipped: true","timestamp":"2019-04-09T13:28:04.816Z"}
+{"level":"info","message":"Scheduling actions for rule TimeDateUpdate","timestamp":"2019-04-09T13:28:04.816Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T13:28:14.877Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T13:28:15.886Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T13:28:36.905Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T13:28:37.935Z"}
+{"message":"MQTT disconnected","level":"info","timestamp":"2019-04-09T13:28:58.940Z"}
+{"message":"MQTT trying to reconnect","level":"info","timestamp":"2019-04-09T13:28:59.942Z"}
+{"level":"info","message":"cron evaluated: state: true, match: true, flipped: true","timestamp":"2019-04-09T13:29:04.821Z"}
+{"level":"info","message":"Scheduling actions for rule TimeDateUpdate","timestamp":"2019-04-09T13:29:04.821Z"}
+{"message":"executing ScriptAction","level":"info","timestamp":"2019-04-09T13:29:04.821Z"}
+{"level":"debug","message":"running script:\n# ----- start script -----\nwrite('knx/write/15/1/0', new Date().toString());\n# -----  end script  -----","timestamp":"2019-04-09T13:29:04.821Z"}
+{"level":"info","message":"ScriptAction published knx/write/15/1/0 -> Tue Apr 09 2019 15:29:04 GMT+0200 (Central European Summer Time)","timestamp":"2019-04-09T13:29:04.821Z"}
+{"message":"executing ScriptAction","level":"info","timestamp":"2019-04-09T13:29:04.821Z"}
+{"level":"debug","message":"running script:\n# ----- start script -----\nwrite('knx/write/15/1/1', new Date().toString());\n# -----  end script  -----","timestamp":"2019-04-09T13:29:04.821Z"}
+{"level":"info","message":"ScriptAction published knx/write/15/1/1 -> Tue Apr 09 2019 15:29:04 GMT+0200 (Central European Summer Time)","timestamp":"2019-04-09T13:29:04.821Z"}
+{"message":"Parsing rules","level":"info","timestamp":"2019-04-09T13:52:09.283Z"}
+{"level":"info","message":"loaded <Rule> TEST - #conditions: 3, #onTrueActions: 0, #onFalseActions: 0","timestamp":"2019-04-09T13:52:09.299Z"}
+{"level":"info","message":"loaded <Rule> TimeDateUpdate - #conditions: 1, #onTrueActions: 2, #onFalseActions: 0","timestamp":"2019-04-09T13:52:09.299Z"}
+{"level":"info","message":"loaded <Rule> Bel - #conditions: 1, #onTrueActions: 1, #onFalseActions: 0","timestamp":"2019-04-09T13:52:09.299Z"}
+{"level":"info","message":"loaded <Rule> Afdak_achteraan - #conditions: 3, #onTrueActions: 1, #onFalseActions: 1","timestamp":"2019-04-09T13:52:09.299Z"}
+{"level":"info","message":"loaded <Rule> Voordeur - #conditions: 2, #onTrueActions: 3, #onFalseActions: 0","timestamp":"2019-04-09T13:52:09.299Z"}
+{"level":"info","message":"loaded <Rule> Afdak - #conditions: 1, #onTrueActions: 1, #onFalseActions: 0","timestamp":"2019-04-09T13:52:09.299Z"}
+{"level":"info","message":"loaded <Rule> StatusBeneden - #conditions: 12, #onTrueActions: 1, #onFalseActions: 1","timestamp":"2019-04-09T13:52:09.299Z"}
+{"level":"info","message":"loaded <Rule> BadkamerVentilatie - #conditions: 1, #onTrueActions: 5, #onFalseActions: 0","timestamp":"2019-04-09T13:52:09.299Z"}
+{"level":"info","message":"loaded <Rule> Ventilatie - #conditions: 1, #onTrueActions: 1, #onFalseActions: 0","timestamp":"2019-04-09T13:52:09.314Z"}
+{"level":"info","message":"cron evaluated: state: false, match: true, flipped: true","timestamp":"2019-04-09T13:52:09.361Z"}
+{"level":"info","message":"Scheduling actions for rule TimeDateUpdate","timestamp":"2019-04-09T13:52:09.361Z"}
+{"level":"info","message":"Listening on port 4000","timestamp":"2019-04-09T13:52:09.361Z"}
+{"message":"Parsing rules","level":"info","timestamp":"2019-04-09T16:10:30.949Z"}
+{"level":"info","message":"loaded <Rule> TEST - #conditions: 3, #onTrueActions: 0, #onFalseActions: 0","timestamp":"2019-04-09T16:10:30.969Z"}
+{"level":"info","message":"loaded <Rule> TimeDateUpdate - #conditions: 1, #onTrueActions: 2, #onFalseActions: 0","timestamp":"2019-04-09T16:10:30.979Z"}
+{"level":"info","message":"loaded <Rule> Bel - #conditions: 1, #onTrueActions: 1, #onFalseActions: 0","timestamp":"2019-04-09T16:10:30.980Z"}
+{"level":"info","message":"loaded <Rule> Afdak_achteraan - #conditions: 3, #onTrueActions: 1, #onFalseActions: 1","timestamp":"2019-04-09T16:10:30.982Z"}
+{"level":"info","message":"loaded <Rule> Voordeur - #conditions: 2, #onTrueActions: 3, #onFalseActions: 0","timestamp":"2019-04-09T16:10:30.983Z"}
+{"level":"info","message":"loaded <Rule> Afdak - #conditions: 1, #onTrueActions: 1, #onFalseActions: 0","timestamp":"2019-04-09T16:10:30.984Z"}
+{"level":"info","message":"loaded <Rule> StatusBeneden - #conditions: 12, #onTrueActions: 1, #onFalseActions: 1","timestamp":"2019-04-09T16:10:30.985Z"}
+{"level":"info","message":"loaded <Rule> BadkamerVentilatie - #conditions: 1, #onTrueActions: 5, #onFalseActions: 0","timestamp":"2019-04-09T16:10:30.986Z"}
+{"level":"info","message":"loaded <Rule> Ventilatie - #conditions: 1, #onTrueActions: 1, #onFalseActions: 0","timestamp":"2019-04-09T16:10:30.987Z"}
+{"level":"info","message":"cron evaluated: state: false, match: true, flipped: true","timestamp":"2019-04-09T16:10:31.046Z"}
+{"level":"info","message":"Scheduling actions for rule TimeDateUpdate","timestamp":"2019-04-09T16:10:31.047Z"}
+{"level":"info","message":"Listening on port 4000","timestamp":"2019-04-09T16:10:31.052Z"}
+{"message":"Parsing rules","level":"info","timestamp":"2019-04-09T16:10:47.714Z"}
+{"level":"info","message":"loaded <Rule> TEST - #conditions: 3, #onTrueActions: 0, #onFalseActions: 0","timestamp":"2019-04-09T16:10:47.731Z"}
+{"level":"info","message":"loaded <Rule> TimeDateUpdate - #conditions: 1, #onTrueActions: 2, #onFalseActions: 0","timestamp":"2019-04-09T16:10:47.734Z"}
+{"level":"info","message":"loaded <Rule> Bel - #conditions: 1, #onTrueActions: 1, #onFalseActions: 0","timestamp":"2019-04-09T16:10:47.735Z"}
+{"level":"info","message":"loaded <Rule> Afdak_achteraan - #conditions: 3, #onTrueActions: 1, #onFalseActions: 1","timestamp":"2019-04-09T16:10:47.736Z"}
+{"level":"info","message":"loaded <Rule> Voordeur - #conditions: 2, #onTrueActions: 3, #onFalseActions: 0","timestamp":"2019-04-09T16:10:47.737Z"}
+{"level":"info","message":"loaded <Rule> Afdak - #conditions: 1, #onTrueActions: 1, #onFalseActions: 0","timestamp":"2019-04-09T16:10:47.737Z"}
+{"level":"info","message":"loaded <Rule> StatusBeneden - #conditions: 12, #onTrueActions: 1, #onFalseActions: 1","timestamp":"2019-04-09T16:10:47.738Z"}
+{"level":"info","message":"loaded <Rule> BadkamerVentilatie - #conditions: 1, #onTrueActions: 5, #onFalseActions: 0","timestamp":"2019-04-09T16:10:47.738Z"}
+{"level":"info","message":"loaded <Rule> Ventilatie - #conditions: 1, #onTrueActions: 1, #onFalseActions: 0","timestamp":"2019-04-09T16:10:47.739Z"}
+{"level":"info","message":"cron evaluated: state: false, match: true, flipped: true","timestamp":"2019-04-09T16:10:47.804Z"}
+{"level":"info","message":"Scheduling actions for rule TimeDateUpdate","timestamp":"2019-04-09T16:10:47.806Z"}
+{"level":"info","message":"Listening on port 4000","timestamp":"2019-04-09T16:10:47.808Z"}
