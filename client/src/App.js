@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { DragDropContext } from 'react-dnd';
 import HTML5Backend from 'react-dnd-html5-backend';
-import { AppContainer, AppNav, AppBody, Title, HorizontalContainer } from "./containers";
+import { AppContainer, AppNav, AppBody, Title, HorizontalContainer, AppFooter } from "./containers";
 import { Button } from 'reactstrap';
 import { staticData } from './utils';
 import { RuleList } from './RuleList';
@@ -122,6 +122,9 @@ class App extends Component {
             <RuleEditor id={this.state.selectedRule} refreshNames={() => { this.loadRuleListFromServer(false) }} />
           }
         </AppBody>
+        <AppFooter>
+          test
+        </AppFooter>
 
       </AppContainer>
     );

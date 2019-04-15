@@ -11,12 +11,15 @@ export const AppContainer = styled.div`
 
 export const AppBody = styled.div`
   display: flex;
+  border: 1px solid red;
   flex: 1 1 auto;
-  height: 100vh;
+  height: 80%;
 `;
 
 export const AppFooter = styled.div`
-  flex: none;
+  height: 200px;
+  resize: vertical;
+  overflow: auto;
 `;
 
 // -----------------------------------
@@ -80,8 +83,8 @@ export const HorizontalContainer = styled.div`
   align-items: center;
 `;
 
-export const Header = styled.div`    
+export const Header = styled.div`
   font-size: 120%;
-  font-weight: 800; 
+  font-weight: 800;
 `;
 

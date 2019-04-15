@@ -1,707 +1,370 @@
-{"test":"hallo","bla":"adsf","level":"error","message":"test","timestamp":"2019-04-08 05:07:20"}
-{"message":{"type":"condition","condition":"cron","time":"2019-04-08T16:11:37.702Z","match":true,"state":false,"flipped":true},"level":"info","timestamp":"2019-04-08 06:11:37"}
-{"message":{"type":"condition","condition":"cron","time":"2019-04-08T16:12:04.708Z","match":true,"state":false,"flipped":false},"level":"info","timestamp":"2019-04-08 06:12:04"}
-{"type":"condition","condition":"cron","time":"2019-04-08T16:13:02.689Z","match":true,"state":false,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-08 06:13:02"}
-{"type":"condition","condition":"cron","time":"2019-04-08T16:13:04.694Z","match":true,"state":false,"flipped":false,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-08 06:13:04"}
-{"type":"condition","condition":"cron","time":"2019-04-08T16:14:04.701Z","match":true,"state":false,"flipped":false,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-08 06:14:04"}
-{"type":"condition","condition":"cron","time":"2019-04-08T16:14:56.398Z","match":true,"state":false,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-08 06:14:56"}
-{"type":"condition","condition":"cron","time":"2019-04-08T16:15:05.404Z","match":true,"state":false,"flipped":false,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-08 06:15:05"}
-{"type":"condition","condition":"cron","time":"2019-04-08T16:15:15.532Z","match":true,"state":false,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-08 06:15:15"}
-{"type":"condition","condition":"cron","time":"2019-04-08T16:16:04.538Z","match":true,"state":false,"flipped":false,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-08 06:16:04"}
-{"type":"condition","condition":"cron","time":"2019-04-08T16:22:24.497Z","match":true,"state":false,"flipped":false,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-08 06:22:24"}
-{"type":"condition","condition":"cron","time":"2019-04-08T19:06:11.529Z","match":true,"state":false,"flipped":false,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-08 09:06:11"}
-{"type":"condition","condition":"cron","time":"2019-04-08T19:07:04.424Z","match":true,"state":false,"flipped":false,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-08 09:07:04"}
-{"type":"condition","condition":"cron","time":"2019-04-08T19:07:05.425Z","match":true,"state":false,"flipped":false,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-08 09:07:05"}
-{"type":"condition","condition":"cron","time":"2019-04-08T19:08:05.425Z","match":true,"state":false,"flipped":false,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-08 09:08:05"}
-{"type":"condition","condition":"cron","time":"2019-04-08T19:09:05.425Z","match":true,"state":false,"flipped":false,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-08 09:09:05"}
-{"type":"condition","condition":"cron","time":"2019-04-08T19:10:05.426Z","match":true,"state":false,"flipped":false,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-08 09:10:05"}
-{"type":"condition","condition":"cron","time":"2019-04-08T19:11:05.430Z","match":true,"state":false,"flipped":false,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-08 09:11:05"}
-{"type":"condition","condition":"cron","time":"2019-04-08T19:12:05.431Z","match":true,"state":false,"flipped":false,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-08 09:12:05"}
-{"type":"condition","condition":"cron","time":"2019-04-08T19:13:05.434Z","match":true,"state":false,"flipped":false,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-08 09:13:05"}
-{"type":"condition","condition":"cron","time":"2019-04-08T19:14:05.435Z","match":true,"state":false,"flipped":false,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-08 09:14:05"}
-{"type":"condition","condition":"cron","time":"2019-04-08T19:14:39.853Z","match":true,"state":false,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-08 09:14:39"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-08T19:15:49.449Z","match":true,"state":false,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-08 09:15:49"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-08T19:16:05.451Z","match":true,"state":false,"flipped":false,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-08 09:16:05"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-08T19:17:05.456Z","match":true,"state":false,"flipped":false,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-08 09:17:05"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-08T19:18:05.459Z","match":true,"state":false,"flipped":false,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-08 09:18:05"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-08T19:19:05.460Z","match":true,"state":false,"flipped":false,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-08 09:19:05"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-08T19:20:00.868Z","match":true,"state":false,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-08 09:20:00"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-08T19:20:04.874Z","match":true,"state":false,"flipped":false,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-08 09:20:04"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-08T19:24:58.834Z","match":true,"state":false,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-08 09:24:58"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-08T19:25:04.840Z","match":true,"state":false,"flipped":false,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-08 09:25:04"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-08T19:26:04.840Z","match":true,"state":false,"flipped":false,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-08 09:26:04"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-08T19:27:04.843Z","match":true,"state":false,"flipped":false,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-08 09:27:04"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-08T19:28:04.846Z","match":true,"state":false,"flipped":false,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-08 09:28:04"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-08T19:28:30.430Z","match":true,"state":false,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-08 09:28:30"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-08T19:29:05.432Z","match":true,"state":true,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-08 09:29:05"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-08 09:29:05"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-08 09:29:05"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-08T19:30:05.443Z","match":true,"state":false,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-08 09:30:05"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-08T19:31:05.446Z","match":true,"state":true,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-08 09:31:05"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-08 09:31:05"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-08 09:31:05"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-08T19:32:05.451Z","match":true,"state":false,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-08 09:32:05"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-08T19:33:05.452Z","match":true,"state":true,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-08 09:33:05"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-08 09:33:05"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-08 09:33:05"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-08T19:34:05.455Z","match":true,"state":false,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-08 09:34:05"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-08T19:35:05.458Z","match":true,"state":true,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-08 09:35:05"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-08 09:35:05"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-08 09:35:05"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-08T19:36:05.460Z","match":true,"state":false,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-08 09:36:05"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-08T19:37:05.460Z","match":true,"state":true,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-08 09:37:05"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-08 09:37:05"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-08 09:37:05"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-08T19:38:05.502Z","match":true,"state":false,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-08 09:38:05"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-08T20:04:35.312Z","match":true,"state":false,"flipped":false,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-08 10:04:35"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-08T20:05:05.313Z","match":true,"state":true,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-08 10:05:05"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-08 10:05:05"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-08 10:05:05"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-08T20:06:05.317Z","match":true,"state":false,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-08 10:06:05"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-08T20:07:05.319Z","match":true,"state":true,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-08 10:07:05"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-08 10:07:05"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-08 10:07:05"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-08T20:08:05.321Z","match":true,"state":false,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-08 10:08:05"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-08T20:09:05.323Z","match":true,"state":true,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-08 10:09:05"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-08 10:09:05"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-08 10:09:05"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-08T20:10:05.325Z","match":true,"state":false,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-08 10:10:05"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-08T20:11:05.326Z","match":true,"state":true,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-08 10:11:05"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-08 10:11:05"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-08 10:11:05"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-08T20:12:05.328Z","match":true,"state":false,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-08 10:12:05"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-08T20:13:05.330Z","match":true,"state":true,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-08 10:13:05"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-08 10:13:05"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-08 10:13:05"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-08T20:14:05.335Z","match":true,"state":false,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-08 10:14:05"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-08T20:15:05.340Z","match":true,"state":true,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-08 10:15:05"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-08 10:15:05"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-08 10:15:05"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-08T20:16:05.345Z","match":true,"state":false,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-08 10:16:05"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T06:31:48.323Z","match":true,"state":true,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 08:31:48"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 08:31:48"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 08:31:48"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T06:32:05.341Z","match":true,"state":false,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 08:32:05"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T06:33:05.345Z","match":true,"state":true,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 08:33:05"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 08:33:05"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 08:33:05"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T06:34:05.353Z","match":true,"state":false,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 08:34:05"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T06:35:05.358Z","match":true,"state":true,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 08:35:05"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 08:35:05"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 08:35:05"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T06:36:05.358Z","match":true,"state":false,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 08:36:05"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T06:37:05.359Z","match":true,"state":true,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 08:37:05"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 08:37:05"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 08:37:05"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T06:38:05.364Z","match":true,"state":false,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 08:38:05"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T06:39:05.366Z","match":true,"state":true,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 08:39:05"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 08:39:05"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 08:39:05"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T06:40:05.372Z","match":true,"state":false,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 08:40:05"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T06:41:05.383Z","match":true,"state":true,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 08:41:05"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 08:41:05"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 08:41:05"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T06:42:05.387Z","match":true,"state":false,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 08:42:05"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T06:43:05.392Z","match":true,"state":true,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 08:43:05"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 08:43:05"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 08:43:05"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T06:44:05.397Z","match":true,"state":false,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 08:44:05"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T06:45:05.400Z","match":true,"state":true,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 08:45:05"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 08:45:05"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 08:45:05"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T06:46:05.405Z","match":true,"state":false,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 08:46:05"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T06:47:05.407Z","match":true,"state":true,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 08:47:05"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 08:47:05"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 08:47:05"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T06:48:05.410Z","match":true,"state":false,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 08:48:05"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T06:49:05.420Z","match":true,"state":true,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 08:49:05"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 08:49:05"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 08:49:05"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T06:50:05.427Z","match":true,"state":false,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 08:50:05"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T06:51:05.436Z","match":true,"state":true,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 08:51:05"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 08:51:05"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 08:51:05"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T06:52:05.443Z","match":true,"state":false,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 08:52:05"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T06:53:05.449Z","match":true,"state":true,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 08:53:05"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 08:53:05"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 08:53:05"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T06:54:05.456Z","match":true,"state":false,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 08:54:05"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T06:55:05.463Z","match":true,"state":true,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 08:55:05"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 08:55:05"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 08:55:05"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T06:56:05.474Z","match":true,"state":false,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 08:56:05"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T06:57:05.474Z","match":true,"state":true,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 08:57:05"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 08:57:05"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 08:57:05"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T06:58:05.477Z","match":true,"state":false,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 08:58:05"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T06:59:05.479Z","match":true,"state":true,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 08:59:05"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 08:59:05"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 08:59:05"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T07:00:05.483Z","match":true,"state":false,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 09:00:05"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T07:01:05.484Z","match":true,"state":true,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 09:01:05"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 09:01:05"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 09:01:05"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T07:02:05.488Z","match":true,"state":false,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 09:02:05"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T07:03:05.491Z","match":true,"state":true,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 09:03:05"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 09:03:05"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 09:03:05"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T07:04:05.496Z","match":true,"state":false,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 09:04:05"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T07:05:05.501Z","match":true,"state":true,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 09:05:05"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 09:05:05"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 09:05:05"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T07:06:04.503Z","match":true,"state":false,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 09:06:04"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T07:07:04.539Z","match":true,"state":true,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 09:07:04"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 09:07:04"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 09:07:04"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T07:08:04.549Z","match":true,"state":false,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 09:08:04"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T07:09:04.552Z","match":true,"state":true,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 09:09:04"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 09:09:04"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 09:09:04"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T07:10:04.563Z","match":true,"state":false,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 09:10:04"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T07:11:04.572Z","match":true,"state":true,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 09:11:04"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 09:11:04"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 09:11:04"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T07:12:04.581Z","match":true,"state":false,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 09:12:04"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T07:13:04.591Z","match":true,"state":true,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 09:13:04"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 09:13:04"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 09:13:04"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T07:14:04.601Z","match":true,"state":false,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 09:14:04"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T07:15:04.605Z","match":true,"state":true,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 09:15:04"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 09:15:04"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 09:15:04"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T07:16:04.610Z","match":true,"state":false,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 09:16:04"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T07:17:04.611Z","match":true,"state":true,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 09:17:04"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 09:17:04"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 09:17:04"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T07:18:04.617Z","match":true,"state":false,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 09:18:04"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T07:19:04.622Z","match":true,"state":true,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 09:19:04"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 09:19:04"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 09:19:04"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T07:20:04.629Z","match":true,"state":false,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 09:20:04"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T07:21:04.632Z","match":true,"state":true,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 09:21:04"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 09:21:04"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 09:21:04"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T07:22:04.637Z","match":true,"state":false,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 09:22:04"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T07:23:04.645Z","match":true,"state":true,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 09:23:04"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 09:23:04"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 09:23:04"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T07:24:04.654Z","match":true,"state":false,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 09:24:04"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T07:25:04.661Z","match":true,"state":true,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 09:25:04"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 09:25:04"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 09:25:04"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T07:26:04.669Z","match":true,"state":false,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 09:26:04"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T07:27:04.672Z","match":true,"state":true,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 09:27:04"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 09:27:04"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 09:27:04"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T07:28:04.672Z","match":true,"state":false,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 09:28:04"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T07:29:04.676Z","match":true,"state":true,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 09:29:04"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 09:29:04"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 09:29:04"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T07:30:04.680Z","match":true,"state":false,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 09:30:04"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T07:31:04.684Z","match":true,"state":true,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 09:31:04"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 09:31:04"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 09:31:04"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T07:32:04.685Z","match":true,"state":false,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 09:32:04"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T07:33:04.686Z","match":true,"state":true,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 09:33:04"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 09:33:04"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 09:33:04"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T07:34:04.691Z","match":true,"state":false,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 09:34:04"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T07:35:04.692Z","match":true,"state":true,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 09:35:04"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 09:35:04"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 09:35:04"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T07:36:04.729Z","match":true,"state":false,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 09:36:04"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T07:37:04.731Z","match":true,"state":true,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 09:37:04"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 09:37:04"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 09:37:04"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T07:38:04.737Z","match":true,"state":false,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 09:38:04"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T07:39:04.746Z","match":true,"state":true,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 09:39:04"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 09:39:04"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 09:39:04"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T07:40:04.749Z","match":true,"state":false,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 09:40:04"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T07:41:04.753Z","match":true,"state":true,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 09:41:04"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 09:41:04"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 09:41:04"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T07:42:04.763Z","match":true,"state":false,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 09:42:04"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T07:43:04.771Z","match":true,"state":true,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 09:43:04"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 09:43:04"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 09:43:04"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T07:44:04.776Z","match":true,"state":false,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 09:44:04"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T07:45:04.780Z","match":true,"state":true,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 09:45:04"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 09:45:04"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 09:45:04"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T07:46:04.788Z","match":true,"state":false,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 09:46:04"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T07:47:04.792Z","match":true,"state":true,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 09:47:04"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 09:47:04"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 09:47:04"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T07:48:04.794Z","match":true,"state":false,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 09:48:04"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T07:49:04.799Z","match":true,"state":true,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 09:49:04"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 09:49:04"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 09:49:04"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T07:50:04.803Z","match":true,"state":false,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 09:50:04"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T07:51:04.808Z","match":true,"state":true,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 09:51:04"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 09:51:04"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 09:51:04"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T07:52:04.817Z","match":true,"state":false,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 09:52:04"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T07:53:04.816Z","match":true,"state":true,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 09:53:04"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 09:53:04"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 09:53:04"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T07:54:04.819Z","match":true,"state":false,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 09:54:04"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T07:55:04.825Z","match":true,"state":true,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 09:55:04"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 09:55:04"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 09:55:04"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T07:56:04.829Z","match":true,"state":false,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 09:56:04"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T07:57:04.834Z","match":true,"state":true,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 09:57:04"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 09:57:04"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 09:57:04"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T07:58:04.840Z","match":true,"state":false,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 09:58:04"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T07:59:04.844Z","match":true,"state":true,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 09:59:04"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 09:59:04"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 09:59:04"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T08:00:04.851Z","match":true,"state":false,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 10:00:04"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T08:01:04.852Z","match":true,"state":true,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 10:01:04"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 10:01:04"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 10:01:04"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T08:02:04.861Z","match":true,"state":false,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 10:02:04"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T08:03:04.862Z","match":true,"state":true,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 10:03:04"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 10:03:04"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 10:03:04"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T08:04:04.864Z","match":true,"state":false,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 10:04:04"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T08:05:04.900Z","match":true,"state":true,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 10:05:04"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 10:05:04"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 10:05:04"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T08:06:04.905Z","match":true,"state":false,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 10:06:04"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T08:07:04.912Z","match":true,"state":true,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 10:07:04"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 10:07:04"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 10:07:04"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T08:08:04.918Z","match":true,"state":false,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 10:08:04"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T08:09:04.919Z","match":true,"state":true,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 10:09:04"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 10:09:04"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 10:09:04"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T08:10:04.928Z","match":true,"state":false,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 10:10:04"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T08:11:04.935Z","match":true,"state":true,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 10:11:04"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 10:11:04"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 10:11:04"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T08:12:04.944Z","match":true,"state":false,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 10:12:04"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T08:13:04.951Z","match":true,"state":true,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 10:13:04"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 10:13:04"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 10:13:04"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T08:14:04.959Z","match":true,"state":false,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 10:14:04"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T08:15:04.960Z","match":true,"state":true,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 10:15:04"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 10:15:04"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 10:15:04"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T08:16:04.969Z","match":true,"state":false,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 10:16:04"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T08:17:04.971Z","match":true,"state":true,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 10:17:04"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 10:17:04"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 10:17:04"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T08:18:04.979Z","match":true,"state":false,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 10:18:04"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T08:19:04.988Z","match":true,"state":true,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 10:19:04"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 10:19:04"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 10:19:04"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T08:20:04.990Z","match":true,"state":false,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 10:20:04"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T08:21:04.990Z","match":true,"state":true,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 10:21:04"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 10:21:04"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 10:21:04"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T08:22:04.995Z","match":true,"state":false,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 10:22:04"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T08:23:05.001Z","match":true,"state":true,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 10:23:05"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 10:23:05"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 10:23:05"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T08:24:05.003Z","match":true,"state":false,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 10:24:05"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T08:25:05.011Z","match":true,"state":true,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 10:25:05"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 10:25:05"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 10:25:05"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T08:26:05.014Z","match":true,"state":false,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 10:26:05"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T08:27:05.019Z","match":true,"state":true,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 10:27:05"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 10:27:05"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 10:27:05"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T08:28:05.026Z","match":true,"state":false,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 10:28:05"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T08:29:05.034Z","match":true,"state":true,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 10:29:05"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 10:29:05"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 10:29:05"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T08:30:05.044Z","match":true,"state":false,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 10:30:05"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T08:31:05.050Z","match":true,"state":true,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 10:31:05"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 10:31:05"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 10:31:05"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T08:32:05.061Z","match":true,"state":false,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 10:32:05"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T08:33:05.069Z","match":true,"state":true,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 10:33:05"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 10:33:05"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 10:33:05"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T08:34:05.088Z","match":true,"state":false,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 10:34:05"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T08:35:05.102Z","match":true,"state":true,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 10:35:05"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 10:35:05"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 10:35:05"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T08:36:05.109Z","match":true,"state":false,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 10:36:05"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T08:37:05.115Z","match":true,"state":true,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 10:37:05"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 10:37:05"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 10:37:05"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T08:38:05.122Z","match":true,"state":false,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 10:38:05"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T08:39:05.131Z","match":true,"state":true,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 10:39:05"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 10:39:05"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 10:39:05"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T08:40:05.139Z","match":true,"state":false,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 10:40:05"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T08:41:05.144Z","match":true,"state":true,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 10:41:05"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 10:41:05"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 10:41:05"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T08:42:05.151Z","match":true,"state":false,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 10:42:05"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T08:43:05.161Z","match":true,"state":true,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 10:43:05"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 10:43:05"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 10:43:05"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T08:44:05.169Z","match":true,"state":false,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 10:44:05"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T08:45:05.176Z","match":true,"state":true,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 10:45:05"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 10:45:05"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 10:45:05"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T08:46:05.178Z","match":true,"state":false,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 10:46:05"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T08:47:05.181Z","match":true,"state":true,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 10:47:05"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 10:47:05"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 10:47:05"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T08:48:05.189Z","match":true,"state":false,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 10:48:05"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T08:49:05.192Z","match":true,"state":true,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 10:49:05"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 10:49:05"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 10:49:05"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T08:50:05.197Z","match":true,"state":false,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 10:50:05"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T08:51:05.206Z","match":true,"state":true,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 10:51:05"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 10:51:05"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 10:51:05"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T08:52:05.217Z","match":true,"state":false,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 10:52:05"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T08:53:05.225Z","match":true,"state":true,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 10:53:05"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 10:53:05"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 10:53:05"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T08:54:05.238Z","match":true,"state":false,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 10:54:05"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T08:55:05.244Z","match":true,"state":true,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 10:55:05"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 10:55:05"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 10:55:05"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T08:56:05.248Z","match":true,"state":false,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 10:56:05"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T08:57:05.251Z","match":true,"state":true,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 10:57:05"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 10:57:05"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 10:57:05"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T08:58:05.258Z","match":true,"state":false,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 10:58:05"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T08:59:05.265Z","match":true,"state":true,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 10:59:05"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 10:59:05"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 10:59:05"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T09:00:05.269Z","match":true,"state":false,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 11:00:05"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T09:01:05.269Z","match":true,"state":true,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 11:01:05"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 11:01:05"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 11:01:05"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T09:02:05.274Z","match":true,"state":false,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 11:02:05"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T09:03:05.279Z","match":true,"state":true,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 11:03:05"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 11:03:05"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 11:03:05"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T09:04:05.284Z","match":true,"state":false,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 11:04:05"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T09:05:05.289Z","match":true,"state":true,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 11:05:05"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 11:05:05"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 11:05:05"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T09:06:05.327Z","match":true,"state":false,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 11:06:05"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T09:07:05.330Z","match":true,"state":true,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 11:07:05"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 11:07:05"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 11:07:05"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T09:08:05.335Z","match":true,"state":false,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 11:08:05"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T09:09:05.339Z","match":true,"state":true,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 11:09:05"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 11:09:05"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 11:09:05"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T09:10:05.345Z","match":true,"state":false,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 11:10:05"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T09:11:05.349Z","match":true,"state":true,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 11:11:05"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 11:11:05"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 11:11:05"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T09:12:05.352Z","match":true,"state":false,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 11:12:05"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T09:13:05.356Z","match":true,"state":true,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 11:13:05"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 11:13:05"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 11:13:05"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T09:14:05.365Z","match":true,"state":false,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 11:14:05"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T09:15:05.374Z","match":true,"state":true,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 11:15:05"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 11:15:05"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 11:15:05"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T09:16:05.385Z","match":true,"state":false,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 11:16:05"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T09:17:05.386Z","match":true,"state":true,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 11:17:05"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 11:17:05"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 11:17:05"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T09:18:05.393Z","match":true,"state":false,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 11:18:05"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T09:19:05.402Z","match":true,"state":true,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 11:19:05"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 11:19:05"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 11:19:05"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T09:20:05.411Z","match":true,"state":false,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 11:20:05"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T09:21:05.419Z","match":true,"state":true,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 11:21:05"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 11:21:05"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 11:21:05"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T09:22:05.429Z","match":true,"state":false,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 11:22:05"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T09:23:05.433Z","match":true,"state":true,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 11:23:05"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 11:23:05"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 11:23:05"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T09:24:05.436Z","match":true,"state":false,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 11:24:05"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T09:25:05.440Z","match":true,"state":true,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 11:25:05"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 11:25:05"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 11:25:05"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T09:26:05.445Z","match":true,"state":false,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 11:26:05"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T09:27:05.449Z","match":true,"state":true,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 11:27:05"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 11:27:05"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 11:27:05"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T09:28:05.454Z","match":true,"state":false,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 11:28:05"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T09:29:05.460Z","match":true,"state":true,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 11:29:05"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 11:29:05"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 11:29:05"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T09:30:05.465Z","match":true,"state":false,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 11:30:05"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T09:31:05.467Z","match":true,"state":true,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 11:31:05"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 11:31:05"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 11:31:05"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T09:32:05.472Z","match":true,"state":false,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 11:32:05"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T09:33:05.475Z","match":true,"state":true,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 11:33:05"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 11:33:05"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 11:33:05"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T09:34:05.479Z","match":true,"state":false,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 11:34:05"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T09:35:05.509Z","match":true,"state":true,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 11:35:05"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 11:35:05"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 11:35:05"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T09:36:04.512Z","match":true,"state":false,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 11:36:04"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T09:37:04.514Z","match":true,"state":true,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 11:37:04"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 11:37:04"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 11:37:04"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T09:38:04.518Z","match":true,"state":false,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 11:38:04"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T09:39:04.521Z","match":true,"state":true,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 11:39:04"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 11:39:04"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 11:39:04"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T09:40:04.525Z","match":true,"state":false,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 11:40:04"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T09:41:04.531Z","match":true,"state":true,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 11:41:04"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 11:41:04"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 11:41:04"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T09:42:04.537Z","match":true,"state":false,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 11:42:04"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T09:43:04.542Z","match":true,"state":true,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 11:43:04"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 11:43:04"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 11:43:04"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T09:44:04.546Z","match":true,"state":false,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 11:44:04"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T09:45:04.550Z","match":true,"state":true,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 11:45:04"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 11:45:04"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 11:45:04"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T09:46:04.555Z","match":true,"state":false,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 11:46:04"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T09:47:04.558Z","match":true,"state":true,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 11:47:04"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 11:47:04"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 11:47:04"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T09:48:04.564Z","match":true,"state":false,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 11:48:04"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T09:49:04.568Z","match":true,"state":true,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 11:49:04"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 11:49:04"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 11:49:04"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T09:50:04.574Z","match":true,"state":false,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 11:50:04"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T09:51:04.578Z","match":true,"state":true,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 11:51:04"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 11:51:04"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 11:51:04"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T09:52:04.583Z","match":true,"state":false,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 11:52:04"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T09:53:04.588Z","match":true,"state":true,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 11:53:04"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 11:53:04"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 11:53:04"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T09:54:04.592Z","match":true,"state":false,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 11:54:04"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T09:55:04.594Z","match":true,"state":true,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 11:55:04"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 11:55:04"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 11:55:04"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T09:56:04.598Z","match":true,"state":false,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 11:56:04"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T09:57:04.602Z","match":true,"state":true,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 11:57:04"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 11:57:04"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 11:57:04"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T09:58:04.605Z","match":true,"state":false,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 11:58:04"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T09:59:04.609Z","match":true,"state":true,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 11:59:04"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 11:59:04"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 11:59:04"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T10:00:04.614Z","match":true,"state":false,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 12:00:04"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T10:01:04.618Z","match":true,"state":true,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 12:01:04"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 12:01:04"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 12:01:04"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T10:02:04.621Z","match":true,"state":false,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 12:02:04"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T10:03:04.623Z","match":true,"state":true,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 12:03:04"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 12:03:04"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 12:03:04"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T10:04:04.643Z","match":true,"state":false,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 12:04:04"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T10:05:04.659Z","match":true,"state":true,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 12:05:04"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 12:05:04"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 12:05:04"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T10:06:04.668Z","match":true,"state":false,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 12:06:04"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T10:07:04.674Z","match":true,"state":true,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 12:07:04"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 12:07:04"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 12:07:04"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T10:08:04.686Z","match":true,"state":false,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 12:08:04"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T10:09:04.695Z","match":true,"state":true,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 12:09:04"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 12:09:04"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 12:09:04"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T10:10:04.704Z","match":true,"state":false,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 12:10:04"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T10:11:04.713Z","match":true,"state":true,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 12:11:04"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 12:11:04"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 12:11:04"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T10:12:04.723Z","match":true,"state":false,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 12:12:04"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T10:13:04.730Z","match":true,"state":true,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 12:13:04"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 12:13:04"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 12:13:04"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T10:14:04.738Z","match":true,"state":false,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 12:14:04"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T10:15:04.748Z","match":true,"state":true,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 12:15:04"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 12:15:04"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 12:15:04"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T10:16:04.757Z","match":true,"state":false,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 12:16:04"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T10:17:04.758Z","match":true,"state":true,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 12:17:04"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 12:17:04"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 12:17:04"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T10:18:04.762Z","match":true,"state":false,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 12:18:04"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T10:19:04.765Z","match":true,"state":true,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 12:19:04"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 12:19:04"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 12:19:04"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T10:20:04.769Z","match":true,"state":false,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 12:20:04"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T10:21:04.772Z","match":true,"state":true,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 12:21:04"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 12:21:04"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 12:21:04"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T10:22:04.776Z","match":true,"state":false,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 12:22:04"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T10:23:04.780Z","match":true,"state":true,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 12:23:04"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 12:23:04"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 12:23:04"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T10:24:04.784Z","match":true,"state":false,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 12:24:04"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T10:25:04.788Z","match":true,"state":true,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 12:25:04"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 12:25:04"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 12:25:04"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T10:26:04.793Z","match":true,"state":false,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 12:26:04"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T10:27:04.796Z","match":true,"state":true,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 12:27:04"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 12:27:04"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 12:27:04"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T10:28:04.799Z","match":true,"state":false,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 12:28:04"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T10:29:04.821Z","match":true,"state":true,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 12:29:04"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 12:29:04"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 12:29:04"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T10:30:04.838Z","match":true,"state":false,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 12:30:04"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T10:31:04.842Z","match":true,"state":true,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 12:31:04"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 12:31:04"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 12:31:04"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T10:32:04.843Z","match":true,"state":false,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 12:32:04"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T10:33:04.854Z","match":true,"state":true,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 12:33:04"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 12:33:04"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 12:33:04"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T10:34:04.861Z","match":true,"state":false,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 12:34:04"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T10:35:04.868Z","match":true,"state":true,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 12:35:04"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 12:35:04"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 12:35:04"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T10:36:04.875Z","match":true,"state":false,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 12:36:04"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T10:37:04.881Z","match":true,"state":true,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 12:37:04"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 12:37:04"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 12:37:04"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T10:38:04.890Z","match":true,"state":false,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 12:38:04"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T10:39:04.899Z","match":true,"state":true,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 12:39:04"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 12:39:04"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 12:39:04"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T10:40:04.909Z","match":true,"state":false,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 12:40:04"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T10:41:04.914Z","match":true,"state":true,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 12:41:04"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 12:41:04"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 12:41:04"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T10:42:04.916Z","match":true,"state":false,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 12:42:04"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T10:43:04.920Z","match":true,"state":true,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 12:43:04"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 12:43:04"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 12:43:04"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T10:44:04.926Z","match":true,"state":false,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 12:44:04"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T10:45:04.931Z","match":true,"state":true,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 12:45:04"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 12:45:04"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 12:45:04"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T10:46:04.933Z","match":true,"state":false,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 12:46:04"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T10:47:04.941Z","match":true,"state":true,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 12:47:04"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 12:47:04"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 12:47:04"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T10:48:04.947Z","match":true,"state":false,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 12:48:04"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T10:49:04.951Z","match":true,"state":true,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 12:49:04"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 12:49:04"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 12:49:04"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T10:50:04.960Z","match":true,"state":false,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 12:50:04"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T10:51:04.962Z","match":true,"state":true,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 12:51:04"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 12:51:04"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 12:51:04"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T10:52:04.966Z","match":true,"state":false,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 12:52:04"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T10:53:04.978Z","match":true,"state":true,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 12:53:04"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 12:53:04"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 12:53:04"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T10:54:04.988Z","match":true,"state":false,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 12:54:04"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T10:55:04.995Z","match":true,"state":true,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 12:55:04"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 12:55:04"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 12:55:04"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T10:56:05.006Z","match":true,"state":false,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 12:56:05"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T10:57:05.008Z","match":true,"state":true,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 12:57:05"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 12:57:05"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 12:57:05"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T10:58:05.013Z","match":true,"state":false,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 12:58:05"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T10:59:05.036Z","match":true,"state":true,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 12:59:05"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 12:59:05"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 12:59:05"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T11:00:05.043Z","match":true,"state":false,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 01:00:05"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T11:01:05.054Z","match":true,"state":true,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 01:01:05"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 01:01:05"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 01:01:05"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T11:02:05.056Z","match":true,"state":false,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 01:02:05"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T11:03:05.064Z","match":true,"state":true,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 01:03:05"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 01:03:05"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 01:03:05"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T11:04:05.074Z","match":true,"state":false,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 01:04:05"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T11:05:05.082Z","match":true,"state":true,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 01:05:05"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 01:05:05"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 01:05:05"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T11:06:05.084Z","match":true,"state":false,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 01:06:05"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T11:07:05.093Z","match":true,"state":true,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 01:07:05"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 01:07:05"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 01:07:05"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T11:08:05.104Z","match":true,"state":false,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 01:08:05"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T11:09:05.112Z","match":true,"state":true,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 01:09:05"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 01:09:05"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 01:09:05"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T11:10:05.113Z","match":true,"state":false,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 01:10:05"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T11:11:05.116Z","match":true,"state":true,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 01:11:05"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 01:11:05"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 01:11:05"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T11:12:05.131Z","match":true,"state":false,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 01:12:05"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T11:13:05.139Z","match":true,"state":true,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 01:13:05"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 01:13:05"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 01:13:05"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T11:14:05.150Z","match":true,"state":false,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 01:14:05"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T11:15:05.156Z","match":true,"state":true,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 01:15:05"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 01:15:05"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 01:15:05"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T11:16:05.162Z","match":true,"state":false,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 01:16:05"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T11:17:05.167Z","match":true,"state":true,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 01:17:05"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 01:17:05"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 01:17:05"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T11:18:05.181Z","match":true,"state":false,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 01:18:05"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T11:19:05.191Z","match":true,"state":true,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 01:19:05"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 01:19:05"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 01:19:05"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T11:20:05.197Z","match":true,"state":false,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 01:20:05"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T11:21:05.206Z","match":true,"state":true,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 01:21:05"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 01:21:05"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 01:21:05"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T11:22:05.215Z","match":true,"state":false,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 01:22:05"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T11:23:05.223Z","match":true,"state":true,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 01:23:05"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 01:23:05"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 01:23:05"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T11:24:05.234Z","match":true,"state":false,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 01:24:05"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T11:25:05.239Z","match":true,"state":true,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 01:25:05"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 01:25:05"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 01:25:05"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T11:26:05.245Z","match":true,"state":false,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 01:26:05"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T11:27:05.248Z","match":true,"state":true,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 01:27:05"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 01:27:05"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 01:27:05"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T11:28:05.271Z","match":true,"state":false,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 01:28:05"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T11:29:05.281Z","match":true,"state":true,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 01:29:05"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 01:29:05"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 01:29:05"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T11:30:05.286Z","match":true,"state":false,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 01:30:05"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T11:31:05.289Z","match":true,"state":true,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 01:31:05"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 01:31:05"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 01:31:05"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T11:32:05.300Z","match":true,"state":false,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 01:32:05"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T11:33:05.310Z","match":true,"state":true,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 01:33:05"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 01:33:05"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 01:33:05"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T11:34:05.321Z","match":true,"state":false,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 01:34:05"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T11:35:05.329Z","match":true,"state":true,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 01:35:05"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 01:35:05"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 01:35:05"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T11:36:05.332Z","match":true,"state":false,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 01:36:05"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T11:37:05.336Z","match":true,"state":true,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 01:37:05"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 01:37:05"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 01:37:05"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T11:38:05.346Z","match":true,"state":false,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 01:38:05"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T11:39:05.353Z","match":true,"state":true,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 01:39:05"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 01:39:05"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 01:39:05"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T11:40:05.361Z","match":true,"state":false,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 01:40:05"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T11:41:05.363Z","match":true,"state":true,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 01:41:05"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 01:41:05"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 01:41:05"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T11:42:05.370Z","match":true,"state":false,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 01:42:05"}
-{"ruleId":"TimeDateUpdate","type":"condition","condition":"cron","time":"2019-04-09T11:43:05.374Z","match":true,"state":true,"flipped":true,"level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 01:43:05"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 01:43:05"}
-{"type":"action","action":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 01:43:05"}
+{"ruleId":"TimeDateUpdate","type":"condition","subtype":"cron","details":"time: Tue Apr 09 2019 13:53:41 GMT+0200 (Central European Summer Time), match: true, state: true, flipped: true","level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 01:53:41"}
+{"type":"action","subtype":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 01:53:41"}
+{"type":"action","subtype":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 01:53:41"}
+{"ruleId":"TimeDateUpdate","type":"condition","subtype":"cron","details":"time: Tue Apr 09 2019 13:54:05 GMT+0200 (Central European Summer Time), match: true, state: false, flipped: true","level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 01:54:05"}
+{"ruleId":"TimeDateUpdate","type":"condition","subtype":"cron","details":"time: Tue Apr 09 2019 13:55:05 GMT+0200 (Central European Summer Time), match: true, state: true, flipped: true","level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 01:55:05"}
+{"type":"action","subtype":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 01:55:05"}
+{"type":"action","subtype":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 01:55:05"}
+{"ruleId":"TimeDateUpdate","type":"condition","subtype":"cron","details":"time: 4/9/2019, 1:55:38 PM, match: true, state: true, flipped: true","level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 01:55:38"}
+{"type":"action","subtype":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 01:55:38"}
+{"type":"action","subtype":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 01:55:38"}
+{"ruleId":"TimeDateUpdate","type":"condition","subtype":"cron","details":"time: 4/9/2019, 1:56:04 PM, match: true, state: false, flipped: true","level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 01:56:04"}
+{"ruleId":"TimeDateUpdate","type":"condition","subtype":"cron","details":"match: true, state: true, flipped: true","level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 01:57:07"}
+{"type":"action","subtype":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 01:57:07"}
+{"type":"action","subtype":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 01:57:07"}
+{"ruleId":"TimeDateUpdate","type":"condition","subtype":"cron","details":"match: true, state: false, flipped: true","level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 01:58:05"}
+{"ruleId":"TimeDateUpdate","type":"condition","subtype":"cron","details":"match: true, state: true, flipped: true","level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 01:59:05"}
+{"type":"action","subtype":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 01:59:05"}
+{"type":"action","subtype":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 01:59:05"}
+{"ruleId":"TimeDateUpdate","type":"condition","subtype":"cron","details":"match: true, state: false, flipped: true","level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 02:00:05"}
+{"ruleId":"TimeDateUpdate","type":"condition","subtype":"cron","details":"match: true, state: true, flipped: true","level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 02:01:05"}
+{"type":"action","subtype":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 02:01:05"}
+{"type":"action","subtype":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 02:01:05"}
+{"ruleId":"TimeDateUpdate","type":"condition","subtype":"cron","details":"match: true, state: false, flipped: true","level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 02:02:05"}
+{"ruleId":"TimeDateUpdate","type":"condition","subtype":"cron","details":"match: true, state: true, flipped: true","level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 02:03:05"}
+{"type":"action","subtype":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 02:03:05"}
+{"type":"action","subtype":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 02:03:05"}
+{"ruleId":"TimeDateUpdate","type":"condition","subtype":"cron","details":"match: true, state: false, flipped: true","level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 02:04:05"}
+{"ruleId":"TimeDateUpdate","type":"condition","subtype":"cron","details":"match: true, state: true, flipped: true","level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 02:05:05"}
+{"type":"action","subtype":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 02:05:05"}
+{"type":"action","subtype":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 02:05:05"}
+{"ruleId":"TimeDateUpdate","type":"condition","subtype":"cron","details":"match: true, state: false, flipped: true","level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 02:06:05"}
+{"ruleId":"TimeDateUpdate","type":"condition","subtype":"cron","details":"match: true, state: true, flipped: true","level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 02:07:05"}
+{"type":"action","subtype":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 02:07:05"}
+{"type":"action","subtype":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 02:07:05"}
+{"ruleId":"TimeDateUpdate","type":"condition","subtype":"cron","details":"match: true, state: false, flipped: true","level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 02:08:05"}
+{"ruleId":"TimeDateUpdate","type":"condition","subtype":"cron","details":"match: true, state: true, flipped: true","level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 02:09:05"}
+{"type":"action","subtype":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 02:09:05"}
+{"type":"action","subtype":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 02:09:05"}
+{"ruleId":"TimeDateUpdate","type":"condition","subtype":"cron","details":"match: true, state: false, flipped: true","level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 02:10:05"}
+{"ruleId":"TimeDateUpdate","type":"condition","subtype":"cron","details":"match: true, state: true, flipped: true","level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 02:11:05"}
+{"type":"action","subtype":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 02:11:05"}
+{"type":"action","subtype":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 02:11:05"}
+{"ruleId":"TimeDateUpdate","type":"condition","subtype":"cron","details":"match: true, state: false, flipped: true","level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 02:12:05"}
+{"ruleId":"TimeDateUpdate","type":"condition","subtype":"cron","details":"match: true, state: true, flipped: true","level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 02:13:05"}
+{"type":"action","subtype":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 02:13:05"}
+{"type":"action","subtype":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 02:13:05"}
+{"ruleId":"TimeDateUpdate","type":"condition","subtype":"cron","details":"match: true, state: false, flipped: true","level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 02:14:05"}
+{"ruleId":"TimeDateUpdate","type":"condition","subtype":"cron","details":"match: true, state: true, flipped: true","level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 02:15:05"}
+{"type":"action","subtype":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 02:15:05"}
+{"type":"action","subtype":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 02:15:05"}
+{"ruleId":"TimeDateUpdate","type":"condition","subtype":"cron","details":"match: true, state: false, flipped: true","level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 02:16:05"}
+{"ruleId":"TimeDateUpdate","type":"condition","subtype":"cron","details":"match: true, state: true, flipped: true","level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 02:17:05"}
+{"type":"action","subtype":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 02:17:05"}
+{"type":"action","subtype":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 02:17:05"}
+{"ruleId":"TimeDateUpdate","type":"condition","subtype":"cron","details":"match: true, state: false, flipped: true","level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 02:18:05"}
+{"ruleId":"TimeDateUpdate","type":"condition","subtype":"cron","details":"match: true, state: true, flipped: true","level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 02:19:05"}
+{"type":"action","subtype":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 02:19:05"}
+{"type":"action","subtype":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 02:19:05"}
+{"ruleId":"TimeDateUpdate","type":"condition","subtype":"cron","details":"match: true, state: true, flipped: true","level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 02:25:00"}
+{"type":"action","subtype":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 02:25:00"}
+{"type":"action","subtype":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 02:25:00"}
+{"ruleId":"TimeDateUpdate","type":"condition","subtype":"cron","details":"match: true, state: true, flipped: false","level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 02:25:04"}
+{"type":"action","subtype":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 02:25:04"}
+{"type":"action","subtype":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 02:25:04"}
+{"ruleId":"TimeDateUpdate","type":"condition","subtype":"cron","details":"match: true, state: false, flipped: true","level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 02:26:04"}
+{"ruleId":"TimeDateUpdate","type":"condition","subtype":"cron","details":"match: true, state: true, flipped: true","level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 02:27:04"}
+{"type":"action","subtype":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 02:27:04"}
+{"type":"action","subtype":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 02:27:04"}
+{"ruleId":"TimeDateUpdate","type":"condition","subtype":"cron","details":"match: true, state: false, flipped: true","level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 02:28:04"}
+{"ruleId":"TimeDateUpdate","type":"condition","subtype":"cron","details":"match: true, state: true, flipped: true","level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 02:29:04"}
+{"type":"action","subtype":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 02:29:04"}
+{"type":"action","subtype":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 02:29:04"}
+{"ruleId":"TimeDateUpdate","type":"condition","subtype":"cron","details":"match: true, state: false, flipped: true","level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 02:30:04"}
+{"ruleId":"TimeDateUpdate","type":"condition","subtype":"cron","details":"match: true, state: true, flipped: true","level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 02:31:04"}
+{"type":"action","subtype":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 02:31:04"}
+{"type":"action","subtype":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 02:31:04"}
+{"ruleId":"TimeDateUpdate","type":"condition","subtype":"cron","details":"match: true, state: false, flipped: true","level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 02:32:04"}
+{"ruleId":"TimeDateUpdate","type":"condition","subtype":"cron","details":"match: true, state: true, flipped: true","level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 02:33:04"}
+{"type":"action","subtype":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 02:33:04"}
+{"type":"action","subtype":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 02:33:04"}
+{"ruleId":"TimeDateUpdate","type":"condition","subtype":"cron","details":"match: true, state: false, flipped: true","level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 02:34:04"}
+{"ruleId":"TimeDateUpdate","type":"condition","subtype":"cron","details":"match: true, state: true, flipped: true","level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 02:35:04"}
+{"type":"action","subtype":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 02:35:04"}
+{"type":"action","subtype":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 02:35:04"}
+{"ruleId":"TimeDateUpdate","type":"condition","subtype":"cron","details":"match: true, state: false, flipped: true","level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 02:36:04"}
+{"ruleId":"TimeDateUpdate","type":"condition","subtype":"cron","details":"match: true, state: true, flipped: true","level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 02:37:04"}
+{"type":"action","subtype":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 02:37:04"}
+{"type":"action","subtype":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 02:37:04"}
+{"ruleId":"TimeDateUpdate","type":"condition","subtype":"cron","details":"match: true, state: false, flipped: true","level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 02:38:04"}
+{"ruleId":"TimeDateUpdate","type":"condition","subtype":"cron","details":"match: true, state: true, flipped: true","level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 02:39:04"}
+{"type":"action","subtype":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 02:39:04"}
+{"type":"action","subtype":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 02:39:04"}
+{"ruleId":"TimeDateUpdate","type":"condition","subtype":"cron","details":"match: true, state: false, flipped: true","level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 02:40:04"}
+{"ruleId":"TimeDateUpdate","type":"condition","subtype":"cron","details":"match: true, state: true, flipped: true","level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 02:41:04"}
+{"type":"action","subtype":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 02:41:04"}
+{"type":"action","subtype":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 02:41:04"}
+{"ruleId":"TimeDateUpdate","type":"condition","subtype":"cron","details":"match: true, state: false, flipped: true","level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 02:42:04"}
+{"ruleId":"TimeDateUpdate","type":"condition","subtype":"cron","details":"match: true, state: true, flipped: true","level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 02:43:04"}
+{"type":"action","subtype":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 02:43:04"}
+{"type":"action","subtype":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 02:43:04"}
+{"ruleId":"TimeDateUpdate","type":"condition","subtype":"cron","details":"match: true, state: false, flipped: true","level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 02:44:04"}
+{"ruleId":"TimeDateUpdate","type":"condition","subtype":"cron","details":"match: true, state: true, flipped: true","level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 02:45:04"}
+{"type":"action","subtype":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 02:45:04"}
+{"type":"action","subtype":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 02:45:04"}
+{"ruleId":"TimeDateUpdate","type":"condition","subtype":"cron","details":"match: true, state: false, flipped: true","level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 02:46:04"}
+{"ruleId":"TimeDateUpdate","type":"condition","subtype":"cron","details":"match: true, state: true, flipped: true","level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 02:47:04"}
+{"type":"action","subtype":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 02:47:04"}
+{"type":"action","subtype":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 02:47:04"}
+{"ruleId":"TimeDateUpdate","type":"condition","subtype":"cron","details":"match: true, state: false, flipped: true","level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 02:48:04"}
+{"ruleId":"TimeDateUpdate","type":"condition","subtype":"cron","details":"match: true, state: true, flipped: true","level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 02:49:04"}
+{"type":"action","subtype":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 02:49:04"}
+{"type":"action","subtype":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 02:49:04"}
+{"ruleId":"TimeDateUpdate","type":"condition","subtype":"cron","details":"match: true, state: false, flipped: true","level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 02:50:04"}
+{"ruleId":"TimeDateUpdate","type":"condition","subtype":"cron","details":"match: true, state: true, flipped: true","level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 02:51:04"}
+{"type":"action","subtype":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 02:51:04"}
+{"type":"action","subtype":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 02:51:04"}
+{"ruleId":"TimeDateUpdate","type":"condition","subtype":"cron","details":"match: true, state: false, flipped: true","level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 02:52:04"}
+{"ruleId":"TimeDateUpdate","type":"condition","subtype":"cron","details":"match: true, state: true, flipped: true","level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 02:53:04"}
+{"type":"action","subtype":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 02:53:04"}
+{"type":"action","subtype":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 02:53:04"}
+{"ruleId":"TimeDateUpdate","type":"condition","subtype":"cron","details":"match: true, state: false, flipped: true","level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 02:54:04"}
+{"ruleId":"TimeDateUpdate","type":"condition","subtype":"cron","details":"match: true, state: true, flipped: true","level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 02:55:04"}
+{"type":"action","subtype":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 02:55:04"}
+{"type":"action","subtype":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 02:55:04"}
+{"ruleId":"TimeDateUpdate","type":"condition","subtype":"cron","details":"match: true, state: false, flipped: true","level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 02:56:04"}
+{"ruleId":"TimeDateUpdate","type":"condition","subtype":"cron","details":"match: true, state: true, flipped: true","level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 02:57:04"}
+{"type":"action","subtype":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 02:57:04"}
+{"type":"action","subtype":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 02:57:04"}
+{"ruleId":"TimeDateUpdate","type":"condition","subtype":"cron","details":"match: true, state: false, flipped: true","level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 02:58:05"}
+{"ruleId":"TimeDateUpdate","type":"condition","subtype":"cron","details":"match: true, state: true, flipped: true","level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 02:59:05"}
+{"type":"action","subtype":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 02:59:05"}
+{"type":"action","subtype":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 02:59:05"}
+{"ruleId":"TimeDateUpdate","type":"condition","subtype":"cron","details":"match: true, state: false, flipped: true","level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 03:00:05"}
+{"ruleId":"TimeDateUpdate","type":"condition","subtype":"cron","details":"match: true, state: true, flipped: true","level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 03:01:05"}
+{"type":"action","subtype":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 03:01:05"}
+{"type":"action","subtype":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 03:01:05"}
+{"ruleId":"TimeDateUpdate","type":"condition","subtype":"cron","details":"match: true, state: false, flipped: true","level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 03:02:05"}
+{"ruleId":"TimeDateUpdate","type":"condition","subtype":"cron","details":"match: true, state: true, flipped: true","level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 03:03:05"}
+{"type":"action","subtype":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 03:03:05"}
+{"type":"action","subtype":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 03:03:05"}
+{"ruleId":"TimeDateUpdate","type":"condition","subtype":"cron","details":"match: true, state: false, flipped: true","level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 03:04:05"}
+{"ruleId":"TimeDateUpdate","type":"condition","subtype":"cron","details":"match: true, state: true, flipped: true","level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 03:05:05"}
+{"type":"action","subtype":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 03:05:05"}
+{"type":"action","subtype":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 03:05:05"}
+{"ruleId":"TimeDateUpdate","type":"condition","subtype":"cron","details":"match: true, state: false, flipped: true","level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 03:06:05"}
+{"ruleId":"TimeDateUpdate","type":"condition","subtype":"cron","details":"match: true, state: true, flipped: true","level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 03:07:05"}
+{"type":"action","subtype":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 03:07:05"}
+{"type":"action","subtype":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 03:07:05"}
+{"ruleId":"TimeDateUpdate","type":"condition","subtype":"cron","details":"match: true, state: false, flipped: true","level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 03:08:05"}
+{"ruleId":"TimeDateUpdate","type":"condition","subtype":"cron","details":"match: true, state: true, flipped: true","level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 03:09:05"}
+{"type":"action","subtype":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 03:09:05"}
+{"type":"action","subtype":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 03:09:05"}
+{"ruleId":"TimeDateUpdate","type":"condition","subtype":"cron","details":"match: true, state: false, flipped: true","level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 03:10:05"}
+{"ruleId":"TimeDateUpdate","type":"condition","subtype":"cron","details":"match: true, state: true, flipped: true","level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 03:11:05"}
+{"type":"action","subtype":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 03:11:05"}
+{"type":"action","subtype":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 03:11:05"}
+{"ruleId":"TimeDateUpdate","type":"condition","subtype":"cron","details":"match: true, state: false, flipped: true","level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 03:12:05"}
+{"ruleId":"TimeDateUpdate","type":"condition","subtype":"cron","details":"match: true, state: true, flipped: true","level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 03:13:05"}
+{"type":"action","subtype":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 03:13:05"}
+{"type":"action","subtype":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 03:13:05"}
+{"ruleId":"TimeDateUpdate","type":"condition","subtype":"cron","details":"match: true, state: false, flipped: true","level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 03:14:05"}
+{"ruleId":"TimeDateUpdate","type":"condition","subtype":"cron","details":"match: true, state: true, flipped: true","level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 03:15:05"}
+{"type":"action","subtype":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 03:15:05"}
+{"type":"action","subtype":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 03:15:05"}
+{"ruleId":"TimeDateUpdate","type":"condition","subtype":"cron","details":"match: true, state: false, flipped: true","level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 03:16:05"}
+{"ruleId":"TimeDateUpdate","type":"condition","subtype":"cron","details":"match: true, state: true, flipped: true","level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 03:17:05"}
+{"type":"action","subtype":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 03:17:05"}
+{"type":"action","subtype":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 03:17:05"}
+{"ruleId":"TimeDateUpdate","type":"condition","subtype":"cron","details":"match: true, state: false, flipped: true","level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 03:18:05"}
+{"ruleId":"TimeDateUpdate","type":"condition","subtype":"cron","details":"match: true, state: true, flipped: true","level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 03:19:05"}
+{"type":"action","subtype":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 03:19:05"}
+{"type":"action","subtype":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 03:19:05"}
+{"ruleId":"TimeDateUpdate","type":"condition","subtype":"cron","details":"match: true, state: false, flipped: true","level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 03:20:05"}
+{"ruleId":"TimeDateUpdate","type":"condition","subtype":"cron","details":"match: true, state: true, flipped: true","level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 03:21:05"}
+{"type":"action","subtype":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 03:21:05"}
+{"type":"action","subtype":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 03:21:05"}
+{"ruleId":"TimeDateUpdate","type":"condition","subtype":"cron","details":"match: true, state: false, flipped: true","level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 03:22:05"}
+{"ruleId":"TimeDateUpdate","type":"condition","subtype":"cron","details":"match: true, state: true, flipped: true","level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 03:23:05"}
+{"type":"action","subtype":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 03:23:05"}
+{"type":"action","subtype":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 03:23:05"}
+{"ruleId":"TimeDateUpdate","type":"condition","subtype":"cron","details":"match: true, state: false, flipped: true","level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 03:24:05"}
+{"ruleId":"TimeDateUpdate","type":"condition","subtype":"cron","details":"match: true, state: true, flipped: true","level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 03:25:05"}
+{"type":"action","subtype":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 03:25:05"}
+{"type":"action","subtype":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 03:25:05"}
+{"ruleId":"TimeDateUpdate","type":"condition","subtype":"cron","details":"match: true, state: false, flipped: true","level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 03:26:05"}
+{"ruleId":"TimeDateUpdate","type":"condition","subtype":"cron","details":"match: true, state: true, flipped: true","level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 03:27:05"}
+{"type":"action","subtype":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 03:27:05"}
+{"type":"action","subtype":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 03:27:05"}
+{"ruleId":"TimeDateUpdate","type":"condition","subtype":"cron","details":"match: true, state: true, flipped: true","level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 03:27:31"}
+{"type":"action","subtype":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 03:27:31"}
+{"type":"action","subtype":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 03:27:31"}
+{"ruleId":"TimeDateUpdate","type":"condition","subtype":"cron","details":"match: true, state: false, flipped: true","level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 03:28:04"}
+{"ruleId":"TimeDateUpdate","type":"condition","subtype":"cron","details":"match: true, state: true, flipped: true","level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 03:29:04"}
+{"type":"action","subtype":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 03:29:04"}
+{"type":"action","subtype":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-09 03:29:04"}
+{"ruleId":"TimeDateUpdate","type":"condition","subtype":"cron","details":"match: true, state: false, flipped: true","level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 03:52:09"}
+{"ruleId":"TimeDateUpdate","type":"condition","subtype":"cron","details":"match: true, state: false, flipped: true","level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 06:10:31"}
+{"ruleId":"TimeDateUpdate","type":"condition","subtype":"cron","details":"match: true, state: false, flipped: true","level":"info","message":"Cron condition evaluated","timestamp":"2019-04-09 06:10:47"}
+{"ruleId":"TimeDateUpdate","type":"condition","subtype":"cron","details":"match: true, state: true, flipped: true","level":"info","message":"Cron condition evaluated","timestamp":"2019-04-15 01:43:02"}
+{"type":"action","subtype":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-15 01:43:02"}
+{"type":"action","subtype":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-15 01:43:02"}
+{"ruleId":"TimeDateUpdate","type":"condition","subtype":"cron","details":"match: true, state: true, flipped: false","level":"info","message":"Cron condition evaluated","timestamp":"2019-04-15 01:43:05"}
+{"type":"action","subtype":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-15 01:43:05"}
+{"type":"action","subtype":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-15 01:43:05"}
+{"ruleId":"TimeDateUpdate","type":"condition","subtype":"cron","details":"match: true, state: false, flipped: true","level":"info","message":"Cron condition evaluated","timestamp":"2019-04-15 01:44:59"}
+{"ruleId":"TimeDateUpdate","type":"condition","subtype":"cron","details":"match: true, state: true, flipped: true","level":"info","message":"Cron condition evaluated","timestamp":"2019-04-15 01:45:04"}
+{"type":"action","subtype":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-15 01:45:04"}
+{"type":"action","subtype":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-15 01:45:04"}
+{"ruleId":"TimeDateUpdate","type":"condition","subtype":"cron","details":"match: true, state: false, flipped: true","level":"info","message":"Cron condition evaluated","timestamp":"2019-04-15 01:46:36"}
+{"ruleId":"TimeDateUpdate","type":"condition","subtype":"cron","details":"match: true, state: true, flipped: true","level":"info","message":"Cron condition evaluated","timestamp":"2019-04-15 01:47:05"}
+{"type":"action","subtype":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-15 01:47:05"}
+{"type":"action","subtype":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-15 01:47:05"}
+{"ruleId":"TimeDateUpdate","type":"condition","subtype":"cron","details":"match: true, state: false, flipped: true","level":"info","message":"Cron condition evaluated","timestamp":"2019-04-15 01:48:05"}
+{"ruleId":"TimeDateUpdate","type":"condition","subtype":"cron","details":"match: true, state: true, flipped: true","level":"info","message":"Cron condition evaluated","timestamp":"2019-04-15 01:49:05"}
+{"type":"action","subtype":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-15 01:49:05"}
+{"type":"action","subtype":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-15 01:49:05"}
+{"ruleId":"TimeDateUpdate","type":"condition","subtype":"cron","details":"match: true, state: true, flipped: true","level":"info","message":"Cron condition evaluated","timestamp":"2019-04-15 01:49:07"}
+{"type":"action","subtype":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-15 01:49:07"}
+{"type":"action","subtype":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-15 01:49:07"}
+{"ruleId":"TimeDateUpdate","type":"condition","subtype":"cron","details":"match: true, state: false, flipped: true","level":"info","message":"Cron condition evaluated","timestamp":"2019-04-15 01:50:05"}
+{"ruleId":"TimeDateUpdate","type":"condition","subtype":"cron","details":"match: true, state: true, flipped: true","level":"info","message":"Cron condition evaluated","timestamp":"2019-04-15 01:51:04"}
+{"type":"action","subtype":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-15 01:51:04"}
+{"type":"action","subtype":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-15 01:51:04"}
+{"ruleId":"TimeDateUpdate","type":"condition","subtype":"cron","details":"match: true, state: false, flipped: true","level":"info","message":"Cron condition evaluated","timestamp":"2019-04-15 01:52:04"}
+{"ruleId":"TimeDateUpdate","type":"condition","subtype":"cron","details":"match: true, state: true, flipped: true","level":"info","message":"Cron condition evaluated","timestamp":"2019-04-15 01:53:29"}
+{"type":"action","subtype":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-15 01:53:29"}
+{"type":"action","subtype":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-15 01:53:29"}
+{"ruleId":"TimeDateUpdate","type":"condition","subtype":"cron","details":"match: true, state: true, flipped: true","level":"info","message":"Cron condition evaluated","timestamp":"2019-04-15 01:53:47"}
+{"type":"action","subtype":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-15 01:53:47"}
+{"type":"action","subtype":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-15 01:53:47"}
+{"ruleId":"TimeDateUpdate","type":"condition","subtype":"cron","details":"match: true, state: false, flipped: true","level":"info","message":"Cron condition evaluated","timestamp":"2019-04-15 01:54:04"}
+{"ruleId":"TimeDateUpdate","type":"condition","subtype":"cron","details":"match: true, state: false, flipped: true","level":"info","message":"Cron condition evaluated","timestamp":"2019-04-15 01:54:28"}
+{"ruleId":"TimeDateUpdate","type":"condition","subtype":"cron","details":"match: true, state: true, flipped: true","level":"info","message":"Cron condition evaluated","timestamp":"2019-04-15 01:55:05"}
+{"type":"action","subtype":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-15 01:55:05"}
+{"type":"action","subtype":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-15 01:55:05"}
+{"ruleId":"TimeDateUpdate","type":"condition","subtype":"cron","details":"match: true, state: false, flipped: true","level":"info","message":"Cron condition evaluated","timestamp":"2019-04-15 01:56:05"}
+{"ruleId":"TimeDateUpdate","type":"condition","subtype":"cron","details":"match: true, state: true, flipped: true","level":"info","message":"Cron condition evaluated","timestamp":"2019-04-15 01:57:05"}
+{"type":"action","subtype":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-15 01:57:05"}
+{"type":"action","subtype":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-15 01:57:05"}
+{"ruleId":"TimeDateUpdate","type":"condition","subtype":"cron","details":"match: true, state: false, flipped: true","level":"info","message":"Cron condition evaluated","timestamp":"2019-04-15 01:58:05"}
+{"ruleId":"TimeDateUpdate","type":"condition","subtype":"cron","details":"match: true, state: true, flipped: true","level":"info","message":"Cron condition evaluated","timestamp":"2019-04-15 01:59:05"}
+{"type":"action","subtype":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-15 01:59:05"}
+{"type":"action","subtype":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-15 01:59:05"}
+{"ruleId":"TimeDateUpdate","type":"condition","subtype":"cron","details":"match: true, state: false, flipped: true","level":"info","message":"Cron condition evaluated","timestamp":"2019-04-15 02:00:05"}
+{"ruleId":"TimeDateUpdate","type":"condition","subtype":"cron","details":"match: true, state: false, flipped: true","level":"info","message":"Cron condition evaluated","timestamp":"2019-04-15 02:00:53"}
+{"ruleId":"TimeDateUpdate","type":"condition","subtype":"cron","details":"match: true, state: true, flipped: true","level":"info","message":"Cron condition evaluated","timestamp":"2019-04-15 02:01:05"}
+{"type":"action","subtype":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-15 02:01:05"}
+{"type":"action","subtype":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-15 02:01:05"}
+{"ruleId":"TimeDateUpdate","type":"condition","subtype":"cron","details":"match: true, state: false, flipped: true","level":"info","message":"Cron condition evaluated","timestamp":"2019-04-15 02:02:05"}
+{"ruleId":"TimeDateUpdate","type":"condition","subtype":"cron","details":"match: true, state: false, flipped: true","level":"info","message":"Cron condition evaluated","timestamp":"2019-04-15 02:02:33"}
+{"ruleId":"TimeDateUpdate","type":"condition","subtype":"cron","details":"match: true, state: true, flipped: true","level":"info","message":"Cron condition evaluated","timestamp":"2019-04-15 02:03:04"}
+{"type":"action","subtype":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-15 02:03:04"}
+{"type":"action","subtype":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-15 02:03:04"}
+{"ruleId":"TimeDateUpdate","type":"condition","subtype":"cron","details":"match: true, state: false, flipped: true","level":"info","message":"Cron condition evaluated","timestamp":"2019-04-15 02:04:04"}
+{"ruleId":"TimeDateUpdate","type":"condition","subtype":"cron","details":"match: true, state: false, flipped: true","level":"info","message":"Cron condition evaluated","timestamp":"2019-04-15 02:04:18"}
+{"ruleId":"TimeDateUpdate","type":"condition","subtype":"cron","details":"match: true, state: true, flipped: true","level":"info","message":"Cron condition evaluated","timestamp":"2019-04-15 02:05:04"}
+{"type":"action","subtype":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-15 02:05:04"}
+{"type":"action","subtype":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-15 02:05:04"}
+{"ruleId":"TimeDateUpdate","type":"condition","subtype":"cron","details":"match: true, state: false, flipped: true","level":"info","message":"Cron condition evaluated","timestamp":"2019-04-15 02:06:04"}
+{"ruleId":"TimeDateUpdate","type":"condition","subtype":"cron","details":"match: true, state: true, flipped: true","level":"info","message":"Cron condition evaluated","timestamp":"2019-04-15 02:07:04"}
+{"type":"action","subtype":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-15 02:07:04"}
+{"type":"action","subtype":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-15 02:07:04"}
+{"ruleId":"TimeDateUpdate","type":"condition","subtype":"cron","details":"match: true, state: false, flipped: true","level":"info","message":"Cron condition evaluated","timestamp":"2019-04-15 02:08:04"}
+{"ruleId":"TimeDateUpdate","type":"condition","subtype":"cron","details":"match: true, state: true, flipped: true","level":"info","message":"Cron condition evaluated","timestamp":"2019-04-15 02:09:04"}
+{"type":"action","subtype":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-15 02:09:04"}
+{"type":"action","subtype":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-15 02:09:04"}
+{"ruleId":"TimeDateUpdate","type":"condition","subtype":"cron","details":"match: true, state: false, flipped: true","level":"info","message":"Cron condition evaluated","timestamp":"2019-04-15 02:10:04"}
+{"ruleId":"TimeDateUpdate","type":"condition","subtype":"cron","details":"match: true, state: true, flipped: true","level":"info","message":"Cron condition evaluated","timestamp":"2019-04-15 02:11:04"}
+{"type":"action","subtype":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-15 02:11:04"}
+{"type":"action","subtype":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-15 02:11:04"}
+{"ruleId":"TimeDateUpdate","type":"condition","subtype":"cron","details":"match: true, state: false, flipped: true","level":"info","message":"Cron condition evaluated","timestamp":"2019-04-15 02:12:04"}
+{"ruleId":"TimeDateUpdate","type":"condition","subtype":"cron","details":"match: true, state: true, flipped: true","level":"info","message":"Cron condition evaluated","timestamp":"2019-04-15 02:13:04"}
+{"type":"action","subtype":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-15 02:13:04"}
+{"type":"action","subtype":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-15 02:13:04"}
+{"ruleId":"TimeDateUpdate","type":"condition","subtype":"cron","details":"match: true, state: false, flipped: true","level":"info","message":"Cron condition evaluated","timestamp":"2019-04-15 02:14:04"}
+{"ruleId":"TimeDateUpdate","type":"condition","subtype":"cron","details":"match: true, state: true, flipped: true","level":"info","message":"Cron condition evaluated","timestamp":"2019-04-15 02:15:04"}
+{"type":"action","subtype":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-15 02:15:04"}
+{"type":"action","subtype":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-15 02:15:04"}
+{"ruleId":"TimeDateUpdate","type":"condition","subtype":"cron","details":"match: true, state: false, flipped: true","level":"info","message":"Cron condition evaluated","timestamp":"2019-04-15 02:16:04"}
+{"ruleId":"TimeDateUpdate","type":"condition","subtype":"cron","details":"match: true, state: true, flipped: true","level":"info","message":"Cron condition evaluated","timestamp":"2019-04-15 02:17:04"}
+{"type":"action","subtype":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-15 02:17:04"}
+{"type":"action","subtype":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-15 02:17:04"}
+{"ruleId":"TimeDateUpdate","type":"condition","subtype":"cron","details":"match: true, state: false, flipped: true","level":"info","message":"Cron condition evaluated","timestamp":"2019-04-15 02:18:04"}
+{"ruleId":"TimeDateUpdate","type":"condition","subtype":"cron","details":"match: true, state: true, flipped: true","level":"info","message":"Cron condition evaluated","timestamp":"2019-04-15 02:19:04"}
+{"type":"action","subtype":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-15 02:19:04"}
+{"type":"action","subtype":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-15 02:19:04"}
+{"ruleId":"TimeDateUpdate","type":"condition","subtype":"cron","details":"match: true, state: false, flipped: true","level":"info","message":"Cron condition evaluated","timestamp":"2019-04-15 02:20:04"}
+{"ruleId":"TimeDateUpdate","type":"condition","subtype":"cron","details":"match: true, state: true, flipped: true","level":"info","message":"Cron condition evaluated","timestamp":"2019-04-15 02:21:04"}
+{"type":"action","subtype":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-15 02:21:04"}
+{"type":"action","subtype":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-15 02:21:04"}
+{"ruleId":"TimeDateUpdate","type":"condition","subtype":"cron","details":"match: true, state: false, flipped: true","level":"info","message":"Cron condition evaluated","timestamp":"2019-04-15 02:22:04"}
+{"ruleId":"TimeDateUpdate","type":"condition","subtype":"cron","details":"match: true, state: true, flipped: true","level":"info","message":"Cron condition evaluated","timestamp":"2019-04-15 02:23:04"}
+{"type":"action","subtype":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-15 02:23:04"}
+{"type":"action","subtype":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-15 02:23:04"}
+{"ruleId":"TimeDateUpdate","type":"condition","subtype":"cron","details":"match: true, state: false, flipped: true","level":"info","message":"Cron condition evaluated","timestamp":"2019-04-15 02:24:04"}
+{"ruleId":"TimeDateUpdate","type":"condition","subtype":"cron","details":"match: true, state: true, flipped: true","level":"info","message":"Cron condition evaluated","timestamp":"2019-04-15 02:25:04"}
+{"type":"action","subtype":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-15 02:25:04"}
+{"type":"action","subtype":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-15 02:25:04"}
+{"ruleId":"TimeDateUpdate","type":"condition","subtype":"cron","details":"match: true, state: false, flipped: true","level":"info","message":"Cron condition evaluated","timestamp":"2019-04-15 02:26:04"}
+{"ruleId":"TimeDateUpdate","type":"condition","subtype":"cron","details":"match: true, state: true, flipped: true","level":"info","message":"Cron condition evaluated","timestamp":"2019-04-15 02:27:04"}
+{"type":"action","subtype":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-15 02:27:04"}
+{"type":"action","subtype":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-15 02:27:04"}
+{"ruleId":"TimeDateUpdate","type":"condition","subtype":"cron","details":"match: true, state: false, flipped: true","level":"info","message":"Cron condition evaluated","timestamp":"2019-04-15 02:28:04"}
+{"ruleId":"TimeDateUpdate","type":"condition","subtype":"cron","details":"match: true, state: true, flipped: true","level":"info","message":"Cron condition evaluated","timestamp":"2019-04-15 02:29:04"}
+{"type":"action","subtype":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-15 02:29:04"}
+{"type":"action","subtype":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-15 02:29:04"}
+{"ruleId":"TimeDateUpdate","type":"condition","subtype":"cron","details":"match: true, state: false, flipped: true","level":"info","message":"Cron condition evaluated","timestamp":"2019-04-15 02:30:04"}
+{"ruleId":"TimeDateUpdate","type":"condition","subtype":"cron","details":"match: true, state: true, flipped: true","level":"info","message":"Cron condition evaluated","timestamp":"2019-04-15 02:31:04"}
+{"type":"action","subtype":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-15 02:31:04"}
+{"type":"action","subtype":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-15 02:31:04"}
+{"ruleId":"TimeDateUpdate","type":"condition","subtype":"cron","details":"match: true, state: false, flipped: true","level":"info","message":"Cron condition evaluated","timestamp":"2019-04-15 02:32:04"}
+{"ruleId":"TimeDateUpdate","type":"condition","subtype":"cron","details":"match: true, state: true, flipped: true","level":"info","message":"Cron condition evaluated","timestamp":"2019-04-15 02:33:04"}
+{"type":"action","subtype":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-15 02:33:04"}
+{"type":"action","subtype":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-15 02:33:04"}
+{"ruleId":"TimeDateUpdate","type":"condition","subtype":"cron","details":"match: true, state: false, flipped: true","level":"info","message":"Cron condition evaluated","timestamp":"2019-04-15 02:34:04"}
+{"ruleId":"TimeDateUpdate","type":"condition","subtype":"cron","details":"match: true, state: true, flipped: true","level":"info","message":"Cron condition evaluated","timestamp":"2019-04-15 02:35:04"}
+{"type":"action","subtype":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-15 02:35:04"}
+{"type":"action","subtype":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-15 02:35:04"}
+{"ruleId":"TimeDateUpdate","type":"condition","subtype":"cron","details":"match: true, state: false, flipped: true","level":"info","message":"Cron condition evaluated","timestamp":"2019-04-15 02:36:04"}
+{"ruleId":"TimeDateUpdate","type":"condition","subtype":"cron","details":"match: true, state: true, flipped: true","level":"info","message":"Cron condition evaluated","timestamp":"2019-04-15 02:37:04"}
+{"type":"action","subtype":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-15 02:37:04"}
+{"type":"action","subtype":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-15 02:37:04"}
+{"ruleId":"TimeDateUpdate","type":"condition","subtype":"cron","details":"match: true, state: false, flipped: true","level":"info","message":"Cron condition evaluated","timestamp":"2019-04-15 02:38:04"}
+{"ruleId":"TimeDateUpdate","type":"condition","subtype":"cron","details":"match: true, state: true, flipped: true","level":"info","message":"Cron condition evaluated","timestamp":"2019-04-15 02:39:04"}
+{"type":"action","subtype":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-15 02:39:04"}
+{"type":"action","subtype":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-15 02:39:04"}
+{"ruleId":"TimeDateUpdate","type":"condition","subtype":"cron","details":"match: true, state: false, flipped: true","level":"info","message":"Cron condition evaluated","timestamp":"2019-04-15 02:40:04"}
+{"ruleId":"TimeDateUpdate","type":"condition","subtype":"cron","details":"match: true, state: true, flipped: true","level":"info","message":"Cron condition evaluated","timestamp":"2019-04-15 02:41:04"}
+{"type":"action","subtype":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-15 02:41:04"}
+{"type":"action","subtype":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-15 02:41:04"}
+{"ruleId":"TimeDateUpdate","type":"condition","subtype":"cron","details":"match: true, state: false, flipped: true","level":"info","message":"Cron condition evaluated","timestamp":"2019-04-15 02:42:04"}
+{"ruleId":"TimeDateUpdate","type":"condition","subtype":"cron","details":"match: true, state: true, flipped: true","level":"info","message":"Cron condition evaluated","timestamp":"2019-04-15 02:43:05"}
+{"type":"action","subtype":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-15 02:43:05"}
+{"type":"action","subtype":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-15 02:43:05"}
+{"ruleId":"TimeDateUpdate","type":"condition","subtype":"cron","details":"match: true, state: false, flipped: true","level":"info","message":"Cron condition evaluated","timestamp":"2019-04-15 02:44:05"}
+{"ruleId":"TimeDateUpdate","type":"condition","subtype":"cron","details":"match: true, state: true, flipped: true","level":"info","message":"Cron condition evaluated","timestamp":"2019-04-15 02:45:05"}
+{"type":"action","subtype":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-15 02:45:05"}
+{"type":"action","subtype":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-15 02:45:05"}
+{"ruleId":"TimeDateUpdate","type":"condition","subtype":"cron","details":"match: true, state: false, flipped: true","level":"info","message":"Cron condition evaluated","timestamp":"2019-04-15 02:46:05"}
+{"ruleId":"TimeDateUpdate","type":"condition","subtype":"cron","details":"match: true, state: true, flipped: true","level":"info","message":"Cron condition evaluated","timestamp":"2019-04-15 02:47:05"}
+{"type":"action","subtype":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-15 02:47:05"}
+{"type":"action","subtype":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-15 02:47:05"}
+{"ruleId":"TimeDateUpdate","type":"condition","subtype":"cron","details":"match: true, state: false, flipped: true","level":"info","message":"Cron condition evaluated","timestamp":"2019-04-15 02:48:05"}
+{"ruleId":"TimeDateUpdate","type":"condition","subtype":"cron","details":"match: true, state: true, flipped: true","level":"info","message":"Cron condition evaluated","timestamp":"2019-04-15 02:49:05"}
+{"type":"action","subtype":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-15 02:49:05"}
+{"type":"action","subtype":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-15 02:49:05"}
+{"ruleId":"TimeDateUpdate","type":"condition","subtype":"cron","details":"match: true, state: false, flipped: true","level":"info","message":"Cron condition evaluated","timestamp":"2019-04-15 02:50:05"}
+{"ruleId":"TimeDateUpdate","type":"condition","subtype":"cron","details":"match: true, state: true, flipped: true","level":"info","message":"Cron condition evaluated","timestamp":"2019-04-15 02:51:05"}
+{"type":"action","subtype":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-15 02:51:05"}
+{"type":"action","subtype":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-15 02:51:05"}
+{"ruleId":"TimeDateUpdate","type":"condition","subtype":"cron","details":"match: true, state: false, flipped: true","level":"info","message":"Cron condition evaluated","timestamp":"2019-04-15 02:52:05"}
+{"ruleId":"TimeDateUpdate","type":"condition","subtype":"cron","details":"match: true, state: true, flipped: true","level":"info","message":"Cron condition evaluated","timestamp":"2019-04-15 02:53:05"}
+{"type":"action","subtype":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-15 02:53:05"}
+{"type":"action","subtype":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-15 02:53:05"}
+{"ruleId":"TimeDateUpdate","type":"condition","subtype":"cron","details":"match: true, state: false, flipped: true","level":"info","message":"Cron condition evaluated","timestamp":"2019-04-15 02:54:05"}
+{"ruleId":"TimeDateUpdate","type":"condition","subtype":"cron","details":"match: true, state: true, flipped: true","level":"info","message":"Cron condition evaluated","timestamp":"2019-04-15 02:55:05"}
+{"type":"action","subtype":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-15 02:55:05"}
+{"type":"action","subtype":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-15 02:55:05"}
+{"ruleId":"TimeDateUpdate","type":"condition","subtype":"cron","details":"match: true, state: false, flipped: true","level":"info","message":"Cron condition evaluated","timestamp":"2019-04-15 02:56:05"}
+{"ruleId":"TimeDateUpdate","type":"condition","subtype":"cron","details":"match: true, state: true, flipped: true","level":"info","message":"Cron condition evaluated","timestamp":"2019-04-15 02:57:05"}
+{"type":"action","subtype":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-15 02:57:05"}
+{"type":"action","subtype":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-15 02:57:05"}
+{"ruleId":"TimeDateUpdate","type":"condition","subtype":"cron","details":"match: true, state: false, flipped: true","level":"info","message":"Cron condition evaluated","timestamp":"2019-04-15 02:58:05"}
+{"ruleId":"TimeDateUpdate","type":"condition","subtype":"cron","details":"match: true, state: true, flipped: true","level":"info","message":"Cron condition evaluated","timestamp":"2019-04-15 02:59:05"}
+{"type":"action","subtype":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-15 02:59:05"}
+{"type":"action","subtype":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-15 02:59:05"}
+{"ruleId":"TimeDateUpdate","type":"condition","subtype":"cron","details":"match: true, state: false, flipped: true","level":"info","message":"Cron condition evaluated","timestamp":"2019-04-15 03:00:05"}
+{"ruleId":"TimeDateUpdate","type":"condition","subtype":"cron","details":"match: true, state: true, flipped: true","level":"info","message":"Cron condition evaluated","timestamp":"2019-04-15 03:01:05"}
+{"type":"action","subtype":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-15 03:01:05"}
+{"type":"action","subtype":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-15 03:01:05"}
