@@ -17,6 +17,7 @@
     "react-notification": "^6.8.4",
     "react-scripts": "2.1.1",
     "react-sortly": "^1.5.3",
+    "react-table": "^6.9.2",
     "reactstrap": "^6.5.0",
     "string-format": "^2.0.0",
     "styled-components": "^4.1.2"

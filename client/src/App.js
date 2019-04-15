@@ -2,10 +2,11 @@ import React, { Component } from 'react';
 import { DragDropContext } from 'react-dnd';
 import HTML5Backend from 'react-dnd-html5-backend';
 import { AppContainer, AppNav, AppBody, Title, HorizontalContainer, AppFooter } from "./containers";
-import { Button } from 'reactstrap';
+import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import { staticData } from './utils';
 import { RuleList } from './RuleList';
 import { RuleEditor } from './RuleEditor';
+import { LogTable } from './LogTable';
 import axios from 'axios';
 import update from 'immutability-helper';
 
@@ -15,7 +16,9 @@ class App extends Component {
     this.state = {
       rules: [],
       selectedRule: undefined,
-      rule: {}
+      rule: {},
+      logs: [],
+      logsVisible: false
     };
   }
 
@@ -84,6 +87,21 @@ class App extends Component {
       });
   }
 
+  handleLogsClick = () => {
+    axios.get('/api/logs')
+      .then((response) => {        
+        this.setState({logs: response.data, logsVisible: true});
+      })
+      .catch((error) => {
+        // TODO: inform user
+        console.log(error);
+      });
+  }
+
+  hideLogs = () => {
+    this.setState({logs: [], logsVisible: false});
+  }
+
 
   updateRuleList(list, refreshEditor = true) {
     if (refreshEditor) {
@@ -107,6 +125,7 @@ class App extends Component {
           <AppNav>
             <HorizontalContainer>
               <Title>Rules</Title>
+              <Button onClick={this.handleLogsClick}>Logs</Button>
               <Button onClick={this.handleAddRuleClick}>Add</Button>
             </HorizontalContainer>
             {!this.state.selectedRule && <Title>No rules defined. Create one...</Title>}
@@ -120,11 +139,18 @@ class App extends Component {
           </AppNav>
           {this.state.selectedRule &&
             <RuleEditor id={this.state.selectedRule} refreshNames={() => { this.loadRuleListFromServer(false) }} />
-          }
+          }          
         </AppBody>
-        <AppFooter>
-          test
-        </AppFooter>
+        <Modal isOpen={this.state.logsVisible} toggle={this.hideLogs} size="xl">
+          <ModalHeader toggle={this.hideLogs}>Modal title</ModalHeader>
+          <ModalBody>
+            <LogTable data={this.state.logs} />
+          </ModalBody>
+          <ModalFooter>
+            <Button color="primary" onClick={this.hideLogs}>Do Something</Button>{' '}
+            <Button color="secondary" onClick={this.hideLogs}>Cancel</Button>
+          </ModalFooter>
+        </Modal>
 
       </AppContainer>
     );

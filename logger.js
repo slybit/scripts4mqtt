@@ -4,11 +4,6 @@ const config = require('./config.js').parse();
 const readline = require('readline');
 const fs = require('fs');
 
-const ruleLogs = [];
-
-
-
-
 const consoleFormat = combine(
   timestamp({ format: 'YYYY-MM-DD hh:mm:ss' }),
   format.splat(),
@@ -42,26 +37,32 @@ const jsonlogger = createLogger({
 
 
 const parseRuleLog = function () {
-  // create instance of readline
-  // each instance is associated with single input stream
-  let rl = readline.createInterface({
-    input: fs.createReadStream('rules.log')
+  return new Promise(function (resolve) {
+    const ruleLogs = [];
+    // create instance of readline
+    // each instance is associated with single input stream
+    let rl = readline.createInterface({
+      input: fs.createReadStream('rules.log')
+    });
+
+    let line_no = 0;
+
+    // event is emitted after each line
+    rl.on('line', function (line) {
+      const item = JSON.parse(line);
+      ruleLogs.push(item);
+    });
+
+    // end
+    rl.on('close', function (line) {
+      console.log('Total lines : ' + ruleLogs.length);
+      resolve(ruleLogs);
+    });
+
   });
 
-  let line_no = 0;
-
-  // event is emitted after each line
-  rl.on('line', function (line) {
-    const item = JSON.parse(line);
-    ruleLogs.push(item);
-  });
-
-  // end
-  rl.on('close', function (line) {
-    console.log('Total lines : ' + ruleLogs.length);
-  });
 }
 
-parseRuleLog();
+//parseRuleLog();
 
-module.exports = { logger, jsonlogger };
+module.exports = { logger, jsonlogger, parseRuleLog };

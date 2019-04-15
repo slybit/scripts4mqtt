@@ -368,3 +368,8 @@
 {"ruleId":"TimeDateUpdate","type":"condition","subtype":"cron","details":"match: true, state: true, flipped: true","level":"info","message":"Cron condition evaluated","timestamp":"2019-04-15 03:01:05"}
 {"type":"action","subtype":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-15 03:01:05"}
 {"type":"action","subtype":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-15 03:01:05"}
+{"ruleId":"TimeDateUpdate","type":"condition","subtype":"cron","details":"match: true, state: false, flipped: true","level":"info","message":"Cron condition evaluated","timestamp":"2019-04-15 03:02:05"}
+{"ruleId":"TimeDateUpdate","type":"condition","subtype":"cron","details":"match: true, state: true, flipped: true","level":"info","message":"Cron condition evaluated","timestamp":"2019-04-15 03:03:05"}
+{"type":"action","subtype":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-15 03:03:05"}
+{"type":"action","subtype":"script","level":"info","message":"ScriptAction executed","timestamp":"2019-04-15 03:03:05"}
+{"ruleId":"TimeDateUpdate","type":"condition","subtype":"cron","details":"match: true, state: false, flipped: true","level":"info","message":"Cron condition evaluated","timestamp":"2019-04-15 03:04:05"}
