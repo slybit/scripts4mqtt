@@ -1,11 +1,30 @@
 const { createLogger, format, transports } = require('winston');
+require('winston-daily-rotate-file');
 const { combine, timestamp, printf } = format;
 const config = require('./config.js').parse();
 const readline = require('readline');
 const fs = require('fs');
 
+var defaultTransport = new (transports.DailyRotateFile)({
+  filename: 'default-%DATE%.log',
+  datePattern: 'YYYY-MM-DD-HH',
+  zippedArchive: false,  
+  maxFiles: '14d',
+  format: format.combine(format.timestamp(), format.splat(), format.json())
+});
+
+
+var rulesTransport = new (transports.DailyRotateFile)({
+  filename: 'rules-%DATE%.log',
+  datePattern: 'YYYY-MM-DD-HH',
+  zippedArchive: false,  
+  maxFiles: '14d',
+  format: format.combine(format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }), format.json())
+});
+
+
 const consoleFormat = combine(
-  timestamp({ format: 'YYYY-MM-DD hh:mm:ss' }),
+  timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
   format.splat(),
   printf(({ level, message, timestamp }) => {
     return `${timestamp} | ${level.padEnd(7).toUpperCase()} | ${message}`;
@@ -19,19 +38,17 @@ const logger = createLogger({
     new transports.Console({
       format: consoleFormat
     }),
-    new transports.File({
-      filename: 'default.log',
-      format: format.combine(format.timestamp(), format.splat(), format.json()),
-    }),
+    //new transports.File({
+    //  filename: 'default.log',
+    //  format: format.combine(format.timestamp(), format.splat(), format.json()),
+    //}),
+    defaultTransport
   ],
 });
 
 const jsonlogger = createLogger({
   transports: [
-    new transports.File({
-      filename: 'rules.log', level: 'debug',
-      format: format.combine(format.timestamp({ format: 'YYYY-MM-DD hh:mm:ss' }), format.json()),
-    }),
+    rulesTransport
   ],
 });
 

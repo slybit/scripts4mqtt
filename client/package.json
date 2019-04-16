@@ -15,6 +15,7 @@
     "react-dom": "^16.6.3",
     "react-json-view": "^1.19.1",
     "react-notification": "^6.8.4",
+    "react-router-dom": "^5.0.0",
     "react-scripts": "2.1.1",
     "react-sortly": "^1.5.3",
     "react-table": "^6.9.2",

@@ -1,36 +1,72 @@
 import React from "react";
 import ReactTable from 'react-table'
+import axios from 'axios';
 
 export class LogTable extends React.Component {
 
-    constructor(props) {
-        super(props);
-        console.log(props.data);
+    constructor() {
+        super();
+        this.state = {
+            logs: []
+        }
+    }
+
+
+    componentDidMount() {
+        this.loadLogsFromServer();
+    }
+
+    loadLogsFromServer = () => {
+        axios.get('/api/logs')
+            .then((response) => {
+                this.setState({ logs: response.data, logsVisible: true });
+            })
+            .catch((error) => {
+                // TODO: inform user
+                console.log(error);
+            });
     }
 
 
     render() {
-        const columns = [{
-            Header: 'Rule ID',
-            accessor: 'ruleId' // String-based value accessors!
-        },
+        const columns = [
             {
-            Header: 'Type',
-            accessor: 'type' // String-based value accessors!
-        }, {
-            Header: 'Subtype',
-            accessor: 'subtype',
-        }, {
-            Header: 'Level',
-            accessor: 'level'
-        }, {
-            Header: 'Details',
-            accessor: 'details'
-        }]
+                Header: 'Timestamp',
+                accessor: 'timestamp',
+                width: 150
+            },
+            {
+                Header: 'Rule name',
+                accessor: 'ruleName',
+                width: 200
+            },
+            {
+                Header: 'Type',
+                accessor: 'type',
+                width: 100
+            }, {
+                Header: 'Subtype',
+                accessor: 'subtype',
+                width: 100
+            }, {
+                Header: 'Level',
+                accessor: 'level',
+                width: 100
+            }, {
+                Header: 'Details',
+                accessor: 'details'
+            }]
 
         return <ReactTable
-            data={this.props.data}
+            data={this.state.logs}
             columns={columns}
+            className="-striped -highlight"
+            defaultSorted={[
+                {
+                  id: "timestamp",
+                  desc: true
+                }
+              ]}
         />
 
     }

@@ -3,3 +3,6 @@ newrules.yaml
 combined.log
 default.log
 rules.log
+.*-audit.json
+default-*.log
+rules-*.log
