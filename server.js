@@ -1,4 +1,5 @@
 const express = require('express');
+const path = require('path');
 // TODO: use winston express middleware instead of morgan? worth it?
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
@@ -61,4 +62,13 @@ router.get('/logs', async (req, res) =>  {
 
 app.use('/api', router);
 
+// ----
+const client = express.Router();
+client.use(express.static(path.join(__dirname, 'client', 'build')));
+client.get('/*', function(req, res) {
+    res.sendFile(path.join(__dirname, 'client', 'build', 'index.html'));
+});
+app.use('/', client);
+
+// ----- 
 app.listen(API_PORT, () => logger.info('Listening on port %s', API_PORT));
