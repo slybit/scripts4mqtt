@@ -2,7 +2,7 @@ const express = require('express');
 // TODO: use winston express middleware instead of morgan? worth it?
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
-const {logger, jsonlogger, parseRuleLog} = require('./logger.js');
+const {logger, jsonlogger, getRuleLogs} = require('./logger.js');
 const config = require('./config.js').parse();
 const static = require('./static.js').parse();
 const rules = require('./rules.js');
@@ -51,7 +51,7 @@ router.post('/validate', (req, res) => {
 
 router.get('/logs', async (req, res) =>  {
     try {
-        const logs = await parseRuleLog();    
+        const logs = await getRuleLogs();
         res.json(logs);
     } catch (err) {
         logger.error('Error parsing longs');

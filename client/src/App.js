@@ -19,9 +19,10 @@ export default class App extends Component {
                     </NavItem>
                 </Nav>
                 <Switch>
+                    <Route exact path="/" component={Editor} />
                     <Route path='/editor' component={Editor}></Route>
                     <Route path='/logs' component={LogTable}></Route>
-                </Switch>                
+                </Switch>
             </AppContainer>
         );
     }

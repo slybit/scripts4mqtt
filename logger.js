@@ -7,8 +7,8 @@ const fs = require('fs');
 
 var defaultTransport = new (transports.DailyRotateFile)({
   filename: 'default-%DATE%.log',
-  datePattern: 'YYYY-MM-DD-HH',
-  zippedArchive: false,  
+  datePattern: 'YYYY-MM-DD',
+  zippedArchive: false,
   maxFiles: '14d',
   format: format.combine(format.timestamp(), format.splat(), format.json())
 });
@@ -16,8 +16,8 @@ var defaultTransport = new (transports.DailyRotateFile)({
 
 var rulesTransport = new (transports.DailyRotateFile)({
   filename: 'rules-%DATE%.log',
-  datePattern: 'YYYY-MM-DD-HH',
-  zippedArchive: false,  
+  datePattern: 'YYYY-MM-DD',
+  zippedArchive: false,
   maxFiles: '14d',
   format: format.combine(format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }), format.json())
 });
@@ -53,33 +53,45 @@ const jsonlogger = createLogger({
 });
 
 
-const parseRuleLog = function () {
+const getRuleLogs = function () {
+  // registers
+  let line_no = 0;
+  const logs = [];
+  let MAXLINES = 5000;
+  return new Promise(async function (resolve) {
+        // list log files
+        const files = fs.readdirSync('.');
+        const logfiles = files.filter(file => file.startsWith('rules-')).sort().reverse();
+
+        for (let f of logfiles) {
+          console.log(f);
+          await parseRuleLogFile(f, logs);
+          if (logs.length > MAXLINES) break;
+        }
+        resolve(logs.splice(0, Math.min(logs.length, MAXLINES)));
+  });
+}
+
+const parseRuleLogFile = function (filename, logs) {
   return new Promise(function (resolve) {
-    const ruleLogs = [];
     // create instance of readline
     // each instance is associated with single input stream
     let rl = readline.createInterface({
-      input: fs.createReadStream('rules.log')
+      input: fs.createReadStream(filename)
     });
-
-    let line_no = 0;
 
     // event is emitted after each line
     rl.on('line', function (line) {
-      const item = JSON.parse(line);
-      ruleLogs.push(item);
+      logs.push(JSON.parse(line));
     });
 
     // end
     rl.on('close', function (line) {
-      console.log('Total lines : ' + ruleLogs.length);
-      resolve(ruleLogs);
+      resolve(logs);
     });
-
   });
-
 }
 
-//parseRuleLog();
 
-module.exports = { logger, jsonlogger, parseRuleLog };
+
+module.exports = { logger, jsonlogger, getRuleLogs };
