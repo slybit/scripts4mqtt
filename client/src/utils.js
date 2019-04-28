@@ -102,7 +102,7 @@ export const staticData = {
     newItems: {
         rule: {
             name: "new_rule",
-            enabled: true,
+            enabled: false,
             condition: []
         },
         condition: {

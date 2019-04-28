@@ -92,7 +92,7 @@ export class DynamicEditor extends React.Component {
 
     render() {
         return (
-            <Modal isOpen={this.props.visible} fade={false} toggle={this.props.editorHandleCancelClick}>
+            <Modal isOpen={this.props.visible} fade={false} toggle={this.props.editorHandleCancelClick} size="lg">
                 <ModalHeader toggle={this.props.editorHandleCancelClick}>{this.props.title}</ModalHeader>
                 <ModalBody>
                     <Form className="form">
