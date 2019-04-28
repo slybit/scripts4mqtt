@@ -3,7 +3,7 @@ import { DragDropContext } from 'react-dnd';
 import HTML5Backend from 'react-dnd-html5-backend';
 import { AppNav, AppBody, Title, HorizontalContainer } from "./containers";
 import { Button } from 'reactstrap';
-import { staticData } from './utils';
+import { staticData, showError } from './utils';
 import { RuleList } from './RuleList';
 import { RuleEditor } from './RuleEditor';
 import axios from 'axios';
@@ -28,7 +28,7 @@ class Editor extends Component {
         this.updateRuleList(response.data, refreshEditor);
       })
       .catch((error) => {
-        console.log(error);
+        showError("Cannot access the script4mqtt service.", error);
       });
   }
 
@@ -46,11 +46,15 @@ class Editor extends Component {
   handleDeleteRuleClick = (key) => {
     axios.delete('/api/rule/' + key)
       .then((response) => {
-        this.updateRuleList(this.state.rules.filter((item) => item.key !== key));
+        if (response.data.success) {
+          this.updateRuleList(this.state.rules.filter((item) => item.key !== key));
+        } else {
+          showError("Deletion not handled by script4mqtt service.", response.data);
+          console.log(response.data);
+        }
       })
       .catch((error) => {
-        // TODO: inform user
-        console.log(error);
+        showError("Cannot access the script4mqtt service.", error);
       });
   }
 
@@ -61,13 +65,12 @@ class Editor extends Component {
         if (response.data.success) {
           this.setState({ rules: update(this.state.rules, { [index]: { $toggle: ['enabled'] } }) });
         } else {
-          // TODO: alert user, editor is not visible!
+          showError("Rule update not handled by script4mqtt service.", response.data);
           console.log(response.data);
         }
       })
       .catch((error) => {
-        // TODO: alert user
-        console.log(error);
+        showError("Cannot access the script4mqtt service.", error);
       });
 
 
@@ -77,12 +80,15 @@ class Editor extends Component {
   handleAddRuleClick = () => {
     axios.post('/api/rules', staticData.newItems.rule)
       .then((response) => {
-        console.log(response);
-        this.loadRuleListFromServer(false);
+        if (response.data.success) {
+          this.loadRuleListFromServer(false);
+        } else {
+          showError("New rule action not handled by script4mqtt service.", response.data);
+          console.log(response.data);
+        }
       })
       .catch((error) => {
-        // TODO: inform user
-        console.log(error);
+        showError("Cannot access the script4mqtt service.", error);
       });
   }
 
@@ -116,7 +122,6 @@ class Editor extends Component {
           <AppNav>
             <HorizontalContainer>
               <Title>Rules</Title>
-              <Button onClick={this.handleLogsClick}>Logs</Button>
               <Button onClick={this.handleAddRuleClick}>Add</Button>
             </HorizontalContainer>
             {!this.state.selectedRule && <Title>No rules defined. Create one...</Title>}

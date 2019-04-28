@@ -36,15 +36,15 @@ class Rules {
             }
         }
         for (let key in this.jsonContents) {
-            //try {
+            try {
                 let rule = new Rule(key, this.jsonContents[key]);
                 this.rules[key] = rule;
                 logger.info('loaded %s', rule.toString());
-            //} catch (e) {
-            //    logger.error('Error loading rule [%s]', key);
-             //   logger.error(e.toString());
-             //   process.exit(1);
-            //}
+            } catch (e) {
+                logger.error('Error loading rule [%s]', key);
+                logger.error(e.toString());
+                process.exit(1);
+            }
         }
 
     }

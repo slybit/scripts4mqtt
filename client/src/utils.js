@@ -84,6 +84,10 @@ export function isNewItem(item, type, subtype) {
     }
 }
 
+export function showError(msg, error) {
+    alert(msg + "\n\n" + error);
+}
+
 export const staticData = {
     conditions: {
         mqtt: "MQTT",
