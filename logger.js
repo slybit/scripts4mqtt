@@ -4,12 +4,16 @@ const { combine, timestamp, printf } = format;
 const config = require('./config.js').parse();
 const readline = require('readline');
 const fs = require('fs');
+const path = require('path');
+
+const LOGPATH = config.logpath || './logs/';
 
 var defaultTransport = new (transports.DailyRotateFile)({
   filename: 'default-%DATE%.log',
   datePattern: 'YYYY-MM-DD',
   zippedArchive: false,
   maxFiles: '14d',
+  dirname: LOGPATH,
   format: format.combine(format.timestamp(), format.splat(), format.json())
 });
 
@@ -19,6 +23,7 @@ var rulesTransport = new (transports.DailyRotateFile)({
   datePattern: 'YYYY-MM-DD',
   zippedArchive: false,
   maxFiles: '14d',
+  dirname: LOGPATH,
   format: format.combine(format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }), format.json())
 });
 
@@ -60,12 +65,12 @@ const getRuleLogs = function () {
   let MAXLINES = 5000;
   return new Promise(async function (resolve) {
         // list log files
-        const files = fs.readdirSync('.');
+        const files = fs.readdirSync(LOGPATH);
         const logfiles = files.filter(file => file.startsWith('rules-')).sort().reverse();
 
         for (let f of logfiles) {
           console.log(f);
-          await parseRuleLogFile(f, logs);
+          await parseRuleLogFile(path.join(LOGPATH, f), logs);
           if (logs.length > MAXLINES) break;
         }
         resolve(logs.splice(0, Math.min(logs.length, MAXLINES)));
