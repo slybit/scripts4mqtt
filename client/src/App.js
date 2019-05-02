@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { BrowserRouter, Switch, Route, NavLink as RRNavLink } from 'react-router-dom';
+import { Redirect, Switch, Route, NavLink as RRNavLink } from 'react-router-dom';
 import { Nav, NavItem, NavLink } from 'reactstrap';
 import { AppContainer } from "./containers";
 import Editor from './Editor';
@@ -19,7 +19,8 @@ export default class App extends Component {
                     </NavItem>
                 </Nav>
                 <Switch>
-                    <Route exact path="/" component={Editor} />
+                    {/* React Route way of redirecting from / -> /editor */}
+                    <Route exact path="/" render={() => (<Redirect to="/editor" />)} />
                     <Route path='/editor' component={Editor}></Route>
                     <Route path='/logs' component={LogTable}></Route>
                 </Switch>
