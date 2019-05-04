@@ -52,7 +52,7 @@ class Rules {
     saveRules() {
         logger.info("saving rules");
         try {
-            fs.writeFileSync("newrules.yaml", yaml.safeDump(this.jsonContents));
+            fs.writeFileSync("rules.yaml", yaml.safeDump(this.jsonContents));
         } catch (e) {
             logger.error(e);
         }

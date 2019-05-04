@@ -1,9 +1,0 @@
-actions:
-  mqtt: "MQTT"
-  script: "Script"
-  email: "Email message"
-  pushover: "Pushover service"
-conditions:
-  mqtt: "MQTT"    
-  cron: "Cron expression"
-    
