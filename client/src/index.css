@@ -33,3 +33,24 @@ body {
 }
 
 
+
+.container_editor_area {
+  tab-size: 4ch;
+  max-height: 100vh;
+  overflow: auto;
+  margin: 1.67em 0;
+}
+
+.container__editor {
+  font-variant-ligatures: common-ligatures;
+  background-color: #fafafa;
+  border-radius: 3px;
+  font-family: 'Fira code', 'Fira Mono', Consolas, Menlo, Courier, monospace;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.container__editor textarea {
+  outline: 0;
+}
+

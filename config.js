@@ -20,3 +20,16 @@ exports.parse = function () {
         }
     }
 }
+
+exports.getConfig = function () {
+    const file = process.env.MQTT4SCRIPTS_CONFIG || 'config.yaml';
+    if (fs.existsSync(file)) {
+        try {
+          return fs.readFileSync(file, 'utf8');
+        } catch (e) {
+          console.log(e);          
+        }
+    } else {
+        return "";
+    }
+}

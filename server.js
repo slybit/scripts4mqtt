@@ -4,6 +4,7 @@ const path = require('path');
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
 const {logger, jsonlogger, getRuleLogs} = require('./logger.js');
+const {getConfig} = require('./config.js');
 const config = require('./config.js').parse();
 const static = require('./static.js').parse();
 const rules = require('./rules.js');
@@ -55,8 +56,18 @@ router.get('/logs', async (req, res) =>  {
         const logs = await getRuleLogs();
         res.json(logs);
     } catch (err) {
-        logger.error('Error parsing longs');
+        logger.error('Error parsing logs');
         res.json([]);
+    }
+});
+
+router.get('/config', (req, res) =>  {
+    try {
+        const config = { config : getConfig() };
+        res.json(config);
+    } catch (err) {
+        logger.error('Error reading config file');
+        res.json({ config : "" });
     }
 });
 
