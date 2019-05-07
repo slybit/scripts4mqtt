@@ -4,7 +4,7 @@ const path = require('path');
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
 const {logger, jsonlogger, getRuleLogs} = require('./logger.js');
-const {getConfig} = require('./config.js');
+const {getConfig, updateConfig} = require('./config.js');
 const config = require('./config.js').parse();
 const static = require('./static.js').parse();
 const rules = require('./rules.js');
@@ -62,14 +62,14 @@ router.get('/logs', async (req, res) =>  {
 });
 
 router.get('/config', (req, res) =>  {
-    try {
-        const config = { config : getConfig() };
-        res.json(config);
-    } catch (err) {
-        logger.error('Error reading config file');
-        res.json({ config : "" });
-    }
+    res.json({ config : getConfig() });
 });
+
+router.post('/config', (req, res) =>  {
+    res.json(updateConfig(req.body));
+});
+
+
 
 app.use('/api', router);
 
@@ -81,5 +81,5 @@ client.get('/*', function(req, res) {
 });
 app.use('/', client);
 
-// ----- 
+// -----
 app.listen(API_PORT, () => logger.info('Listening on port %s', API_PORT));

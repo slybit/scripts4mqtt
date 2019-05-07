@@ -36,7 +36,7 @@ body {
 
 .container_editor_area {
   tab-size: 4ch;
-  max-height: 100vh;
+  max-height: 80vh;
   overflow: auto;
   margin: 1.67em 0;
 }
