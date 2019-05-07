@@ -36,12 +36,12 @@ class Engine {
                 logger.info('ScriptAction published %s -> %s', topic, message);
                 return mqttClient.publish(topic, message, {'retain' : retain});
             }
-            
+
         }
         this.testbox = {
             log: logger,
             testStore: this.testStore,
-            mqttStore: this.mqttStore,            
+            mqttStore: this.mqttStore,
             vm: vm,
             put: function (key, value) {
                 testStore.set(key, value);
@@ -61,7 +61,7 @@ class Engine {
                 logger.info('TESTING script result: ScriptAction published %s -> %s', topic, message);
                 return true;
             }
-            
+
         }
         vm.createContext(this.sandbox);
         vm.createContext(this.testbox);
@@ -70,7 +70,7 @@ class Engine {
     }
 
     runScript(script) {
-        logger.debug('running script:\n# ----- start script -----\n%s\n# -----  end script  -----', script);
+        //logger.debug('running script:\n# ----- start script -----\n%s\n# -----  end script  -----', script);
         return vm.runInContext(script, this.sandbox);
     }
 
@@ -83,7 +83,7 @@ class Engine {
 
 
 class Singleton {
-  
+
     static getInstance(mqttClient) {
         if (!Singleton.instance) {
             if (mqttClient !== undefined) {
@@ -94,7 +94,7 @@ class Singleton {
         }
         return Singleton.instance;
     }
-  
+
   }
 
 module.exports = Singleton;

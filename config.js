@@ -1,13 +1,22 @@
 const yaml = require('js-yaml');
 const fs = require('fs');
 
-const file = process.env.MQTT4SCRIPTS_CONFIG || 'config.yaml';
+const FILE = process.env.MQTT4SCRIPTS_CONFIG || 'config.yaml';
+let CONFIG = undefined;
 
-exports.parse = function () {
 
-  if (fs.existsSync(file)) {
+exports.config = function () {
+  if (CONFIG === undefined) {
+    CONFIG = parse();
+  }
+  return CONFIG;
+}
+
+parse = function () {
+
+  if (fs.existsSync(FILE)) {
     try {
-      return yaml.safeLoad(fs.readFileSync(file, 'utf8'));
+      return yaml.safeLoad(fs.readFileSync(FILE, 'utf8'));
     } catch (e) {
       console.log(e);
       process.exit();
@@ -24,10 +33,9 @@ exports.parse = function () {
 }
 
 exports.getConfig = function () {
-  const file = process.env.MQTT4SCRIPTS_CONFIG || 'config.yaml';
-  if (fs.existsSync(file)) {
+  if (fs.existsSync(FILE)) {
     try {
-      return fs.readFileSync(file, 'utf8');
+      return fs.readFileSync(FILE, 'utf8');
     } catch (err) {
       console.log(err);
     }
@@ -46,11 +54,11 @@ exports.updateConfig = function (c) {
   }
 
   try {
-    fs.writeFileSync('newconfig.yaml', c.config);
+    fs.writeFileSync(FILE, c.config);
   } catch (e) {
     console.log(err);
     return { success: false, error: err.message };
   }
-
+  CONFIG = undefined;
   return { success: true };
 }

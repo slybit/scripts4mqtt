@@ -4,8 +4,7 @@ const path = require('path');
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
 const {logger, jsonlogger, getRuleLogs} = require('./logger.js');
-const {getConfig, updateConfig} = require('./config.js');
-const config = require('./config.js').parse();
+const {config, getConfig, updateConfig} = require('./config.js');
 const static = require('./static.js').parse();
 const rules = require('./rules.js');
 const validator = require('./validator.js');
@@ -13,7 +12,7 @@ const validator = require('./validator.js');
 const app = express();
 const router = express.Router();
 
-const API_PORT = process.env.API_PORT || config.port || 4000;
+const API_PORT = process.env.API_PORT || config().port || 4000;
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());

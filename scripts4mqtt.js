@@ -2,7 +2,7 @@
 const mqtt = require('mqtt');
 const {logger, jsonlogger} = require('./logger.js');
 const Engine = require('./engine.js');
-const config = require('./config.js').parse();
+const config = require('./config.js').config;
 const { pushover } = require('./utils.js');
 
 //jsonlogger.error("test", {test: 'hallo', bla: 'adsf'});
@@ -14,7 +14,7 @@ const  rules  = require('./rules.js');
 
 let justStarted = true;
 
-const mqttClient = mqtt.connect(config.mqtt.url, config.mqtt.options);
+const mqttClient = mqtt.connect(config().mqtt.url, config().mqtt.options);
 const engine = Engine.getInstance(mqttClient);
 // we start the timer checker here (and not in the constructor of the Rules class),
 // because otherwise a condition might already trigger before the engine singleton
@@ -55,9 +55,14 @@ let processMessage = function (topic, message, packet) {
 let setMqttHandlers = function (mqttClient) {
     mqttClient.on('connect', function () {
         logger.info('MQTT connected');
-        for (const topic of config.topics) {
-            mqttClient.subscribe(topic);
-            logger.verbose('subscribed to %s', topic);
+        if (config().topics) {
+            for (const topic of config().topics) {
+                mqttClient.subscribe(topic);
+                logger.verbose('subscribed to %s', topic);
+            }
+        } else {
+            mqttClient.subscribe('#');
+            logger.verbose('subscribed to all topics');
         }
     });
 
@@ -73,7 +78,7 @@ let setMqttHandlers = function (mqttClient) {
         processMessage(topic, message, packet); // this will update the store with the values
         // ignore the initial retained messages
         if (!packet.retain) justStarted = false;
-        let withActions = !justStarted || config.retained
+        let withActions = !justStarted || config().retained
         // send the message to the rule engine
         rules.mqttConditionChecker(topic, withActions);
     });

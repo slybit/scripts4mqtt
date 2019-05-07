@@ -6,19 +6,18 @@ const mustache = require('mustache');
 const { validateMqttCondition, validateMqttAction, validateCronCondition, validateEmailAction } = require('./validator');
 const {logger, jsonlogger} = require('./logger.js');
 const Engine = require('./engine.js');
-const config = require('./config.js').parse();
+const config = require('./config.js').config;
 const cronmatch = require('./cronmatch.js')
 const { SMTPTransporter, pushover } = require('./utils.js')
 
-const filename = process.env.MQTT4SCRIPTS_RULES || 'rules.yaml';
+const FILENAME = process.env.MQTT4SCRIPTS_RULES || 'rules.yaml';
 
 const topicToArray = function (topic) {
     return topic.split('/');
 }
 
 class Rules {
-    constructor(config) {
-        this.config = config;
+    constructor() {
         this.lastMinutes = -1;
         this.loadRules();
     }
@@ -27,9 +26,9 @@ class Rules {
         logger.info("Parsing rules");
         this.jsonContents = {};
         this.rules = {};
-        if (fs.existsSync(filename)) {
+        if (fs.existsSync(FILENAME)) {
             try {
-                this.jsonContents = yaml.safeLoad(fs.readFileSync(filename, 'utf8'));
+                this.jsonContents = yaml.safeLoad(fs.readFileSync(FILENAME, 'utf8'));
             } catch (e) {
                 logger.error(e.toString());
                 process.exit(1);
@@ -52,7 +51,7 @@ class Rules {
     saveRules() {
         logger.info("saving rules");
         try {
-            fs.writeFileSync("rules.yaml", yaml.safeDump(this.jsonContents));
+            fs.writeFileSync(FILENAME, yaml.safeDump(this.jsonContents));
         } catch (e) {
             logger.error(e);
         }
@@ -125,9 +124,9 @@ class Rules {
 
     validateRulesFile() {
         logger.info("Validating rules file");
-        if (fs.existsSync(filename)) {
+        if (fs.existsSync(FILENAME)) {
             try {
-                this.jsonContents = yaml.safeLoad(fs.readFileSync(filename, 'utf8'));
+                this.jsonContents = yaml.safeLoad(fs.readFileSync(FILENAME, 'utf8'));
             } catch (e) {
                 logger.error('Error while validating rules file: could not read rules file');
                 throw (new Error('Could not read rules file'));
@@ -497,7 +496,7 @@ class ScriptAction extends Action {
     }
 
     execute() {
-        logger.info('executing ScriptAction');        
+        logger.info('executing ScriptAction');
         try {
             Engine.getInstance().runScript(this.script);
             jsonlogger.info("ScriptAction executed", {ruleId: this.rule.id, ruleName: this.rule.name, type: "action", subtype: "script"});
@@ -524,7 +523,7 @@ class EMailAction extends Action {
     execute() {
         logger.info('executing EMailAction');
         const mailOptions = {
-            from: config.email.from,
+            from: config().email.from,
             ...this.msg
         };
 
@@ -705,7 +704,7 @@ class SimpleCondition extends Condition {
 
 
 
-const rules = new Rules(config);
+const rules = new Rules();
 
 //module.exports = {Rules, Rule}
 module.exports = rules;
