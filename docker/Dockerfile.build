@@ -1,0 +1,13 @@
+FROM node:carbon-jessie-slim
+ENTRYPOINT /build.sh
+
+# ref: https://medium.com/@alexeiled/docker-pattern-the-build-container-b0d0e86ad601
+
+# run with
+# docker run  -v $(pwd)/client:/source -v $(pwd)/build_app.sh:/usr/local/build/build_docker.sh nodebuilder
+
+
+
+# docker run --name scripts4mqtt -v /home/stefaan/scripts4mqtt/logs/:/logs/ -v /home/stefaan/scripts4mqtt/config.yaml:/usr/src/app/config.yaml -v /home/stefaan/scripts4mqtt/rules.yaml:/usr/src/app/rules.yaml --user 1000:1000 -p 80:4000 -i scripts4mqtt:1.0
+# docker run -it -v $(pwd):/source --user $(id -u):$(id -g) node:carbon-jessie-slim /bin/bash -c "cd /source/client && npm install && npm run build"
+
