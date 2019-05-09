@@ -7,10 +7,12 @@ fi
 git pull
 git checkout release
 # -- build the client --
-cd client
+#cd client
 #npm install
-npm run build
+#npm run build
+docker start -i nodebuilder
+rm -rf ./client/build/
+docker cp nodebuilder:/usr/local/build/source/build/ ./client/
 # -- build the docker
-cd ..
 docker build . --tag scripts4mqtt:"$1"
 
