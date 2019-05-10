@@ -16,7 +16,7 @@ Bel:
     type: mqtt
     trigger: on_flip_true
     topic: knx/status/15/2/3
-    eval: '{{M.val}} == 1'
+    eval: '{{M.val}} == "0x01"'
   ontrue:
     - type: pushover
       message: Notification from script4mqtt

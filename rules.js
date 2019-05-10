@@ -543,7 +543,7 @@ class EMailAction extends Action {
 class PushoverAction extends Action {
 
     constructor(json, rule) {
-        super(json), rule;
+        super(json, rule);
         this.msg = {
             message: json.message,
             title: json.title,
@@ -647,7 +647,7 @@ class MqttCondition extends Condition {
             logger.error(err);
         }
         logger.debug("MQTT Condition state updated from %s to %s; flipped = %s", this.oldState, this.state, this.flipped());
-        jsonlogger.info("MQTT condition evaluated", {ruleId: this.rule.id, ruleName: this.rule.name, type: "condition", subtype: "mqtt", details: `topic: ${this.topic}, value: ${data.M}, oldState: ${this.oldState}, state: ${this.state}, flipped: ${this.flipped()}`});
+        jsonlogger.info("MQTT condition evaluated", {ruleId: this.rule.id, ruleName: this.rule.name, type: "condition", subtype: "mqtt", details: `topic: ${this.topic}, value: ${data.M.val}, oldState: ${this.oldState}, state: ${this.state}, flipped: ${this.flipped()}`});
         return this.triggered();
     }
 
