@@ -8,7 +8,9 @@ const { pushover } = require('./utils.js');
 //jsonlogger.error("test", {test: 'hallo', bla: 'adsf'});
 
 // starts the API server
-require('./server.js');
+if (config().api.enabled === true) {
+    require('./server.js');
+}
 
 const  rules  = require('./rules.js');
 
