@@ -1,5 +1,4 @@
 /* 
-
 Source: https://github.com/svrnm/cronmatch
 
 The match method accepts two parameters:
@@ -11,8 +10,7 @@ The match method accepts two parameters:
     if (cronmatch.match(['* * * * * 3 *','* * * 29 2 * *'], Date.now())) {
         ...
     }
-
- */
+*/
 
 function expand(value, type, date) {
 

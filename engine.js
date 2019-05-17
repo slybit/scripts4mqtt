@@ -1,5 +1,27 @@
+/*
+Creates a controlled environment in which the ScriptActions are being run.
+It exposes the following functions:
+
+    put: function (key, value)
+
+        Store a value in the shared key/value store.
+
+    get: function(key, defaultValue)
+
+        Retrieves a value from the shared key/value store. If not found, the defaultValue is returned.
+
+    read: function(topic)
+
+        Reads the current value of a certain MQTT topic. If no messages have been published on the topic, "undefined" is returned.
+
+    write: function(topic, message, retain = false)
+
+        Write an MQTT message to the provided topic.
+        The message can be a string, a number or an object.
+*/
+
 const vm = require('vm');
-const {logger, jsonlogger} = require('./logger.js');
+const {logger} = require('./logger.js');
 
 const store = new Map();
 const testStore = new Map(); // only used for testing scripts
