@@ -1,10 +1,11 @@
 const express = require('express');
+const { spawn } = require('child_process');
 const path = require('path');
 // TODO: use winston express middleware instead of morgan? worth it?
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
-const {logger, getRuleLogs, getMqttLogs} = require('./logger.js');
-const {config, getConfig, updateConfig} = require('./config.js');
+const { logger, getRuleLogs, getMqttLogs } = require('./logger.js');
+const { config, getConfig, updateConfig } = require('./config.js');
 const rules = require('./rules.js');
 const validator = require('./validator.js');
 
@@ -45,7 +46,7 @@ router.post('/validate', (req, res) => {
     res.json(validator.validate(req.body));
 });
 
-router.get('/logs/rules', async (req, res) =>  {
+router.get('/logs/rules', async (req, res) => {
     try {
         const logs = await getRuleLogs();
         res.json(logs);
@@ -55,7 +56,7 @@ router.get('/logs/rules', async (req, res) =>  {
     }
 });
 
-router.get('/logs/mqtt', async (req, res) =>  {
+router.get('/logs/mqtt', async (req, res) => {
     try {
         const logs = await getMqttLogs();
         res.json(logs);
@@ -66,14 +67,23 @@ router.get('/logs/mqtt', async (req, res) =>  {
 });
 
 
-router.get('/config', (req, res) =>  {
-    res.json({ config : getConfig() });
+router.get('/config', (req, res) => {
+    res.json({ config: getConfig() });
 });
 
-router.post('/config', (req, res) =>  {
-    res.json(updateConfig(req.body));
+router.post('/config', (req, res) => {
+    let response = updateConfig(req.body);
+    res.json(response);
+    if (response.success) {
+        // restart using a child process
+        spawn(process.argv[0], process.argv.slice(1), {
+            detached: true,
+            stdio: 'inherit'
+        }).unref();
+        // kill the parent process;
+        process.exit();
+    }
 });
-
 
 
 app.use('/api', router);
@@ -81,7 +91,7 @@ app.use('/api', router);
 // ----
 const client = express.Router();
 client.use(express.static(path.join(__dirname, 'client', 'build')));
-client.get('/*', function(req, res) {
+client.get('/*', function (req, res) {
     res.sendFile(path.join(__dirname, 'client', 'build', 'index.html'));
 });
 app.use('/', client);

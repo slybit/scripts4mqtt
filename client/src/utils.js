@@ -122,11 +122,13 @@ export const staticData = {
         action: {
             mqtt: {
                 type: "mqtt",
+                delay: 0,
                 topic: "__REPLACE__",
                 value: "__REPLACE__"
             },
             pushover: {
                 type: "pushover",
+                delay: 0,
                 title: "__REPLACE__",
                 message: "",
                 sound: "pushover",
@@ -134,12 +136,14 @@ export const staticData = {
             },
             email: {
                 type: "email",
+                delay: 0,
                 to: "replace@mail.com",
                 subject: "__REPLACE__",
                 body: ""
             },
             script: {
                 type: "script",
+                delay: 0,
                 script: ""
             }
         }
@@ -192,10 +196,12 @@ export const staticData = {
         },
         action: {
             mqtt: [
+                { key: "delay", label: "Delay"},
                 { key: "topic", label: "Topic", props: { required: true } },
                 { key: "value", label: "Value", props: { required: true } },
             ],
             pushover: [
+                { key: "delay", label: "Delay"},
                 { key: "title", label: "Title", props: { required: true } },
                 { key: "message", label: "Message", type: "textarea", props: { rows: 5 } },
                 {
@@ -235,11 +241,13 @@ export const staticData = {
                 }
             ],
             email: [
+                { key: "delay", label: "Delay"},
                 { key: "to", label: "To", props: { required: true } },
                 { key: "subject", label: "Subject" },
                 { key: "body", label: "Body", type: "textarea", props: { rows: 10 } }
             ],
             script: [
+                { key: "delay", label: "Delay"},
                 { key: "script", label: "Script", type: "textarea", props: { rows: 30, style: { fontFamily: 'monospace', fontSize: '1rem' } } }
             ]
         }

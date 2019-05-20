@@ -42,7 +42,7 @@ export class Config extends React.Component {
                     console.log(response.data);
                     showError("Could not save config file.", response.data.error);
                 } else {
-                    showError("New configuration saved to server", "");
+                    showError("New configuration saved to server.", "Server has been restarted.");
                 }
             })
             .catch((error) => {
