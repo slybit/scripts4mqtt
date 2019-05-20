@@ -5,10 +5,6 @@ TimeDateUpdate:
       trigger: always
       'off': ''
       'on': 15 * * * *
-    - type: mqtt
-      trigger: 'no'
-      topic: __REPLACE__
-      eval: '{{true}}'
   ontrue:
     - type: script
       script: 'write(''knx/write/15/1/0'', new Date().toString());'

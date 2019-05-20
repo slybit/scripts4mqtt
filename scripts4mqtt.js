@@ -1,6 +1,6 @@
 'use strict'
 const mqtt = require('mqtt');
-const {logger, jsonlogger} = require('./logger.js');
+const {logger, mqttlogger} = require('./logger.js');
 const Engine = require('./engine.js');
 const config = require('./config.js').config;
 const { pushover } = require('./utils.js');
@@ -27,7 +27,7 @@ rules.scheduleTimerConditionChecker();
 let processMessage = function (topic, message, packet) {
     // message is a Buffer, so first convert it to a String
     message = message.toString();
-    logger.silly("MQTT received %s : %s", topic, message);
+    logger.silly("MQTT received %s : %s", topic, message);    
     // now parse the data
     let data = {};
     if (message === 'true') {
@@ -77,9 +77,11 @@ let setMqttHandlers = function (mqttClient) {
     });
 
     mqttClient.on('message', function (topic, message, packet) {
-        processMessage(topic, message, packet); // this will update the store with the values
+        processMessage(topic, message, packet); // this will update the store with the values        
         // ignore the initial retained messages
         if (!packet.retain) justStarted = false;
+        // log the message to the mqtt logger if not justStarted (old, retained messages are not logged)
+        if (!justStarted) mqttlogger.info("MQTT message recieved", {"topic" : topic, "msg": message.toString()});
         let withActions = !justStarted || config().retained
         // send the message to the rule engine
         rules.mqttConditionChecker(topic, withActions);

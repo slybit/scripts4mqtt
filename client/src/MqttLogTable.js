@@ -2,7 +2,7 @@ import React from "react";
 import ReactTable from 'react-table'
 import axios from 'axios';
 
-export class LogTable extends React.Component {
+export class MqttLogTable extends React.Component {
 
     constructor() {
         super();
@@ -17,7 +17,7 @@ export class LogTable extends React.Component {
     }
 
     loadLogsFromServer = () => {
-        axios.get('/api/logs')
+        axios.get('/api/logs/mqtt')
             .then((response) => {
                 this.setState({ logs: response.data, logsVisible: true });
             })
@@ -31,43 +31,39 @@ export class LogTable extends React.Component {
     render() {
         const columns = [
             {
+                id: 1,
                 Header: 'Timestamp',
                 accessor: 'timestamp',
                 width: 150
             },
             {
-                Header: 'Rule name',
-                accessor: 'ruleName',
-                width: 200
+                id: 2,
+                Header: 'Topic',
+                accessor: 'topic',
+                width: 300,
+                Cell: row => (
+                    <span title={row.value}>
+                        {row.value}
+                    </span>
+                  )
             },
             {
-                Header: 'Type',
-                accessor: 'type',
-                width: 100
-            }, {
-                Header: 'Subtype',
-                accessor: 'subtype',
-                width: 100
-            }, {
-                Header: 'Level',
-                accessor: 'level',
-                width: 100
-            }, {
-                Header: 'Details',
-                accessor: 'details'
+                id: 3,
+                Header: 'Message',
+                accessor: 'msg'
             }]
 
-        return <ReactTable
+        return <div><ReactTable
             data={this.state.logs}
             columns={columns}
-            className="-striped -highlight"
+            className="-striped -highlight grid"
             defaultSorted={[
                 {
                   id: "timestamp",
                   desc: true
                 }
               ]}
-        />
+        /></div>
 
     }
 

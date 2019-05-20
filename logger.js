@@ -27,6 +27,14 @@ var rulesTransport = new (transports.DailyRotateFile)({
   format: format.combine(format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }), format.json())
 });
 
+let mqttTransport = new (transports.DailyRotateFile)({
+  filename: 'mqtt-%DATE%.log',
+  datePattern: 'YYYY-MM-DD',
+  zippedArchive: false,
+  maxFiles: '14d',
+  dirname: LOGPATH,
+  format: format.combine(format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }), format.json())
+});
 
 const consoleFormat = combine(
   timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
@@ -57,27 +65,39 @@ const jsonlogger = createLogger({
   ],
 });
 
+const mqttlogger = createLogger({
+  transports: [
+    mqttTransport
+  ],
+});
 
-const getRuleLogs = function () {
-  // registers
-  let line_no = 0;
+
+const getRuleLogs = function () {    
+  return getLogs('rules');
+}
+
+const getMqttLogs = function () {    
+  return getLogs('mqtt');
+}
+
+const getLogs = function (prefix) {    
   const logs = [];
   let MAXLINES = 5000;
   return new Promise(async function (resolve) {
         // list log files
         const files = fs.readdirSync(LOGPATH);
-        const logfiles = files.filter(file => file.startsWith('rules-')).sort().reverse();
+        const logfiles = files.filter(file => file.startsWith(prefix+'-')).sort().reverse();
 
         for (let f of logfiles) {
           console.log(f);
-          await parseRuleLogFile(path.join(LOGPATH, f), logs);
+          await parseLogFile(path.join(LOGPATH, f), logs);
           if (logs.length > MAXLINES) break;
         }
         resolve(logs.splice(0, Math.min(logs.length, MAXLINES)));
   });
 }
 
-const parseRuleLogFile = function (filename, logs) {
+const parseLogFile = function (filename, logs) {
   return new Promise(function (resolve) {
     // create instance of readline
     // each instance is associated with single input stream
@@ -99,4 +119,4 @@ const parseRuleLogFile = function (filename, logs) {
 
 
 
-module.exports = { logger, jsonlogger, getRuleLogs };
+module.exports = { logger, jsonlogger, mqttlogger, getRuleLogs, getMqttLogs };

@@ -10,6 +10,10 @@ body {
   color: #333;
 }
 
+.grid {
+  font-size: 13px;
+}
+
 .code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace;
   background: #e7e7e7;
