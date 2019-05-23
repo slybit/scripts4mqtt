@@ -31,7 +31,7 @@ export class RulesLogTable extends React.Component {
     render() {
         const columns = [
             {
-                id:  1,
+                id:  'timestamp',
                 Header: 'Timestamp',
                 accessor: 'timestamp',
                 width: 150
@@ -47,20 +47,20 @@ export class RulesLogTable extends React.Component {
                 Header: 'Type',
                 accessor: 'type',
                 width: 100
-            }, 
+            },
             {
                 id: 4,
                 Header: 'Subtype',
                 accessor: 'subtype',
                 width: 100
-            }, 
+            },
             {
                 id: 5,
                 Header: 'Level',
                 accessor: 'level',
                 width: 100
-            }, 
-            {   
+            },
+            {
                 id: 6,
                 Header: 'Details',
                 accessor: 'details'

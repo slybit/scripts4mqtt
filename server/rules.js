@@ -10,7 +10,7 @@ const config = require('./config.js').parse();
 const cronmatch = require('./cronmatch.js')
 const { SMTPTransporter, pushover } = require('./utils.js')
 
-const FILENAME = process.env.MQTT4SCRIPTS_RULES || 'rules.yaml';
+const FILENAME = process.env.MQTT4SCRIPTS_RULES || '../config/rules.yaml';
 
 const topicToArray = function (topic) {
     return topic.split('/');

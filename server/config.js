@@ -6,7 +6,7 @@ It supports reading and updating the configuration file.
 const yaml = require('js-yaml');
 const fs = require('fs');
 
-const FILE = process.env.MQTT4SCRIPTS_CONFIG || 'config.yaml';
+const FILE = process.env.MQTT4SCRIPTS_CONFIG || '../config/config.yaml';
 
 
 /* Exported
