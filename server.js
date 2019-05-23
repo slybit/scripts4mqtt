@@ -5,14 +5,15 @@ const path = require('path');
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
 const { logger, getRuleLogs, getMqttLogs } = require('./logger.js');
-const { config, getConfig, updateConfig } = require('./config.js');
+const { updateConfig } = require('./config.js');
+const config = require('./config.js').parse();
 const rules = require('./rules.js');
 const validator = require('./validator.js');
 
 const app = express();
 const router = express.Router();
 
-const API_PORT = process.env.API_PORT || config().api.port || 4000;
+const API_PORT = process.env.API_PORT || config.api.port || 4000;
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
@@ -68,7 +69,7 @@ router.get('/logs/mqtt', async (req, res) => {
 
 
 router.get('/config', (req, res) => {
-    res.json({ config: getConfig() });
+    res.json({ config: getconfig });
 });
 
 router.post('/config', (req, res) => {

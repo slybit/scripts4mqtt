@@ -6,7 +6,7 @@ const mustache = require('mustache');
 const { validateMqttCondition, validateMqttAction, validateCronCondition, validateEmailAction } = require('./validator');
 const {logger, jsonlogger} = require('./logger.js');
 const Engine = require('./engine.js');
-const config = require('./config.js').config;
+const config = require('./config.js').parse();
 const cronmatch = require('./cronmatch.js')
 const { SMTPTransporter, pushover } = require('./utils.js')
 
@@ -523,7 +523,7 @@ class EMailAction extends Action {
     execute() {
         logger.info('executing EMailAction');
         const mailOptions = {
-            from: config().email.from,
+            from: config.email.from,
             ...this.msg
         };
 

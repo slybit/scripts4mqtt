@@ -1,12 +1,12 @@
 const { createLogger, format, transports } = require('winston');
 require('winston-daily-rotate-file');
 const { combine, timestamp, printf } = format;
-const config  = require('./config.js').config;
+const config  = require('./config.js').parse();
 const readline = require('readline');
 const fs = require('fs');
 const path = require('path');
 
-const LOGPATH = config().logpath || './logs/';
+const LOGPATH = config.logpath || './logs/';
 
 var defaultTransport = new (transports.DailyRotateFile)({
   filename: 'default-%DATE%.log',
@@ -46,7 +46,7 @@ const consoleFormat = combine(
 
 
 const logger = createLogger({
-  level: config().loglevel,
+  level: config.loglevel,
   transports: [
     new transports.Console({
       format: consoleFormat
@@ -72,15 +72,15 @@ const mqttlogger = createLogger({
 });
 
 
-const getRuleLogs = function () {    
+const getRuleLogs = function () {
   return getLogs('rules');
 }
 
-const getMqttLogs = function () {    
+const getMqttLogs = function () {
   return getLogs('mqtt');
 }
 
-const getLogs = function (prefix) {    
+const getLogs = function (prefix) {
   const logs = [];
   let MAXLINES = 5000;
   return new Promise(async function (resolve) {

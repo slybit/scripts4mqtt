@@ -2,13 +2,13 @@
 const mqtt = require('mqtt');
 const {logger, mqttlogger} = require('./logger.js');
 const Engine = require('./engine.js');
-const config = require('./config.js').config;
+const config = require('./config.js').parse();
 const { pushover } = require('./utils.js');
 
 //jsonlogger.error("test", {test: 'hallo', bla: 'adsf'});
 
 // starts the API server
-if (config().api.enabled === true) {
+if (config.api && config.api.enabled === true) {
     require('./server.js');
 }
 
@@ -16,7 +16,7 @@ const  rules  = require('./rules.js');
 
 let justStarted = true;
 
-const mqttClient = mqtt.connect(config().mqtt.url, config().mqtt.options);
+const mqttClient = mqtt.connect(config.mqtt.url, config.mqtt.options);
 const engine = Engine.getInstance(mqttClient);
 // we start the timer checker here (and not in the constructor of the Rules class),
 // because otherwise a condition might already trigger before the engine singleton
@@ -27,7 +27,7 @@ rules.scheduleTimerConditionChecker();
 let processMessage = function (topic, message, packet) {
     // message is a Buffer, so first convert it to a String
     message = message.toString();
-    logger.silly("MQTT received %s : %s", topic, message);    
+    logger.silly("MQTT received %s : %s", topic, message);
     // now parse the data
     let data = {};
     if (message === 'true') {
@@ -57,8 +57,8 @@ let processMessage = function (topic, message, packet) {
 let setMqttHandlers = function (mqttClient) {
     mqttClient.on('connect', function () {
         logger.info('MQTT connected');
-        if (config().topics) {
-            for (const topic of config().topics) {
+        if (config.topics) {
+            for (const topic of config.topics) {
                 mqttClient.subscribe(topic);
                 logger.verbose('subscribed to %s', topic);
             }
@@ -77,12 +77,12 @@ let setMqttHandlers = function (mqttClient) {
     });
 
     mqttClient.on('message', function (topic, message, packet) {
-        processMessage(topic, message, packet); // this will update the store with the values        
+        processMessage(topic, message, packet); // this will update the store with the values
         // ignore the initial retained messages
         if (!packet.retain) justStarted = false;
         // log the message to the mqtt logger if not justStarted (old, retained messages are not logged)
         if (!justStarted) mqttlogger.info("MQTT message recieved", {"topic" : topic, "msg": message.toString()});
-        let withActions = !justStarted || config().retained
+        let withActions = !justStarted || config.retained
         // send the message to the rule engine
         rules.mqttConditionChecker(topic, withActions);
     });
