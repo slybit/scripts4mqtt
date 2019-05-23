@@ -77,12 +77,14 @@ router.post('/config', (req, res) => {
     res.json(response);
     if (response.success) {
         // restart using a child process
+/*
         spawn(process.argv[0], process.argv.slice(1), {
             detached: true,
             stdio: 'inherit'
         }).unref();
         // kill the parent process;
         process.exit();
+*/
     }
 });
 
