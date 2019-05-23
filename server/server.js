@@ -5,7 +5,7 @@ const path = require('path');
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
 const { logger, getRuleLogs, getMqttLogs } = require('./logger.js');
-const { updateConfig } = require('./config.js');
+const { getConfig, updateConfig } = require('./config.js');
 const config = require('./config.js').parse();
 const rules = require('./rules.js');
 const validator = require('./validator.js');
@@ -69,7 +69,7 @@ router.get('/logs/mqtt', async (req, res) => {
 
 
 router.get('/config', (req, res) => {
-    res.json({ config: getconfig });
+    res.json({ config: getConfig() });
 });
 
 router.post('/config', (req, res) => {
@@ -91,9 +91,9 @@ app.use('/api', router);
 
 // ----
 const client = express.Router();
-client.use(express.static(path.join(__dirname, 'client', 'build')));
+client.use(express.static(path.join(__dirname, '..', 'client', 'build')));
 client.get('/*', function (req, res) {
-    res.sendFile(path.join(__dirname, 'client', 'build', 'index.html'));
+    res.sendFile(path.join(__dirname, '..', 'client', 'build', 'index.html'));
 });
 app.use('/', client);
 
