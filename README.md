@@ -25,11 +25,15 @@ Start by downloading the latest release from github and unzip it in some folder 
 
 Starts scripts4mqtt using
 ```sh
+$ cd server
 $ npm install  # just once to install all dependencies
-$ node scripts4mqtt.js
+$ npm install -g nodemon # just once
+$ nodemon --watch ../config -e yaml --ignore ../config/rules.yaml scripts4mqtt.js
 ```
 
 This will start the scripts4mqtt server and also the API and the web client if it is enabled in the config file (see further below for details).
+
+I use nodemon to automatically restart the server whenever the `config/config.yaml` file is changed. This was added because the web api allows you to edit the config file and most updates of the config are only taken into account with a server restart. If you don not need this feature, you can just use `node scripts4mqtt.js` to start the server.
 
 By default, the web client runs on port 4000 and you can test it by browsing to [http://localhost:4000/](http://localhost:4000/).
 
@@ -39,29 +43,55 @@ By default, the web client runs on port 4000 and you can test it by browsing to 
 #### Use the image from docker hub:
 
 ```sh
-$ docker run --name scripts4mqtt -v /path/to/scripts4mqtt/logs/:/logs/ -v /path/to/scripts4mqtt/config.yaml:/usr/src/app/config.yaml -v /path/to/scripts4mqtt/rules.yaml:/usr/src/app/rules.yaml --user 1000:1000 -p 4000:4000 bluemalt/scripts4mqtt
+$ docker run --name scripts4mqtt -v /hostpath/to/scripts4mqtt/logs/:/scripts4mqtt/logs/ -v /hostpath/to/scripts4mqtt/config/:/scripts4mqtt/config/ --user 1000:1000 -p 4000:4000 slybit/scripts4mqtt
 ```
 
 Since scripts4mqtt is writing to the 3 mounted folders/files, you have to make sure that you are running the container with *your* user id and group id by adapting the `--user` parameter. If you omit the `--user` parameter, the container will run as root and the log files, config.yaml and rules.yaml will also be owned by root. Not only is it bad practice to run containers as root when not required, it is also inconvenient.
 
-#### Build it yourself
+You should make sure that the `/hostpath/to/scripts4mqtt/logs/` and the `/hostpath/to/scripts4mqtt/config` folders exist prior to starting the container. If they do not exist, docker will create them and they will be owned by `root`!
+
+
+### From source
+
+Clone the latest master branch from github.
+
+Build the React web app and start the server:
 
 ```sh
-$ docker build . --tag scripts4mqtt
-$ docker run --name scripts4mqtt -v /path/to/scripts4mqtt/logs/:/logs/ -v /path/to/scripts4mqtt/config.yaml:/usr/src/app/config.yaml -v /path/to/scripts4mqtt/rules.yaml:/usr/src/app/rules.yaml --user 1000:1000 -p 4000:4000 scripts4mqtt
+$ cd client
+$ npm install # gonna install quite a lot of development dependencies
+$ npm run build # will build the final react web app in the 'client\build' folder
+$ cd ../server
+$ npm install # server dependencies
+$ node scripts4mqtt # will start the server and web api and react web app
 ```
 
-Same remark abou the `--user` parameter applies here.
+Or build your own docker image:
 
-### If you wish to develop scripts4mqtt
-
-Simply clone the repository and start the server with:
 ```sh
+$ ./build_docker.sh VERSION
+```
+
+The script basically goes through the steps above (building the client, etc.) and then runs a 'docker build' to create an image tagged with 'scripts4mqtt:VERSION'.
+
+Finally start your own container:
+
+```sh
+$ docker run --name scripts4mqtt -v /hostpath/to/scripts4mqtt/logs/:/scripts4mqtt/logs/ -v /hostpath/to/scripts4mqtt/config/:/scripts4mqtt/config/ --user 1000:1000 -p 4000:4000 scripts4mqtt:VERSION
+```
+
+
+## If you wish to develop scripts4mqtt
+
+For development, it is highly recommended to run the `server` and `client` separately. This way, you get all the advantage of the React development tools and you do not have to rebuild the React app for every change you make.
+
+Clone the repository and start the server with:
+```sh
+$ cd server
 $ npm install
-$ node scripts4mqtt.js
+$ node scripts4mqtt.js # or nodemon --watch ../config -e yaml --ignore ../config/rules.yaml scripts4mqtt.js
 ```
 This will start the server and the API listening on port 4000 by default.
-
 
 Start the client with:
 ```sh
@@ -69,11 +99,11 @@ $ cd client
 $ npm install
 $ npm start
 ```
-This will start the React web client on port 3000. The web client will connect to the API on port 4000. This port can be configured in the `package.json` file in the client folder by adapting the `proxy` URL.
+This will start the React web client on port 3000. The web client will connect to the API on port 4000. This port can be configured in the `client\package.json` file in the client folder by adapting the `proxy` URL.
 
 ## Configuration
 
-The configuration is done by adapting the `path/to/scripts4mqtt/config.yaml` file. The default file contains all options and documentation to explain the options.
+The configuration is done by adapting the `hostpath/to/scripts4mqtt/config/config.yaml` file. The default file contains all options and documentation to explain the options.
 
 ## Setting up Rules
 

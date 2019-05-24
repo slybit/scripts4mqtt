@@ -5,14 +5,12 @@ if [ "$#" -ne 1 ]; then
 fi
 # -- make sure we have the latest release code --
 git pull
-git checkout release
+git checkout master
 # -- build the client --
-#cd client
-#npm install
-#npm run build
-docker start -i nodebuilder
-rm -rf ./client/build/
-docker cp nodebuilder:/usr/local/build/source/build/ ./client/
+cd client
+npm install
+npm run build
 # -- build the docker
+cd ..
 docker build . --tag scripts4mqtt:"$1"
 
