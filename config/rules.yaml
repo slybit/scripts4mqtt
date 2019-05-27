@@ -10,8 +10,8 @@ TimeDateUpdate:
       script: 'write(''knx/write/15/1/0'', new Date().toString());'
     - type: script
       script: 'write(''knx/write/15/1/1'', new Date().toString());'
-Bel:
-  name: Bel
+DoorBell:
+  name: Doorbell
   condition:
     type: mqtt
     trigger: on_flip_true
@@ -20,11 +20,11 @@ Bel:
   ontrue:
     - type: pushover
       message: Notification from script4mqtt
-      title: Bel! Bel!
+      title: Doorbell ringing!
       sound: bike
       priority: 1
-Achtergevel:
-  name: Afdak_achteraan
+Back_of_the_house:
+  name: Back of the house
   condition:
     type: and
     condition:
@@ -49,8 +49,8 @@ Achtergevel:
     - type: mqtt
       topic: knx/set/0/0/208
       value: 0
-Voordeur:
-  name: Voordeur
+Front_door:
+  name: Front door
   condition:
     type: and
     condition:
@@ -71,8 +71,8 @@ Voordeur:
     - type: mqtt
       topic: knx/set/0/0/202
       value: 1
-Afdak:
-  name: Afdak
+Complex_script:
+  name: Complex script
   condition:
     type: mqtt
     trigger: always
@@ -103,69 +103,8 @@ Afdak:
             write("knx/write/0/0/208", "1");
             break;
         }
-StatusBeneden:
-  name: StatusBeneden
-  condition:
-    type: or
-    condition:
-      - type: mqtt
-        trigger: always
-        topic: knx/status/0/0/15
-        eval: '{{M.val}} == 1'
-      - type: mqtt
-        trigger: always
-        topic: knx/status/0/0/16
-        eval: '{{M.val}} == 1'
-      - type: mqtt
-        trigger: always
-        topic: knx/status/0/0/17
-        eval: '{{M.val}} == 1'
-      - type: mqtt
-        trigger: always
-        topic: knx/status/0/0/18
-        eval: '{{M.val}} == 1'
-      - type: mqtt
-        trigger: always
-        topic: knx/status/0/0/19
-        eval: '{{M.val}} == 1'
-      - type: mqtt
-        trigger: always
-        topic: knx/status/0/0/20
-        eval: '{{M.val}} == 1'
-      - type: mqtt
-        trigger: always
-        topic: knx/status/0/0/22
-        eval: '{{M.val}} == 1'
-      - type: mqtt
-        trigger: always
-        topic: knx/status/0/0/23
-        eval: '{{M.val}} == 1'
-      - type: mqtt
-        trigger: always
-        topic: knx/status/0/0/207
-        eval: '{{M.val}} == 1'
-      - type: mqtt
-        trigger: always
-        topic: knx/status/0/0/208
-        eval: '{{M.val}} == 1'
-      - type: mqtt
-        trigger: always
-        topic: knx/status/0/0/211
-        eval: '{{M.val}} == 1'
-      - type: mqtt
-        trigger: always
-        topic: knx/status/0/0/212
-        eval: '{{M.val}} == 1'
-  ontrue:
-    - type: mqtt
-      topic: knx/set/0/6/1
-      value: 1
-  onfalse:
-    - type: mqtt
-      topic: knx/set/0/6/1
-      value: 0
-BadkamerVentilatie:
-  name: BadkamerVentilatie
+Bathroom_ventilatin:
+  name: Bathroom ventilation
   condition:
     type: mqtt
     trigger: always
@@ -190,8 +129,8 @@ BadkamerVentilatie:
       topic: knx/set/2/1/4
       value: 0
       delay: 600000
-Ventilatie:
-  name: Ventilatie
+SetVentilationFromHassio:
+  name: Ventilation
   condition:
     type: mqtt
     trigger: always
