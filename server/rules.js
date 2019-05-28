@@ -522,6 +522,8 @@ class EMailAction extends Action {
 
     execute() {
         logger.info('executing EMailAction');
+        const action = this;
+
         const mailOptions = {
             from: config.email.from,
             ...this.msg
@@ -533,7 +535,7 @@ class EMailAction extends Action {
                 logger.error(err);
             } else {
                 logger.info('mail sent succesfully');
-                jsonlogger.info("EMailAction executed", {ruleId: this.rule.id, ruleName: this.rule.name, type: "action", subtype: "email", details: `subject: ${this.msg.subject}`});
+                jsonlogger.info("EMailAction executed", {ruleId: action.rule.id, ruleName: action.rule.name, type: "action", subtype: "email", details: `subject: ${action.msg.subject}`});
             }
         });
     }
@@ -554,13 +556,14 @@ class PushoverAction extends Action {
 
     execute() {
         logger.info('executing PushoverAction');
+        const action = this;
         pushover.send(this.msg, function (err, result) {
             if (err) {
                 logger.error('ERROR sending Pushover notification');
                 logger.error(err);
             } else {
                 logger.info('Pushover notification sent succesfully');
-                jsonlogger.info("PushoverAction executed", {ruleId: this.rule.id, ruleName: this.rule.name, type: "action", subtype: "pushover", details: `subject: ${this.msg.title}`});
+                jsonlogger.info("PushoverAction executed", {ruleId: action.rule.id, ruleName: action.rule.name, type: "action", subtype: "pushover", details: `subject: ${action.msg.title}`});
             }
         });
     }

@@ -13,7 +13,7 @@ It consists of 2 parts:
 The server is a node.js application with a simple Express based API.
 The client is a React based web application, consisting only of static HTML and Javascript pages that are served by the server.
 
-Note that the use of the API and the client is optional.
+The use of the API and the client is optional.
 
 ## Installation
 
