@@ -28,23 +28,28 @@ let processMessage = function (topic, message, packet) {
     // message is a Buffer, so first convert it to a String
     message = message.toString();
     logger.silly("MQTT received %s : %s", topic, message);
-    // now parse the data
-    let data = {};
+    // now parse the data   
+    let data = undefined; 
     if (message === 'true') {
-        data.val = true;
+        data = {val : true} ;
     } else if (message === 'false') {
-        data.val = false;
+        data = {val : false} ;
     } else if (isNaN(message)) {
         try {
             data = JSON.parse(message);
         } catch (err) {
             //logger.error('could not parse message to json: %s', message);
-            data.val = message; // will be a string
+            data = {val : message} ; // will be a string
         }
-    } else {
-        data.val = Number(message);
+    } else {        
+        data = {val : Number(message)};
     }
-    if (!data.ts) data.ts = (new Date).getTime();
+    // add our own timestamp
+    data.__ts__ = (new Date).getTime();
+    // data is now an object with
+    // - a timestamp in __ts__
+    // - a single value (string or number) stored in 'val'
+    // - or a bunch of fields taken from the message if the message was JSON
 
     if (!data) {
         logger.warn('did not understand message %s on topic %s', message, topic)

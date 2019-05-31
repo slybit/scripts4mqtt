@@ -90,15 +90,18 @@ const getLogs = function (prefix) {
 
         for (let f of logfiles) {
           console.log(f);
-          await parseLogFile(path.join(LOGPATH, f), logs);
+          await parseLogFile(path.join(LOGPATH, f), MAXLINES - logs.length, logs);          
           if (logs.length > MAXLINES) break;
         }
-        resolve(logs.splice(0, Math.min(logs.length, MAXLINES)));
+        // keep at max MAXLINES
+        logs.splice(MAXLINES);
+        resolve(logs);
   });
 }
 
-const parseLogFile = function (filename, logs) {
+const parseLogFile = function (filename, maxLineCount, logs) {
   return new Promise(function (resolve) {
+    const buffer = [];
     // create instance of readline
     // each instance is associated with single input stream
     let rl = readline.createInterface({
@@ -107,13 +110,20 @@ const parseLogFile = function (filename, logs) {
 
     // event is emitted after each line
     rl.on('line', function (line) {
-      logs.push(JSON.parse(line));
+      //logs.push(JSON.parse(line));
+      buffer.push(line);
     });
 
     // end
-    rl.on('close', function (line) {
+    rl.on('close', function () {
+      // keep only the required number of lines at the END of the buffer
+      buffer.splice(0, buffer.length-maxLineCount);
+      for (line of buffer) {
+        logs.push(JSON.parse(line));
+      }
       resolve(logs);
     });
+    
   });
 }
 
