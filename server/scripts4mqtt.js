@@ -37,6 +37,8 @@ let processMessage = function (topic, message, packet) {
     } else if (isNaN(message)) {
         try {
             data = JSON.parse(message);
+            // sometimes JSON.parse does not return an object...
+            if (typeof data !== 'object') data = {val: data};
         } catch (err) {
             //logger.error('could not parse message to json: %s', message);
             data = {val : message} ; // will be a string
