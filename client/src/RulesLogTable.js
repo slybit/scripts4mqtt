@@ -19,7 +19,7 @@ export class RulesLogTable extends React.Component {
     loadLogsFromServer = () => {
         axios.get('/api/logs/rules')
             .then((response) => {
-                this.setState({ logs: response.data, logsVisible: true });
+                this.setState({ logs: response.data });
             })
             .catch((error) => {
                 // TODO: inform user
@@ -33,7 +33,7 @@ export class RulesLogTable extends React.Component {
             {
                 id:  'timestamp',
                 Header: 'Timestamp',
-                accessor: 'timestamp',
+                accessor: 'timestamp',                
                 width: 150
             },
             {
@@ -53,13 +53,7 @@ export class RulesLogTable extends React.Component {
                 Header: 'Subtype',
                 accessor: 'subtype',
                 width: 100
-            },
-            {
-                id: 5,
-                Header: 'Level',
-                accessor: 'level',
-                width: 100
-            },
+            },            
             {
                 id: 6,
                 Header: 'Details',
@@ -68,6 +62,9 @@ export class RulesLogTable extends React.Component {
 
         return <ReactTable
             data={this.state.logs}
+            filterable
+            defaultFilterMethod={(filter, row) =>
+                String(row[filter.id]).includes(filter.value)}
             columns={columns}
             className="-striped -highlight grid"
             defaultSorted={[

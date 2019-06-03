@@ -2,12 +2,12 @@ import React from "react";
 import ReactTable from 'react-table'
 import axios from 'axios';
 
-export class MqttLogTable extends React.Component {
+export class StoreTable extends React.Component {
 
     constructor() {
         super();
         this.state = {
-            logs: []
+            store: []
         }
     }
 
@@ -17,9 +17,9 @@ export class MqttLogTable extends React.Component {
     }
 
     loadLogsFromServer = () => {
-        axios.get('/api/logs/mqtt')
+        axios.get('/api/store')
             .then((response) => {
-                this.setState({ logs: response.data });
+                this.setState({ store: response.data });
             })
             .catch((error) => {
                 // TODO: inform user
@@ -31,15 +31,9 @@ export class MqttLogTable extends React.Component {
     render() {
         const columns = [
             {
-                id: 'timestamp',
-                Header: 'Timestamp',
-                accessor: 'timestamp',                
-                width: 150
-            },
-            {
-                id: 2,
+                id: 'topic',
                 Header: 'Topic',
-                accessor: 'topic',
+                accessor: 'topic',                
                 width: 300,
                 Cell: row => (
                     <span title={row.value}>
@@ -48,13 +42,13 @@ export class MqttLogTable extends React.Component {
                   )
             },
             {
-                id: 3,
-                Header: 'Message',
-                accessor: 'msg'
+                id: 2,
+                Header: 'Value',
+                accessor: 'value'
             }]
 
         return <div><ReactTable
-            data={this.state.logs}
+            data={this.state.store}
             filterable
             defaultFilterMethod={(filter, row) =>
                 String(row[filter.id]).includes(filter.value)}
@@ -62,7 +56,7 @@ export class MqttLogTable extends React.Component {
             className="-striped -highlight grid"
             defaultSorted={[
                 {
-                  id: "timestamp",
+                  id: "topic",
                   desc: true
                 }
               ]}

@@ -101,6 +101,20 @@ class Engine {
         return vm.runInContext(script, this.testbox);
     }
 
+    /**
+     * Dumps the current contents of the store as an array
+     */
+    dumpStore() {
+        let a = [];
+        for (let key of this.mqttStore.keys()) {
+            a.push({"topic": key, "value": JSON.stringify(this.mqttStore.get(key).data)});
+        }
+        for (let key of this.store.keys()) {
+            a.push({"topic": "__STORE__" + key, "value": JSON.stringify(this.store.get(key))});
+        }
+        return a;
+    }
+
 }
 
 

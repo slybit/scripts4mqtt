@@ -8,6 +8,7 @@ const { logger, getRuleLogs, getMqttLogs } = require('./logger.js');
 const { getConfig, updateConfig } = require('./config.js');
 const config = require('./config.js').parse();
 const rules = require('./rules.js');
+const Engine = require('./engine.js');
 const validator = require('./validator.js');
 
 const app = express();
@@ -86,6 +87,16 @@ router.post('/config', (req, res) => {
         process.exit();
 */
     }
+});
+
+router.get('/store',  (req, res) => {
+    try {
+        const dump = Engine.getInstance().dumpStore();
+        res.json(dump);
+    } catch (err) {
+        logger.error('Error dumping store');
+        res.json([]);
+    }    
 });
 
 

@@ -5,6 +5,7 @@ import { AppContainer } from "./containers";
 import Editor from './Editor';
 import { RulesLogTable } from './RulesLogTable';
 import { MqttLogTable } from './MqttLogTable';
+import { StoreTable } from './StoreTable';
 import { Config } from './Config';
 
 export default class App extends Component {
@@ -23,6 +24,9 @@ export default class App extends Component {
                         <NavLink tag={RRNavLink} exact to="/logs/mqtt" activeClassName="active">MQTT Logs</NavLink>
                     </NavItem>
                     <NavItem>
+                        <NavLink tag={RRNavLink} exact to="/store" activeClassName="active">Data Store</NavLink>
+                    </NavItem>
+                    <NavItem>
                         <NavLink tag={RRNavLink} exact to="/config" activeClassName="active">Config</NavLink>
                     </NavItem>
                 </Nav>
@@ -32,6 +36,7 @@ export default class App extends Component {
                     <Route path='/editor' component={Editor}></Route>
                     <Route path='/logs/rules' component={RulesLogTable}></Route>
                     <Route path='/logs/mqtt' component={MqttLogTable}></Route>
+                    <Route path='/store' component={StoreTable}></Route>
                     <Route path='/config' component={Config}></Route>
                 </Switch>
             </AppContainer>
