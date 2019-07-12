@@ -4,7 +4,7 @@ const util = require('util');
 const crypto = require('crypto');
 const mustache = require('mustache');
 const { validateMqttCondition, validateMqttAction, validateCronCondition, validateEmailAction } = require('./validator');
-const {logger, jsonlogger} = require('./logger.js');
+const {logger, jsonlogger, logbooklogger} = require('./logger.js');
 const Engine = require('./engine.js');
 const config = require('./config.js').parse();
 const cronmatch = require('./cronmatch.js')
@@ -365,6 +365,9 @@ class Rule {
                 case "pushover":
                     result.push(new PushoverAction(a, this));
                     break;
+                case "logbook":
+                    result.push(new LogBookAction(a, this));
+                    break;
                 default:
                     throw new Error('Unknown action type ' + a.type);
             }
@@ -569,6 +572,26 @@ class PushoverAction extends Action {
     }
 
 }
+
+
+class LogBookAction extends Action {
+
+    constructor(json, rule) {
+        super(json, rule);    
+        this.message = json.message;    
+    }
+
+    execute() {        
+        if (this.message !== undefined) {            
+            logbooklogger.info("Entry", {message: this.message});
+            logger.info('LogBookAction called with message %s', this.message);
+            jsonlogger.info("LogBookAction executed", {ruleId: this.rule.id, ruleName: this.rule.name, type: "action", subtype: "logbook", details: `message: ${this.message}`});
+            
+        }
+    }
+
+}
+
 
 
 

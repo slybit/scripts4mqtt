@@ -8,6 +8,7 @@ const path = require('path');
 
 const LOGPATH = config.logpath || '../logs/';
 
+// Transport for the application logs
 var defaultTransport = new (transports.DailyRotateFile)({
   filename: 'default-%DATE%.log',
   datePattern: 'YYYY-MM-DD',
@@ -17,7 +18,7 @@ var defaultTransport = new (transports.DailyRotateFile)({
   format: format.combine(format.timestamp(), format.splat(), format.json())
 });
 
-
+// Transport for the Rules logs
 var rulesTransport = new (transports.DailyRotateFile)({
   filename: 'rules-%DATE%.log',
   datePattern: 'YYYY-MM-DD',
@@ -27,11 +28,22 @@ var rulesTransport = new (transports.DailyRotateFile)({
   format: format.combine(format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }), format.json())
 });
 
+// Transport for the MQTT logs
 let mqttTransport = new (transports.DailyRotateFile)({
   filename: 'mqtt-%DATE%.log',
   datePattern: 'YYYY-MM-DD',
   zippedArchive: false,
   maxFiles: '14d',
+  dirname: LOGPATH,
+  format: format.combine(format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }), format.json())
+});
+
+// Transport for the LogBook logs
+let logbookTransport = new (transports.DailyRotateFile)({
+  filename: 'logbook-%DATE%.log',
+  datePattern: 'YYYY-MM',
+  zippedArchive: false,
+  maxFiles: '12',
   dirname: LOGPATH,
   format: format.combine(format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }), format.json())
 });
@@ -71,6 +83,12 @@ const mqttlogger = createLogger({
   ],
 });
 
+const logbooklogger = createLogger({
+  transports: [
+    logbookTransport
+  ],
+});
+
 
 const getRuleLogs = function () {
   return getLogs('rules');
@@ -78,6 +96,10 @@ const getRuleLogs = function () {
 
 const getMqttLogs = function () {
   return getLogs('mqtt');
+}
+
+const getLogbookLogs = function () {
+  return getLogs('logbook');
 }
 
 const getLogs = function (prefix) {
@@ -129,4 +151,4 @@ const parseLogFile = function (filename, maxLineCount, logs) {
 
 
 
-module.exports = { logger, jsonlogger, mqttlogger, getRuleLogs, getMqttLogs };
+module.exports = { logger, jsonlogger, mqttlogger, logbooklogger, getRuleLogs, getMqttLogs, getLogbookLogs };
