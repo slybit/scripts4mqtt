@@ -98,6 +98,7 @@ export const staticData = {
         script: "Script",
         email: "Email",
         pushover: "Pushover",
+        logbook: "Log book"
     },
     newItems: {
         rule: {
@@ -145,6 +146,11 @@ export const staticData = {
                 type: "script",
                 delay: 0,
                 script: ""
+            },
+            logbook: {
+                type: "logbook",
+                delay: 0,
+                message: ""
             }
         }
 
@@ -249,6 +255,10 @@ export const staticData = {
             script: [
                 { key: "delay", label: "Delay"},
                 { key: "script", label: "Script", type: "textarea", props: { rows: 30, style: { fontFamily: 'monospace', fontSize: '1rem' } } }
+            ],
+            logbook: [
+                { key: "delay", label: "Delay"},                
+                { key: "message", label: "Message"}
             ]
         }
     }

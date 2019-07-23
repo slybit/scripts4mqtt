@@ -4,7 +4,7 @@ const path = require('path');
 // TODO: use winston express middleware instead of morgan? worth it?
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
-const { logger, getRuleLogs, getMqttLogs } = require('./logger.js');
+const { logger, getRuleLogs, getMqttLogs, getLogbookLogs } = require('./logger.js');
 const { getConfig, updateConfig } = require('./config.js');
 const config = require('./config.js').parse();
 const rules = require('./rules.js');
@@ -97,6 +97,16 @@ router.get('/store',  (req, res) => {
         logger.error('Error dumping store');
         res.json([]);
     }    
+});
+
+router.get('/logbook',  async (req, res) => {
+    try {
+        const logs = await getLogbookLogs();
+        res.json(logs);
+    } catch (err) {
+        logger.error('Error parsing logbook logs');
+        res.json([]);
+    } 
 });
 
 

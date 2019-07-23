@@ -6,6 +6,7 @@ import Editor from './Editor';
 import { RulesLogTable } from './RulesLogTable';
 import { MqttLogTable } from './MqttLogTable';
 import { StoreTable } from './StoreTable';
+import { LogBookTable } from './LogBookTable';
 import { Config } from './Config';
 
 export default class App extends Component {
@@ -16,6 +17,9 @@ export default class App extends Component {
                 <Nav tabs>
                     <NavItem>
                         <NavLink tag={RRNavLink} exact to="/editor" activeClassName="active">Editor</NavLink>
+                    </NavItem>
+                    <NavItem>
+                        <NavLink tag={RRNavLink} exact to="/logbook" activeClassName="active">Log Book</NavLink>
                     </NavItem>
                     <NavItem>
                         <NavLink tag={RRNavLink} exact to="/logs/rules" activeClassName="active">Rules Logs</NavLink>
@@ -34,6 +38,7 @@ export default class App extends Component {
                     {/* React Route way of redirecting from / -> /editor */}
                     <Route exact path="/" render={() => (<Redirect to="/editor" />)} />
                     <Route path='/editor' component={Editor}></Route>
+                    <Route path='/logbook' component={LogBookTable}></Route>
                     <Route path='/logs/rules' component={RulesLogTable}></Route>
                     <Route path='/logs/mqtt' component={MqttLogTable}></Route>
                     <Route path='/store' component={StoreTable}></Route>

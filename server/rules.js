@@ -583,7 +583,8 @@ class LogBookAction extends Action {
 
     execute() {        
         if (this.message !== undefined) {            
-            logbooklogger.info("Entry", {message: this.message});
+            //logbooklogger.info("Entry", {message: this.message});
+            logbooklogger.info(this.message);
             logger.info('LogBookAction called with message %s', this.message);
             jsonlogger.info("LogBookAction executed", {ruleId: this.rule.id, ruleName: this.rule.name, type: "action", subtype: "logbook", details: `message: ${this.message}`});
             

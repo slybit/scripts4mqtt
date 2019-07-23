@@ -10,6 +10,16 @@ TimeDateUpdate:
       script: 'write(''knx/write/15/1/0'', new Date().toString());'
     - type: script
       script: 'write(''knx/write/15/1/1'', new Date().toString());'
+Logbook:
+  name: Logbook
+  condition:
+    - type: cron
+      trigger: always
+      'off': ''
+      'on': '*/1 * * * *'
+  ontrue:
+    - type: logbook
+      message: test to logbook123
 DoorBell:
   name: Doorbell
   condition:
