@@ -72,7 +72,7 @@ class Rules {
                 if ((c instanceof MqttCondition) && (c.topic === topic)) {
                     logger.silly('Rule [%s] matches topic [%s], evaluating...', rule.name, topic);
                     if (c.evaluate() && withActions)
-                        rule.scheduleActions();
+                        rule.scheduleActions(topic);
                 }
             // TODO: add wildcard topics in the condition
         }
@@ -95,7 +95,7 @@ class Rules {
                     if ((c instanceof CronCondition)) {
                         logger.silly('Cron tick, evaluating...', rule.name);
                         if (c.evaluate())
-                            rule.scheduleActions();
+                            rule.scheduleActions("__cron__");
                     }
             }
         }
@@ -388,7 +388,7 @@ class Rule {
         return result;
     }
 
-    scheduleActions() {
+    scheduleActions(topic) {
         if (!this.enabled) {
             logger.silly('Rule disabled, not scheduling actions for rule %s', this.name);
             return;
@@ -400,14 +400,31 @@ class Rule {
         } else {
             actions = this.onFalseActions;
         }
-        for (let a of actions) {
-            if (a.pending !== undefined) {
-                clearTimeout(a.pending);
-                a.pending = undefined;
-            }
+        for (let a of actions) { 
             if (a.delay > 0) {
-                a.pending = setTimeout(a.execute.bind(a), a.delay);
-                logger.info('delayed execution for %s in %d millesecs', typeof (a), a.delay);
+                if (this.pendingOption === PendingOptions["always"]) {
+                    // always cancel an exiting pending action
+                    if (a.pending !== undefined) {
+                        clearTimeout(a.pending);
+                        a.pending = undefined;
+                        logger.info('cancelled pending action for %s', typeof (a));
+                    }
+                    a.pending = setTimeout(a.execute.bind(a), a.delay);
+                    logger.info('delayed execution for %s in %d millesecs', typeof (a), a.delay);
+                } else if (this.pendingOption === PendingOptions["topic"]) {
+                    // only cancel the exiting pending action for the same topic
+                    if (a.pendingTopics[topic] !== undefined) {
+                        clearTimeout(a.pendingTopics[topic]);
+                        a.pendingTopics[topic] = undefined;
+                        logger.info('cancelled pending action for topic [%s] for %s', topic, typeof (a));
+                    }
+                    a.pendingTopics[topic] = setTimeout(a.execute.bind(a), a.delay);
+                    logger.info('delayed execution for for topic [%s] %s in %d millesecs', topic, typeof (a), a.delay);
+                } else {
+                    // default: 'never'; just schedule the action with a delay and dont kill any existing pending actions
+                    setTimeout(a.execute.bind(a), a.delay);
+                    logger.info('delayed execution for %s in %d millesecs', typeof (a), a.delay);
+                }
             } else {
                 a.execute();
             }
@@ -480,7 +497,10 @@ class Action {
     constructor(json, rule) {
         this.rule = rule;
         this.delay = json.delay ? json.delay : 0;
-        this.pending = undefined;
+        // only used incase the user selects "same topic" for the Pending Option
+        this.pendingTopics = {};
+        // used in case of cron conditions being the trigger or the user selecting "always" or "never"
+        this.pending == undefined;
     }
 
     execute() {
