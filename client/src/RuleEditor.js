@@ -18,6 +18,7 @@ export class RuleEditor extends React.Component {
         this.state = {
             ruleId: undefined,
             ruleName: "",
+            pendingOption: "always",
             ontrue: [],
             onfalse: [],
             flatConditions: [],
@@ -55,6 +56,7 @@ export class RuleEditor extends React.Component {
             ruleName: data.name,
             rulePrevName: data.name,
             ruleNameHasChanged: false,
+            pendingOption: data.pendingOption,
             ontrue: data.ontrue ? addIds(data.ontrue) : [],
             onfalse: data.onfalse ? addIds(data.onfalse) : [],
             flatConditions: addIds(flattenConditions(data.condition)),
@@ -77,6 +79,24 @@ export class RuleEditor extends React.Component {
             editorItemType: itemType,
             editorTitle: itemType,
             editorAlertVisible: false
+        });
+    }
+
+    savePendinOption = (option) => {
+        //this.setState({ pendingOption: option });
+        axios.put('/api/rule/' + this.state.ruleId, {pendingOption: option})
+        .then((response) => {
+            // update the state
+            if (response.data.success) {
+                this.setStateFromServerData(response.data.newrule);
+            } else {
+                // TODO: alert user, editor is not visible!
+                console.log(response.data);
+            }
+        })
+        .catch((error) => {
+            // TODO: alert user
+            console.log(error);
         });
     }
 
@@ -278,17 +298,37 @@ export class RuleEditor extends React.Component {
             <DropdownItem key={action} onClick={() => { this.addNewItem("onfalse", action) }}>{staticData.actions[action]}</DropdownItem>
         ));
 
+        const pendingOptions = Object.keys(staticData.pendingOptions).map((option) => (
+            <DropdownItem key={option} onClick={() => { this.savePendinOption(option) }}>{staticData.pendingOptions[option]}</DropdownItem>
+        ));
+
         return (
             <AppMain>
 
                 <AppContent>
+                    <Container>
+                    Name:
                     <InputGroup>
+                        
                         <Input value={this.state.ruleName} onChange={this.onRuleNameChange}/>
                         {this.state.ruleNameHasChanged && <InputGroupAddon addonType="append">
                             <Button color="secondary"><Icon path={mdiCheck} size={1} color="white" onClick={this.handleRuleNameSaveClick} /></Button>
                             <Button color="secondary"><Icon path={mdiCancel} size={1} color="white" onClick={this.handleRuleNameCancelClick} /></Button>
                         </InputGroupAddon>}
                     </InputGroup>
+                    </Container>
+
+                    <HorizontalContainer>
+                        Cancel pending:
+                        <UncontrolledDropdown>
+                            <DropdownToggle caret>
+                                {staticData.pendingOptions[this.state.pendingOption]}
+                            </DropdownToggle>
+                            <DropdownMenu>
+                                {pendingOptions}
+                            </DropdownMenu>
+                        </UncontrolledDropdown>
+                    </HorizontalContainer>
                     <HorizontalContainer>
                         <Header>Conditions:</Header>
                         <UncontrolledDropdown>
@@ -306,56 +346,52 @@ export class RuleEditor extends React.Component {
                         </UncontrolledDropdown>
                     </HorizontalContainer>
 
-
-                    <Container>
-
-                        <Sortly
-                            items={this.state.flatConditions}
-                            itemRenderer={this.ConditionItemRenderer}
-                            onChange={this.handleChange}
-                            onMove={this.handleMove}
+                    <Sortly
+                        items={this.state.flatConditions}
+                        itemRenderer={this.ConditionItemRenderer}
+                        onChange={this.handleChange}
+                        onMove={this.handleMove}
+                    />
+                
+                    <HorizontalContainer>
+                        <Header>On True:</Header>
+                        <UncontrolledDropdown>
+                            <DropdownToggle caret>
+                                Add OnTrue Action
+                            </DropdownToggle>
+                            <DropdownMenu>
+                                {newOntrueActions}
+                            </DropdownMenu>
+                        </UncontrolledDropdown>
+                    </HorizontalContainer>
+                    <ul className="list-group">
+                        <ActionItemRendererClass
+                            actions={this.state.ontrue}
+                            type="ontrue"
+                            handleEditableItemClick={this.handleEditableItemClick}
                         />
-                    </Container>
-                    <Container>
-                        <HorizontalContainer>
-                            <Header>On True:</Header>
-                            <UncontrolledDropdown>
-                                <DropdownToggle caret>
-                                    Add OnTrue Action
-                                </DropdownToggle>
-                                <DropdownMenu>
-                                    {newOntrueActions}
-                                </DropdownMenu>
-                            </UncontrolledDropdown>
-                        </HorizontalContainer>
-                        <ul className="list-group">
-                            <ActionItemRendererClass
-                                actions={this.state.ontrue}
-                                type="ontrue"
-                                handleEditableItemClick={this.handleEditableItemClick}
-                            />
-                        </ul>
+                    </ul>
 
-                        <HorizontalContainer>
-                            <Header>On False:</Header>
-                            <UncontrolledDropdown>
-                                <DropdownToggle caret>
-                                    Add OnFalse Action
-                                </DropdownToggle>
-                                <DropdownMenu>
-                                    {newOnfalseActions}
-                                </DropdownMenu>
-                            </UncontrolledDropdown>
-                        </HorizontalContainer>
-                        <ul className="list-group">
-                            <ActionItemRendererClass
-                                actions={this.state.onfalse}
-                                type="onfalse"
-                                handleEditableItemClick={this.handleEditableItemClick}
-                            />
-                        </ul>
+                    <HorizontalContainer>
+                        <Header>On False:</Header>
+                        <UncontrolledDropdown>
+                            <DropdownToggle caret>
+                                Add OnFalse Action
+                            </DropdownToggle>
+                            <DropdownMenu>
+                                {newOnfalseActions}
+                            </DropdownMenu>
+                        </UncontrolledDropdown>
+                    </HorizontalContainer>
+                    <ul className="list-group">
+                        <ActionItemRendererClass
+                            actions={this.state.onfalse}
+                            type="onfalse"
+                            handleEditableItemClick={this.handleEditableItemClick}
+                        />
+                    </ul>
 
-                    </Container>
+                   
 
                     {false && <pre className='code'>{JSON.stringify(this.state, undefined, 4)}</pre>}
 

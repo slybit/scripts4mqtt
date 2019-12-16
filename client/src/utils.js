@@ -100,10 +100,16 @@ export const staticData = {
         pushover: "Pushover",
         logbook: "Log book"
     },
+    pendingOptions: {
+        always: "Always",
+        never: "Never",
+        topic: "Same topic"
+    },
     newItems: {
         rule: {
-            name: "new_rule",
+            name: "New rule",
             enabled: false,
+            pendingOption: "always",
             condition: []
         },
         condition: {

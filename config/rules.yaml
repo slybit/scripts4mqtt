@@ -10,6 +10,7 @@ TimeDateUpdate:
       script: 'write(''knx/write/15/1/0'', new Date().toString());'
     - type: script
       script: 'write(''knx/write/15/1/1'', new Date().toString());'
+  pendingOption: always
 Logbook:
   name: Logbook
   condition:
@@ -20,6 +21,7 @@ Logbook:
   ontrue:
     - type: logbook
       message: test to logbook123
+  pendingOption: always
 DoorBell:
   name: Doorbell
   condition:
@@ -33,6 +35,7 @@ DoorBell:
       title: Doorbell ringing!
       sound: bike
       priority: 1
+  pendingOption: always
 Back_of_the_house:
   name: Back of the house
   condition:
@@ -59,6 +62,7 @@ Back_of_the_house:
     - type: mqtt
       topic: knx/set/0/0/208
       value: 0
+  pendingOption: always
 Front_door:
   name: Front door
   condition:
@@ -81,6 +85,7 @@ Front_door:
     - type: mqtt
       topic: knx/set/0/0/202
       value: 1
+  pendingOption: always
 Complex_script:
   name: Complex script
   condition:
@@ -113,6 +118,7 @@ Complex_script:
             write("knx/write/0/0/208", "1");
             break;
         }
+  pendingOption: always
 Bathroom_ventilatin:
   name: Bathroom ventilation
   condition:
@@ -139,6 +145,7 @@ Bathroom_ventilatin:
       topic: knx/set/2/1/4
       value: 0
       delay: 600000
+  pendingOption: always
 SetVentilationFromHassio:
   name: Ventilation
   condition:
@@ -184,3 +191,4 @@ SetVentilationFromHassio:
             write("hass/status/ventilation/high", 1, true);
             break;
         }  
+  pendingOption: always

@@ -290,14 +290,27 @@ class Rules {
 }
 
 
+/* --------------------------------------------------------------------------------------------
+ * Rule
+-------------------------------------------------------------------------------------------- */
+
+
+const PendingOptions = Object.freeze({
+    "never": 0,
+    "always": 1,
+    "topic": 2
+});
 
 
 class Rule {
+
+
 
     constructor(id, json) {
         this.id = id;
         this.name = json.name;
         this.enabled = json.enabled === undefined ? true : json.enabled;
+        this.pendingOption = PendingOptions[json.pendingOption] ? PendingOptions[json.pendingOption] : PendingOptions["always"];
         this.conditions = [];
         this.logic = this.parseCondition(json.condition);
         this.onFalseActions = this.parseActions(json.onfalse);
@@ -455,6 +468,13 @@ class Rule {
 
 
 }
+
+
+
+/* --------------------------------------------------------------------------------------------
+ * Action
+-------------------------------------------------------------------------------------------- */
+
 
 class Action {
     constructor(json, rule) {
