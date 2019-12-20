@@ -123,6 +123,13 @@ There are 2 types of conditions:
 
 Any number of them can be combined using OR and AND operations.
 
+## Actions
+
+### Delay
+
+The delay parameter will delay the execution of an action with the specified amount of milliseconds. For example, setting a delay of 60000 will delay the execution of the action with 1 minute.
+
+
 
 # Notes
 

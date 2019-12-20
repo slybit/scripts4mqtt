@@ -66,13 +66,18 @@ class Rules {
     */
     mqttConditionChecker(topic, withActions = true) {
         logger.silly('MQTT Condition Checker called for %s', topic);
+        // build the context of a triggered action, it will be passed through to the 'execute' method of the action.
+        let context = {};
+        context.H = Engine.getInstance().mqttStore.get(topic) ? Engine.getInstance().mqttStore.get(topic).data : undefined;
+        context.topic = topic
+        context.T = topicToArray(topic);
         for (let key in this.rules) {
             let rule = this.rules[key];
             for (let c of rule.conditions)
                 if ((c instanceof MqttCondition) && (c.topic === topic)) {
                     logger.silly('Rule [%s] matches topic [%s], evaluating...', rule.name, topic);
                     if (c.evaluate() && withActions)
-                        rule.scheduleActions(topic);
+                        rule.scheduleActions(context);
                 }
             // TODO: add wildcard topics in the condition
         }
@@ -84,6 +89,10 @@ class Rules {
     */
     scheduleTimerConditionChecker() {
         const date = new Date();
+        // build the context of a triggered action, it will be passed through to the 'execute' method of the action.
+        let context = {};
+        context.date = date.toLocaleString;
+        context.topic = "__cron__";
         // calculate delay so next tick will be 5 seconds after the minute mark
         const delay = 60 - ((Math.round(date.getTime() / 1000) - 5) % 60);
         const minutes = date.getMinutes();
@@ -95,12 +104,15 @@ class Rules {
                     if ((c instanceof CronCondition)) {
                         logger.silly('Cron tick, evaluating...', rule.name);
                         if (c.evaluate())
-                            rule.scheduleActions("__cron__");
+                            rule.scheduleActions(context);
                     }
             }
         }
         setTimeout(this.scheduleTimerConditionChecker.bind(this), delay * 1000);
     }
+
+ 
+
 
     /*
      * REST APIs
@@ -175,7 +187,6 @@ class Rules {
     */
     updateRule(id, input, newrule = false) {
         try {
-
             if (newrule) {
                 this.jsonContents[id] = input;
             } else {
@@ -296,9 +307,9 @@ class Rules {
 
 
 const PendingOptions = Object.freeze({
-    "never": 0,
-    "always": 1,
-    "topic": 2
+    "never": 10,
+    "always": 11,
+    "topic": 12
 });
 
 
@@ -388,16 +399,31 @@ class Rule {
         return result;
     }
 
-    scheduleActions(topic) {
+    /*
+    context will contain:
+     - for a MQTT condition:
+            - context.H = message content at the time the action was triggered (Historic)
+            - context.T = topic that triggered the action as an array
+            - context.topic = topic that triggered the action as a string (1/2/3)
+     - for a Cron condition:
+            - context.date = the timestamp of when the action was triggered 
+            - context.topic = "__cron__" -> we abuse this to be able to keep track of pending actions using context.topic also when the condition was a cron task
+    */
+    scheduleActions(context) {
         if (!this.enabled) {
             logger.silly('Rule disabled, not scheduling actions for rule %s', this.name);
             return;
         }
         logger.info('Scheduling actions for rule %s', this.name);
+
+        this.cancelPendingActions(context.topic);
+
         let actions = [];
         if (Rule.evalLogic(this.logic)) {
+            console.log("true actions");
             actions = this.onTrueActions;
         } else {
+            console.log("false actions");
             actions = this.onFalseActions;
         }
         for (let a of actions) { 
@@ -409,27 +435,53 @@ class Rule {
                         a.pending = undefined;
                         logger.info('cancelled pending action for %s', typeof (a));
                     }
-                    a.pending = setTimeout(a.execute.bind(a), a.delay);
+                    a.pending = setTimeout(a.execute.bind(a, context), a.delay);
                     logger.info('delayed execution for %s in %d millesecs', typeof (a), a.delay);
                 } else if (this.pendingOption === PendingOptions["topic"]) {
                     // only cancel the exiting pending action for the same topic
-                    if (a.pendingTopics[topic] !== undefined) {
-                        clearTimeout(a.pendingTopics[topic]);
-                        a.pendingTopics[topic] = undefined;
-                        logger.info('cancelled pending action for topic [%s] for %s', topic, typeof (a));
+                    if (a.pendingTopics[context.topic] !== undefined) {
+                        clearTimeout(a.pendingTopics[context.topic]);
+                        a.pendingTopics[context.topic] = undefined;
+                        logger.info('cancelled pending action for topic [%s] for %s', context.topic, typeof (a));
                     }
-                    a.pendingTopics[topic] = setTimeout(a.execute.bind(a), a.delay);
-                    logger.info('delayed execution for for topic [%s] %s in %d millesecs', topic, typeof (a), a.delay);
+                    a.pendingTopics[context.topic] = setTimeout(a.execute.bind(a, context), a.delay);
+                    logger.info('delayed execution for for topic [%s] %s in %d millesecs', context.topic, typeof (a), a.delay);
                 } else {
                     // default: 'never'; just schedule the action with a delay and dont kill any existing pending actions
-                    setTimeout(a.execute.bind(a), a.delay);
+                    setTimeout(a.execute.bind(a, context), a.delay);
                     logger.info('delayed execution for %s in %d millesecs', typeof (a), a.delay);
                 }
             } else {
-                a.execute();
+                a.execute(context);
             }
         }
     }
+
+    cancelPendingActions(topic) {
+        let actions = this.onTrueActions;
+        actions.join(this.onFalseActions);
+        
+       
+        for (let a of actions) {
+            if (this.pendingOption === PendingOptions["always"]) {
+                // always cancel an exiting pending action
+                if (a.pending !== undefined) {
+                    clearTimeout(a.pending);
+                    a.pending = undefined;
+                    logger.info('cancelled pending action for %s', typeof (a));
+                }
+            } else if (this.pendingOption === PendingOptions["topic"]) {
+                // only cancel the exiting pending action for the same topic
+                if (a.pendingTopics[topic] !== undefined) {
+                    clearTimeout(a.pendingTopics[topic]);
+                    a.pendingTopics[topic] = undefined;
+                    logger.info('cancelled pending action for topic [%s] for %s', topic, typeof (a));
+                }
+            } 
+        }
+    }
+
+    
 
     // json can be either an array of conditions, or a single (nested) condition
     // a condition has a 'type' and a 'condition' -> itself again an array (for 'or' and 'and') or a nested condition
@@ -503,8 +555,11 @@ class Action {
         this.pending == undefined;
     }
 
-    execute() {
-        logger.info("Bang! Action executed.");
+    execute(context) {
+        // if the context contains a Historic message value, also add the current value
+        if (context.H) {
+            context.M = Engine.getInstance().mqttStore.get(context.topic) ? Engine.getInstance().mqttStore.get(context.topic).data : undefined;
+        }
     }
 }
 
@@ -517,7 +572,8 @@ class SetValueAction extends Action {
         validateMqttAction(json);
     }
 
-    execute() {
+    execute(context) {
+        super.execute(context); 
         if (this.topic !== undefined && this.value !== undefined) {
             Engine.getInstance().mqttClient.publish(this.topic, JSON.stringify(this.value));
             logger.info('SetValueAction published %s -> %s', this.topic, this.value);
@@ -534,11 +590,12 @@ class ScriptAction extends Action {
 
     constructor(json, rule) {
         super(json, rule);
-        this.topic = json.topic;
+        //this.topic = json.topic;
         this.script = json.script;
     }
 
-    execute() {
+    execute(context) {
+        super.execute(context); 
         logger.info('executing ScriptAction');
         try {
             Engine.getInstance().runScript(this.script);
@@ -563,7 +620,8 @@ class EMailAction extends Action {
         validateEmailAction(json);
     }
 
-    execute() {
+    execute(context) {
+        super.execute(context); 
         logger.info('executing EMailAction');
         const action = this;
 
@@ -597,7 +655,8 @@ class PushoverAction extends Action {
         }
     }
 
-    execute() {
+    execute(context) {
+        super.execute(context); 
         logger.info('executing PushoverAction');
         const action = this;
         pushover.send(this.msg, function (err, result) {
@@ -621,12 +680,29 @@ class LogBookAction extends Action {
         this.message = json.message;    
     }
 
-    execute() {        
-        if (this.message !== undefined) {            
+    execute(context) {     
+        super.execute(context);   
+        if (this.message !== undefined) {     
+            
+            // TODO!!! -> move this context building to the calling function, so it is automatically available for all actions!!!
+            
+            
+            try {
+                let finalMessage = mustache.render(this.message, context);
+                //logger.debug('evaluating script:\n# ----- start script -----\n%s\n# -----  end script  -----', script);
+                logbooklogger.info(finalMessage);
+                logger.info('LogBookAction called with message %s', finalMessage);
+                jsonlogger.info("LogBookAction executed", {ruleId: this.rule.id, ruleName: this.rule.name, type: "action", subtype: "logbook", details: `message: ${finalMessage}`});
+                
+            } catch (err) {
+               logger.error(err);
+            }
+
+
             //logbooklogger.info("Entry", {message: this.message});
-            logbooklogger.info(this.message);
-            logger.info('LogBookAction called with message %s', this.message);
-            jsonlogger.info("LogBookAction executed", {ruleId: this.rule.id, ruleName: this.rule.name, type: "action", subtype: "logbook", details: `message: ${this.message}`});
+            //logbooklogger.info(this.message);
+            //logger.info('LogBookAction called with message %s', this.message);
+            //jsonlogger.info("LogBookAction executed", {ruleId: this.rule.id, ruleName: this.rule.name, type: "action", subtype: "logbook", details: `message: ${this.message}`});
             
         }
     }

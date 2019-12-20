@@ -11,6 +11,7 @@ TimeDateUpdate:
     - type: script
       script: 'write(''knx/write/15/1/1'', new Date().toString());'
   pendingOption: always
+  enabled: false
 Logbook:
   name: Logbook
   condition:
@@ -22,6 +23,7 @@ Logbook:
     - type: logbook
       message: test to logbook123
   pendingOption: always
+  enabled: false
 DoorBell:
   name: Doorbell
   condition:
@@ -36,6 +38,7 @@ DoorBell:
       sound: bike
       priority: 1
   pendingOption: always
+  enabled: false
 Back_of_the_house:
   name: Back of the house
   condition:
@@ -63,6 +66,7 @@ Back_of_the_house:
       topic: knx/set/0/0/208
       value: 0
   pendingOption: always
+  enabled: false
 Front_door:
   name: Front door
   condition:
@@ -86,6 +90,7 @@ Front_door:
       topic: knx/set/0/0/202
       value: 1
   pendingOption: always
+  enabled: false
 Complex_script:
   name: Complex script
   condition:
@@ -119,6 +124,7 @@ Complex_script:
             break;
         }
   pendingOption: always
+  enabled: false
 Bathroom_ventilatin:
   name: Bathroom ventilation
   condition:
@@ -146,6 +152,7 @@ Bathroom_ventilatin:
       value: 0
       delay: 600000
   pendingOption: always
+  enabled: false
 SetVentilationFromHassio:
   name: Ventilation
   condition:
@@ -192,3 +199,22 @@ SetVentilationFromHassio:
             break;
         }  
   pendingOption: always
+  enabled: false
+c71e6414f80f:
+  name: Multi topic
+  enabled: true
+  pendingOption: topic
+  condition:
+    - type: mqtt
+      trigger: always
+      topic: knx/test/0
+      eval: '{{M.val}} == "1"'
+    - type: mqtt
+      trigger: always
+      topic: knx/test/1
+      eval: '{{M.val}} == "1"'
+  ontrue:
+    - type: logbook
+      delay: '10000'
+      message: 'topic: {{{topic}}}, old value: {{H.val}}, new value: {{M.val}}'
+  onfalse: []
