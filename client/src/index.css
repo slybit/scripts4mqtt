@@ -24,6 +24,12 @@ body {
   fill: grey
 }
 
+.aliasButton {
+  margin-left: 3px;
+  margin-right: 3px;
+  padding: 2px 2px 2px 6px;
+}
+
 .deleteIcon:hover {
   fill: orangered
 }
