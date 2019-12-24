@@ -3,7 +3,10 @@ const mqtt = require('mqtt');
 const {logger, mqttlogger} = require('./logger.js');
 const Engine = require('./engine.js');
 const config = require('./config.js').parse();
+const Aliases = require('./aliases.js');
 const { pushover } = require('./utils.js');
+
+const aliases = new Aliases();
 
 //jsonlogger.error("test", {test: 'hallo', bla: 'adsf'});
 
@@ -28,8 +31,8 @@ let processMessage = function (topic, message, packet) {
     // message is a Buffer, so first convert it to a String
     message = message.toString();
     logger.silly("MQTT received %s : %s", topic, message);
-    // now parse the data   
-    let data = undefined; 
+    // now parse the data
+    let data = undefined;
     if (message === 'true') {
         data = {val : true} ;
     } else if (message === 'false') {
@@ -43,7 +46,7 @@ let processMessage = function (topic, message, packet) {
             //logger.error('could not parse message to json: %s', message);
             data = {val : message} ; // will be a string
         }
-    } else {        
+    } else {
         data = {val : Number(message)};
     }
     // add our own timestamp

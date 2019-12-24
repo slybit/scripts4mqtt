@@ -13,7 +13,7 @@ export class Aliases extends Component {
     super();
     this.state = {
       aliases: [],
-      selectedAlias: undefined,      
+      selectedAlias: undefined,
     };
   }
 
@@ -28,7 +28,8 @@ export class Aliases extends Component {
         showError("Cannot access the script4mqtt service.", error);
       });
       */
-     var aliases = [{key: "AliasOne", name: "AliasOne", enabled: true}];
+     //var aliases = [{key: "AliasOne"}, {key: "AliasTwo"}];
+     var aliases = {"AliasOne":["1/1/2","2/3/4","4/12/4"],"AliasAAATwo":["10/1/2","20/3/4","40/12/4"]};
      this.updateAliasList(aliases, refreshEditor);
 
   }
@@ -40,7 +41,7 @@ export class Aliases extends Component {
   }
 
   handleAliasClick(key) {
-    this.setState({ selectedAlias: key });    
+    this.setState({ selectedAlias: key });
   }
 
   /*
@@ -101,7 +102,7 @@ export class Aliases extends Component {
     if (refreshEditor) {
       this.setState({
         aliases: list,
-        selectedAlias: list.length > 0 ? list[0].key : undefined
+        selectedAlias: Object.keys(list).length > 0 ? Object.keys(list).sort()[0] : undefined
       });
     } else {
       this.setState({
@@ -113,9 +114,17 @@ export class Aliases extends Component {
 
 
   render() {
-    return (
+    let items = [];
+    if (this.state.selectedAlias) {
+      items = this.state.aliases[this.state.selectedAlias].map((item, index) => {
+        return (
+          <Button key={item} color="dark" outline className="aliasButton">{item}<Icon path={mdiClose} size={1} color="gray"/></Button>
+        )
+      });
+    }
 
-        
+
+    return (
         <AppBody>
           <AppNav>
             <HorizontalContainer>
@@ -132,51 +141,12 @@ export class Aliases extends Component {
             />
           </AppNav>
           <AppMain>
-                <AppContent>
-                  <Button color="dark" outline className="aliasButton">2/3/4 <Icon path={mdiClose} size={1} color="gray"  /></Button>
-                  <Button color="dark" outline className="aliasButton">2/3/5 <Icon path={mdiClose} size={1} color="gray"  /></Button>
-                  <Button color="dark" outline className="aliasButton">2/3/4 <Icon path={mdiClose} size={1} color="gray"  /></Button>
-                  <Button color="dark" outline className="aliasButton">2/3/5 <Icon path={mdiClose} size={1} color="gray"  /></Button>
-                  <Button color="dark" outline className="aliasButton">2/3/4 <Icon path={mdiClose} size={1} color="gray"  /></Button>
-                  <Button color="dark" outline className="aliasButton">2/3/5 <Icon path={mdiClose} size={1} color="gray"  /></Button>
-                  <Button color="dark" outline className="aliasButton">2/3/4 <Icon path={mdiClose} size={1} color="gray"  /></Button>
-                  <Button color="dark" outline className="aliasButton">2/3/5 <Icon path={mdiClose} size={1} color="gray"  /></Button>
-                  <Button color="dark" outline className="aliasButton">2/3/4 <Icon path={mdiClose} size={1} color="gray"  /></Button>
-                  <Button color="dark" outline className="aliasButton">2/3/5 <Icon path={mdiClose} size={1} color="gray"  /></Button>
-                  <Button color="dark" outline className="aliasButton">2/3/4 <Icon path={mdiClose} size={1} color="gray"  /></Button>
-                  <Button color="dark" outline className="aliasButton">2/3/5 <Icon path={mdiClose} size={1} color="gray"  /></Button>
-                  <Button color="dark" outline className="aliasButton">2/3/4 <Icon path={mdiClose} size={1} color="gray"  /></Button>
-                  <Button color="dark" outline className="aliasButton">2/3/5 <Icon path={mdiClose} size={1} color="gray"  /></Button>
-                  <Button color="dark" outline className="aliasButton">2/3/4 <Icon path={mdiClose} size={1} color="gray"  /></Button>
-                  <Button color="dark" outline className="aliasButton">2/3/5 <Icon path={mdiClose} size={1} color="gray"  /></Button>
-                  <Button color="dark" outline className="aliasButton">2/3/4 <Icon path={mdiClose} size={1} color="gray"  /></Button>
-                  <Button color="dark" outline className="aliasButton">2/3/5 <Icon path={mdiClose} size={1} color="gray"  /></Button>
-                  <Button color="dark" outline className="aliasButton">2/3/4 <Icon path={mdiClose} size={1} color="gray"  /></Button>
-                  <Button color="dark" outline className="aliasButton">2/3/5 <Icon path={mdiClose} size={1} color="gray"  /></Button>
-                  <Button color="dark" outline className="aliasButton">2/3/4 <Icon path={mdiClose} size={1} color="gray"  /></Button>
-                  <Button color="dark" outline className="aliasButton">2/3/5 <Icon path={mdiClose} size={1} color="gray"  /></Button>
-                  <Button color="dark" outline className="aliasButton">2/3/4 <Icon path={mdiClose} size={1} color="gray"  /></Button>
-                  <Button color="dark" outline className="aliasButton">2/3/5 <Icon path={mdiClose} size={1} color="gray"  /></Button>
-                  <Button color="dark" outline className="aliasButton">2/3/4 <Icon path={mdiClose} size={1} color="gray"  /></Button>
-                  <Button color="dark" outline className="aliasButton">2/3/5 <Icon path={mdiClose} size={1} color="gray"  /></Button>
-                  <Button color="dark" outline className="aliasButton">2/3/4 <Icon path={mdiClose} size={1} color="gray"  /></Button>
-                  <Button color="dark" outline className="aliasButton">2/3/5 <Icon path={mdiClose} size={1} color="gray"  /></Button>
-                  <Button color="dark" outline className="aliasButton">2/3/4 <Icon path={mdiClose} size={1} color="gray"  /></Button>
-                  <Button color="dark" outline className="aliasButton">2/3/5 <Icon path={mdiClose} size={1} color="gray"  /></Button>
-                  <Button color="dark" outline className="aliasButton">2/3/4 <Icon path={mdiClose} size={1} color="gray"  /></Button>
-                  <Button color="dark" outline className="aliasButton">2/3/5 <Icon path={mdiClose} size={1} color="gray"  /></Button>
-                  <Button color="dark" outline className="aliasButton">2/3/4 <Icon path={mdiClose} size={1} color="gray"  /></Button>
-                  <Button color="dark" outline className="aliasButton">2/3/5 <Icon path={mdiClose} size={1} color="gray"  /></Button>
-                  <Button color="dark" outline className="aliasButton">2/3/4 <Icon path={mdiClose} size={1} color="gray"  /></Button>
-                  <Button color="dark" outline className="aliasButton">2/3/5 <Icon path={mdiClose} size={1} color="gray"  /></Button>
-                  <Button color="dark" outline className="aliasButton">2/3/4 <Icon path={mdiClose} size={1} color="gray"  /></Button>
-                  <Button color="dark" outline className="aliasButton">2/3/5 <Icon path={mdiClose} size={1} color="gray"  /></Button>
-                  <Button color="dark" outline className="aliasButton">2/3/4 <Icon path={mdiClose} size={1} color="gray"  /></Button>
-                  <Button color="dark" outline className="aliasButton">2/3/5 <Icon path={mdiClose} size={1} color="gray"  /></Button>
-                </AppContent>
+              <AppContent>
+                  {items}
+              </AppContent>
           </AppMain>
         </AppBody>
-        
+
     );
   }
 }

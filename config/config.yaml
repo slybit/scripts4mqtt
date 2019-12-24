@@ -15,8 +15,8 @@ topics:
 retained: false
 # MQTT connection
 mqtt:
-  # URL to MQTT broker  
-  url: 'mqtt://localhost'
+  # URL to MQTT broker
+  url: 'mqtt://192.168.1.10'
   # Options passed straight to the `mqtt` library
   options:
     username: 'mqtt_username'

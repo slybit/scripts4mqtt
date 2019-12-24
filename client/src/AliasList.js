@@ -27,23 +27,22 @@ export class AliasList extends React.Component {
 
     render() {
 
-        const items = this.props.data.map((alias, index) => {
-
+        const items = Object.keys(this.props.data).sort().map((alias, index) => {
             const style = {
                 cursor: 'pointer',
-                ...(alias.key === this.props.selectedAlias ? selectedStyle: null)
+                ...(alias === this.props.selectedAlias ? selectedStyle: null)
             }
-
             return (
 
-                <li className="list-group-item" key={alias.key} id={alias.key} style={style} onClick={() => this.props.onClick(alias.key)}>
-                {alias.name}
+                <li className="list-group-item" key={alias} id={alias} style={style} onClick={() => this.props.onClick(alias)}>
+                {alias}
                 <span style={pushRightStyle}>
-                    <Icon path={mdiDelete} size={1} className="deleteIcon" onClick={(e) => this.handleDeleteClick(e, alias.key)}/>
+                    <Icon path={mdiDelete} size={1} className="deleteIcon" onClick={(e) => this.handleDeleteClick(e, alias)}/>
                 </span>
                 </li>
             )
         });
+
         return (
             <ul className="list-group">
                 {items}
