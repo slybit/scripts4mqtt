@@ -27,10 +27,10 @@ Logbook:
 DoorBell:
   name: Doorbell
   condition:
-    type: mqtt
-    trigger: on_flip_true
-    topic: knx/status/15/2/3
-    eval: '{{M.val}} == "0x01"'
+    - type: mqtt
+      trigger: on_flip_true
+      topic: knx/status/15/2/3
+      eval: '{{M.val}} == "0x01"'
   ontrue:
     - type: pushover
       message: Notification from script4mqtt
@@ -218,3 +218,17 @@ c71e6414f80f:
       delay: '10000'
       message: 'topic: {{{topic}}}, old value: {{H.val}}, new value: {{M.val}}'
   onfalse: []
+5f82f262c580:
+  name: New rule
+  enabled: true
+  pendingOption: always
+  condition:
+    - type: cron
+      trigger: always
+      'on': '* * * * *'
+      'off': '-'
+  ontrue:
+    - type: mqtt
+      delay: 0
+      topic: knx/set/0/0/23
+      value: '{ "test" : 1 }'

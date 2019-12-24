@@ -3,10 +3,7 @@ const mqtt = require('mqtt');
 const {logger, mqttlogger} = require('./logger.js');
 const Engine = require('./engine.js');
 const config = require('./config.js').parse();
-const Aliases = require('./aliases.js');
 const { pushover } = require('./utils.js');
-
-const aliases = new Aliases();
 
 //jsonlogger.error("test", {test: 'hallo', bla: 'adsf'});
 

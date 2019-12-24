@@ -15,7 +15,7 @@ ontrue/onfalse:
 */
 
 function validate(data) {
-    /* data must have a 
+    /* data must have a
     - type
     - editorItemType
     */
@@ -61,7 +61,7 @@ function validate(data) {
 MQTT CONDITION and ACTION
 ---------------------------------------------------------------------------------------------------------------------------- */
 
-function validateMqttCondition(json) {    
+function validateMqttCondition(json) {
     if (!(json.topic && json.eval))
         throw new Error('Missing topic or eval expression');
     if ((json.topic.trim() === '' || json.eval.trim() === ''))
@@ -71,7 +71,7 @@ function validateMqttCondition(json) {
     // no check of the eval expression
 }
 
-function validateMqttAction(json) {    
+function validateMqttAction(json) {
     if (!(json.topic))
         throw new Error('Missing topic');
     if (json.topic.trim() === '')
@@ -140,4 +140,4 @@ function validateEmailAction(json) {
         throw new Error('To email address invalid');
 }
 
-module.exports = {validate, validateMqttCondition, validateMqttAction, validateCronCondition, validateEmailAction};
+module.exports = {validate, validateTopic, validateMqttCondition, validateMqttAction, validateCronCondition, validateEmailAction};

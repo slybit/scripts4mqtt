@@ -1,14 +1,15 @@
 import React, { Component } from 'react';
+import { Button, Form, FormGroup, Label, Input, Alert, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import { AppNav, AppBody, Title, HorizontalContainer, AppContent, AppMain } from "./containers";
-import { Button } from 'reactstrap';
 import { AliasList } from './AliasList';
+import { AliasEditor } from './AliasEditor';
 import { staticData, showError } from './utils';
 import axios from 'axios';
 import update from 'immutability-helper';
-import Icon from '@mdi/react'
-import { mdiClose } from '@mdi/js'
+
 
 export class Aliases extends Component {
+
   constructor() {
     super();
     this.state = {
@@ -17,138 +18,162 @@ export class Aliases extends Component {
     };
   }
 
-  loadAliasListFromServer = (refreshEditor = true) => {
-    /*
+  componentDidMount() {
+    this.loadAliasListFromServer();
+  }
+
+  loadAliasListFromServer() {
     axios.get('/api/aliases')
       .then((response) => {
-        console.log(response.data);
-        this.updateAliasList(response.data, refreshEditor);
+        this.updateAliasList(response.data);
       })
       .catch((error) => {
         showError("Cannot access the script4mqtt service.", error);
       });
-      */
-     //var aliases = [{key: "AliasOne"}, {key: "AliasTwo"}];
-     var aliases = {"AliasOne":["1/1/2","2/3/4","4/12/4"],"AliasAAATwo":["10/1/2","20/3/4","40/12/4"]};
-     this.updateAliasList(aliases, refreshEditor);
-
   }
 
 
 
-  componentDidMount() {
-    this.loadAliasListFromServer();
-  }
+
 
   handleAliasClick(key) {
     this.setState({ selectedAlias: key });
   }
 
-  /*
-  handleDeleteRuleClick = (key) => {
-    axios.delete('/api/rule/' + key)
-      .then((response) => {
-        if (response.data.success) {
-          this.updateRuleList(this.state.rules.filter((item) => item.key !== key));
-        } else {
-          showError("Deletion not handled by script4mqtt service.", response.data);
-          console.log(response.data);
-        }
-      })
-      .catch((error) => {
-        showError("Cannot access the script4mqtt service.", error);
-      });
+
+
+
+
+  handleAddAliasClick = () => {
+    console.log("add alias");
+    this.setState({
+      newAliasModalVisible: true,
+      newAliasName: "",
+      newAliasNameAlertVisible: false,
+      newAliasNameAlert: ""
+    });
   }
-  */
-
-  /*
-  handleEnableRuleClick = (index) => {
-    axios.put('/api/rule/' + this.state.rules[index].key, { enabled: !this.state.rules[index].enabled })
-      .then((response) => {
-        // update the state
-        if (response.data.success) {
-          this.setState({ rules: update(this.state.rules, { [index]: { $toggle: ['enabled'] } }) });
-        } else {
-          showError("Rule update not handled by script4mqtt service.", response.data);
-          console.log(response.data);
-        }
-      })
-      .catch((error) => {
-        showError("Cannot access the script4mqtt service.", error);
-      });
-  }
-  */
-
-  /*
-  handleAddRuleClick = () => {
-    axios.post('/api/rules', staticData.newItems.rule)
-      .then((response) => {
-        if (response.data.success) {
-          this.loadRuleListFromServer(false);
-        } else {
-          showError("New rule action not handled by script4mqtt service.", response.data);
-          console.log(response.data);
-        }
-      })
-      .catch((error) => {
-        showError("Cannot access the script4mqtt service.", error);
-      });
-  }
-  */
 
 
 
-  updateAliasList(list, refreshEditor = true) {
-    if (refreshEditor) {
+  updateAliasList(data) {
       this.setState({
-        aliases: list,
-        selectedAlias: Object.keys(list).length > 0 ? Object.keys(list).sort()[0] : undefined
+        newAliasModalVisible: false,
+        aliases: data.aliases,
+        selectedAlias: data.name ? data.name : (Object.keys(data.aliases).length > 0 ? Object.keys(data.aliases).sort()[0] : undefined)
       });
-    } else {
-      this.setState({
-        aliases: list
-      });
-    }
+  }
+
+
+  onAliasNameChange = (e) => {
+    this.setState({ newAliasName: e.target.value });
+  }
+
+  aliasNameEditorHandleCancelClick = () => {
+    this.setState({
+      newAliasModalVisible: false
+    });
+  }
+
+  aliasNameEditorHandleSaveClick = () => {
+    console.log("creating new alias: " + this.state.newAliasName);
+    let newAlias = {};
+    newAlias[this.state.newAliasName] = [];
+    axios.post('/api/aliases', newAlias)
+    .then((response) => {
+      if (response.data.success) {
+        this.updateAliasList(response.data, true);
+      } else {
+        showError("New rule action not handled by script4mqtt service.", response.data);
+        console.log(response.data);
+      }
+    })
+    .catch((error) => {
+      showError("Cannot access the script4mqtt service.", error);
+    });
+
   }
 
 
 
   render() {
-    let items = [];
-    if (this.state.selectedAlias) {
-      items = this.state.aliases[this.state.selectedAlias].map((item, index) => {
-        return (
-          <Button key={item} color="dark" outline className="aliasButton">{item}<Icon path={mdiClose} size={1} color="gray"/></Button>
-        )
-      });
-    }
-
-
     return (
-        <AppBody>
-          <AppNav>
-            <HorizontalContainer>
-              <Title>Aliases</Title>
-              <Button onClick={this.handleAddAliasClick}>Add</Button>
-            </HorizontalContainer>
-            {!this.state.selectedAlias && <Title>No aliases defined. Create one...</Title>}
-            <AliasList
-              data={this.state.aliases}
-              selectedAlias={this.state.selectedAlias}
-              onClick={this.handleAliasClick.bind(this)}
-              onDeleteClick={this.handleDeleteAliasClick}
-              onEnableClick={this.handleEnableAliasClick}
-            />
-          </AppNav>
-          <AppMain>
-              <AppContent>
-                  {items}
-              </AppContent>
-          </AppMain>
-        </AppBody>
+      <AppBody>
+      {this.state.newAliasModalVisible && <AliasNameInput
+          aliasName={this.state.newAliasName}
+          handleCancelClick={this.aliasNameEditorHandleCancelClick}
+          handleSaveClick={this.aliasNameEditorHandleSaveClick}
+          onAliasNameChange={this.onAliasNameChange}
+          alertVisible={this.newAliasNameAlertVisible}
+          alert={this.newAliasNameAlert}
+        />}
 
+        <AppNav>
+          <HorizontalContainer>
+            <Title>Aliases</Title>
+            <Button onClick={this.handleAddAliasClick}>Add</Button>
+          </HorizontalContainer>
+          {!this.state.selectedAlias && <Title>No aliases defined. Create one...</Title>}
+          <AliasList
+            data={this.state.aliases}
+            selectedAlias={this.state.selectedAlias}
+            onClick={this.handleAliasClick.bind(this)}
+            onDeleteClick={this.handleDeleteAliasClick}
+            onEnableClick={this.handleEnableAliasClick}
+          />
+        </AppNav>
+        {this.state.selectedAlias &&
+          <AliasEditor
+            aliases={this.state.aliases}
+            selectedAlias={this.state.selectedAlias}
+            refreshNames={() => { this.loadAliasListFromServer() }}
+            onAliasNameChange={this.onAliasNameChange} />
+        }
+
+
+      </AppBody>
     );
   }
+
 }
 
+const spacerStyle = {
+  display: 'flex',
+  width: '100%',
+  justifyContent: 'space-between',
+};
+
+
+function AliasNameInput(props) {
+  return (
+    <Modal isOpen={true} fade={false} toggle={props.handleCancelClick} size="lg">
+      <ModalHeader toggle={props.handleCancelClick}>New Alias Name</ModalHeader>
+      <ModalBody>
+        <Form className="form">
+          <FormGroup>
+            <Label for="newAliasName" >New alias name:</Label>
+            <Input id="newAliasName" value={props.aliasName} onChange={props.onAliasNameChange} />
+          </FormGroup>
+        </Form>
+        <Alert color="primary" isOpen={true}>
+          Alias names cannot be changed later and must be unique.
+        </Alert>
+        <Alert color="danger" isOpen={props.alertVisible === true}>
+          {props.alert}
+        </Alert>
+      </ModalBody>
+      <ModalFooter>
+        <FormGroup style={spacerStyle}>
+          &nbsp;
+          <span>
+            <Button color="primary" outline={true} onClick={props.handleCancelClick}>Cancel</Button>{' '}
+            <Button color="primary" onClick={props.handleSaveClick}>Save</Button>
+          </span>
+        </FormGroup>
+      </ModalFooter>
+
+
+    </Modal>
+  );
+}
 

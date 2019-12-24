@@ -111,7 +111,7 @@ class Rules {
         setTimeout(this.scheduleTimerConditionChecker.bind(this), delay * 1000);
     }
 
- 
+
 
 
     /*
@@ -406,7 +406,7 @@ class Rule {
             - context.T = topic that triggered the action as an array
             - context.topic = topic that triggered the action as a string (1/2/3)
      - for a Cron condition:
-            - context.date = the timestamp of when the action was triggered 
+            - context.date = the timestamp of when the action was triggered
             - context.topic = "__cron__" -> we abuse this to be able to keep track of pending actions using context.topic also when the condition was a cron task
     */
     scheduleActions(context) {
@@ -426,7 +426,7 @@ class Rule {
             console.log("false actions");
             actions = this.onFalseActions;
         }
-        for (let a of actions) { 
+        for (let a of actions) {
             if (a.delay > 0) {
                 if (this.pendingOption === PendingOptions["always"]) {
                     // always cancel an exiting pending action
@@ -460,8 +460,8 @@ class Rule {
     cancelPendingActions(topic) {
         let actions = this.onTrueActions;
         actions.join(this.onFalseActions);
-        
-       
+
+
         for (let a of actions) {
             if (this.pendingOption === PendingOptions["always"]) {
                 // always cancel an exiting pending action
@@ -477,11 +477,11 @@ class Rule {
                     a.pendingTopics[topic] = undefined;
                     logger.info('cancelled pending action for topic [%s] for %s', topic, typeof (a));
                 }
-            } 
+            }
         }
     }
 
-    
+
 
     // json can be either an array of conditions, or a single (nested) condition
     // a condition has a 'type' and a 'condition' -> itself again an array (for 'or' and 'and') or a nested condition
@@ -573,9 +573,9 @@ class SetValueAction extends Action {
     }
 
     execute(context) {
-        super.execute(context); 
+        super.execute(context);
         if (this.topic !== undefined && this.value !== undefined) {
-            Engine.getInstance().mqttClient.publish(this.topic, JSON.stringify(this.value));
+            Engine.getInstance().mqttClient.publish(this.topic, this.value);
             logger.info('SetValueAction published %s -> %s', this.topic, this.value);
             jsonlogger.info("SetValueAction executed", {ruleId: this.rule.id, ruleName: this.rule.name, type: "action", subtype: "mqtt", details: `"${this.value}" to ${this.topic}`});
         }
@@ -595,7 +595,7 @@ class ScriptAction extends Action {
     }
 
     execute(context) {
-        super.execute(context); 
+        super.execute(context);
         logger.info('executing ScriptAction');
         try {
             Engine.getInstance().runScript(this.script);
@@ -621,7 +621,7 @@ class EMailAction extends Action {
     }
 
     execute(context) {
-        super.execute(context); 
+        super.execute(context);
         logger.info('executing EMailAction');
         const action = this;
 
@@ -656,7 +656,7 @@ class PushoverAction extends Action {
     }
 
     execute(context) {
-        super.execute(context); 
+        super.execute(context);
         logger.info('executing PushoverAction');
         const action = this;
         pushover.send(this.msg, function (err, result) {
@@ -676,24 +676,24 @@ class PushoverAction extends Action {
 class LogBookAction extends Action {
 
     constructor(json, rule) {
-        super(json, rule);    
-        this.message = json.message;    
+        super(json, rule);
+        this.message = json.message;
     }
 
-    execute(context) {     
-        super.execute(context);   
-        if (this.message !== undefined) {     
-            
+    execute(context) {
+        super.execute(context);
+        if (this.message !== undefined) {
+
             // TODO!!! -> move this context building to the calling function, so it is automatically available for all actions!!!
-            
-            
+
+
             try {
                 let finalMessage = mustache.render(this.message, context);
                 //logger.debug('evaluating script:\n# ----- start script -----\n%s\n# -----  end script  -----', script);
                 logbooklogger.info(finalMessage);
                 logger.info('LogBookAction called with message %s', finalMessage);
                 jsonlogger.info("LogBookAction executed", {ruleId: this.rule.id, ruleName: this.rule.name, type: "action", subtype: "logbook", details: `message: ${finalMessage}`});
-                
+
             } catch (err) {
                logger.error(err);
             }
@@ -703,7 +703,7 @@ class LogBookAction extends Action {
             //logbooklogger.info(this.message);
             //logger.info('LogBookAction called with message %s', this.message);
             //jsonlogger.info("LogBookAction executed", {ruleId: this.rule.id, ruleName: this.rule.name, type: "action", subtype: "logbook", details: `message: ${this.message}`});
-            
+
         }
     }
 

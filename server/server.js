@@ -10,6 +10,7 @@ const config = require('./config.js').parse();
 const rules = require('./rules.js');
 const Engine = require('./engine.js');
 const validator = require('./validator.js');
+const Aliases = require('./aliases.js');
 
 const app = express();
 const router = express.Router();
@@ -43,6 +44,18 @@ router.put('/rule/:ruleId', (req, res) => {
 router.delete('/rule/:ruleId', (req, res) => {
     res.json(rules.deleteRule(req.params.ruleId));
 });
+
+router.get('/aliases', (req, res) => {
+    let aliases = new Aliases();
+    res.json(aliases.listAliases());
+});
+
+router.post('/aliases', (req, res) => {
+    let aliases = new Aliases();
+    res.json(aliases.updateAlias(req.body));
+});
+
+
 
 router.post('/validate', (req, res) => {
     res.json(validator.validate(req.body));
@@ -96,7 +109,7 @@ router.get('/store',  (req, res) => {
     } catch (err) {
         logger.error('Error dumping store');
         res.json([]);
-    }    
+    }
 });
 
 router.get('/logbook',  async (req, res) => {
@@ -106,7 +119,7 @@ router.get('/logbook',  async (req, res) => {
     } catch (err) {
         logger.error('Error parsing logbook logs');
         res.json([]);
-    } 
+    }
 });
 
 
