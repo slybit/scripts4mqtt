@@ -55,7 +55,10 @@ router.post('/aliases', (req, res) => {
     res.json(aliases.updateAlias(req.body));
 });
 
-
+router.delete('/alias/:aliasId', (req, res) => {
+    let aliases = new Aliases();
+    res.json(aliases.deleteAlias(req.params.aliasId));
+});
 
 router.post('/validate', (req, res) => {
     res.json(validator.validate(req.body));

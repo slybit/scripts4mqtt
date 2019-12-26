@@ -232,3 +232,7 @@ c71e6414f80f:
       delay: 0
       topic: knx/set/0/0/23
       value: '{ "test" : 1 }'
+    - type: mqtt
+      delay: 0
+      topic: 1/1/1
+      value: '0'

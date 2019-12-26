@@ -12,32 +12,48 @@ export class Aliases extends Component {
 
   constructor() {
     super();
+    this.data = {};                 // data as received by the server
     this.state = {
-      aliases: [],
-      selectedAlias: undefined,
+      newAliasModalVisible: false,
+      topics: [],                   // list of topics related to the current alias
+      aliasList: [],                // list of aliases
+      selectedAlias: undefined,     // current alias
     };
   }
 
   componentDidMount() {
-    this.loadAliasListFromServer();
+    this.loadAliasesFromServer();
   }
 
-  loadAliasListFromServer() {
+  loadAliasesFromServer() {
     axios.get('/api/aliases')
       .then((response) => {
-        this.updateAliasList(response.data);
+        this.initState(response.data);
       })
       .catch((error) => {
         showError("Cannot access the script4mqtt service.", error);
       });
   }
 
+  initState(data) {
+    // the selected alias name is either indiciated by the server or the first in the sorted list
+    let name = data.name ? data.name : (Object.keys(data.aliases).length > 0 ? Object.keys(data.aliases).sort()[0] : undefined);
+    this.data = data;
+    this.setState({
+      newAliasModalVisible: false,
+      aliasList: Object.keys(data.aliases).sort(),
+      topics: data.aliases[name],
+      selectedAlias: name
+    });
+  }
 
 
-
-
-  handleAliasClick(key) {
-    this.setState({ selectedAlias: key });
+  setCurrentAlias(name) {
+    this.setState({
+      newAliasModalVisible: false,
+      topics: this.data.aliases[name],
+      selectedAlias: name,
+    });
   }
 
 
@@ -56,13 +72,7 @@ export class Aliases extends Component {
 
 
 
-  updateAliasList(data) {
-      this.setState({
-        newAliasModalVisible: false,
-        aliases: data.aliases,
-        selectedAlias: data.name ? data.name : (Object.keys(data.aliases).length > 0 ? Object.keys(data.aliases).sort()[0] : undefined)
-      });
-  }
+  
 
 
   onAliasNameChange = (e) => {
@@ -76,21 +86,53 @@ export class Aliases extends Component {
   }
 
   aliasNameEditorHandleSaveClick = () => {
-    console.log("creating new alias: " + this.state.newAliasName);
     let newAlias = {};
     newAlias[this.state.newAliasName] = [];
-    axios.post('/api/aliases', newAlias)
-    .then((response) => {
-      if (response.data.success) {
-        this.updateAliasList(response.data, true);
-      } else {
-        showError("New rule action not handled by script4mqtt service.", response.data);
-        console.log(response.data);
-      }
-    })
-    .catch((error) => {
-      showError("Cannot access the script4mqtt service.", error);
-    });
+    this.pushAliasUpdateToServer(newAlias);
+  }
+
+  handleDeleteAliasClick = (aliasId) => {
+    axios.delete('/api/alias/' + aliasId)
+      .then((response) => {
+        if (response.data.success) {
+          this.initState(response.data);
+        } else {
+          showError("Alias deletion not accepted by script4mqtt service.", response.data.error);
+          console.log(response.data);
+        }
+      })
+      .catch((error) => {
+        showError("Cannot access the script4mqtt service.", error);
+      });
+
+  }
+
+  
+  deleteTopic = (index) => {
+    let updatedAlias = {};
+    updatedAlias[this.state.selectedAlias] = update(this.state.topics,  { $splice: [[index, 1]] } );
+    this.pushAliasUpdateToServer(updatedAlias);
+  }
+
+  addTopic = (topic) => {
+    let updatedAlias = {};
+    updatedAlias[this.state.selectedAlias] = update(this.state.topics,  { $push: [topic] } );
+    this.pushAliasUpdateToServer(updatedAlias);
+  }
+
+  pushAliasUpdateToServer = (updatedAlias) => {
+    axios.post('/api/aliases', updatedAlias)
+      .then((response) => {
+        if (response.data.success) {
+          this.initState(response.data);
+        } else {
+          showError("Alias update not accepted by script4mqtt service.", response.data.error);
+          console.log(response.data);
+        }
+      })
+      .catch((error) => {
+        showError("Cannot access the script4mqtt service.", error);
+      });
 
   }
 
@@ -99,7 +141,7 @@ export class Aliases extends Component {
   render() {
     return (
       <AppBody>
-      {this.state.newAliasModalVisible && <AliasNameInput
+        {this.state.newAliasModalVisible && <AliasNameInput
           aliasName={this.state.newAliasName}
           handleCancelClick={this.aliasNameEditorHandleCancelClick}
           handleSaveClick={this.aliasNameEditorHandleSaveClick}
@@ -115,19 +157,19 @@ export class Aliases extends Component {
           </HorizontalContainer>
           {!this.state.selectedAlias && <Title>No aliases defined. Create one...</Title>}
           <AliasList
-            data={this.state.aliases}
+            data={this.state.aliasList}
             selectedAlias={this.state.selectedAlias}
-            onClick={this.handleAliasClick.bind(this)}
+            onClick={this.setCurrentAlias.bind(this)}
             onDeleteClick={this.handleDeleteAliasClick}
-            onEnableClick={this.handleEnableAliasClick}
           />
         </AppNav>
-        {this.state.selectedAlias &&
+        {this.state.selectedAlias && 
           <AliasEditor
-            aliases={this.state.aliases}
+            topics={this.state.topics}
             selectedAlias={this.state.selectedAlias}
-            refreshNames={() => { this.loadAliasListFromServer() }}
-            onAliasNameChange={this.onAliasNameChange} />
+            deleteTopic={this.deleteTopic}
+            addTopic={this.addTopic}
+          />
         }
 
 

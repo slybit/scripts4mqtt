@@ -69,6 +69,21 @@ class Aliases {
 
     }
 
+    deleteAlias(id) {
+        try {
+            delete this.aliases[id];
+            this.saveAliases();
+            return {
+                success: true,
+                aliases: this.aliases
+            };
+        } catch (err) {
+            logger.warn(err);
+            return { success: false, error: err.message };
+        }
+
+    }
+
     /*
     - input: JSON with full new alias {"newname" : [ new topics ]}
     */
@@ -76,10 +91,13 @@ class Aliases {
         try {
             let list = Object.values(input)[0];
             for (let topic of list) {
-                if (!validator.validateTopic(topic)) throw new Error('Invalid topic in list');
+                if (!validator.validateTopic(topic)) throw new Error('Invalid topic');
+            }
+            if (new Set(list).size !== list.length) {
+                throw new Error('Duplicate topic in list');
             }
         } catch (err) {
-            throw new Error('Invalid topic list');
+            throw err;
         }
     }
 

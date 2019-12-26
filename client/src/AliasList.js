@@ -13,9 +13,9 @@ const selectedStyle = {
 
 export class AliasList extends React.Component {
 
-    handleDeleteClick = (e, key) => {
+    handleDeleteClick = (e, aliasId) => {
         e.stopPropagation();
-        this.props.onDeleteClick(key);
+        this.props.onDeleteClick(aliasId);
     }
 
     handleEnableClick = (e, index) => {
@@ -27,7 +27,7 @@ export class AliasList extends React.Component {
 
     render() {
 
-        const items = Object.keys(this.props.data).sort().map((alias, index) => {
+        const items = this.props.data.map((alias, index) => {
             const style = {
                 cursor: 'pointer',
                 ...(alias === this.props.selectedAlias ? selectedStyle: null)
