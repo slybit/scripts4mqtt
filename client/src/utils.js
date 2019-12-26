@@ -91,6 +91,7 @@ export function showError(msg, error) {
 export const staticData = {
     conditions: {
         mqtt: "MQTT",
+        alias: "Alias",
         cron: "Cron expression"
     },
     actions: {
@@ -117,6 +118,12 @@ export const staticData = {
                 type: "mqtt",
                 trigger: "no",
                 topic: "__REPLACE__",
+                eval: "{{true}}"
+            },
+            alias: {
+                type: "alias",
+                trigger: "no",
+                alias: "__REPLACE__",
                 eval: "{{true}}"
             },
             cron: {
@@ -190,6 +197,19 @@ export const staticData = {
                     ]
                 },
                 { key: "topic", label: "Topic", props: { required: true } },
+                { key: "eval", label: "Eval", props: { required: true } }
+            ],
+            alias: [
+                {
+                    key: "trigger", label: "Trigger", type: "select", options: [
+                        { value: "no", label: "No" },
+                        { value: "on_flip", label: "On flip" },
+                        { value: "on_flip_true", label: "On flip to True" },
+                        { value: "on_flip_false", label: "On flip to False" },
+                        { value: "always", label: "Always" }
+                    ]
+                },
+                { key: "alias", label: "Alias", props: { required: true } },
                 { key: "eval", label: "Eval", props: { required: true } }
             ],
             cron: [
@@ -269,4 +289,6 @@ export const staticData = {
         }
     }
 }
+
+
 

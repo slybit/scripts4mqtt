@@ -77,7 +77,7 @@ export class RuleEditor extends React.Component {
             editorModel: model,
             editorItemIndex: index,
             editorItemType: itemType,
-            editorTitle: itemType,
+            editorTitle: this.state[itemType][index].type,
             editorAlertVisible: false
         });
     }
@@ -506,6 +506,11 @@ class ConditionItemRendererClass extends React.Component {
                 isNew = isNewItem(this.props, "condition", type);
                 const { topic } = this.props;
                 label = format("MQTT [{}]", topic);
+                break;
+            case "alias":
+                isNew = isNewItem(this.props, "condition", type);
+                const { alias } = this.props;
+                label = format("ALIAS [{}]", alias);
                 break;
             case "cron":
                 isNew = isNewItem(this.props, "condition", type);

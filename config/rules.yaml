@@ -23,7 +23,7 @@ Logbook:
     - type: logbook
       message: test to logbook123
   pendingOption: always
-  enabled: false
+  enabled: true
 DoorBell:
   name: Doorbell
   condition:
@@ -31,6 +31,8 @@ DoorBell:
       trigger: on_flip_true
       topic: knx/status/15/2/3
       eval: '{{M.val}} == "0x01"'
+    - type: and
+      condition: []
   ontrue:
     - type: pushover
       message: Notification from script4mqtt
@@ -39,6 +41,22 @@ DoorBell:
       priority: 1
   pendingOption: always
   enabled: false
+AliasTest:
+  name: AliasTest
+  condition:
+    - type: alias
+      trigger: on_flip_true
+      alias: A
+      eval: '{{M.val}} == "0x01"'
+    - type: alias
+      trigger: 'no'
+      alias: a
+      eval: '{{true}}'
+  ontrue:
+    - type: logbook
+      message: alias test to logbook
+  pendingOption: always
+  enabled: true
 Back_of_the_house:
   name: Back of the house
   condition:

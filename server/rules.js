@@ -2,13 +2,10 @@ const fs = require('fs');
 const yaml = require('js-yaml');
 const util = require('util');
 const crypto = require('crypto');
-const mustache = require('mustache');
-const { validateMqttCondition, validateMqttAction, validateCronCondition, validateEmailAction } = require('./validator');
 const {logger, jsonlogger, logbooklogger} = require('./logger.js');
 const Engine = require('./engine.js');
-const config = require('./config.js').parse();
-const cronmatch = require('./cronmatch.js')
-const { SMTPTransporter, pushover } = require('./utils.js')
+const {EMailAction, LogBookAction, PushoverAction, ScriptAction, SetValueAction} = require('./actions.js')
+const {CronCondition, MqttCondition, AliasCondition, SimpleCondition} = require('./conditions.js')
 
 const FILENAME = process.env.MQTT4SCRIPTS_RULES || '../config/rules.yaml';
 
@@ -75,6 +72,10 @@ class Rules {
             let rule = this.rules[key];
             for (let c of rule.conditions)
                 if ((c instanceof MqttCondition) && (c.topic === topic)) {
+                    logger.silly('Rule [%s] matches topic [%s], evaluating...', rule.name, topic);
+                    if (c.evaluate() && withActions)
+                        rule.scheduleActions(context);
+                } else if ((c instanceof AliasCondition) && (c.getTopics().includes(topic))) {
                     logger.silly('Rule [%s] matches topic [%s], evaluating...', rule.name, topic);
                     if (c.evaluate() && withActions)
                         rule.scheduleActions(context);
@@ -315,8 +316,6 @@ const PendingOptions = Object.freeze({
 
 class Rule {
 
-
-
     constructor(id, json) {
         this.id = id;
         this.name = json.name;
@@ -515,6 +514,10 @@ class Rule {
                     c = new MqttCondition(json, this);
                     this.conditions.push(c);
                     break;
+                case "alias":
+                    c = new AliasCondition(json, this);
+                    this.conditions.push(c);
+                    break;
                 case "cron":
                     c = new CronCondition(json, this);
                     this.conditions.push(c);
@@ -540,314 +543,5 @@ class Rule {
 
 
 
-/* --------------------------------------------------------------------------------------------
- * Action
--------------------------------------------------------------------------------------------- */
-
-
-class Action {
-    constructor(json, rule) {
-        this.rule = rule;
-        this.delay = json.delay ? json.delay : 0;
-        // only used incase the user selects "same topic" for the Pending Option
-        this.pendingTopics = {};
-        // used in case of cron conditions being the trigger or the user selecting "always" or "never"
-        this.pending == undefined;
-    }
-
-    execute(context) {
-        // if the context contains a Historic message value, also add the current value
-        if (context.H) {
-            context.M = Engine.getInstance().mqttStore.get(context.topic) ? Engine.getInstance().mqttStore.get(context.topic).data : undefined;
-        }
-    }
-}
-
-class SetValueAction extends Action {
-
-    constructor(json, rule) {
-        super(json, rule);
-        this.topic = json.topic;
-        this.value = json.value;
-        validateMqttAction(json);
-    }
-
-    execute(context) {
-        super.execute(context);
-        if (this.topic !== undefined && this.value !== undefined) {
-            Engine.getInstance().mqttClient.publish(this.topic, this.value);
-            logger.info('SetValueAction published %s -> %s', this.topic, this.value);
-            jsonlogger.info("SetValueAction executed", {ruleId: this.rule.id, ruleName: this.rule.name, type: "action", subtype: "mqtt", details: `"${this.value}" to ${this.topic}`});
-        }
-
-        //TODO: make value mustache expression
-        //TODO: add option for retain true or false
-    }
-
-}
-
-class ScriptAction extends Action {
-
-    constructor(json, rule) {
-        super(json, rule);
-        //this.topic = json.topic;
-        this.script = json.script;
-    }
-
-    execute(context) {
-        super.execute(context);
-        logger.info('executing ScriptAction');
-        try {
-            Engine.getInstance().runScript(this.script);
-            jsonlogger.info("ScriptAction executed", {ruleId: this.rule.id, ruleName: this.rule.name, type: "action", subtype: "script"});
-        } catch (err) {
-            logger.error('ERROR running script:\n# ----- start script -----\n%s\n# -----  end script  -----', this.script);
-            logger.error(err);
-        }
-    }
-
-}
-
-class EMailAction extends Action {
-
-    constructor(json, rule) {
-        super(json, rule);
-        this.msg = {
-            to: json.to,
-            subject: json.subject,
-            body: json.body,
-        }
-        validateEmailAction(json);
-    }
-
-    execute(context) {
-        super.execute(context);
-        logger.info('executing EMailAction');
-        const action = this;
-
-        const mailOptions = {
-            from: config.email.from,
-            ...this.msg
-        };
-
-        SMTPTransporter.sendMail(mailOptions, function (err, info) {
-            if (err) {
-                logger.error('ERROR sending email');
-                logger.error(err);
-            } else {
-                logger.info('mail sent succesfully');
-                jsonlogger.info("EMailAction executed", {ruleId: action.rule.id, ruleName: action.rule.name, type: "action", subtype: "email", details: `subject: ${action.msg.subject}`});
-            }
-        });
-    }
-
-}
-
-class PushoverAction extends Action {
-
-    constructor(json, rule) {
-        super(json, rule);
-        this.msg = {
-            message: json.message,
-            title: json.title,
-            sound: json.sound ? json.sound : "none",
-            priority: json.priority ? json.priority : 0
-        }
-    }
-
-    execute(context) {
-        super.execute(context);
-        logger.info('executing PushoverAction');
-        const action = this;
-        pushover.send(this.msg, function (err, result) {
-            if (err) {
-                logger.error('ERROR sending Pushover notification');
-                logger.error(err);
-            } else {
-                logger.info('Pushover notification sent succesfully');
-                jsonlogger.info("PushoverAction executed", {ruleId: action.rule.id, ruleName: action.rule.name, type: "action", subtype: "pushover", details: `subject: ${action.msg.title}`});
-            }
-        });
-    }
-
-}
-
-
-class LogBookAction extends Action {
-
-    constructor(json, rule) {
-        super(json, rule);
-        this.message = json.message;
-    }
-
-    execute(context) {
-        super.execute(context);
-        if (this.message !== undefined) {
-
-            // TODO!!! -> move this context building to the calling function, so it is automatically available for all actions!!!
-
-
-            try {
-                let finalMessage = mustache.render(this.message, context);
-                //logger.debug('evaluating script:\n# ----- start script -----\n%s\n# -----  end script  -----', script);
-                logbooklogger.info(finalMessage);
-                logger.info('LogBookAction called with message %s', finalMessage);
-                jsonlogger.info("LogBookAction executed", {ruleId: this.rule.id, ruleName: this.rule.name, type: "action", subtype: "logbook", details: `message: ${finalMessage}`});
-
-            } catch (err) {
-               logger.error(err);
-            }
-
-
-            //logbooklogger.info("Entry", {message: this.message});
-            //logbooklogger.info(this.message);
-            //logger.info('LogBookAction called with message %s', this.message);
-            //jsonlogger.info("LogBookAction executed", {ruleId: this.rule.id, ruleName: this.rule.name, type: "action", subtype: "logbook", details: `message: ${this.message}`});
-
-        }
-    }
-
-}
-
-
-
-
-/* --------------------------------------------------------------------------------------------
- * Condition
--------------------------------------------------------------------------------------------- */
-
-const Trigger = Object.freeze({
-    "no": 10,
-    "on_flip": 11,
-    "on_flip_true": 12,
-    "on_flip_false": 13,
-    "always": 14,
-});
-
-
-class Condition {
-
-    constructor(json, rule) {
-        this.rule = rule;
-        this.trigger = Trigger[json.trigger] ? Trigger[json.trigger] : Trigger["no"];
-        this.oldState = undefined;
-        this.state = undefined;
-    }
-
-    flipped() {
-        return this.state !== this.oldState;
-    }
-
-    flippedFalse() {
-        return !this.state && this.flipped();
-    }
-
-    flippedTrue() {
-        return this.state && this.flipped();
-    }
-
-    triggered() {
-        return (this.trigger == Trigger.always) ||
-            (this.trigger == Trigger.on_flip && this.flipped()) ||
-            (this.trigger == Trigger.on_flip_true && this.flippedTrue()) ||
-            (this.trigger == Trigger.on_flip_false && this.flippedFalse());
-    }
-
-    /*
-        Evaluates this condition.
-        It must update these values for the condition:
-            - oldValue
-            - value
-        It must return True if a complete evaluation of the rule is required, False if not.
-    */
-    evaluate() {
-        throw new Error('You have to implement the method evaluate!');
-    }
-}
-
-
-class MqttCondition extends Condition {
-
-    constructor(json, rule) {
-        super(json, rule);
-        this.topic = json.topic;
-        this.eval = json.eval;
-        validateMqttCondition(json);
-    }
-
-    evaluate() {
-        this.oldState = this.state;
-        this.state = false;
-
-        let data = {};
-        data.M = Engine.getInstance().mqttStore.get(this.topic) ? Engine.getInstance().mqttStore.get(this.topic).data : undefined;
-        data.T = topicToArray(this.topic);
-        try {
-            let script = mustache.render(this.eval, data);
-            //logger.debug('evaluating script:\n# ----- start script -----\n%s\n# -----  end script  -----', script);
-            this.state = Engine.getInstance().runScript(script);
-        } catch (err) {
-            logger.error(err);
-        }
-        logger.debug("MQTT Condition state updated from %s to %s; flipped = %s", this.oldState, this.state, this.flipped());
-        jsonlogger.info("MQTT condition evaluated", {ruleId: this.rule.id, ruleName: this.rule.name, type: "condition", subtype: "mqtt", details: `topic: ${this.topic}, value: ${JSON.stringify(data.M)}, oldState: ${this.oldState}, state: ${this.state}, flipped: ${this.flipped()}`});
-        return this.triggered();
-    }
-
-}
-
-class CronCondition extends Condition {
-
-    constructor(json, rule) {
-        super(json, rule);
-        this.onExpression = json.on ? json.on.trim() : undefined;
-        this.offExpression = json.off ? json.off.trim() : undefined;
-        validateCronCondition(json);
-    }
-
-    evaluate() {
-        this.oldState = this.state;
-        let match = false;
-        const currTime = new Date();
-        // go over the onPatterns first
-        if (this.onExpression !== undefined && this.onExpression !== "" && this.onExpression !== "-" && cronmatch.match(this.onExpression, currTime)) {
-            this.state = true;
-            match = true;
-        }
-
-        // go over the offPatterns second
-        if (this.offExpression !== undefined && this.offExpression !== "" && this.offExpression !== "-" && cronmatch.match(this.offExpression, currTime)) {
-            this.state = false;
-            match = true;
-        }
-
-        if (match) {
-            logger.info('cron evaluated: state: %s, match: %s, flipped: %s', this.state, match, this.flipped());
-            jsonlogger.info("Cron condition evaluated", {ruleId: this.rule.id, ruleName: this.rule.name, type: "condition", subtype: "cron", details: `match: ${match}, state: ${this.state}, flipped: ${this.flipped()}`});
-        }
-        return match && this.triggered()
-    }
-}
-
-class SimpleCondition extends Condition {
-
-    constructor(json, rule) {
-        super(json, rule);
-        this.state = json.value ? true : false;
-    }
-
-    evaluate() {
-        this.oldState = this.state;
-        return this.state;
-    }
-
-}
-
-
-
-
-
 const rules = new Rules();
-
-//module.exports = {Rules, Rule}
 module.exports = rules;

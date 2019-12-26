@@ -37,6 +37,10 @@ class Aliases {
         }
     }
 
+    getTopics(alias) {
+        return (this.aliases[alias] !== undefined) ? this.aliases[alias] : [];
+    }
+
     /*
      * REST APIs
      */

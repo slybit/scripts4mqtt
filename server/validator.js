@@ -71,6 +71,15 @@ function validateMqttCondition(json) {
     // no check of the eval expression
 }
 
+function validateAliasCondition(json) {
+    if (!(json.alias && json.eval))
+        throw new Error('Missing alias or eval expression');
+    if ((json.alias.trim() === '' || json.eval.trim() === ''))
+        throw new Error('Empty alias or eval expression');
+    // TODO: add check of the alias!!!
+    // no check of the eval expression
+}
+
 function validateMqttAction(json) {
     if (!(json.topic))
         throw new Error('Missing topic');
@@ -140,4 +149,4 @@ function validateEmailAction(json) {
         throw new Error('To email address invalid');
 }
 
-module.exports = {validate, validateTopic, validateMqttCondition, validateMqttAction, validateCronCondition, validateEmailAction};
+module.exports = {validate, validateTopic, validateMqttCondition, validateAliasCondition, validateMqttAction, validateCronCondition, validateEmailAction};
