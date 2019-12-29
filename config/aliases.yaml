@@ -3,3 +3,7 @@ A:
   - knx/alias
 a:
   - knx/status/14/0/14
+C:
+  - knx/alias
+  - knx/belias
+  - knx/celias

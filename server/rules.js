@@ -73,11 +73,11 @@ class Rules {
             for (let c of rule.conditions)
                 if ((c instanceof MqttCondition) && (c.topic === topic)) {
                     logger.silly('Rule [%s] matches topic [%s], evaluating...', rule.name, topic);
-                    if (c.evaluate() && withActions)
+                    if (c.evaluate(context) && withActions)
                         rule.scheduleActions(context);
                 } else if ((c instanceof AliasCondition) && (c.getTopics().includes(topic))) {
                     logger.silly('Rule [%s] matches topic [%s], evaluating...', rule.name, topic);
-                    if (c.evaluate() && withActions)
+                    if (c.evaluate(context) && withActions)
                         rule.scheduleActions(context);
                 }
             // TODO: add wildcard topics in the condition
@@ -325,6 +325,7 @@ class Rule {
         this.logic = this.parseCondition(json.condition);
         this.onFalseActions = this.parseActions(json.onfalse);
         this.onTrueActions = this.parseActions(json.ontrue);
+        console.log("pending option: " + this.pendingOption);
     }
 
     static generateId() {
@@ -428,21 +429,9 @@ class Rule {
         for (let a of actions) {
             if (a.delay > 0) {
                 if (this.pendingOption === PendingOptions["always"]) {
-                    // always cancel an exiting pending action
-                    if (a.pending !== undefined) {
-                        clearTimeout(a.pending);
-                        a.pending = undefined;
-                        logger.info('cancelled pending action for %s', typeof (a));
-                    }
                     a.pending = setTimeout(a.execute.bind(a, context), a.delay);
                     logger.info('delayed execution for %s in %d millesecs', typeof (a), a.delay);
                 } else if (this.pendingOption === PendingOptions["topic"]) {
-                    // only cancel the exiting pending action for the same topic
-                    if (a.pendingTopics[context.topic] !== undefined) {
-                        clearTimeout(a.pendingTopics[context.topic]);
-                        a.pendingTopics[context.topic] = undefined;
-                        logger.info('cancelled pending action for topic [%s] for %s', context.topic, typeof (a));
-                    }
                     a.pendingTopics[context.topic] = setTimeout(a.execute.bind(a, context), a.delay);
                     logger.info('delayed execution for for topic [%s] %s in %d millesecs', context.topic, typeof (a), a.delay);
                 } else {
@@ -467,14 +456,14 @@ class Rule {
                 if (a.pending !== undefined) {
                     clearTimeout(a.pending);
                     a.pending = undefined;
-                    logger.info('cancelled pending action for %s', typeof (a));
+                    logger.info('ALWAYS - cancelled pending action for %s', typeof (a));
                 }
             } else if (this.pendingOption === PendingOptions["topic"]) {
                 // only cancel the exiting pending action for the same topic
                 if (a.pendingTopics[topic] !== undefined) {
                     clearTimeout(a.pendingTopics[topic]);
                     a.pendingTopics[topic] = undefined;
-                    logger.info('cancelled pending action for topic [%s] for %s', topic, typeof (a));
+                    logger.info('TOPIC - cancelled pending action for topic [%s] for %s', topic, typeof (a));
                 }
             }
         }

@@ -58,7 +58,7 @@ class Condition {
             - value
         It must return True if a complete evaluation of the rule is required, False if not.
     */
-    evaluate() {
+    evaluate(context) {
         throw new Error('You have to implement the method evaluate!');
     }
 }
@@ -73,7 +73,7 @@ class MqttCondition extends Condition {
         validateMqttCondition(json);
     }
 
-    evaluate() {
+    evaluate(context) {
         this.oldState = this.state;
         this.state = false;
 
@@ -103,24 +103,24 @@ class AliasCondition extends Condition {
         validateAliasCondition(json);
     }
 
-    evaluate() {
+    evaluate(context) {
         this.oldState = this.state;
         let state = false;
-
-        for (let topic of this.getTopics()) {
-            let data = {};
-            data.M = Engine.getInstance().mqttStore.get(topic) ? Engine.getInstance().mqttStore.get(topic).data : {};
-            data.T = topicToArray(topic);
-            console.log(JSON.stringify(data));
-            try {
-                let script = mustache.render(this.eval, data);
-                //logger.debug('evaluating script:\n# ----- start script -----\n%s\n# -----  end script  -----', script);
-                state = Engine.getInstance().runScript(script);
-                if (state) break;
-            } catch (err) {
-                logger.error(err);
-            }
+        // we only take into account the one topic that triggered the evaluation
+        let topic = context.topic;
+        
+        let data = {};
+        data.M = Engine.getInstance().mqttStore.get(topic) ? Engine.getInstance().mqttStore.get(topic).data : {};
+        data.T = topicToArray(topic);
+        console.log(JSON.stringify(data));
+        try {
+            let script = mustache.render(this.eval, data);
+            //logger.debug('evaluating script:\n# ----- start script -----\n%s\n# -----  end script  -----', script);
+            state = Engine.getInstance().runScript(script);
+        } catch (err) {
+            logger.error(err);
         }
+        
         this.state = state;
         logger.debug("Alias Condition state updated from %s to %s; flipped = %s", this.oldState, this.state, this.flipped());
         jsonlogger.info("Alias condition evaluated", {ruleId: this.rule.id, ruleName: this.rule.name, type: "condition", subtype: "mqtt", details: `alias: ${this.alias}, oldState: ${this.oldState}, state: ${this.state}, flipped: ${this.flipped()}`});
@@ -143,7 +143,7 @@ class CronCondition extends Condition {
         validateCronCondition(json);
     }
 
-    evaluate() {
+    evaluate(context) {
         this.oldState = this.state;
         let match = false;
         const currTime = new Date();
@@ -174,7 +174,7 @@ class SimpleCondition extends Condition {
         this.state = json.value ? true : false;
     }
 
-    evaluate() {
+    evaluate(context) {
         this.oldState = this.state;
         return this.state;
     }

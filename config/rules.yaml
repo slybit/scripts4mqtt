@@ -10,7 +10,7 @@ TimeDateUpdate:
       script: 'write(''knx/write/15/1/0'', new Date().toString());'
     - type: script
       script: 'write(''knx/write/15/1/1'', new Date().toString());'
-  pendingOption: always
+  pendingOption: never
   enabled: false
 Logbook:
   name: Logbook
@@ -23,7 +23,7 @@ Logbook:
     - type: logbook
       message: test to logbook123
   pendingOption: always
-  enabled: true
+  enabled: false
 DoorBell:
   name: Doorbell
   condition:
@@ -56,7 +56,7 @@ AliasTest:
     - type: logbook
       message: alias test to logbook
   pendingOption: always
-  enabled: true
+  enabled: false
 Back_of_the_house:
   name: Back of the house
   condition:
@@ -221,16 +221,12 @@ SetVentilationFromHassio:
 c71e6414f80f:
   name: Multi topic
   enabled: true
-  pendingOption: topic
+  pendingOption: never
   condition:
-    - type: mqtt
+    - type: alias
       trigger: always
-      topic: knx/test/0
-      eval: '{{M.val}} == "1"'
-    - type: mqtt
-      trigger: always
-      topic: knx/test/1
-      eval: '{{M.val}} == "1"'
+      alias: C
+      eval: '{{M.val}}==1'
   ontrue:
     - type: logbook
       delay: '10000'
@@ -238,7 +234,7 @@ c71e6414f80f:
   onfalse: []
 5f82f262c580:
   name: New rule
-  enabled: true
+  enabled: false
   pendingOption: always
   condition:
     - type: cron
