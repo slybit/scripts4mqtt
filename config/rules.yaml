@@ -50,7 +50,7 @@ AliasTest:
       eval: '{{M.val}} == "0x01"'
     - type: alias
       trigger: 'no'
-      alias: a
+      alias: A
       eval: '{{true}}'
   ontrue:
     - type: logbook

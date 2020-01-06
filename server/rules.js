@@ -6,6 +6,7 @@ const {logger, jsonlogger, logbooklogger} = require('./logger.js');
 const Engine = require('./engine.js');
 const {EMailAction, LogBookAction, PushoverAction, ScriptAction, SetValueAction} = require('./actions.js')
 const {CronCondition, MqttCondition, AliasCondition, SimpleCondition} = require('./conditions.js')
+const Aliases = require('./aliases.js'); 
 
 const FILENAME = process.env.MQTT4SCRIPTS_RULES || '../config/rules.yaml';
 
@@ -31,7 +32,8 @@ class Rules {
                 process.exit(1);
             }
         }
-        for (let key in this.jsonContents) {
+        
+        for (let key in this.expandAliases()) {
             try {
                 let rule = new Rule(key, this.jsonContents[key]);
                 this.rules[key] = rule;
@@ -42,7 +44,63 @@ class Rules {
                 process.exit(1);
             }
         }
+    }
 
+    expandAliases() {
+        let aliases = new Aliases();
+        let expanded = {};
+        for (let key in this.jsonContents) {
+            let str = JSON.stringify(this.jsonContents[key]);
+            let ruleAliases = [];
+            this.listAliases(this.jsonContents[key].condition, ruleAliases);
+            if (ruleAliases.length > 1) {
+                logger.error('Only one alias allowed in a rule. The following aliases were found in rule [%s]: %s', key, ruleAliases.toString());
+                process.exit(1);
+            }            
+            if (ruleAliases.length === 1) {
+                console.log("alias found in " + key);
+                let aliasstr = '"alias":"' + ruleAliases[0] + '"';
+                for (let topic of aliases.getTopics(ruleAliases[0])) {
+                    let n = str.replace(/"type":"alias"/g, '"type":"mqtt"');
+                    var re = new RegExp(aliasstr, 'g');
+                    n = n.replace(re, '"topic":"' + topic + '"');
+                    console.log(n);
+                    expanded[key + topic] = JSON.parse(n);                    
+                }
+            } else {
+                expanded[key] = this.jsonContents[key];
+            }
+        }
+        //console.log(JSON.stringify(expanded, null, 4));
+        return expanded;
+    }
+
+    // json can be either an array of conditions, or a single (nested) condition
+    // a condition has a 'type' and a 'condition' -> itself again an array (for 'or' and 'and') or a nested condition
+    listAliases(json, aliases) {
+        if (Array.isArray(json)) {
+            let result = [];
+            for (let c of json) {
+                this.listAliases(c, aliases);
+            }
+            return result;
+        } else {
+            if (!json.type) {
+                throw new Error('No type provided for condition.');
+            }
+            switch (json.type.toLowerCase()) {
+                case "and":
+                case "or":
+                    if (!json.condition) {
+                        throw new Error("OR and AND conditions cannot be empty.");
+                    }
+                    this.listAliases(json.condition, aliases);
+                    break;
+                case "alias":
+                    if (!aliases.includes(json.alias)) aliases.push(json.alias);
+                    break;
+            }
+        }
     }
 
     saveRules() {
