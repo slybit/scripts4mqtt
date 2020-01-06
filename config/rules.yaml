@@ -232,21 +232,3 @@ c71e6414f80f:
       delay: '10000'
       message: 'topic: {{{topic}}}, old value: {{H.val}}, new value: {{M.val}}'
   onfalse: []
-5f82f262c580:
-  name: New rule
-  enabled: false
-  pendingOption: always
-  condition:
-    - type: cron
-      trigger: always
-      'on': '* * * * *'
-      'off': '-'
-  ontrue:
-    - type: mqtt
-      delay: 0
-      topic: knx/set/0/0/23
-      value: '{ "test" : 1 }'
-    - type: mqtt
-      delay: 0
-      topic: 1/1/1
-      value: '0'

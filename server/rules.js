@@ -29,15 +29,18 @@ class Rules {
                 this.jsonContents = yaml.safeLoad(fs.readFileSync(FILENAME, 'utf8'));
             } catch (e) {
                 logger.error(e.toString());
-                process.exit(1);
+                
             }
         }
-        
-        for (let key in this.expandAliases()) {
+        for (let key in this.jsonContents) {
             try {
-                let rule = new Rule(key, this.jsonContents[key]);
-                this.rules[key] = rule;
-                logger.info('loaded %s', rule.toString());
+                let expandedRules = this.expandAliases(this.jsonContents[key]);
+                this.rules[key] = [];
+                for (let r of expandedRules) {
+                    let rule = new Rule(key, r);
+                    this.rules[key].push(rule);
+                    logger.info('loaded %s', rule.toString());
+                }
             } catch (e) {
                 logger.error('Error loading rule [%s]', key);
                 logger.error(e.toString());
@@ -46,37 +49,41 @@ class Rules {
         }
     }
 
-    expandAliases() {
+    // returns a list of 'rule' json definitions after exploding the alias to its topics (if any)
+    // the input is the json description of a single rule
+    expandAliases(rule) {
         let aliases = new Aliases();
-        let expanded = {};
-        for (let key in this.jsonContents) {
-            let str = JSON.stringify(this.jsonContents[key]);
-            let ruleAliases = [];
-            this.listAliases(this.jsonContents[key].condition, ruleAliases);
-            if (ruleAliases.length > 1) {
-                logger.error('Only one alias allowed in a rule. The following aliases were found in rule [%s]: %s', key, ruleAliases.toString());
-                process.exit(1);
-            }            
-            if (ruleAliases.length === 1) {
-                console.log("alias found in " + key);
-                let aliasstr = '"alias":"' + ruleAliases[0] + '"';
-                for (let topic of aliases.getTopics(ruleAliases[0])) {
-                    let n = str.replace(/"type":"alias"/g, '"type":"mqtt"');
-                    var re = new RegExp(aliasstr, 'g');
-                    n = n.replace(re, '"topic":"' + topic + '"');
-                    console.log(n);
-                    expanded[key + topic] = JSON.parse(n);                    
-                }
-            } else {
-                expanded[key] = this.jsonContents[key];
-            }
+        let expanded = [];
+
+        let ruleAliases = [];
+        this.listAliases(rule.condition, ruleAliases);
+        // only one alias per rule is allowed!
+        if (ruleAliases.length > 1) {
+            throw new Error('Only one alias allowed in a rule. Multiple aliases were found in rule: ' + rule.name);
         }
-        //console.log(JSON.stringify(expanded, null, 4));
+        // if there are any alias conditions defined, explode the rule into multiple rules - one per alias            
+        if (ruleAliases.length === 1) {
+            console.log("alias found in " + rule.name);
+            let str = JSON.stringify(rule);
+            let aliasstr = '"alias":"' + ruleAliases[0] + '"';
+            // go over all the topics in the alias and create a new rule per topic
+            let i = 0;
+            for (let topic of aliases.getTopics(ruleAliases[0])) {
+                let n = str.replace(/"type":"alias"/g, '"type":"mqtt"');
+                var re = new RegExp(aliasstr, 'g');
+                n = n.replace(re, '"topic":"' + topic + '"');
+                let newRule = JSON.parse(n);
+                expanded.push(newRule);
+                i++;                    
+            }
+        } else {
+            expanded.push(rule)
+        }
         return expanded;
     }
 
-    // json can be either an array of conditions, or a single (nested) condition
-    // a condition has a 'type' and a 'condition' -> itself again an array (for 'or' and 'and') or a nested condition
+    // go through a 'condition' JSON statement and extract all the aliases from one or more alias conditions, if any
+    // returns an array of the unique aliases it found
     listAliases(json, aliases) {
         if (Array.isArray(json)) {
             let result = [];
@@ -127,16 +134,18 @@ class Rules {
         context.topic = topic
         context.T = topicToArray(topic);
         for (let key in this.rules) {
-            let rule = this.rules[key];
-            for (let c of rule.conditions)
-                if ((c instanceof MqttCondition) && (c.topic === topic)) {
-                    logger.silly('Rule [%s] matches topic [%s], evaluating...', rule.name, topic);
-                    if (c.evaluate(context) && withActions)
-                        rule.scheduleActions(context);
-                } else if ((c instanceof AliasCondition) && (c.getTopics().includes(topic))) {
-                    logger.silly('Rule [%s] matches topic [%s], evaluating...', rule.name, topic);
-                    if (c.evaluate(context) && withActions)
-                        rule.scheduleActions(context);
+            let ruleSet = this.rules[key];
+            for (let rule of ruleSet) {
+                for (let c of rule.conditions)
+                    if ((c instanceof MqttCondition) && (c.topic === topic)) {
+                        logger.silly('Rule [%s] matches topic [%s], evaluating...', rule.name, topic);
+                        if (c.evaluate(context) && withActions)
+                            rule.scheduleActions(context);
+                    } else if ((c instanceof AliasCondition) && (c.getTopics().includes(topic))) {
+                        logger.silly('Rule [%s] matches topic [%s], evaluating...', rule.name, topic);
+                        if (c.evaluate(context) && withActions)
+                            rule.scheduleActions(context);
+                    }
                 }
             // TODO: add wildcard topics in the condition
         }
@@ -158,13 +167,15 @@ class Rules {
         // prevent a double tick in a single minute (is only possible in case tasks take very long or at startup)
         if (minutes !== this.lastMinutes) {
             for (let key in this.rules) {
-                let rule = this.rules[key];
-                for (let c of rule.conditions)
-                    if ((c instanceof CronCondition)) {
-                        logger.silly('Cron tick, evaluating...', rule.name);
-                        if (c.evaluate())
-                            rule.scheduleActions(context);
-                    }
+                let ruleSet = this.rules[key];
+                for (let rule of ruleSet) {
+                    for (let c of rule.conditions)
+                        if ((c instanceof CronCondition)) {
+                            logger.silly('Cron tick, evaluating...', rule.name);
+                            if (c.evaluate())
+                                rule.scheduleActions(context);
+                        }
+                }
             }
         }
         setTimeout(this.scheduleTimerConditionChecker.bind(this), delay * 1000);
@@ -203,9 +214,13 @@ class Rules {
                 throw (new Error('Could not read rules file'));
             }
         }
+
         for (let key in this.jsonContents) {
             try {
-                new Rule(key, this.jsonContents[key]);
+                let expandedRules = this.expandAliases(this.jsonContents[key]);
+                for (let r of expandedRules) {
+                    new Rule(key, r);
+                }
             } catch (e) {
                 logger.error('Error while validating rule [%s]', key);
                 logger.error(e.toString());
@@ -217,11 +232,11 @@ class Rules {
 
     listAllRules() {
         let list = [];
-        for (let key in this.rules) {
+        for (let key in this.jsonContents) {
             list.push({
                 key: key,
-                name: this.rules[key].name,
-                enabled: this.rules[key].enabled
+                name: this.jsonContents[key].name,
+                enabled: this.jsonContents[key].enabled
             });
 
         }
@@ -253,8 +268,11 @@ class Rules {
                 this.testRuleUpdate(id, input);
                 Object.assign(this.jsonContents[id], input);
             }
-            const rule = new Rule(id, this.jsonContents[id]);
-            this.rules[id] = rule;
+            this.rules[id] = [];
+            let expandedRules = this.expandAliases(this.jsonContents[id]);
+            for (let r of expandedRules) {
+                this.rules[id].push(new Rule(id, r));
+            }
             this.saveRules();
             return {
                 success: true,
@@ -273,7 +291,10 @@ class Rules {
         // make a hard copy, apply changes and test
         const cloned = JSON.parse(JSON.stringify(this.jsonContents[id]));
         Object.assign(cloned, input);
-        new Rule(id, cloned);
+        let expandedRules = this.expandAliases(cloned);
+        for (let r of expandedRules) {
+            new Rule(id, r);
+        }
     }
 
     deleteRule(id) {
@@ -383,7 +404,6 @@ class Rule {
         this.logic = this.parseCondition(json.condition);
         this.onFalseActions = this.parseActions(json.onfalse);
         this.onTrueActions = this.parseActions(json.ontrue);
-        console.log("pending option: " + this.pendingOption);
     }
 
     static generateId() {

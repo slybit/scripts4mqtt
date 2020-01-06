@@ -14,13 +14,11 @@ class Aliases {
     }
 
     loadAliases() {
-        logger.info("Parsing aliases");
         this.jsonContents = {};
         this.aliases = {};
         if (fs.existsSync(FILENAME)) {
             try {
                 this.aliases = yaml.safeLoad(fs.readFileSync(FILENAME, 'utf8'));
-                logger.info(JSON.stringify(this.aliases));
             } catch (e) {
                 logger.error(e.toString());
                 process.exit(1);
