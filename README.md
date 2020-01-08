@@ -43,8 +43,10 @@ By default, the web client runs on port 4000 and you can test it by browsing to 
 #### Use the image from docker hub:
 
 ```sh
-$ docker run --name scripts4mqtt -v /hostpath/to/scripts4mqtt/logs/:/scripts4mqtt/logs/ -v /hostpath/to/scripts4mqtt/config/:/scripts4mqtt/config/ --user 1000:1000 -p 4000:4000 slybit/scripts4mqtt
+$ docker run --name scripts4mqtt -v /hostpath/to/scripts4mqtt/logs/:/scripts4mqtt/logs/ -v /hostpath/to/scripts4mqtt/config/:/scripts4mqtt/config/ --user 1000:1000 -p 4000:4000 slybit/scripts4mqtt:VERSION
 ```
+
+(Look on [docker hub](https://hub.docker.com/repository/registry-1.docker.io/slybit/scripts4mqtt/tags?page=1) for the latest available version.)
 
 Since scripts4mqtt is writing to the 3 mounted folders/files, you have to make sure that you are running the container with *your* user id and group id by adapting the `--user` parameter. If you omit the `--user` parameter, the container will run as root and the log files, config.yaml and rules.yaml will also be owned by root. Not only is it bad practice to run containers as root when not required, it is also inconvenient.
 
