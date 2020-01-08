@@ -6,7 +6,7 @@ const {logger, jsonlogger, logbooklogger} = require('./logger.js');
 const Engine = require('./engine.js');
 const {EMailAction, LogBookAction, PushoverAction, ScriptAction, SetValueAction} = require('./actions.js')
 const {CronCondition, MqttCondition, AliasCondition, SimpleCondition} = require('./conditions.js')
-const Aliases = require('./aliases.js'); 
+const Aliases = require('./aliases.js');
 
 const FILENAME = process.env.MQTT4SCRIPTS_RULES || '../config/rules.yaml';
 
@@ -29,7 +29,7 @@ class Rules {
                 this.jsonContents = yaml.safeLoad(fs.readFileSync(FILENAME, 'utf8'));
             } catch (e) {
                 logger.error(e.toString());
-                
+
             }
         }
         for (let key in this.jsonContents) {
@@ -61,7 +61,7 @@ class Rules {
         if (ruleAliases.length > 1) {
             throw new Error('Only one alias allowed in a rule. Multiple aliases were found in rule: ' + rule.name);
         }
-        // if there are any alias conditions defined, explode the rule into multiple rules - one per alias            
+        // if there are any alias conditions defined, explode the rule into multiple rules - one per alias
         if (ruleAliases.length === 1) {
             console.log("alias found in " + rule.name);
             let str = JSON.stringify(rule);
@@ -74,7 +74,7 @@ class Rules {
                 n = n.replace(re, '"topic":"' + topic + '"');
                 let newRule = JSON.parse(n);
                 expanded.push(newRule);
-                i++;                    
+                i++;
             }
         } else {
             expanded.push(rule)
@@ -282,8 +282,8 @@ class Rules {
                 }
             };
         } catch (err) {
-            logger.warn(err);
-            return { success: false, error: err.message };
+            logger.warn(err.message);
+            return { success: false, message: err.message };
         }
     }
 

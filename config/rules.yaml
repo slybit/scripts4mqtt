@@ -232,3 +232,20 @@ c71e6414f80f:
       delay: '10000'
       message: 'topic: {{{topic}}}, old value: {{H.val}}, new value: {{M.val}}'
   onfalse: []
+78a92bfa9035:
+  name: Simul
+  enabled: true
+  pendingOption: always
+  condition:
+    - type: cron
+      trigger: on_flip
+      'on': 10 21 * * *
+      'off': 11 21 * * *
+  ontrue:
+    - type: logbook
+      delay: 0
+      message: simul on
+  onfalse:
+    - type: logbook
+      delay: 0
+      message: simul off
