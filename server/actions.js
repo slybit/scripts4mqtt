@@ -51,7 +51,7 @@ class SetValueAction extends Action {
                 }
             }
             Engine.getInstance().mqttClient.publish(this.topic, data);
-            logger.info('SetValueAction published %s -> %s', this.topic, data);
+            logger.info('Rule [%s]: SetValueAction published %s -> %s', this.rule.name, this.topic, data);
             jsonlogger.info("SetValueAction executed", {ruleId: this.rule.id, ruleName: this.rule.name, type: "action", subtype: "mqtt", details: `[${data}] to ${this.topic}`});
         }
 
@@ -71,12 +71,12 @@ class ScriptAction extends Action {
 
     execute(context) {
         super.execute(context);
-        logger.info('executing ScriptAction');
         try {
             Engine.getInstance().runScript(this.script);
+            logger.info('Rule [%s]: ScriptAction executed', this.rule.name);
             jsonlogger.info("ScriptAction executed", {ruleId: this.rule.id, ruleName: this.rule.name, type: "action", subtype: "script"});
         } catch (err) {
-            logger.error('ERROR running script:\n# ----- start script -----\n%s\n# -----  end script  -----', this.script);
+            logger.error('Rule [%s]: ERROR running script:\n# ----- start script -----\n%s\n# -----  end script  -----', this.rule.name, this.script);
             logger.error(err);
         }
     }
@@ -97,7 +97,6 @@ class EMailAction extends Action {
 
     execute(context) {
         super.execute(context);
-        logger.info('executing EMailAction');
         const action = this;
 
         const mailOptions = {
@@ -107,10 +106,10 @@ class EMailAction extends Action {
 
         SMTPTransporter.sendMail(mailOptions, function (err, info) {
             if (err) {
-                logger.error('ERROR sending email');
+                logger.error('Rule [%s]: ERROR EMailAction failed', this.rule.name);
                 logger.error(err);
             } else {
-                logger.info('mail sent succesfully');
+                logger.info('Rule [%s]: EMailAction executed', this.rule.name);
                 jsonlogger.info("EMailAction executed", {ruleId: action.rule.id, ruleName: action.rule.name, type: "action", subtype: "email", details: `subject: ${action.msg.subject}`});
             }
         });
@@ -132,14 +131,13 @@ class PushoverAction extends Action {
 
     execute(context) {
         super.execute(context);
-        logger.info('executing PushoverAction');
         const action = this;
         pushover.send(this.msg, function (err, result) {
             if (err) {
-                logger.error('ERROR sending Pushover notification');
+                logger.error('Rule [%s]: ERROR sending Pushover notification', this.rule.name);
                 logger.error(err);
             } else {
-                logger.info('Pushover notification sent succesfully');
+                logger.info('Rule [%s]: Pushover notification sent succesfully', this.rule.name);
                 jsonlogger.info("PushoverAction executed", {ruleId: action.rule.id, ruleName: action.rule.name, type: "action", subtype: "pushover", details: `subject: ${action.msg.title}`});
             }
         });
@@ -158,27 +156,15 @@ class LogBookAction extends Action {
     execute(context) {
         super.execute(context);
         if (this.message !== undefined) {
-
-            // TODO!!! -> move this context building to the calling function, so it is automatically available for all actions!!!
-
-
             try {
                 let finalMessage = mustache.render(this.message, context);
-                //logger.debug('evaluating script:\n# ----- start script -----\n%s\n# -----  end script  -----', script);
                 logbooklogger.info(finalMessage);
-                logger.info('LogBookAction called with message %s', finalMessage);
+                logger.info('Rule [%s]: LogBookAction called with message %s', this.rule.name, finalMessage);
                 jsonlogger.info("LogBookAction executed", {ruleId: this.rule.id, ruleName: this.rule.name, type: "action", subtype: "logbook", details: `message: ${finalMessage}`});
-
             } catch (err) {
-               logger.error(err);
+                logger.error('Rule [%s]: ERROR LogBookAction failed', this.rule.name);
+                logger.error(err);
             }
-
-
-            //logbooklogger.info("Entry", {message: this.message});
-            //logbooklogger.info(this.message);
-            //logger.info('LogBookAction called with message %s', this.message);
-            //jsonlogger.info("LogBookAction executed", {ruleId: this.rule.id, ruleName: this.rule.name, type: "action", subtype: "logbook", details: `message: ${this.message}`});
-
         }
     }
 

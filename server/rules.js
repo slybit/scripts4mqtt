@@ -5,7 +5,7 @@ const crypto = require('crypto');
 const {logger, jsonlogger, logbooklogger} = require('./logger.js');
 const Engine = require('./engine.js');
 const {EMailAction, LogBookAction, PushoverAction, ScriptAction, SetValueAction} = require('./actions.js')
-const {CronCondition, MqttCondition, AliasCondition, SimpleCondition} = require('./conditions.js')
+const {CronCondition, MqttCondition, SimpleCondition} = require('./conditions.js')
 const Aliases = require('./aliases.js');
 
 const FILENAME = process.env.MQTT4SCRIPTS_RULES || '../config/rules.yaml';
@@ -127,7 +127,7 @@ class Rules {
       Only the topic of the message is provided, the data should be taken from 'engine.mqttStore'
     */
     mqttConditionChecker(topic, withActions = true) {
-        logger.silly('MQTT Condition Checker called for %s', topic);
+        //logger.silly('MQTT Condition Checker called for %s', topic);
         // build the context of a triggered action, it will be passed through to the 'execute' method of the action.
         let context = {};
         context.H = Engine.getInstance().mqttStore.get(topic) ? Engine.getInstance().mqttStore.get(topic).data : undefined;
@@ -138,11 +138,7 @@ class Rules {
             for (let rule of ruleSet) {
                 for (let c of rule.conditions)
                     if ((c instanceof MqttCondition) && (c.topic === topic)) {
-                        logger.silly('Rule [%s] matches topic [%s], evaluating...', rule.name, topic);
-                        if (c.evaluate(context) && withActions)
-                            rule.scheduleActions(context);
-                    } else if ((c instanceof AliasCondition) && (c.getTopics().includes(topic))) {
-                        logger.silly('Rule [%s] matches topic [%s], evaluating...', rule.name, topic);
+                        logger.silly('Rule [%s]: matches topic [%s], evaluating...', rule.name, topic);
                         if (c.evaluate(context) && withActions)
                             rule.scheduleActions(context);
                     }
@@ -171,7 +167,7 @@ class Rules {
                 for (let rule of ruleSet) {
                     for (let c of rule.conditions)
                         if ((c instanceof CronCondition)) {
-                            logger.silly('Cron tick, evaluating...', rule.name);
+                            logger.silly('Rule [%s]: cron tick, evaluating cron expressions', rule.name);
                             if (c.evaluate())
                                 rule.scheduleActions(context);
                         }
@@ -488,44 +484,55 @@ class Rule {
             - context.topic = "__cron__" -> we abuse this to be able to keep track of pending actions using context.topic also when the condition was a cron task
     */
     scheduleActions(context) {
+        if (context.topic === "__cron__") {
+            logger.info('Rule [%s]: TRIGGERED by cron tick', this.name);
+        } else {
+            logger.info('Rule [%s]: TRIGGERED by topic [%s]', this.name, context.topic);
+        }
+
         if (!this.enabled) {
-            logger.silly('Rule disabled, not scheduling actions for rule %s', this.name);
+            logger.info('Rule [%s]: Rule disabled, not scheduling actions', this.name);
             return;
         }
-        logger.info('Scheduling actions for rule %s', this.name);
 
         this.cancelPendingActions(context.topic);
 
         let actions = [];
         if (Rule.evalLogic(this.logic)) {
-            console.log("true actions");
+            logger.info("Rule [%s]: scheduling TRUE actions", this.name);
             actions = this.onTrueActions;
         } else {
-            console.log("false actions");
+            logger.info("Rule [%s]: scheduling FALSE actions", this.name);
             actions = this.onFalseActions;
         }
         for (let a of actions) {
             if (a.delay > 0) {
                 if (this.pendingOption === PendingOptions["always"]) {
+                    logger.info('Rule [%s]: Schedule - delayed execution in %d millesecs', a.rule.name, a.delay);
                     a.pending = setTimeout(a.execute.bind(a, context), a.delay);
-                    logger.info('delayed execution for %s in %d millesecs', typeof (a), a.delay);
+
                 } else if (this.pendingOption === PendingOptions["topic"]) {
+                    logger.info('Rule [%s]: Schedule - delayed execution for topic [%s] in %d millesecs', a.rule.name, context.topic, a.delay);
                     a.pendingTopics[context.topic] = setTimeout(a.execute.bind(a, context), a.delay);
-                    logger.info('delayed execution for for topic [%s] %s in %d millesecs', context.topic, typeof (a), a.delay);
                 } else {
                     // default: 'never'; just schedule the action with a delay and dont kill any existing pending actions
+                    logger.info('Rule [%s]: Schedule - delayed execution in %d millesecs', a.rule.name, a.delay);
                     setTimeout(a.execute.bind(a, context), a.delay);
-                    logger.info('delayed execution for %s in %d millesecs', typeof (a), a.delay);
                 }
             } else {
+                logger.info('Rule [%s]: schedule - immediate execution', a.rule.name);
                 a.execute(context);
             }
         }
     }
 
     cancelPendingActions(topic) {
+
+
         let actions = this.onTrueActions;
-        actions.join(this.onFalseActions);
+        actions = actions.concat(this.onFalseActions);
+
+        //logger.info("CANCEL PENDING CALLED " + actions.length);
 
 
         for (let a of actions) {
@@ -534,14 +541,14 @@ class Rule {
                 if (a.pending !== undefined) {
                     clearTimeout(a.pending);
                     a.pending = undefined;
-                    logger.info('ALWAYS - cancelled pending action for %s', typeof (a));
+                    logger.info('Rule [%s]: CANCEL always - cancelled pending action', a.rule.name);
                 }
             } else if (this.pendingOption === PendingOptions["topic"]) {
                 // only cancel the exiting pending action for the same topic
                 if (a.pendingTopics[topic] !== undefined) {
                     clearTimeout(a.pendingTopics[topic]);
                     a.pendingTopics[topic] = undefined;
-                    logger.info('TOPIC - cancelled pending action for topic [%s] for %s', topic, typeof (a));
+                    logger.info('Rule [%s]: CANCEL topic - cancelled pending action for topic [%s]', topic, a.rule.name);
                 }
             }
         }
@@ -579,10 +586,6 @@ class Rule {
                     break;
                 case "mqtt":
                     c = new MqttCondition(json, this);
-                    this.conditions.push(c);
-                    break;
-                case "alias":
-                    c = new AliasCondition(json, this);
                     this.conditions.push(c);
                     break;
                 case "cron":

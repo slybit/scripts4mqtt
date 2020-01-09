@@ -87,52 +87,13 @@ class MqttCondition extends Condition {
         } catch (err) {
             logger.error(err);
         }
-        logger.debug("MQTT Condition state updated from %s to %s; flipped = %s", this.oldState, this.state, this.flipped());
+        logger.info("Rule [%s]: MQTT Condition state updated from %s to %s; flipped = %s", this.rule.name, this.oldState, this.state, this.flipped());
         jsonlogger.info("MQTT condition evaluated", {ruleId: this.rule.id, ruleName: this.rule.name, type: "condition", subtype: "mqtt", details: `topic: ${this.topic}, value: ${JSON.stringify(data.M)}, oldState: ${this.oldState}, state: ${this.state}, flipped: ${this.flipped()}`});
         return this.triggered();
     }
 
 }
 
-class AliasCondition extends Condition {
-
-    constructor(json, rule) {
-        super(json, rule);
-        this.alias = json.alias;
-        this.eval = json.eval;
-        validateAliasCondition(json);
-    }
-
-    evaluate(context) {
-        this.oldState = this.state;
-        let state = false;
-        // we only take into account the one topic that triggered the evaluation
-        let topic = context.topic;
-        
-        let data = {};
-        data.M = Engine.getInstance().mqttStore.get(topic) ? Engine.getInstance().mqttStore.get(topic).data : {};
-        data.T = topicToArray(topic);
-        console.log(JSON.stringify(data));
-        try {
-            let script = mustache.render(this.eval, data);
-            //logger.debug('evaluating script:\n# ----- start script -----\n%s\n# -----  end script  -----', script);
-            state = Engine.getInstance().runScript(script);
-        } catch (err) {
-            logger.error(err);
-        }
-        
-        this.state = state;
-        logger.debug("Alias Condition state updated from %s to %s; flipped = %s", this.oldState, this.state, this.flipped());
-        jsonlogger.info("Alias condition evaluated", {ruleId: this.rule.id, ruleName: this.rule.name, type: "condition", subtype: "mqtt", details: `alias: ${this.alias}, oldState: ${this.oldState}, state: ${this.state}, flipped: ${this.flipped()}`});
-        return this.triggered();
-    }
-
-    getTopics() {
-        let aliases = new Aliases();
-        return aliases.getTopics(this.alias);
-    }
-
-}
 
 class CronCondition extends Condition {
 
@@ -160,7 +121,7 @@ class CronCondition extends Condition {
         }
 
         if (match) {
-            logger.info('cron evaluated: state: %s, match: %s, flipped: %s', this.state, match, this.flipped());
+            logger.info('Rule [%s]: cron evaluated: state: %s, match: %s, flipped: %s', this.rule.name, this.state, match, this.flipped());
             jsonlogger.info("Cron condition evaluated", {ruleId: this.rule.id, ruleName: this.rule.name, type: "condition", subtype: "cron", details: `match: ${match}, state: ${this.state}, flipped: ${this.flipped()}`});
         }
         return match && this.triggered()
@@ -181,4 +142,4 @@ class SimpleCondition extends Condition {
 
 }
 
-module.exports = {CronCondition, MqttCondition, AliasCondition, SimpleCondition}
+module.exports = {CronCondition, MqttCondition, SimpleCondition}
