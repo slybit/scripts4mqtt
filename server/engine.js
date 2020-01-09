@@ -54,8 +54,17 @@ class Engine {
                 return mqttStore.get(topic);
             },
             write: function(topic, message, retain = false) {
-                if (!isNaN(message)) message = message.toString();
-                logger.info('ScriptAction published %s -> %s', topic, message);
+                let data = "";
+                if (typeof message === 'string' || message instanceof Buffer || message instanceof ArrayBuffer) {
+                    data = message;
+                } else {
+                    try {
+                        data = message.toString();
+                    } catch (err) {
+                        logger.error("Could not convert value to String - sending empty message");
+                    }
+                }
+                logger.info('ScriptAction published %s -> %s', topic, data);
                 return mqttClient.publish(topic, message, {'retain' : retain});
             }
 

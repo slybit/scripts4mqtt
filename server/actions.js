@@ -40,9 +40,19 @@ class SetValueAction extends Action {
     execute(context) {
         super.execute(context);
         if (this.topic !== undefined && this.value !== undefined) {
-            Engine.getInstance().mqttClient.publish(this.topic, this.value);
-            logger.info('SetValueAction published %s -> %s', this.topic, this.value);
-            jsonlogger.info("SetValueAction executed", {ruleId: this.rule.id, ruleName: this.rule.name, type: "action", subtype: "mqtt", details: `"${this.value}" to ${this.topic}`});
+            let data = "";
+            if (typeof this.value === 'string' || this.value instanceof Buffer || this.value instanceof ArrayBuffer) {
+                data = this.value;
+            } else {
+                try {
+                    data = this.value.toString();
+                } catch (err) {
+                    logger.error("Could not convert value to String - sending empty message");
+                }
+            }
+            Engine.getInstance().mqttClient.publish(this.topic, data);
+            logger.info('SetValueAction published %s -> %s', this.topic, data);
+            jsonlogger.info("SetValueAction executed", {ruleId: this.rule.id, ruleName: this.rule.name, type: "action", subtype: "mqtt", details: `[${data}] to ${this.topic}`});
         }
 
         //TODO: make value mustache expression

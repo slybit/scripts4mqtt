@@ -122,7 +122,7 @@ Complex_script:
         var a = get("mode", 0);
         a = (a + 1) % 4;
         put("mode", a);
-        log.info(a);        
+        log.info(a);
         switch (a) {
           case 0:
             write("knx/write/0/0/207", 0);
@@ -181,8 +181,8 @@ SetVentilationFromHassio:
   ontrue:
     - type: script
       script: |-
-        var mode = read("hass/write/ventilation").data.val;        
-        log.info(JSON.stringify(mode));        
+        var mode = read("hass/write/ventilation").data.val;
+        log.info(JSON.stringify(mode));
         switch (mode) {
           case "off":
             write("knx/write/2/0/0", 0);
@@ -215,7 +215,7 @@ SetVentilationFromHassio:
             write("hass/status/ventilation/medium", 0, true);
             write("hass/status/ventilation/high", 1, true);
             break;
-        }  
+        }
   pendingOption: always
   enabled: false
 c71e6414f80f:
@@ -238,13 +238,16 @@ c71e6414f80f:
   pendingOption: always
   condition:
     - type: cron
-      trigger: on_flip
-      'on': 10 21 * * *
+      trigger: always
+      'on': 25 10 * * *
       'off': 11 21 * * *
   ontrue:
     - type: logbook
       delay: 0
       message: simul on
+    - type: mqtt
+      topic: knx/brol
+      value: 1
   onfalse:
     - type: logbook
       delay: 0
