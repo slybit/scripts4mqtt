@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Redirect, Switch, Route, NavLink as RRNavLink } from 'react-router-dom';
-import { Nav, NavItem, NavLink } from 'reactstrap';
+import { Navbar, NavbarBrand, Nav, NavItem, NavLink } from 'reactstrap';
 import { AppContainer } from "./containers";
 import Editor from './Editor';
 import { Aliases } from './Aliases';
@@ -15,6 +15,8 @@ export default class App extends Component {
     render() {
         return (
             <AppContainer>
+                <Navbar color="white" light expand="md">
+                <NavbarBrand href="/">Scripts4MQTT</NavbarBrand>
                 <Nav tabs>
                     <NavItem>
                         <NavLink tag={RRNavLink} exact to="/editor" activeClassName="active">Editor</NavLink>
@@ -38,6 +40,7 @@ export default class App extends Component {
                         <NavLink tag={RRNavLink} exact to="/config" activeClassName="active">Config</NavLink>
                     </NavItem>
                 </Nav>
+                </Navbar>
                 <Switch>
                     {/* React Route way of redirecting from / -> /editor */}
                     <Route exact path="/" render={() => (<Redirect to="/editor" />)} />

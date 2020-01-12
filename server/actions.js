@@ -134,10 +134,10 @@ class PushoverAction extends Action {
         const action = this;
         pushover.send(this.msg, function (err, result) {
             if (err) {
-                logger.error('Rule [%s]: ERROR sending Pushover notification', this.rule.name);
+                logger.error('Rule [%s]: ERROR sending Pushover notification', action.rule.name);
                 logger.error(err);
             } else {
-                logger.info('Rule [%s]: Pushover notification sent succesfully', this.rule.name);
+                logger.info('Rule [%s]: Pushover notification sent succesfully', action.rule.name);
                 jsonlogger.info("PushoverAction executed", {ruleId: action.rule.id, ruleName: action.rule.name, type: "action", subtype: "pushover", details: `subject: ${action.msg.title}`});
             }
         });
