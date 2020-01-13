@@ -65,7 +65,7 @@ class Engine {
                     }
                 }
                 logger.info('ScriptAction published %s -> %s', topic, data);
-                return mqttClient.publish(topic, message, {'retain' : retain});
+                return mqttClient.publish(topic, data, {'retain' : retain});
             }
 
         }
