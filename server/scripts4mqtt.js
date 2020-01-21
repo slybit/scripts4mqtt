@@ -89,6 +89,7 @@ let setMqttHandlers = function (mqttClient) {
         if (!packet.retain) justStarted = false;
         // log the message to the mqtt logger if not justStarted (old, retained messages are not logged)
         if (!justStarted) mqttlogger.info("MQTT message recieved", {"topic" : topic, "msg": message.toString()});
+
         let withActions = !justStarted || config.retained
         // send the message to the rule engine
         rules.mqttConditionChecker(topic, withActions);

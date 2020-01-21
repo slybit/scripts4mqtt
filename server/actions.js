@@ -1,6 +1,6 @@
 const mustache = require('mustache');
-const {validateMqttAction, validateEmailAction } = require('./validator');
-const {logger, jsonlogger, logbooklogger} = require('./logger.js');
+const { validateMqttAction, validateEmailAction } = require('./validator');
+const { logger, jsonlogger, logbooklogger } = require('./logger.js');
 const Engine = require('./engine.js');
 const config = require('./config.js').parse();
 const { SMTPTransporter, pushover } = require('./utils.js')
@@ -41,9 +41,14 @@ class SetValueAction extends Action {
         super.execute(context);
         if (this.topic !== undefined && this.value !== undefined) {
             let data = "";
-            if (typeof this.value === 'string' || this.value instanceof Buffer || this.value instanceof ArrayBuffer) {
+            if (typeof this.value === 'string') {
+                // render it
+                data = mustache.render(this.value, context);
+            } else if (this.value instanceof Buffer || this.value instanceof ArrayBuffer) {
+                // take as-is
                 data = this.value;
             } else {
+                // try to turn in into a string
                 try {
                     data = this.value.toString();
                 } catch (err) {
@@ -52,10 +57,9 @@ class SetValueAction extends Action {
             }
             Engine.getInstance().mqttClient.publish(this.topic, data);
             logger.info('Rule [%s]: SetValueAction published %s -> %s', this.rule.name, this.topic, data);
-            jsonlogger.info("SetValueAction executed", {ruleId: this.rule.id, ruleName: this.rule.name, type: "action", subtype: "mqtt", details: `[${data}] to ${this.topic}`});
+            jsonlogger.info("SetValueAction executed", { ruleId: this.rule.id, ruleName: this.rule.name, type: "action", subtype: "mqtt", details: `[${data}] to ${this.topic}` });
         }
 
-        //TODO: make value mustache expression
         //TODO: add option for retain true or false
     }
 
@@ -74,7 +78,7 @@ class ScriptAction extends Action {
         try {
             Engine.getInstance().runScript(this.script);
             logger.info('Rule [%s]: ScriptAction executed', this.rule.name);
-            jsonlogger.info("ScriptAction executed", {ruleId: this.rule.id, ruleName: this.rule.name, type: "action", subtype: "script"});
+            jsonlogger.info("ScriptAction executed", { ruleId: this.rule.id, ruleName: this.rule.name, type: "action", subtype: "script" });
         } catch (err) {
             logger.error('Rule [%s]: ERROR running script:\n# ----- start script -----\n%s\n# -----  end script  -----', this.rule.name, this.script);
             logger.error(err);
@@ -90,7 +94,7 @@ class EMailAction extends Action {
         this.msg = {
             to: json.to,
             subject: json.subject,
-            body: json.body,
+            text: json.body,
         }
         validateEmailAction(json);
     }
@@ -99,20 +103,32 @@ class EMailAction extends Action {
         super.execute(context);
         const action = this;
 
-        const mailOptions = {
-            from: config.email.from,
-            ...this.msg
-        };
+        // clone the msg
+        let data = JSON.parse(JSON.stringify(this.msg));
+        try {
+            // render the subject
+            data.subject = mustache.render(data.subject, context);
+            // render the body (= text in SMTPTransport)
+            data.text = mustache.render(data.text, context);
 
-        SMTPTransporter.sendMail(mailOptions, function (err, info) {
-            if (err) {
-                logger.error('Rule [%s]: ERROR EMailAction failed', this.rule.name);
-                logger.error(err);
-            } else {
-                logger.info('Rule [%s]: EMailAction executed', this.rule.name);
-                jsonlogger.info("EMailAction executed", {ruleId: action.rule.id, ruleName: action.rule.name, type: "action", subtype: "email", details: `subject: ${action.msg.subject}`});
-            }
-        });
+            const mailOptions = {
+                from: config.email.from,
+                ...data
+            };
+
+            SMTPTransporter.sendMail(mailOptions, function (err, info) {
+                if (err) {
+                    logger.error('Rule [%s]: ERROR EMailAction failed', action.rule.name);
+                    logger.error(err);
+                } else {
+                    logger.info('Rule [%s]: EMailAction executed', action.rule.name);
+                    jsonlogger.info("EMailAction executed", { ruleId: action.rule.id, ruleName: action.rule.name, type: "action", subtype: "email", details: `subject: ${data.subject}` });
+                }
+            });
+        } catch (err) {
+            logger.error('Rule [%s]: ERROR EMailAction failed', this.rule.name);
+            logger.error(err);
+        }
     }
 
 }
@@ -132,15 +148,26 @@ class PushoverAction extends Action {
     execute(context) {
         super.execute(context);
         const action = this;
-        pushover.send(this.msg, function (err, result) {
-            if (err) {
-                logger.error('Rule [%s]: ERROR sending Pushover notification', action.rule.name);
-                logger.error(err);
-            } else {
-                logger.info('Rule [%s]: Pushover notification sent succesfully', action.rule.name);
-                jsonlogger.info("PushoverAction executed", {ruleId: action.rule.id, ruleName: action.rule.name, type: "action", subtype: "pushover", details: `subject: ${action.msg.title}`});
-            }
-        });
+        // clone the msg
+        let data = JSON.parse(JSON.stringify(this.msg));
+        try {
+            // render the message
+            data.message = mustache.render(data.message, context);
+            // render the title
+            data.title = mustache.render(data.title, context);
+            pushover.send(data, function (err, result) {
+                if (err) {
+                    logger.error('Rule [%s]: ERROR sending Pushover notification', action.rule.name);
+                    logger.error(err);
+                } else {
+                    logger.info('Rule [%s]: Pushover notification sent succesfully', action.rule.name);
+                    jsonlogger.info("PushoverAction executed", { ruleId: action.rule.id, ruleName: action.rule.name, type: "action", subtype: "pushover", details: `subject: ${data.title}` });
+                }
+            });
+        } catch (err) {
+            logger.error('Rule [%s]: ERROR PushoverAction failed', this.rule.name);
+            logger.error(err);
+        }
     }
 
 }
@@ -160,7 +187,7 @@ class LogBookAction extends Action {
                 let finalMessage = mustache.render(this.message, context);
                 logbooklogger.info(finalMessage);
                 logger.info('Rule [%s]: LogBookAction called with message %s', this.rule.name, finalMessage);
-                jsonlogger.info("LogBookAction executed", {ruleId: this.rule.id, ruleName: this.rule.name, type: "action", subtype: "logbook", details: `message: ${finalMessage}`});
+                jsonlogger.info("LogBookAction executed", { ruleId: this.rule.id, ruleName: this.rule.name, type: "action", subtype: "logbook", details: `message: ${finalMessage}` });
             } catch (err) {
                 logger.error('Rule [%s]: ERROR LogBookAction failed', this.rule.name);
                 logger.error(err);
@@ -171,4 +198,4 @@ class LogBookAction extends Action {
 }
 
 
-module.exports = {EMailAction, LogBookAction, PushoverAction, ScriptAction, SetValueAction}
+module.exports = { EMailAction, LogBookAction, PushoverAction, ScriptAction, SetValueAction }
