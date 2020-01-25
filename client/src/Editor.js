@@ -24,7 +24,6 @@ class Editor extends Component {
   loadRuleListFromServer = (refreshEditor = true) => {
     axios.get('/api/rules')
       .then((response) => {
-        console.log(response.data);
         this.updateRuleList(response.data, refreshEditor);
       })
       .catch((error) => {
@@ -92,7 +91,7 @@ class Editor extends Component {
       });
   }
 
-  
+
 
   hideLogs = () => {
     this.setState({ logs: [], logsVisible: false });
@@ -117,7 +116,7 @@ class Editor extends Component {
   render() {
     return (
 
-        
+
         <AppBody>
           <AppNav>
             <HorizontalContainer>
@@ -137,7 +136,7 @@ class Editor extends Component {
             <RuleEditor id={this.state.selectedRule} refreshNames={() => { this.loadRuleListFromServer(false) }} />
           }
         </AppBody>
-        
+
     );
   }
 }

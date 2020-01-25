@@ -1,4 +1,5 @@
 const mustache = require('mustache');
+const axios = require('axios');
 const { validateMqttAction, validateEmailAction } = require('./validator');
 const { logger, jsonlogger, logbooklogger } = require('./logger.js');
 const Engine = require('./engine.js');
@@ -198,4 +199,36 @@ class LogBookAction extends Action {
 }
 
 
-module.exports = { EMailAction, LogBookAction, PushoverAction, ScriptAction, SetValueAction }
+class WebHookAction extends Action {
+
+    constructor(json, rule) {
+        super(json, rule);
+        this.url = json.url;
+    }
+
+    execute(context) {
+        super.execute(context);
+        const action = this;
+        try {
+            // render the URL
+            let url = mustache.render(action.url, context);
+            axios.get(url)
+                .then((response) => {
+                    logger.info('Rule [%s]: WebHookAction request sent succesfully', action.rule.name);
+                    jsonlogger.info("WebHookAction executed", { ruleId: action.rule.id, ruleName: action.rule.name, type: "action", subtype: "webhook", details: `return code: ${response.status}, url: ${url}` });
+                })
+                .catch((err) => {
+                    logger.error('Rule [%s]: ERROR sending WebHookAction request', action.rule.name);
+                    logger.error(err);
+                });
+        } catch (err) {
+            logger.error('Rule [%s]: ERROR sending WebHookAction request', this.rule.name);
+            logger.error(err);
+        }
+    }
+
+}
+
+
+
+module.exports = { EMailAction, LogBookAction, PushoverAction, ScriptAction, SetValueAction, WebHookAction }

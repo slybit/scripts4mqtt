@@ -21,6 +21,7 @@ It exposes the following functions:
 */
 
 const vm = require('vm');
+const axios = require('axios');
 const {logger} = require('./logger.js');
 
 const store = new Map();
@@ -40,6 +41,7 @@ class Engine {
             mqttStore: this.mqttStore,
             mqttClient: this.mqttClient,
             vm: vm,
+            axios: axios,
             put: function (key, value) {
                 store.set(key, value);
             },
@@ -74,6 +76,7 @@ class Engine {
             testStore: this.testStore,
             mqttStore: this.mqttStore,
             vm: vm,
+            axios: axios,
             put: function (key, value) {
                 testStore.set(key, value);
             },

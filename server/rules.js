@@ -4,7 +4,7 @@ const util = require('util');
 const crypto = require('crypto');
 const {logger, jsonlogger, logbooklogger} = require('./logger.js');
 const Engine = require('./engine.js');
-const {EMailAction, LogBookAction, PushoverAction, ScriptAction, SetValueAction} = require('./actions.js')
+const {EMailAction, LogBookAction, PushoverAction, ScriptAction, SetValueAction, WebHookAction} = require('./actions.js')
 const {CronCondition, MqttCondition, SimpleCondition} = require('./conditions.js')
 const Aliases = require('./aliases.js');
 
@@ -465,6 +465,9 @@ class Rule {
                     break;
                 case "logbook":
                     result.push(new LogBookAction(a, this));
+                    break;
+                case "webhook":
+                    result.push(new WebHookAction(a, this));
                     break;
                 default:
                     throw new Error('Unknown action type ' + a.type);

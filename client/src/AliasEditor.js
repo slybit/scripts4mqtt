@@ -1,15 +1,10 @@
 import React from "react";
-import { Title, Container, HorizontalContainer, AppContent, AppMain, AppEditor, Header } from "./containers";
-import { Button, FormGroup, Label, UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem, InputGroup, InputGroupAddon, Input } from 'reactstrap';
+import { Title, Container, AppContent, AppMain, AppEditor} from "./containers";
+import { Button, FormGroup, Label, InputGroup, InputGroupAddon, Input } from 'reactstrap';
 import Icon from '@mdi/react'
-import { mdiPencilOutline, mdiCancel, mdiCheck, mdiClose } from '@mdi/js'
-import update from 'immutability-helper';
-import ReactJson from 'react-json-view';
-import format from 'string-format';
-import Sortly, { remove, findDescendants } from 'react-sortly';
-import { addIds, stripIds, flattenConditions, buildTree, staticData, isNewItem } from './utils';
-import { DynamicEditor } from './DynamicEditor'
-import axios from 'axios';
+import { mdiCancel, mdiCheck, mdiClose } from '@mdi/js'
+
+
 
 
 export class AliasEditor extends React.Component {
@@ -75,7 +70,7 @@ export class AliasEditor extends React.Component {
                     </FormGroup>
 
 
-                   
+
 
                 </AppContent>
                 <AppEditor>

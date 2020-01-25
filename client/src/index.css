@@ -47,6 +47,7 @@ body {
 .container_editor_area {
   tab-size: 4ch;
   max-height: 80vh;
+  max-width: 80vh;
   overflow: auto;
   margin: 1.67em 0;
 }
@@ -62,5 +63,24 @@ body {
 
 .container__editor textarea {
   outline: 0;
+
 }
+
+
+
+.script_editor_area {
+  tab-size: 4ch;
+  max-height: 30em;
+  overflow: auto;
+}
+
+.script_editor {
+  font-variant-ligatures: common-ligatures;
+  background-color: #fafafa;
+  border-radius: 3px;
+  font-family: 'Fira code', 'Fira Mono', Consolas, Menlo, Courier, monospace;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
 

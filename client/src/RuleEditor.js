@@ -27,13 +27,11 @@ export class RuleEditor extends React.Component {
     }
 
     componentDidMount() {
-        console.log(this.props.id);
         this.loadRuleFromServer(this.props.id);
     }
 
     componentDidUpdate(prevProps) {
         if (prevProps.id !== this.props.id) {
-            console.log("Loading from server: " + this.props.id);
             this.loadRuleFromServer(this.props.id);
         }
     }
@@ -41,7 +39,6 @@ export class RuleEditor extends React.Component {
     loadRuleFromServer(id) {
         axios.get('/api/rule/' + id)
             .then((response) => {
-                console.log(response.data);
                 this.setStateFromServerData(response.data);
             })
             .catch((error) => {
@@ -70,14 +67,14 @@ export class RuleEditor extends React.Component {
 
 
 
-    handleEditableItemClick = (index, itemType, model) => {
+    handleEditableItemClick = (majorType, index, itemType, model) => {
         this.setState({
             editorVisible: true,
             editorData: this.state[itemType][index],
             editorModel: model,
             editorItemIndex: index,
             editorItemType: itemType,
-            editorTitle: this.state[itemType][index].type,
+            editorTitle: staticData[majorType][this.state[itemType][index].type],
             editorAlertVisible: false
         });
     }
@@ -132,7 +129,6 @@ export class RuleEditor extends React.Component {
 
     handleChange = (items) => {
         this.setState({ flatConditions: items });
-        console.log(items);
     }
 
     handleMove = (items, index, newIndex) => {
@@ -220,7 +216,7 @@ export class RuleEditor extends React.Component {
                         this.setStateFromServerData(response.data.newrule);
                     } else {
                         this.setState({ editorAlertMessage: response.data.message, editorAlertVisible: true });
-                        console.log(response.data);
+                        //console.log(response.data);
                     }
                 })
                 .catch((error) => {
@@ -236,7 +232,7 @@ export class RuleEditor extends React.Component {
             .then((response) => {
                 if (!response.data.success) {
                     this.setState({ editorAlertMessage: response.data.message, editorAlertVisible: true });
-                    console.log(response.data);
+                    //console.log(response.data);
                     return;
                 } else {
                     this.pushUpdateToServer(newData)
@@ -246,7 +242,7 @@ export class RuleEditor extends React.Component {
                                 this.setStateFromServerData(response.data.newrule);
                             } else {
                                 this.setState({ editorAlertMessage: response.data.message, editorAlertVisible: true });
-                                console.log(response.data);
+                                //console.log(response.data);
                             }
                         })
                         .catch((error) => {
@@ -309,7 +305,7 @@ export class RuleEditor extends React.Component {
                     <Container>
                     Name:
                     <InputGroup>
-                        
+
                         <Input value={this.state.ruleName} onChange={this.onRuleNameChange}/>
                         {this.state.ruleNameHasChanged && <InputGroupAddon addonType="append">
                             <Button color="secondary"><Icon path={mdiCheck} size={1} color="white" onClick={this.handleRuleNameSaveClick} /></Button>
@@ -352,7 +348,7 @@ export class RuleEditor extends React.Component {
                         onChange={this.handleChange}
                         onMove={this.handleMove}
                     />
-                
+
                     <HorizontalContainer>
                         <Header>On True:</Header>
                         <UncontrolledDropdown>
@@ -391,7 +387,7 @@ export class RuleEditor extends React.Component {
                         />
                     </ul>
 
-                   
+
 
                     {false && <pre className='code'>{JSON.stringify(this.state, undefined, 4)}</pre>}
 
@@ -464,8 +460,8 @@ class ActionItemRendererClass extends React.Component {
                 <li className="list-group-item"
                     key={action._id} id={action._id}
                     style={style}
-                    onClick={() => this.props.handleEditableItemClick(index, this.props.type, staticData.editor.action[action.type])}>
-                    {isNew ? "* " : ""} {action.type}
+                    onClick={() => this.props.handleEditableItemClick("actions", index, this.props.type, staticData.editor.action[action.type])}>
+                    {isNew ? "* " : ""} { staticData.actions[action.type] }
                 </li>
             )
         }
@@ -477,8 +473,7 @@ class ActionItemRendererClass extends React.Component {
 class ConditionItemRendererClass extends React.Component {
 
     handleClick = () => {
-        console.log(this.props.type);
-        this.props.onEditableItemClick(this.props.index, "flatConditions", staticData.editor.condition[this.props.type]);
+        this.props.onEditableItemClick("conditions", this.props.index, "flatConditions", staticData.editor.condition[this.props.type]);
     }
 
     handleDeleteClick = (e) => {

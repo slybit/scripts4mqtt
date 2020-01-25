@@ -99,7 +99,8 @@ export const staticData = {
         script: "Script",
         email: "Email",
         pushover: "Pushover",
-        logbook: "Log book"
+        logbook: "Log book",
+        webhook: "Webhook"
     },
     pendingOptions: {
         always: "Always",
@@ -118,13 +119,13 @@ export const staticData = {
                 type: "mqtt",
                 trigger: "no",
                 topic: "__REPLACE__",
-                eval: "{{true}}"
+                eval: "true"
             },
             alias: {
                 type: "alias",
                 trigger: "no",
                 alias: "__REPLACE__",
-                eval: "{{true}}"
+                eval: "true"
             },
             cron: {
                 type: "cron",
@@ -151,7 +152,7 @@ export const staticData = {
             email: {
                 type: "email",
                 delay: 0,
-                to: "replace@mail.com",
+                to: "__REPLACE__",
                 subject: "__REPLACE__",
                 body: ""
             },
@@ -164,6 +165,11 @@ export const staticData = {
                 type: "logbook",
                 delay: 0,
                 message: ""
+            },
+            webhook: {
+                type: "webhook",
+                delay: 0,
+                url: "__REPLACE__"
             }
         }
 
@@ -280,11 +286,15 @@ export const staticData = {
             ],
             script: [
                 { key: "delay", label: "Delay"},
-                { key: "script", label: "Script", type: "textarea", props: { rows: 30, style: { fontFamily: 'monospace', fontSize: '1rem' } } }
+                { key: "script", label: "Script", type: "simple-editor", props: { rows: 30, style: { fontFamily: 'monospace', fontSize: '1rem' } } }
             ],
             logbook: [
-                { key: "delay", label: "Delay"},                
+                { key: "delay", label: "Delay"},
                 { key: "message", label: "Message"}
+            ],
+            webhook: [
+                { key: "delay", label: "Delay"},
+                { key: "url", label: "URL"}
             ]
         }
     }

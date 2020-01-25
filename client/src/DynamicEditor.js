@@ -1,5 +1,9 @@
 import React from "react";
 import { Button, Form, FormGroup, Label, Input, Alert, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
+import { highlight, languages } from 'prismjs/components/prism-core';
+import 'prismjs/components/prism-clike';
+import 'prismjs/components/prism-javascript';
+import Editor from 'react-simple-code-editor';
 
 
 
@@ -37,11 +41,11 @@ export class DynamicEditor extends React.Component {
         console.log(this.state);
     }
 
-    onChange = (e, key) => {        
+    onChange = (e, key) => {
         this.setState({
             [key]: e.target.value
         });
-        
+
     }
 
     handleSaveClick = () => {
@@ -68,6 +72,19 @@ export class DynamicEditor extends React.Component {
                     value={value}
                     onChange={(e) => { this.onChange(e, target) }}
                 />;
+            } else if (type === "simple-editor") {
+                input =
+                <div className="script_editor_area">
+                    <Editor
+                        value={value}
+                        id={key}
+                        name={key}
+                        onValueChange={ v => { this.setState( { [key]: v } ) }}
+                        highlight={value => highlight(value, languages.js)}
+                        padding={10}
+                        className="script_editor code"
+                    />
+                </div>;
             } else if (type === "select") {
                 const options = m.options.map((o) => {
                     return (<option key={o.value} value={o.value}>{o.label}</option>);
@@ -92,7 +109,7 @@ export class DynamicEditor extends React.Component {
 
     render() {
         return (
-            <Modal isOpen={this.props.visible} fade={false} toggle={this.props.editorHandleCancelClick} size="lg">
+            <Modal isOpen={this.props.visible} fade={false} toggle={this.props.editorHandleCancelClick} size="xl">
                 <ModalHeader toggle={this.props.editorHandleCancelClick}>{this.props.title}</ModalHeader>
                 <ModalBody>
                     <Form className="form">
@@ -107,7 +124,7 @@ export class DynamicEditor extends React.Component {
 
                     <FormGroup style={spacerStyle}>
                         <Button color="danger" outline onClick={this.props.editorHandleDeleteClick}>Delete</Button>
-                        <span>                            
+                        <span>
                             <Button color="primary" outline={true} onClick={this.props.editorHandleCancelClick}>Cancel</Button>{' '}
                             <Button color="primary" onClick={this.handleSaveClick}>Save</Button>
                         </span>
