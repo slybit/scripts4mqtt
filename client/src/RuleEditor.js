@@ -1,6 +1,6 @@
 import React from "react";
 import { Title, Container, HorizontalContainer, AppContent, AppMain, AppEditor, Header } from "./containers";
-import { Button, UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem, InputGroup, InputGroupAddon, Input } from 'reactstrap';
+import { Button, UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem, InputGroup, InputGroupAddon, Input, FormGroup, Label } from 'reactstrap';
 import Icon from '@mdi/react'
 import { mdiPencilOutline, mdiCancel, mdiCheck } from '@mdi/js'
 import update from 'immutability-helper';
@@ -17,7 +17,7 @@ export class RuleEditor extends React.Component {
         super(props);
         this.state = {
             ruleId: undefined,
-            ruleName: "",
+            name: "",
             pendingOption: "always",
             ontrue: [],
             onfalse: [],
@@ -50,9 +50,12 @@ export class RuleEditor extends React.Component {
         this.setState({
             source: JSON.parse(JSON.stringify(data)), // taking independant copy of the data
             ruleId: data.id,
-            ruleName: data.name,
-            rulePrevName: data.name,
-            ruleNameHasChanged: false,
+            name: data.name,
+            namePrev: data.name,
+            nameHasChanged: false,
+            description: data.description,
+            descriptionPrev: data.name,
+            descriptionHasChanged: false,
             pendingOption: data.pendingOption,
             ontrue: data.ontrue ? addIds(data.ontrue) : [],
             onfalse: data.onfalse ? addIds(data.onfalse) : [],
@@ -81,46 +84,55 @@ export class RuleEditor extends React.Component {
 
     savePendinOption = (option) => {
         //this.setState({ pendingOption: option });
-        axios.put('/api/rule/' + this.state.ruleId, {pendingOption: option})
-        .then((response) => {
-            // update the state
-            if (response.data.success) {
-                this.setStateFromServerData(response.data.newrule);
-            } else {
-                // TODO: alert user, editor is not visible!
-                console.log(response.data);
-            }
-        })
-        .catch((error) => {
-            // TODO: alert user
-            console.log(error);
-        });
+        axios.put('/api/rule/' + this.state.ruleId, { pendingOption: option })
+            .then((response) => {
+                // update the state
+                if (response.data.success) {
+                    this.setStateFromServerData(response.data.newrule);
+                } else {
+                    // TODO: alert user, editor is not visible!
+                    console.log(response.data);
+                }
+            })
+            .catch((error) => {
+                // TODO: alert user
+                console.log(error);
+            });
     }
 
-    onRuleNameChange = (e) => {
-        this.setState({ ruleName: e.target.value, ruleNameHasChanged: true });
+    // itemName is either
+    // - "name"
+    // - "description"
+    onnameChange = (e, itemName) => {
+        this.setState({ [itemName]: e.target.value, [itemName+"HasChanged"]: true });
     }
 
-    handleRuleNameCancelClick = () => {
-        this.setState({ ruleName: this.state.rulePrevName, ruleNameHasChanged: false });
+    // itemName is either
+    // - "name"
+    // - "description"
+    handlenameCancelClick = (itemName) => {
+        this.setState({ [itemName]: this.state[itemName+"Prev"], [itemName+"HasChanged"]: false });
     }
 
-    handleRuleNameSaveClick = () => {
-        axios.put('/api/rule/' + this.state.ruleId, {name: this.state.ruleName})
-        .then((response) => {
-            // update the state
-            if (response.data.success) {
-                this.setStateFromServerData(response.data.newrule);
-                this.props.refreshNames();
-            } else {
-                // TODO: alert user, editor is not visible!
-                console.log(response.data);
-            }
-        })
-        .catch((error) => {
-            // TODO: alert user
-            console.log(error);
-        });
+    // itemName is either
+    // - "name"
+    // - "description"
+    handlenameSaveClick = (itemName) => {
+        axios.put('/api/rule/' + this.state.ruleId, { [itemName]: this.state[itemName] })
+            .then((response) => {
+                // update the state
+                if (response.data.success) {
+                    this.setStateFromServerData(response.data.newrule);
+                    this.props.refreshNames();
+                } else {
+                    // TODO: alert user, editor is not visible!
+                    console.log(response.data);
+                }
+            })
+            .catch((error) => {
+                // TODO: alert user
+                console.log(error);
+            });
     }
 
 
@@ -302,17 +314,26 @@ export class RuleEditor extends React.Component {
             <AppMain>
 
                 <AppContent>
-                    <Container>
-                    Name:
-                    <InputGroup>
-
-                        <Input value={this.state.ruleName} onChange={this.onRuleNameChange}/>
-                        {this.state.ruleNameHasChanged && <InputGroupAddon addonType="append">
-                            <Button color="secondary"><Icon path={mdiCheck} size={1} color="white" onClick={this.handleRuleNameSaveClick} /></Button>
-                            <Button color="secondary"><Icon path={mdiCancel} size={1} color="white" onClick={this.handleRuleNameCancelClick} /></Button>
-                        </InputGroupAddon>}
-                    </InputGroup>
-                    </Container>
+                    <FormGroup>
+                        <Label for="name">Name</Label>
+                        <InputGroup name="name">
+                            <Input className="bold" value={this.state.name} onChange={(e) => this.onnameChange(e, "name") } />
+                            {this.state.nameHasChanged && <InputGroupAddon addonType="append">
+                                <Button color="secondary"><Icon path={mdiCheck} size={1} color="white" onClick={() => this.handlenameSaveClick("name")} /></Button>
+                                <Button color="secondary"><Icon path={mdiCancel} size={1} color="white" onClick={() => this.handlenameCancelClick("name")} /></Button>
+                            </InputGroupAddon>}
+                        </InputGroup>
+                    </FormGroup>
+                    <FormGroup>
+                        <Label for="description">Description</Label>
+                        <InputGroup name="description">
+                            <Input type="textarea" value={this.state.description} onChange={(e) => this.onnameChange(e, "description") } />
+                            {this.state.descriptionHasChanged && <InputGroupAddon addonType="append">
+                                <Button color="secondary"><Icon path={mdiCheck} size={1} color="white" onClick={() => this.handlenameSaveClick("description")} /></Button>
+                                <Button color="secondary"><Icon path={mdiCancel} size={1} color="white" onClick={() => this.handlenameCancelClick("description")} /></Button>
+                            </InputGroupAddon>}
+                        </InputGroup>
+                    </FormGroup>
 
                     <HorizontalContainer>
                         Cancel pending:
@@ -461,7 +482,7 @@ class ActionItemRendererClass extends React.Component {
                     key={action._id} id={action._id}
                     style={style}
                     onClick={() => this.props.handleEditableItemClick("actions", index, this.props.type, staticData.editor.action[action.type])}>
-                    {isNew ? "* " : ""} { staticData.actions[action.type] }
+                    {isNew ? "* " : ""} {staticData.actions[action.type]}
                 </li>
             )
         }

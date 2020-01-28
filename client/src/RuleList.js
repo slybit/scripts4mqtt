@@ -8,7 +8,8 @@ const pushRightStyle = {
 };
 
 const selectedStyle = {
-    color: 'blue'
+    color: 'blue',
+    background: 'ALICEBLUE'
 };
 
 export class RuleList extends React.Component {

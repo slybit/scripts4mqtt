@@ -143,7 +143,7 @@ class Editor extends Component {
               <Button onClick={this.handleAddRuleClick}>Add</Button>
             </HorizontalContainer>
             {!this.state.selectedRule && <Title>No rules defined. Create one...</Title>}
-            <Input placeholder="Search" value={this.state.filter} onChange={this.updateFilter}/>
+            <Input placeholder="Filter rules..." value={this.state.filter} onChange={this.updateFilter}/>
             <br></br>
             <RuleList
               data={this.state.filteredRules}

@@ -10,6 +10,11 @@ body {
   color: #333;
 }
 
+.bold {
+  font-weight: bold;
+  background: ALICEBLUE;
+}
+
 .grid {
   font-size: 13px;
 }

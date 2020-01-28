@@ -1,5 +1,5 @@
 TimeDateUpdate:
-  name: TimeDateUpdate
+  name: Test
   condition:
     - type: cron
       trigger: always
@@ -12,6 +12,8 @@ TimeDateUpdate:
       script: 'write(''knx/write/15/1/1'', new Date().toString());'
   pendingOption: never
   enabled: false
+  description: The description asdfasdf
+  itemName: a
 Logbook:
   name: Logbook
   condition:
@@ -58,7 +60,7 @@ AliasTest:
   pendingOption: always
   enabled: false
 Back_of_the_house:
-  name: Back of the house
+  name: Back of the house2
   condition:
     type: and
     condition:
@@ -220,7 +222,7 @@ SetVentilationFromHassio:
   enabled: false
 c71e6414f80f:
   name: Multi topic
-  enabled: true
+  enabled: false
   pendingOption: never
   condition:
     - type: alias
@@ -234,7 +236,7 @@ c71e6414f80f:
   onfalse: []
 78a92bfa9035:
   name: Simul
-  enabled: true
+  enabled: false
   pendingOption: always
   condition:
     - type: cron
@@ -252,3 +254,12 @@ c71e6414f80f:
     - type: logbook
       delay: 0
       message: simul off
+2a4e6cb5f787:
+  name: New rule
+  enabled: true
+  pendingOption: always
+  condition:
+    - type: mqtt
+      trigger: always
+      topic: alarm/set
+      eval: '{{{M.val}}} == "ARM_AWAY"'
