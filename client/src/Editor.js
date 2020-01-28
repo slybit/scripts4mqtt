@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { DragDropContext } from 'react-dnd';
 import HTML5Backend from 'react-dnd-html5-backend';
 import { AppNav, AppBody, Title, HorizontalContainer } from "./containers";
-import { Button } from 'reactstrap';
+import { Button, Input } from 'reactstrap';
 import { staticData, showError } from './utils';
 import { RuleList } from './RuleList';
 import { RuleEditor } from './RuleEditor';
@@ -14,6 +14,8 @@ class Editor extends Component {
     super();
     this.state = {
       rules: [],
+      filteredRules: [],
+      filter: "",
       selectedRule: undefined,
       rule: {},
       logs: [],
@@ -102,16 +104,33 @@ class Editor extends Component {
     if (refreshEditor) {
       this.setState({
         rules: list,
+        filteredRules: this.filterList(list, this.state.filter),
         selectedRule: list.length > 0 ? list[0].key : undefined
       });
     } else {
       this.setState({
-        rules: list
+        rules: list,
+        filteredRules: this.filterList(list, this.state.filter)
       });
     }
   }
 
+  updateFilter = (event) => {
+    let filter = event.target.value;
+      this.setState({
+        filter: event.target.value,
+        filteredRules: this.filterList(this.state.rules, filter)
+      });
 
+  }
+
+  filterList = (list, filter) => {
+    return list.filter(function(item) {
+      return item.name.toLowerCase().search(
+        filter.toLowerCase()) !== -1;
+    });
+
+  }
 
   render() {
     return (
@@ -124,8 +143,10 @@ class Editor extends Component {
               <Button onClick={this.handleAddRuleClick}>Add</Button>
             </HorizontalContainer>
             {!this.state.selectedRule && <Title>No rules defined. Create one...</Title>}
+            <Input placeholder="Search" value={this.state.filter} onChange={this.updateFilter}/>
+            <br></br>
             <RuleList
-              data={this.state.rules}
+              data={this.state.filteredRules}
               selectedRule={this.state.selectedRule}
               onClick={this.handleRuleClick.bind(this)}
               onDeleteClick={this.handleDeleteRuleClick}
