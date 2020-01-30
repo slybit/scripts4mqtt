@@ -19,9 +19,9 @@ export class RuleList extends React.Component {
         this.props.onDeleteClick(key);
     }
 
-    handleEnableClick = (e, index) => {
+    handleEnableClick = (e, index, newEnabledState) => {
         e.stopPropagation();
-        this.props.onEnableClick(index);
+        this.props.onEnableClick(index, newEnabledState);
     }
 
 
@@ -38,7 +38,7 @@ export class RuleList extends React.Component {
             return (
 
                 <li className="list-group-item" key={rule.key} id={rule.key} style={style} onClick={() => this.props.onClick(rule.key)}>
-                <Icon path={rule.enabled ? mdiCheckBoxOutline : mdiCheckboxBlankOutline} className="editIcon" size={1} onClick={(e) => this.handleEnableClick(e, index)}/>
+                <Icon path={rule.enabled ? mdiCheckBoxOutline : mdiCheckboxBlankOutline} className="editIcon" size={1} onClick={(e) => this.handleEnableClick(e, rule.key, !rule.enabled)}/>
                 {' '}{rule.name}
                 <span style={pushRightStyle}>
                     <Icon path={mdiDelete} size={1} className="deleteIcon" onClick={(e) => this.handleDeleteClick(e, rule.key)}/>

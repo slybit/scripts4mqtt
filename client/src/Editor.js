@@ -59,12 +59,12 @@ class Editor extends Component {
       });
   }
 
-  handleEnableRuleClick = (index) => {
-    axios.put('/api/rule/' + this.state.rules[index].key, { enabled: !this.state.rules[index].enabled })
+  handleEnableRuleClick = (key, newEnabledState) => {
+    axios.put('/api/rule/' + key, { enabled: newEnabledState })
       .then((response) => {
         // update the state
         if (response.data.success) {
-          this.setState({ rules: update(this.state.rules, { [index]: { $toggle: ['enabled'] } }) });
+            this.loadRuleListFromServer(false);
         } else {
           showError("Rule update not handled by script4mqtt service.", response.data);
           console.log(response.data);
