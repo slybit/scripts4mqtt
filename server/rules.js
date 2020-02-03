@@ -498,61 +498,47 @@ class Rule {
             return;
         }
 
-        this.cancelPendingActions(context.topic);
-
         let actions = [];
         if (Rule.evalLogic(this.logic)) {
             logger.info("Rule [%s]: scheduling TRUE actions", this.name);
             actions = this.onTrueActions;
+            this.cancelPendingActions(this.onFalseActions);
         } else {
             logger.info("Rule [%s]: scheduling FALSE actions", this.name);
             actions = this.onFalseActions;
+            this.cancelPendingActions(this.onTrueActions);
         }
         for (let a of actions) {
+            console.log(a);
             if (a.delay > 0) {
-                if (this.pendingOption === PendingOptions["always"]) {
-                    logger.info('Rule [%s]: Schedule - delayed execution in %d millesecs', a.rule.name, a.delay);
-                    a.pending = setTimeout(a.execute.bind(a, context), a.delay);
-
-                } else if (this.pendingOption === PendingOptions["topic"]) {
-                    logger.info('Rule [%s]: Schedule - delayed execution for topic [%s] in %d millesecs', a.rule.name, context.topic, a.delay);
-                    a.pendingTopics[context.topic] = setTimeout(a.execute.bind(a, context), a.delay);
-                } else {
-                    // default: 'never'; just schedule the action with a delay and dont kill any existing pending actions
-                    logger.info('Rule [%s]: Schedule - delayed execution in %d millesecs', a.rule.name, a.delay);
-                    setTimeout(a.execute.bind(a, context), a.delay);
-                }
-            } else {
+                logger.info('Rule [%s]: Schedule - delayed execution in %d millesecs', a.rule.name, a.delay);
+                a.pending = setTimeout(a.execute.bind(a, context), a.delay);
+            } else if (a.delay == 0) {
                 logger.info('Rule [%s]: schedule - immediate execution', a.rule.name);
                 a.execute(context);
+            }
+            if (a.interval > 0) {
+                if (a.repeater === undefined) {
+                    logger.info('Rule [%s]: Schedule - repeated execution with interval of %d millesecs', a.rule.name, a.interval);
+                    a.repeater = setInterval(a.execute.bind(a, context), a.interval);
+                } else {
+                    logger.info('Rule [%s]: Leaving existing repeated execution with interval of %d millesecs', a.rule.name, a.interval);
+                }
             }
         }
     }
 
-    cancelPendingActions(topic) {
-
-
-        let actions = this.onTrueActions;
-        actions = actions.concat(this.onFalseActions);
-
-        //logger.info("CANCEL PENDING CALLED " + actions.length);
-
-
+    cancelPendingActions(actions) {
         for (let a of actions) {
-            if (this.pendingOption === PendingOptions["always"]) {
-                // always cancel an exiting pending action
-                if (a.pending !== undefined) {
-                    clearTimeout(a.pending);
-                    a.pending = undefined;
-                    logger.info('Rule [%s]: CANCEL always - cancelled pending action', a.rule.name);
-                }
-            } else if (this.pendingOption === PendingOptions["topic"]) {
-                // only cancel the exiting pending action for the same topic
-                if (a.pendingTopics[topic] !== undefined) {
-                    clearTimeout(a.pendingTopics[topic]);
-                    a.pendingTopics[topic] = undefined;
-                    logger.info('Rule [%s]: CANCEL topic - cancelled pending action for topic [%s]', topic, a.rule.name);
-                }
+            if (a.pending !== undefined) {
+                clearTimeout(a.pending);
+                a.pending = undefined;
+                logger.info('Rule [%s]:  cancelled pending action', a.rule.name);
+            }
+            if (a.repeater !== undefined) {
+                clearInterval(a.repeater);
+                a.repeater = undefined;
+                logger.info('Rule [%s]:  cancelled repeating action', a.rule.name);
             }
         }
     }

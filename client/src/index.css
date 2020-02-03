@@ -10,9 +10,14 @@ body {
   color: #333;
 }
 
-.bold {
+.bold_blue {
   font-weight: bold;
   background: ALICEBLUE;
+}
+
+
+.bold {
+  font-weight: bold;
 }
 
 .grid {

@@ -18,7 +18,6 @@ export class RuleEditor extends React.Component {
         this.state = {
             ruleId: undefined,
             name: "",
-            pendingOption: "always",
             ontrue: [],
             onfalse: [],
             flatConditions: [],
@@ -54,9 +53,8 @@ export class RuleEditor extends React.Component {
             namePrev: data.name,
             nameHasChanged: false,
             description: data.description,
-            descriptionPrev: data.name,
+            descriptionPrev: data.description,
             descriptionHasChanged: false,
-            pendingOption: data.pendingOption,
             ontrue: data.ontrue ? addIds(data.ontrue) : [],
             onfalse: data.onfalse ? addIds(data.onfalse) : [],
             flatConditions: addIds(flattenConditions(data.condition)),
@@ -82,42 +80,26 @@ export class RuleEditor extends React.Component {
         });
     }
 
-    savePendinOption = (option) => {
-        //this.setState({ pendingOption: option });
-        axios.put('/api/rule/' + this.state.ruleId, { pendingOption: option })
-            .then((response) => {
-                // update the state
-                if (response.data.success) {
-                    this.setStateFromServerData(response.data.newrule);
-                } else {
-                    // TODO: alert user, editor is not visible!
-                    console.log(response.data);
-                }
-            })
-            .catch((error) => {
-                // TODO: alert user
-                console.log(error);
-            });
-    }
+    
 
     // itemName is either
     // - "name"
     // - "description"
-    onnameChange = (e, itemName) => {
+    onEditableItemChange = (e, itemName) => {
         this.setState({ [itemName]: e.target.value, [itemName+"HasChanged"]: true });
     }
 
     // itemName is either
     // - "name"
     // - "description"
-    handlenameCancelClick = (itemName) => {
+    handleEditableItemCancelClick = (itemName) => {
         this.setState({ [itemName]: this.state[itemName+"Prev"], [itemName+"HasChanged"]: false });
     }
 
     // itemName is either
     // - "name"
     // - "description"
-    handlenameSaveClick = (itemName) => {
+    handleEditableItemSaveClick = (itemName) => {
         axios.put('/api/rule/' + this.state.ruleId, { [itemName]: this.state[itemName] })
             .then((response) => {
                 // update the state
@@ -306,9 +288,6 @@ export class RuleEditor extends React.Component {
             <DropdownItem key={action} onClick={() => { this.addNewItem("onfalse", action) }}>{staticData.actions[action]}</DropdownItem>
         ));
 
-        const pendingOptions = Object.keys(staticData.pendingOptions).map((option) => (
-            <DropdownItem key={option} onClick={() => { this.savePendinOption(option) }}>{staticData.pendingOptions[option]}</DropdownItem>
-        ));
 
         return (
             <AppMain>
@@ -317,35 +296,23 @@ export class RuleEditor extends React.Component {
                     <FormGroup>
                         <Label for="name">Name</Label>
                         <InputGroup name="name">
-                            <Input className="bold" value={this.state.name} onChange={(e) => this.onnameChange(e, "name") } />
+                            <Input className="bold_blue" value={this.state.name} onChange={(e) => this.onEditableItemChange(e, "name") } />
                             {this.state.nameHasChanged && <InputGroupAddon addonType="append">
-                                <Button color="secondary"><Icon path={mdiCheck} size={1} color="white" onClick={() => this.handlenameSaveClick("name")} /></Button>
-                                <Button color="secondary"><Icon path={mdiCancel} size={1} color="white" onClick={() => this.handlenameCancelClick("name")} /></Button>
+                                <Button color="secondary"><Icon path={mdiCheck} size={1} color="white" onClick={() => this.handleEditableItemSaveClick("name")} /></Button>
+                                <Button color="secondary"><Icon path={mdiCancel} size={1} color="white" onClick={() => this.handleEditableItemCancelClick("name")} /></Button>
                             </InputGroupAddon>}
                         </InputGroup>
                     </FormGroup>
                     <FormGroup>
                         <Label for="description">Description</Label>
                         <InputGroup name="description">
-                            <Input type="textarea" value={this.state.description} onChange={(e) => this.onnameChange(e, "description") } />
+                            <Input type="textarea" value={this.state.description} onChange={(e) => this.onEditableItemChange(e, "description") } />
                             {this.state.descriptionHasChanged && <InputGroupAddon addonType="append">
-                                <Button color="secondary"><Icon path={mdiCheck} size={1} color="white" onClick={() => this.handlenameSaveClick("description")} /></Button>
-                                <Button color="secondary"><Icon path={mdiCancel} size={1} color="white" onClick={() => this.handlenameCancelClick("description")} /></Button>
+                                <Button color="secondary"><Icon path={mdiCheck} size={1} color="white" onClick={() => this.handleEditableItemSaveClick("description")} /></Button>
+                                <Button color="secondary"><Icon path={mdiCancel} size={1} color="white" onClick={() => this.handleEditableItemCancelClick("description")} /></Button>
                             </InputGroupAddon>}
                         </InputGroup>
                     </FormGroup>
-
-                    <HorizontalContainer>
-                        Cancel pending:
-                        <UncontrolledDropdown>
-                            <DropdownToggle caret>
-                                {staticData.pendingOptions[this.state.pendingOption]}
-                            </DropdownToggle>
-                            <DropdownMenu>
-                                {pendingOptions}
-                            </DropdownMenu>
-                        </UncontrolledDropdown>
-                    </HorizontalContainer>
                     <HorizontalContainer>
                         <Header>Conditions:</Header>
                         <UncontrolledDropdown>

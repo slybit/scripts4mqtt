@@ -28,6 +28,8 @@ export const AppNav = styled.div`
   max-width: 40em;
   order: -1;
   border-right: 1px solid rgba(0, 0, 0, 0.125);
+  overflow-y: auto;
+    min-height: 0px;
 `;
 
 export const AppMain = styled.div`
@@ -48,6 +50,8 @@ export const AppContent = styled.div`
   min-height: 0px;
   border-right: 1px solid rgba(0, 0, 0, 0.125);
 `;
+
+
 
 
 

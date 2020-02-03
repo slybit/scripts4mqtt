@@ -37,7 +37,7 @@ export class RuleList extends React.Component {
 
             return (
 
-                <li className="list-group-item" key={rule.key} id={rule.key} style={style} onClick={() => this.props.onClick(rule.key)}>
+                <li className={`list-group-item ${rule.enabled ? "bold" : ""}`} key={rule.key} id={rule.key} style={style} onClick={() => this.props.onClick(rule.key)}>
                 <Icon path={rule.enabled ? mdiCheckBoxOutline : mdiCheckboxBlankOutline} className="editIcon" size={1} onClick={(e) => this.handleEnableClick(e, rule.key, !rule.enabled)}/>
                 {' '}{rule.name}
                 <span style={pushRightStyle}>

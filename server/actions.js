@@ -15,6 +15,7 @@ class Action {
     constructor(json, rule) {
         this.rule = rule;
         this.delay = json.delay ? json.delay : 0;
+        this.interval = json.interval ? json.interval : 0;
         // only used incase the user selects "same topic" for the Pending Option
         this.pendingTopics = {};
         // used in case of cron conditions being the trigger or the user selecting "always" or "never"

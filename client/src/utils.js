@@ -102,16 +102,10 @@ export const staticData = {
         logbook: "Log book",
         webhook: "Webhook"
     },
-    pendingOptions: {
-        always: "Always",
-        never: "Never",
-        topic: "Same topic"
-    },
     newItems: {
         rule: {
             name: "New rule",
             enabled: false,
-            pendingOption: "always",
             condition: []
         },
         condition: {
@@ -138,12 +132,14 @@ export const staticData = {
             mqtt: {
                 type: "mqtt",
                 delay: 0,
+                interval: 0,
                 topic: "__REPLACE__",
                 value: "__REPLACE__"
             },
             pushover: {
                 type: "pushover",
                 delay: 0,
+                interval: 0,
                 title: "__REPLACE__",
                 message: "",
                 sound: "pushover",
@@ -152,6 +148,7 @@ export const staticData = {
             email: {
                 type: "email",
                 delay: 0,
+                interval: 0,
                 to: "__REPLACE__",
                 subject: "__REPLACE__",
                 body: ""
@@ -159,16 +156,19 @@ export const staticData = {
             script: {
                 type: "script",
                 delay: 0,
+                interval: 0,
                 script: ""
             },
             logbook: {
                 type: "logbook",
                 delay: 0,
+                interval: 0,
                 message: ""
             },
             webhook: {
                 type: "webhook",
                 delay: 0,
+                interval: 0,
                 url: "__REPLACE__"
             }
         }
@@ -235,11 +235,13 @@ export const staticData = {
         action: {
             mqtt: [
                 { key: "delay", label: "Delay"},
+                { key: "interval", label: "Interval"},
                 { key: "topic", label: "Topic", props: { required: true } },
                 { key: "value", label: "Value", props: { required: true } },
             ],
             pushover: [
                 { key: "delay", label: "Delay"},
+                { key: "interval", label: "Interval"},
                 { key: "title", label: "Title", props: { required: true } },
                 { key: "message", label: "Message", type: "textarea", props: { rows: 5 } },
                 {
@@ -280,20 +282,24 @@ export const staticData = {
             ],
             email: [
                 { key: "delay", label: "Delay"},
+                { key: "interval", label: "Interval"},
                 { key: "to", label: "To", props: { required: true } },
                 { key: "subject", label: "Subject" },
                 { key: "body", label: "Body", type: "textarea", props: { rows: 10 } }
             ],
             script: [
                 { key: "delay", label: "Delay"},
+                { key: "interval", label: "Interval"},
                 { key: "script", label: "Script", type: "simple-editor", props: { rows: 30, style: { fontFamily: 'monospace', fontSize: '1rem' } } }
             ],
             logbook: [
                 { key: "delay", label: "Delay"},
+                { key: "interval", label: "Interval"},
                 { key: "message", label: "Message"}
             ],
             webhook: [
                 { key: "delay", label: "Delay"},
+                { key: "interval", label: "Interval"},
                 { key: "url", label: "URL"}
             ]
         }

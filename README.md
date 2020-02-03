@@ -127,6 +127,15 @@ Any number of them can be combined using OR and AND operations.
 
 ## Actions
 
+
+### Delay and repetition
+
+In case either an action is pending a delayed activatio or is repeating, a new trigger of the condition block will have the following consequences:
+* pending delayed action: reset the delay timer on the same evaluation and cancel the action if opposite evaluation
+* repeating action: leave alone on the same evaluation and cancel the action if opposite evaluation
+
+For example, if a delayed action that was part of the True actions, will be cancelled on a false evaluation after a trigger in the condition block. A true evaluation of the evaluation block would reset the counter.
+
 ### Delay
 
 The delay parameter will delay the execution of an action with the specified amount of milliseconds. For example, setting a delay of 60000 will delay the execution of the action with 1 minute.
