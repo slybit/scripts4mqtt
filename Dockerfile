@@ -1,4 +1,4 @@
-FROM node:carbon-alpine
+FROM node:erbium-alpine
 
 # Install tzdata so we can set the timezone
 RUN apk add tzdata
