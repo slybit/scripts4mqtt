@@ -105,6 +105,7 @@ export const staticData = {
     newItems: {
         rule: {
             name: "New rule",
+            description: "",
             enabled: false,
             condition: []
         },
@@ -113,7 +114,9 @@ export const staticData = {
                 type: "mqtt",
                 trigger: "no",
                 topic: "__REPLACE__",
-                eval: "true"
+                operator: "eq",
+                jmespath: "val",
+                value: ""
             },
             alias: {
                 type: "alias",
@@ -203,7 +206,16 @@ export const staticData = {
                     ]
                 },
                 { key: "topic", label: "Topic", props: { required: true } },
-                { key: "eval", label: "Eval", props: { required: true } }
+                { key: "jmespath", label: "jmespath", props: { required: true } },
+                {
+                    key: "operator", label: "Operator", type: "select", options: [
+                        { value: "eq", label: "= (equals)" },
+                        { value: "gt", label: "> (greater than)" },
+                        { value: "lt", label: "< (less than)"},
+                        { value: "neq", label: "!= (not equal to)"}
+                    ]
+                },
+                { key: "value", label: "Value", props: { required: true } }
             ],
             alias: [
                 {

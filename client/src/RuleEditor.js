@@ -52,8 +52,8 @@ export class RuleEditor extends React.Component {
             name: data.name,
             namePrev: data.name,
             nameHasChanged: false,
-            description: data.description,
-            descriptionPrev: data.description,
+            description: data.description ? data.description : "",
+            descriptionPrev: data.description ? data.description : "",
             descriptionHasChanged: false,
             ontrue: data.ontrue ? addIds(data.ontrue) : [],
             onfalse: data.onfalse ? addIds(data.onfalse) : [],
@@ -80,7 +80,7 @@ export class RuleEditor extends React.Component {
         });
     }
 
-    
+
 
     // itemName is either
     // - "name"

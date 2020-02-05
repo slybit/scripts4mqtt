@@ -29,7 +29,7 @@ class Rules {
                 this.jsonContents = yaml.safeLoad(fs.readFileSync(FILENAME, 'utf8'));
             } catch (e) {
                 logger.error(e.toString());
-
+                process.exit(1);
             }
         }
         for (let key in this.jsonContents) {

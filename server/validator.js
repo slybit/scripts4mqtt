@@ -62,13 +62,8 @@ MQTT CONDITION and ACTION
 ---------------------------------------------------------------------------------------------------------------------------- */
 
 function validateMqttCondition(json) {
-    if (!(json.topic && json.eval))
-        throw new Error('Missing topic or eval expression');
-    if ((json.topic.trim() === '' || json.eval.trim() === ''))
-        throw new Error('Empty topic or eval expression');
-    if (!validateTopic(json.topic))
-        throw new Error('Invalid topic');
-    // no check of the eval expression
+    if (json.value === undefined)
+        throw new Error('Missing value');
 }
 
 function validateAliasCondition(json) {

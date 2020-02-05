@@ -32,7 +32,8 @@ DoorBell:
     - type: mqtt
       trigger: on_flip_true
       topic: knx/status/15/2/3
-      eval: '{{M.val}} == "0x01"'
+      jmespath: 'val'
+      value: '0x01'
     - type: and
       condition: []
   ontrue:
@@ -49,11 +50,8 @@ AliasTest:
     - type: alias
       trigger: on_flip_true
       alias: A
-      eval: '{{M.val}} == "0x01"'
-    - type: alias
-      trigger: 'no'
-      alias: A
-      eval: '{{true}}'
+      jmespath: 'val'
+      value: '0x01'
   ontrue:
     - type: logbook
       message: alias test to logbook
@@ -66,17 +64,20 @@ Back_of_the_house:
     condition:
       - type: mqtt
         topic: knx/status/15/2/30
-        eval: '{{M.val}} == "0x01"'
+        jmespath: 'val'
+        value: '0x01'
       - type: or
         condition:
           - type: mqtt
             trigger: always
             topic: knx/status/14/0/14
-            eval: '{{M.val}} == 0'
+            jmespath: 'val'
+            value: 0
           - type: mqtt
             trigger: always
             topic: knx/status/14/0/15
-            eval: '{{M.val}} == 0'
+            jmespath: 'val'
+            value: 0
   ontrue:
     - type: mqtt
       topic: knx/set/0/0/208
@@ -94,11 +95,13 @@ Front_door:
     condition:
       - type: mqtt
         topic: knx/status/15/2/30
-        eval: '{{M.val}} == "0x01"'
+        jmespath: 'val'
+        value: '0x01'
       - type: mqtt
         trigger: always
         topic: knx/status/14/0/1
-        eval: '{{M.val}} == 0'
+        jmespath: 'val'
+        value: '0x01'
   ontrue:
     - type: mqtt
       topic: knx/set/0/0/200
@@ -117,7 +120,8 @@ Complex_script:
     type: mqtt
     trigger: always
     topic: knx/status/15/2/10
-    eval: '{{M.val}} == 1'
+    jmespath: 'val'
+    value: 1
   ontrue:
     - type: script
       script: |-
@@ -151,7 +155,8 @@ Bathroom_ventilatin:
     type: mqtt
     trigger: always
     topic: knx/status/15/2/6
-    eval: '{{M.val}} == 1'
+    jmespath: 'val'
+    value: 1
   ontrue:
     - type: mqtt
       topic: knx/set/2/0/0
@@ -179,7 +184,8 @@ SetVentilationFromHassio:
     type: mqtt
     trigger: always
     topic: hass/write/ventilation
-    eval: 'true'
+    jmespath: 'val'
+    value: '*'
   ontrue:
     - type: script
       script: |-
@@ -228,7 +234,8 @@ c71e6414f80f:
     - type: alias
       trigger: always
       alias: C
-      eval: '{{M.val}}==1'
+      jmespath: 'val'
+      value: '1'
   ontrue:
     - type: logbook
       delay: '10000'
@@ -262,4 +269,5 @@ c71e6414f80f:
     - type: mqtt
       trigger: always
       topic: alarm/set
-      eval: '{{{M.val}}} == "ARM_AWAY"'
+      jmespath: 'val'
+      value: "ARM_AWAY"
