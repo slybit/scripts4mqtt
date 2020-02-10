@@ -5,7 +5,7 @@ const path = require('path');
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
 const { logger, getRuleLogs, getMqttLogs, getLogbookLogs } = require('./logger.js');
-const { getConfig, updateConfig } = require('./config.js');
+const { getConfig, updateConfig, getMetaData } = require('./config.js');
 const config = require('./config.js').parse();
 const rules = require('./rules.js');
 const Engine = require('./engine.js');
@@ -103,6 +103,10 @@ router.post('/config', (req, res) => {
         process.exit();
 */
     }
+});
+
+router.get('/meta', (req, res) => {
+    res.json({ meta: getMetaData() });
 });
 
 router.get('/store',  (req, res) => {

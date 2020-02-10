@@ -1,4 +1,11 @@
 import React from "react";
+import {
+    Card,
+    CardBody,
+    CardText,
+    CardTitle,
+    Container
+} from 'reactstrap';
 import axios from 'axios';
 import { showError } from './utils.js';
 
@@ -7,19 +14,19 @@ export class About extends React.Component {
     constructor() {
         super();
         this.state = {
-            about: ""
+            meta: ""
         }
     }
 
 
     componentDidMount() {
-        this.loadAboutFromServer();
+        this.loadMetaFromServer();
     }
 
-    loadAboutFromServer = () => {
-        axios.get('/api/about')
+    loadMetaFromServer = () => {
+        axios.get('/api/meta')
             .then((response) => {
-                this.setState({ about: response.data.about });
+                this.setState({ meta: response.data.meta });
             })
             .catch((error) => {
                 // TODO: inform user
@@ -29,8 +36,18 @@ export class About extends React.Component {
 
     render() {
         return (
-            <div>About
-            </div>
+            <Container>
+            <Card >
+                <CardBody>
+                    <CardTitle>Scripts4MQTT</CardTitle>
+                    <CardText>
+                        <p>Build: {this.state.meta.build}</p>
+                        <p>Build date: {this.state.meta.date}</p>
+                    </CardText>
+
+                </CardBody>
+            </Card>
+            </Container>
         );
     }
 
