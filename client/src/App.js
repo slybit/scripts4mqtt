@@ -9,6 +9,7 @@ import { MqttLogTable } from './MqttLogTable';
 import { StoreTable } from './StoreTable';
 import { LogBookTable } from './LogBookTable';
 import { Config } from './Config';
+import { About } from './About';
 
 export default class App extends Component {
 
@@ -39,6 +40,9 @@ export default class App extends Component {
                     <NavItem>
                         <NavLink tag={RRNavLink} exact to="/config" activeClassName="active">Config</NavLink>
                     </NavItem>
+                    <NavItem>
+                        <NavLink tag={RRNavLink} exact to="/about" activeClassName="active">About</NavLink>
+                    </NavItem>
                 </Nav>
                 </Navbar>
                 <Switch>
@@ -51,6 +55,7 @@ export default class App extends Component {
                     <Route path='/logs/mqtt' component={MqttLogTable}></Route>
                     <Route path='/store' component={StoreTable}></Route>
                     <Route path='/config' component={Config}></Route>
+                    <Route path='/about' component={About}></Route>
                 </Switch>
             </AppContainer>
         );
