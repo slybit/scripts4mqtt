@@ -1,6 +1,6 @@
 var fs = require('fs');
 console.log("Incrementing build number...");
-fs.readFile('../config/metadata.json', function (err, content) {
+fs.readFile('./src/metadata.json', function (err, content) {
     var metadata = {};
     if (!err) {
         metadata = JSON.parse(content);
@@ -9,7 +9,7 @@ fs.readFile('../config/metadata.json', function (err, content) {
     }
     metadata.build = metadata.build + 1;
     metadata.date = (new Date()).toLocaleDateString();
-    fs.writeFile('../config/metadata.json', JSON.stringify(metadata), function (err) {
+    fs.writeFile('./src/metadata.json', JSON.stringify(metadata), function (err) {
         if (err) throw err;
         console.log("Current build number: " + metadata.build);
     })
