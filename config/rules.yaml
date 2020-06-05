@@ -32,7 +32,7 @@ DoorBell:
     - type: mqtt
       trigger: on_flip_true
       topic: knx/status/15/2/3
-      jmespath: 'val'
+      jmespath: val
       value: '0x01'
     - type: and
       condition: []
@@ -50,7 +50,7 @@ AliasTest:
     - type: alias
       trigger: on_flip_true
       alias: A
-      jmespath: 'val'
+      jmespath: val
       value: '0x01'
   ontrue:
     - type: logbook
@@ -64,19 +64,19 @@ Back_of_the_house:
     condition:
       - type: mqtt
         topic: knx/status/15/2/30
-        jmespath: 'val'
+        jmespath: val
         value: '0x01'
       - type: or
         condition:
           - type: mqtt
             trigger: always
             topic: knx/status/14/0/14
-            jmespath: 'val'
+            jmespath: val
             value: 0
           - type: mqtt
             trigger: always
             topic: knx/status/14/0/15
-            jmespath: 'val'
+            jmespath: val
             value: 0
   ontrue:
     - type: mqtt
@@ -95,12 +95,12 @@ Front_door:
     condition:
       - type: mqtt
         topic: knx/status/15/2/30
-        jmespath: 'val'
+        jmespath: val
         value: '0x01'
       - type: mqtt
         trigger: always
         topic: knx/status/14/0/1
-        jmespath: 'val'
+        jmespath: val
         value: '0x01'
   ontrue:
     - type: mqtt
@@ -120,7 +120,7 @@ Complex_script:
     type: mqtt
     trigger: always
     topic: knx/status/15/2/10
-    jmespath: 'val'
+    jmespath: val
     value: 1
   ontrue:
     - type: script
@@ -155,7 +155,7 @@ Bathroom_ventilatin:
     type: mqtt
     trigger: always
     topic: knx/status/15/2/6
-    jmespath: 'val'
+    jmespath: val
     value: 1
   ontrue:
     - type: mqtt
@@ -184,7 +184,7 @@ SetVentilationFromHassio:
     type: mqtt
     trigger: always
     topic: hass/write/ventilation
-    jmespath: 'val'
+    jmespath: val
     value: '*'
   ontrue:
     - type: script
@@ -234,7 +234,7 @@ c71e6414f80f:
     - type: alias
       trigger: always
       alias: C
-      jmespath: 'val'
+      jmespath: val
       value: '1'
   ontrue:
     - type: logbook
@@ -269,5 +269,107 @@ c71e6414f80f:
     - type: mqtt
       trigger: always
       topic: alarm/set
-      jmespath: 'val'
-      value: "ARM_AWAY"
+      jmespath: val
+      value: ARM_AWAY
+  onfalse:
+    - type: script
+      delay: 0
+      interval: 0
+      script: |-
+        console.log(JSON.stringify(context));
+        if (context.topic === 'alarm/set') log.info(context.M.val);
+25b81d34ed32:
+  name: New rule
+  description: ''
+  enabled: false
+  condition: []
+a2db3a5325d1:
+  name: New rule
+  description: ''
+  enabled: false
+  condition: []
+ebab8e3d57b6:
+  name: New rule
+  description: ''
+  enabled: false
+  condition: []
+0e762a31b89e:
+  name: New rule
+  description: ''
+  enabled: false
+  condition: []
+1e4c49505fcc:
+  name: New rule
+  description: ''
+  enabled: false
+  condition: []
+9b049b375b68:
+  name: New rule
+  description: ''
+  enabled: false
+  condition: []
+c8d7520a460c:
+  name: New rule
+  description: ''
+  enabled: false
+  condition: []
+13635c2e871c:
+  name: New rule
+  description: ''
+  enabled: false
+  condition: []
+106bd71e1c35:
+  name: New rule
+  description: ''
+  enabled: false
+  condition: []
+09e75bfb2c89:
+  name: New rule
+  description: ''
+  enabled: false
+  condition: []
+e9a1cdc22cf8:
+  name: New rule
+  description: ''
+  enabled: false
+  condition: []
+01bac5f17d9f:
+  name: New rule
+  description: ''
+  enabled: false
+  condition: []
+f4af86d0cec9:
+  name: New rule
+  description: ''
+  enabled: false
+  condition: []
+b88fc9cba4b0:
+  name: New rule
+  description: ''
+  enabled: false
+  condition: []
+133d2a09e194:
+  name: New rule
+  description: ''
+  enabled: false
+  condition: []
+bc85f6ac0ce2:
+  name: New rule
+  description: ''
+  enabled: false
+  condition: []
+92499bee2615:
+  name: New rule
+  description: ''
+  enabled: false
+  condition: []
+b4985733f025:
+  name: New rule
+  description: ''
+  enabled: false
+  condition: []
+dac9cc28ae76:
+  name: New rule
+  description: ''
+  enabled: false
+  condition: []

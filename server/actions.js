@@ -78,7 +78,7 @@ class ScriptAction extends Action {
     execute(context) {
         super.execute(context);
         try {
-            Engine.getInstance().runScript(this.script);
+            Engine.getInstance().runScript(this.script, context);
             logger.info('Rule [%s]: ScriptAction executed', this.rule.name);
             jsonlogger.info("ScriptAction executed", { ruleId: this.rule.id, ruleName: this.rule.name, type: "action", subtype: "script" });
         } catch (err) {

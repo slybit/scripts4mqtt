@@ -32,12 +32,13 @@ class Engine {
 
     constructor(mqttClient) {
         this.mqttClient = mqttClient;
-        this.store = store;
+        this.store = store;        
         this.mqttStore = mqttStore;
         this.vm = vm;
         this.sandbox = {
             log: logger,
-            store: this.store,
+            context: {},
+            store: this.store,            
             mqttStore: this.mqttStore,
             mqttClient: this.mqttClient,
             vm: vm,
@@ -103,12 +104,13 @@ class Engine {
 
     }
 
-    runScript(script) {
+    runScript(script, context) {
         //logger.debug('running script:\n# ----- start script -----\n%s\n# -----  end script  -----', script);
+        this.sandbox.context = context;
         return vm.runInContext(script, this.sandbox);
     }
 
-    testScript(script) {
+    testScript(script, context) {
         logger.debug('testing script:\n# ----- start script -----\n%s\n# -----  end script  -----', script);
         return vm.runInContext(script, this.testbox);
     }

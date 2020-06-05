@@ -509,7 +509,7 @@ class Rule {
             this.cancelPendingActions(this.onTrueActions);
         }
         for (let a of actions) {
-            console.log(a);
+            //console.log(a);
             if (a.delay > 0) {
                 logger.info('Rule [%s]: Schedule - delayed execution in %d millesecs', a.rule.name, a.delay);
                 a.pending = setTimeout(a.execute.bind(a, context), a.delay);
