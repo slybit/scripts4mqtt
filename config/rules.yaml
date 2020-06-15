@@ -1,5 +1,7 @@
 TimeDateUpdate:
   name: Test
+  category: Stuff
+  order: 0
   condition:
     - type: cron
       trigger: always
@@ -16,6 +18,8 @@ TimeDateUpdate:
   itemName: a
 Logbook:
   name: Logbook
+  category: Stuff
+  order: 1
   condition:
     - type: cron
       trigger: always
@@ -28,6 +32,8 @@ Logbook:
   enabled: false
 DoorBell:
   name: Doorbell
+  category: Other Stuff
+  order: 0
   condition:
     - type: mqtt
       trigger: on_flip_true
@@ -44,332 +50,39 @@ DoorBell:
       priority: 1
   pendingOption: always
   enabled: false
-AliasTest:
-  name: AliasTest
-  condition:
-    - type: alias
-      trigger: on_flip_true
-      alias: A
-      jmespath: val
-      value: '0x01'
-  ontrue:
-    - type: logbook
-      message: alias test to logbook
-  pendingOption: always
-  enabled: false
-Back_of_the_house:
-  name: Back of the house2
-  condition:
-    type: and
-    condition:
-      - type: mqtt
-        topic: knx/status/15/2/30
-        jmespath: val
-        value: '0x01'
-      - type: or
-        condition:
-          - type: mqtt
-            trigger: always
-            topic: knx/status/14/0/14
-            jmespath: val
-            value: 0
-          - type: mqtt
-            trigger: always
-            topic: knx/status/14/0/15
-            jmespath: val
-            value: 0
-  ontrue:
-    - type: mqtt
-      topic: knx/set/0/0/208
-      value: 1
-  onfalse:
-    - type: mqtt
-      topic: knx/set/0/0/208
-      value: 0
-  pendingOption: always
-  enabled: false
-Front_door:
-  name: Front door
-  condition:
-    type: and
-    condition:
-      - type: mqtt
-        topic: knx/status/15/2/30
-        jmespath: val
-        value: '0x01'
-      - type: mqtt
-        trigger: always
-        topic: knx/status/14/0/1
-        jmespath: val
-        value: '0x01'
-  ontrue:
-    - type: mqtt
-      topic: knx/set/0/0/200
-      value: 1
-    - type: mqtt
-      topic: knx/set/0/0/201
-      value: 1
-    - type: mqtt
-      topic: knx/set/0/0/202
-      value: 1
-  pendingOption: always
-  enabled: false
-Complex_script:
-  name: Complex script
-  condition:
-    type: mqtt
-    trigger: always
-    topic: knx/status/15/2/10
-    jmespath: val
-    value: 1
-  ontrue:
-    - type: script
-      script: |-
-        var a = get("mode", 0);
-        a = (a + 1) % 4;
-        put("mode", a);
-        log.info(a);
-        switch (a) {
-          case 0:
-            write("knx/write/0/0/207", 0);
-            write("knx/write/0/0/208", 0);
-            break;
-          case 1:
-            write("knx/write/0/0/207", "1");
-            write("knx/write/0/0/208", "0");
-            break;
-          case 2:
-            write("knx/write/0/0/207", "1");
-            write("knx/write/0/0/208", "1");
-            break;
-          case 3:
-            write("knx/write/0/0/207", "0");
-            write("knx/write/0/0/208", "1");
-            break;
-        }
-  pendingOption: always
-  enabled: false
-Bathroom_ventilatin:
-  name: Bathroom ventilation
-  condition:
-    type: mqtt
-    trigger: always
-    topic: knx/status/15/2/6
-    jmespath: val
-    value: 1
-  ontrue:
-    - type: mqtt
-      topic: knx/set/2/0/0
-      value: 1
-    - type: mqtt
-      topic: knx/set/2/2/3
-      value: 1
-    - type: mqtt
-      topic: knx/set/2/1/4
-      value: 1
-      delay: 500
-    - type: mqtt
-      topic: hass/ventilation
-      value: low
-      delay: 600000
-    - type: mqtt
-      topic: knx/set/2/1/4
-      value: 0
-      delay: 600000
-  pendingOption: always
-  enabled: false
-SetVentilationFromHassio:
-  name: Ventilation
-  condition:
-    type: mqtt
-    trigger: always
-    topic: hass/write/ventilation
-    jmespath: val
-    value: '*'
-  ontrue:
-    - type: script
-      script: |-
-        var mode = read("hass/write/ventilation").data.val;
-        log.info(JSON.stringify(mode));
-        switch (mode) {
-          case "off":
-            write("knx/write/2/0/0", 0);
-            write("hass/status/ventilation/off", 1, true);
-            write("hass/status/ventilation/low", 0, true);
-            write("hass/status/ventilation/medium", 0, true);
-            write("hass/status/ventilation/high", 0, true);
-            break;
-          case "low":
-            write("knx/write/2/0/0", "1");
-            write("knx/write/2/2/1", "1");
-            write("hass/status/ventilation/off", 0, true);
-            write("hass/status/ventilation/low", 1, true);
-            write("hass/status/ventilation/medium", 0, true);
-            write("hass/status/ventilation/high", 0, true);
-            break;
-          case "medium":
-            write("knx/write/2/0/0", "1");
-            write("knx/write/2/2/2", "1");
-            write("hass/status/ventilation/off", 0, true);
-            write("hass/status/ventilation/low", 0, true);
-            write("hass/status/ventilation/medium", 1, true);
-            write("hass/status/ventilation/high", 0, true);
-            break;
-          case "high":
-            write("knx/write/2/0/0", "1");
-            write("knx/write/2/2/3", "1");
-            write("hass/status/ventilation/off", 0, true);
-            write("hass/status/ventilation/low", 0, true);
-            write("hass/status/ventilation/medium", 0, true);
-            write("hass/status/ventilation/high", 1, true);
-            break;
-        }
-  pendingOption: always
-  enabled: false
-c71e6414f80f:
-  name: Multi topic
-  enabled: false
-  pendingOption: never
-  condition:
-    - type: alias
-      trigger: always
-      alias: C
-      jmespath: val
-      value: '1'
-  ontrue:
-    - type: logbook
-      delay: '10000'
-      message: 'topic: {{{topic}}}, old value: {{H.val}}, new value: {{M.val}}'
-  onfalse: []
-78a92bfa9035:
-  name: Simul
-  enabled: false
-  pendingOption: always
-  condition:
-    - type: cron
-      trigger: always
-      'on': 25 10 * * *
-      'off': 11 21 * * *
-  ontrue:
-    - type: logbook
-      delay: 0
-      message: simul on
-    - type: mqtt
-      topic: knx/brol
-      value: 1
-  onfalse:
-    - type: logbook
-      delay: 0
-      message: simul off
-2a4e6cb5f787:
+ef2a1abf4e20:
   name: New rule
-  enabled: true
-  pendingOption: always
-  condition:
-    - type: mqtt
-      trigger: always
-      topic: alarm/set
-      jmespath: val
-      value: ARM_AWAY
-  onfalse:
-    - type: script
-      delay: 0
-      interval: 0
-      script: |-
-        console.log(JSON.stringify(context));
-        if (context.topic === 'alarm/set') log.info(context.M.val);
-25b81d34ed32:
-  name: New rule
+  category: default
   description: ''
   enabled: false
   condition: []
-a2db3a5325d1:
+2bf3c2a03716:
   name: New rule
+  category: default
   description: ''
   enabled: false
   condition: []
-ebab8e3d57b6:
+b59d44f48aac:
   name: New rule
+  category: default
   description: ''
   enabled: false
   condition: []
-0e762a31b89e:
+76b2870b34bc:
   name: New rule
+  category: default
   description: ''
   enabled: false
   condition: []
-1e4c49505fcc:
+23ddb5f2160f:
   name: New rule
+  category: default
   description: ''
   enabled: false
   condition: []
-9b049b375b68:
+6ba57721006b:
   name: New rule
-  description: ''
-  enabled: false
-  condition: []
-c8d7520a460c:
-  name: New rule
-  description: ''
-  enabled: false
-  condition: []
-13635c2e871c:
-  name: New rule
-  description: ''
-  enabled: false
-  condition: []
-106bd71e1c35:
-  name: New rule
-  description: ''
-  enabled: false
-  condition: []
-09e75bfb2c89:
-  name: New rule
-  description: ''
-  enabled: false
-  condition: []
-e9a1cdc22cf8:
-  name: New rule
-  description: ''
-  enabled: false
-  condition: []
-01bac5f17d9f:
-  name: New rule
-  description: ''
-  enabled: false
-  condition: []
-f4af86d0cec9:
-  name: New rule
-  description: ''
-  enabled: false
-  condition: []
-b88fc9cba4b0:
-  name: New rule
-  description: ''
-  enabled: false
-  condition: []
-133d2a09e194:
-  name: New rule
-  description: ''
-  enabled: false
-  condition: []
-bc85f6ac0ce2:
-  name: New rule
-  description: ''
-  enabled: false
-  condition: []
-92499bee2615:
-  name: New rule
-  description: ''
-  enabled: false
-  condition: []
-b4985733f025:
-  name: New rule
-  description: ''
-  enabled: false
-  condition: []
-dac9cc28ae76:
-  name: New rule
+  category: default
   description: ''
   enabled: false
   condition: []

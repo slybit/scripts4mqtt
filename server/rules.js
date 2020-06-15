@@ -32,7 +32,9 @@ class Rules {
                 process.exit(1);
             }
         }
+
         for (let key in this.jsonContents) {
+            console.log(key);
             try {
                 let expandedRules = this.expandAliases(this.jsonContents[key]);
                 this.rules[key] = [];
@@ -180,9 +182,9 @@ class Rules {
 
 
 
-    /*
-     * REST APIs
-     */
+    /* --------------------------------------------------------------------------------------------
+     * API
+     -------------------------------------------------------------------------------------------- */
 
     reload() {
         try {
@@ -227,16 +229,33 @@ class Rules {
 
 
     listAllRules() {
-        let list = [];
+        let categories = {};
         for (let key in this.jsonContents) {
-            list.push({
+            let categoryName = this.jsonContents[key].category ? this.jsonContents[key].category : "default";
+            let category = categories[categoryName];
+            if (!category) {
+                category = {
+                    isOpen: true,
+                    rules: []
+                };
+                categories[categoryName] = category;
+            }
+            category.rules.push({
                 key: key,
+                order: this.jsonContents[key].order,
+                category: categoryName,
                 name: this.jsonContents[key].name,
                 enabled: this.jsonContents[key].enabled
             });
-
         }
-        return list;
+        /*
+        let list = [];
+        for (let category of Object.keys(categories)) {
+            console.log(category);
+            list.push(category);
+        }
+        */
+        return categories;
     }
 
     createRule(input) {

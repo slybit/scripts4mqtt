@@ -5,8 +5,32 @@ const config  = require('./config.js').parse();
 const readline = require('readline');
 const fs = require('fs');
 const path = require('path');
+const { Writable } = require('stream');
+ 
 
 const LOGPATH = config.logpath || '../logs/';
+const LOGBUFFERSIZE = 500;
+
+
+const logBufferStatic = [];
+const logBufferDynamic = [];
+const stream = new Writable();
+stream._write = (chunk, encoding, next) => {
+  logBufferStatic.push(chunk.toString());
+  if (logBufferStatic.length > LOGBUFFERSIZE) logBufferStatic.shift();
+  logBufferDynamic.push(chunk.toString());
+  if (logBufferDynamic.length > LOGBUFFERSIZE) logBufferDynamic.shift();
+  next();
+}
+
+// format for stream and console
+const consoleFormat = combine(
+  timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
+  format.splat(),
+  printf(({ level, message, timestamp }) => {
+    return `${timestamp} | ${level.padEnd(7).toUpperCase()} | ${message}`;
+  })
+);
 
 // Transport for the application logs
 var defaultTransport = new (transports.DailyRotateFile)({
@@ -48,13 +72,18 @@ let logbookTransport = new (transports.DailyRotateFile)({
   format: format.combine(format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }), format.json())
 });
 
-const consoleFormat = combine(
-  timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
-  format.splat(),
-  printf(({ level, message, timestamp }) => {
-    return `${timestamp} | ${level.padEnd(7).toUpperCase()} | ${message}`;
-  })
-);
+// Memory transport
+let streamTransport = new (transports.Stream)({
+  stream: stream,
+  format: format.combine(
+    format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
+    format.splat(),
+    format.printf((msg) => {
+      return `${msg.timestamp} | ` + format.colorize().colorize(msg.level, `${msg.level.padEnd(7).toUpperCase()}`) +  ` | ${msg.message}`;
+    })
+  ),
+}); 
+
 
 
 const logger = createLogger({
@@ -67,7 +96,8 @@ const logger = createLogger({
     //  filename: 'default.log',
     //  format: format.combine(format.timestamp(), format.splat(), format.json()),
     //}),
-    defaultTransport
+    defaultTransport,
+    streamTransport
   ],
 });
 
@@ -151,4 +181,4 @@ const parseLogFile = function (filename, maxLineCount, logs) {
 
 
 
-module.exports = { logger, jsonlogger, mqttlogger, logbooklogger, getRuleLogs, getMqttLogs, getLogbookLogs };
+module.exports = { logBufferDynamic, logBufferStatic, logger, jsonlogger, mqttlogger, logbooklogger, getRuleLogs, getMqttLogs, getLogbookLogs };

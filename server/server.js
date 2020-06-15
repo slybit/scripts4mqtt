@@ -4,7 +4,7 @@ const path = require('path');
 // TODO: use winston express middleware instead of morgan? worth it?
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
-const { logger, getRuleLogs, getMqttLogs, getLogbookLogs } = require('./logger.js');
+const { logBufferStatic, logBufferDynamic, logger, getRuleLogs, getMqttLogs, getLogbookLogs } = require('./logger.js');
 const { getConfig, updateConfig, getMetaData } = require('./config.js');
 const config = require('./config.js').parse();
 const rules = require('./rules.js');
@@ -94,14 +94,14 @@ router.post('/config', (req, res) => {
     res.json(response);
     if (response.success) {
         // restart using a child process
-/*
-        spawn(process.argv[0], process.argv.slice(1), {
-            detached: true,
-            stdio: 'inherit'
-        }).unref();
-        // kill the parent process;
-        process.exit();
-*/
+        /*
+                spawn(process.argv[0], process.argv.slice(1), {
+                    detached: true,
+                    stdio: 'inherit'
+                }).unref();
+                // kill the parent process;
+                process.exit();
+        */
     }
 });
 
@@ -109,7 +109,7 @@ router.get('/meta', (req, res) => {
     res.json({ meta: getMetaData() });
 });
 
-router.get('/store',  (req, res) => {
+router.get('/store', (req, res) => {
     try {
         const dump = Engine.getInstance().dumpStore();
         res.json(dump);
@@ -119,10 +119,32 @@ router.get('/store',  (req, res) => {
     }
 });
 
-router.get('/logbook',  async (req, res) => {
+router.get('/logbook', async (req, res) => {
     try {
         const logs = await getLogbookLogs();
         res.json(logs);
+    } catch (err) {
+        logger.error('Error parsing logbook logs');
+        res.json([]);
+    }
+});
+
+router.get('/infinite', async (req, res) => {
+    try {
+        res.setHeader('Transfer-Encoding', 'chunked');
+        res.setHeader('Access-Control-Allow-Origin', '*');
+        res.setHeader('Access-Control-Allow-Methods', 'GET');
+        res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+        //setInterval(() => res.write(Buffer.from(`${Date.now()}\n`)), 300);
+        for (line of logBufferStatic) {
+            res.write(Buffer.from(`${line}`))
+        }
+        logBufferDynamic.length = 0;
+        setInterval(() => {
+            while (logBufferDynamic.length > 0) {
+                res.write(Buffer.from(`${logBufferDynamic.shift()}`))
+            }
+        }, 300);
     } catch (err) {
         logger.error('Error parsing logbook logs');
         res.json([]);
@@ -133,12 +155,13 @@ router.get('/logbook',  async (req, res) => {
 app.use('/api', router);
 
 // ----
+/*
 const client = express.Router();
 client.use(express.static(path.join(__dirname, '..', 'client', 'build')));
 client.get('/*', function (req, res) {
     res.sendFile(path.join(__dirname, '..', 'client', 'build', 'index.html'));
 });
 app.use('/', client);
-
+*/
 // -----
 app.listen(API_PORT, () => logger.info('Listening on port %s', API_PORT));
