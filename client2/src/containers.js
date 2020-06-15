@@ -1,10 +1,18 @@
 import styled from "styled-components";
 
+
+/**  
+ * Outer wrapper.
+ * Provides a full width and height flex container that will host
+ *    - NavBar (top bar)
+ *    - AppBody or NonFlexBody
+ *    - Footer
+ * */
 export const AppContainer = styled.div`
   display: flex;
+  flex-direction: column;
   height: 100vh;
   max-height: 100vh;
-  flex-direction: column;
 `;
 
 // -----------------------------------
@@ -27,11 +35,41 @@ export const AppFooter = styled.div`
 
 // -----------------------------------
 
+/**
+ * Left column, non-scrolling, hosting the search bar and rule list
+ */
+export const LeftColumn = styled.div`
+  flex: 0 0 20em;
+  max-width: 40em;
+  border-right: 1px solid rgba(0, 0, 0, 0.125);
+  overflow-y: hidden;
+`;
+
+/**
+ * Scrollable container, hosting the list of rules
+ */
+export const RuleListContainer = styled.div`
+  overflow-y: auto;
+  height: 100%
+`;
+
+/**
+ * Flex container positioned right of the 'LeftColumn'.
+ * Can be used to host one or more columns.
+ */
+export const RightColumn = styled.div`
+    display: flex;
+    flex: 1 1 auto;
+    background: #fff;
+    padding: 5px;
+    overflow-y: hidden;
+`;
+
 export const AppColumn2 = styled.div`
   flex: 0 0 20em;
   max-width: 20em;
   border-right: 1px solid rgba(0, 0, 0, 0.125);
-  overflow-y: auto;
+  overflow-y: hidden;
 `;
 
 export const AppColumn10 = styled.div`
@@ -40,23 +78,9 @@ export const AppColumn10 = styled.div`
   overflow-y: auto;
 `;
 
-export const AppNav = styled.div`
-  flex: 0 0 20em;
-  max-width: 40em;
-  order: -1;
-  border-right: 1px solid rgba(0, 0, 0, 0.125);
-  overflow-y: auto;
-    min-height: 0px;
-`;
 
-export const AppMain = styled.div`
-    display: flex;
-    flex: 1 1 auto;
-    background: #fff;
-    padding: 5px;
-    overflow-y: auto;
-    min-height: 0px;
-`;
+
+
 
 export const AppContent = styled.div`
   flex: 0 0 40em;

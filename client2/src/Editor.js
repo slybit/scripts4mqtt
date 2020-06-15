@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
-import { AppNav, AppBody, Title, HorizontalContainer } from "./containers";
+import { LeftColumn, AppBody, Title, HorizontalContainer } from "./containers";
 import { Button, Input } from 'reactstrap';
 import { staticData, showError } from './utils';
 import { RuleList } from './RuleList';
+import { RuleEditor } from './RuleEditor';
 import axios from 'axios';
 import update from 'immutability-helper';
 
@@ -44,10 +45,10 @@ class Editor extends Component {
 
 
   updateRuleList(ruleList, updatedRule = undefined) {
-      console.log(updatedRule);
+    console.log(updatedRule);
     if (updatedRule) {
       this.setState({
-        rules: update(ruleList, {[updatedRule.category] : {isOpen: {$set: true }}} ),
+        rules: update(ruleList, { [updatedRule.category]: { isOpen: { $set: true } } }),
         selectedRule: updatedRule.id
       });
     } else {
@@ -63,10 +64,10 @@ class Editor extends Component {
       filter: event.target.value,
     });
 
-    for (let category of  Object.keys(this.state.rules)) {
-        this.setState((state) => ({
-            rules: update(state.rules, {[category] : {isOpen: {$set: true }}} )
-        }));
+    for (let category of Object.keys(this.state.rules)) {
+      this.setState((state) => ({
+        rules: update(state.rules, { [category]: { isOpen: { $set: true } } })
+      }));
     }
   }
 
@@ -75,8 +76,8 @@ class Editor extends Component {
     let filter = this.state.filter;
     for (let category of Object.keys(this.state.rules)) {
       filtered[category] = {
-          isOpen: this.state.rules[category].isOpen,
-          rules: []
+        isOpen: this.state.rules[category].isOpen,
+        rules: []
       };
       filtered[category].rules = this.state.rules[category].rules.filter(function (item) {
         return item.name.toLowerCase().search(
@@ -87,94 +88,97 @@ class Editor extends Component {
   }
 
 
-    /* --------------------------------------------------------------------------------------------------
-    UI handlers
-    -------------------------------------------------------------------------------------------------- */
+  /* --------------------------------------------------------------------------------------------------
+  UI handlers
+  -------------------------------------------------------------------------------------------------- */
 
-    handleRuleClick = (key) => {
-        console.log("Rule clicked: " + key);
-        this.setState({ selectedRule: key });
-    }
-
-    handleCategoryClick = (category) => {
-        this.setState( { rules : update(this.state.rules, {[category] : {$toggle: ['isOpen'] }}  ) } );
-    }
-
-    handleDeleteRuleClick = (key) => {
-      axios.delete('/api/rule/' + key)
-        .then((response) => {
-          if (response.data.success) {
-            this.loadRuleListFromServer(false);
-          } else {
-            showError("Deletion not handled by script4mqtt service.", response.data);
-            console.log(response.data);
-          }
-        })
-        .catch((error) => {
-          showError("Cannot access the script4mqtt service.", error);
-        });
-    }
-
-    handleEnableRuleClick = (key, newEnabledState) => {
-      axios.put('/api/rule/' + key, { enabled: newEnabledState })
-        .then((response) => {
-          // update the state
-          if (response.data.success) {
-            this.loadRuleListFromServer(false);
-          } else {
-            showError("Rule update not handled by script4mqtt service.", response.data);
-            console.log(response.data);
-          }
-        })
-        .catch((error) => {
-          showError("Cannot access the script4mqtt service.", error);
-        });
-    }
-
-    handleAddRuleClick = () => {
-      axios.post('/api/rules', staticData.newItems.rule)
-        .then((response) => {
-          if (response.data.success) {
-            this.loadRuleListFromServer(response.data.newrule);
-          } else {
-            showError("New rule action not handled by script4mqtt service.", response.data);
-            console.log(response.data);
-          }
-        })
-        .catch((error) => {
-          showError("Cannot access the script4mqtt service.", error);
-        });
-    }
-
-    /* --------------------------------------------------------------------------------------------------
-    Render
-    -------------------------------------------------------------------------------------------------- */
-
-    render() {
-      return (
-        <AppBody>
-          <AppNav>
-            <HorizontalContainer>
-              <Title>Rules</Title>
-              <Button onClick={this.handleAddRuleClick}>Add</Button>
-            </HorizontalContainer>
-            {!this.state.selectedRule && <Title>No rules defined. Create one...</Title>}
-            <Input placeholder="Filter rules..." value={this.state.filter} onChange={this.updateFilter} />
-            <br></br>
-            <RuleList
-              data={this.filterList()}
-              selectedRule={this.state.selectedRule}
-              onClick={this.handleRuleClick.bind(this)}
-              onDeleteClick={this.handleDeleteRuleClick}
-              onEnableClick={this.handleEnableRuleClick}
-              onCategoryClick={this.handleCategoryClick}
-            />
-          </AppNav>
-
-
-        </AppBody>
-      );
-    }
+  handleRuleClick = (key) => {
+    console.log("Rule clicked: " + key);
+    this.setState({ selectedRule: key });
   }
 
-  export default Editor;
+  handleCategoryClick = (category) => {
+    this.setState({ rules: update(this.state.rules, { [category]: { $toggle: ['isOpen'] } }) });
+  }
+
+  handleDeleteRuleClick = (key) => {
+    axios.delete('/api/rule/' + key)
+      .then((response) => {
+        if (response.data.success) {
+          this.loadRuleListFromServer(false);
+        } else {
+          showError("Deletion not handled by script4mqtt service.", response.data);
+          console.log(response.data);
+        }
+      })
+      .catch((error) => {
+        showError("Cannot access the script4mqtt service.", error);
+      });
+  }
+
+  handleEnableRuleClick = (key, newEnabledState) => {
+    axios.put('/api/rule/' + key, { enabled: newEnabledState })
+      .then((response) => {
+        // update the state
+        if (response.data.success) {
+          this.loadRuleListFromServer(false);
+        } else {
+          showError("Rule update not handled by script4mqtt service.", response.data);
+          console.log(response.data);
+        }
+      })
+      .catch((error) => {
+        showError("Cannot access the script4mqtt service.", error);
+      });
+  }
+
+  handleAddRuleClick = () => {
+    axios.post('/api/rules', staticData.newItems.rule)
+      .then((response) => {
+        if (response.data.success) {
+          this.loadRuleListFromServer(response.data.newrule);
+        } else {
+          showError("New rule action not handled by script4mqtt service.", response.data);
+          console.log(response.data);
+        }
+      })
+      .catch((error) => {
+        showError("Cannot access the script4mqtt service.", error);
+      });
+  }
+
+  /* --------------------------------------------------------------------------------------------------
+  Render
+  -------------------------------------------------------------------------------------------------- */
+
+  render() {
+    return (
+      <AppBody>
+        <LeftColumn>
+          <HorizontalContainer>
+            <Title>Rules</Title>
+            <Button onClick={this.handleAddRuleClick}>Add</Button>
+          </HorizontalContainer>
+          <Input placeholder="Filter rules..." value={this.state.filter} onChange={this.updateFilter} />
+          <br></br>
+          <RuleList
+            data={this.filterList()}
+            selectedRule={this.state.selectedRule}
+            onClick={this.handleRuleClick.bind(this)}
+            onDeleteClick={this.handleDeleteRuleClick}
+            onEnableClick={this.handleEnableRuleClick}
+            onCategoryClick={this.handleCategoryClick}
+          />
+        </LeftColumn>
+        {this.state.selectedRule && false &&
+            <div id={this.state.selectedRule} refreshNames={() => { this.loadRuleListFromServer(false) }} />
+          }
+          {this.state.selectedRule &&
+            <RuleEditor id={this.state.selectedRule} refreshNames={() => { this.loadRuleListFromServer(false) }} />
+          }
+      </AppBody>
+    );
+  }
+}
+
+export default Editor;

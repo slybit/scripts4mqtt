@@ -1,18 +1,8 @@
 import React from "react";
 import Icon from '@mdi/react'
 import { mdiDelete, mdiCheckboxBlankOutline, mdiCheckBoxOutline } from '@mdi/js'
-import { HorizontalContainer } from "./containers";
-//import { Accordion, AccordionItem } from 'react-sanfona';
-/*import {
-    Accordion,
-    AccordionItem,
-    AccordionItemHeading,
-    AccordionItemButton,
-    AccordionItemPanel,
-} from 'react-accessible-accordion';
-import 'react-accessible-accordion/dist/fancy-example.css';
-*/
-import { Collapse, Button, CardBody, Card } from 'reactstrap';
+import { HorizontalContainer, RuleListContainer } from "./containers";
+import { Collapse } from 'reactstrap';
 
 
 const pushRightStyle = {
@@ -47,9 +37,10 @@ export class RuleList extends React.Component {
 
 
         return (
-            Object.keys(this.props.data).sort().map(item => {
+            <RuleListContainer>
+            { Object.keys(this.props.data).sort().map(item => {
                 return (
-                    <div>
+                    <div >
                         <HorizontalContainer style={{width: "100%", background: "#007bff", color: "white", cursor: 'pointer'}} onClick={() => this.props.onCategoryClick(item)}>{item}</HorizontalContainer>
                         <Collapse isOpen={this.props.data[item].isOpen}>
                             <ul className="list-group">
@@ -75,7 +66,8 @@ export class RuleList extends React.Component {
                         </Collapse>
                     </div>
                 )
-            })
+            }) }
+            </RuleListContainer>
         );
 
 
