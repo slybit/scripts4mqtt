@@ -1,9 +1,12 @@
 import React, { Component } from 'react';
+import { DndProvider } from 'react-dnd';
+import { HTML5Backend } from 'react-dnd-html5-backend';
+import { ContextProvider } from 'react-sortly';
 import { LeftColumn, AppBody, Title, HorizontalContainer } from "./containers";
 import { Button, Input } from 'reactstrap';
 import { staticData, showError } from './utils';
 import { RuleList } from './RuleList';
-import { RuleEditor } from './RuleEditor';
+import { RuleEditor } from './RuleEditor2';
 import axios from 'axios';
 import update from 'immutability-helper';
 
@@ -174,7 +177,11 @@ class Editor extends Component {
             <div id={this.state.selectedRule} refreshNames={() => { this.loadRuleListFromServer(false) }} />
           }
           {this.state.selectedRule &&
+                  <DndProvider backend={HTML5Backend}>
+                  <ContextProvider>
             <RuleEditor id={this.state.selectedRule} refreshNames={() => { this.loadRuleListFromServer(false) }} />
+            </ContextProvider>
+            </DndProvider>
           }
       </AppBody>
     );

@@ -278,13 +278,13 @@ export class RuleEditor extends React.Component {
     )
 
     ItemRenderer = (props) => {
-        const { data: { name, depth } } = props;
+        const { data: { type, depth } } = props;
         const [, drag] = useDrag();
         const [, drop] = useDrop();
 
         return (
             <div ref={drop}>
-                <div ref={drag} style={{ marginLeft: depth * 20 }}>{name}</div>
+                <div ref={drag} style={{ marginLeft: depth * 20 }}>{type}</div>
             </div>
         );
     }

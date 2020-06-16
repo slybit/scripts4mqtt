@@ -164,3 +164,9 @@ ea459e87573f:
   description: ''
   enabled: false
   condition: []
+7f0a4b0bb661:
+  name: New rule 5
+  description: ''
+  category: default
+  enabled: false
+  condition: []

@@ -5,7 +5,7 @@ export function flattenConditions(nested) {
         let id = list.length > 0 ? list[list.length - 1].id + 1 : 1;
         let path = parent.path.slice(0);
         if (parent.id) path.push(parent.id);
-        let item = { id: id, path: path, ...nested };
+        let item = { id: id, path: path, depth: path.length, ...nested };
         delete item.condition; // otherwise the nested conditions all stay in
         list.push(item);
         if ((nested.type === 'or' || nested.type === 'and') && nested.condition) {

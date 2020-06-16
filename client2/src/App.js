@@ -1,7 +1,4 @@
 import React from 'react';
-import { DndProvider } from 'react-dnd';
-import { HTML5Backend } from 'react-dnd-html5-backend';
-import { ContextProvider } from 'react-sortly';
 import { Redirect, Switch, Route, NavLink as RRNavLink } from 'react-router-dom';
 import { Navbar, NavbarBrand, Nav, NavItem, NavLink } from 'reactstrap';
 import { AppContainer, AppFooter, NonFlexBody, AppBody, AppNav, AppColumn2, AppColumn10 } from './containers.js';
@@ -28,38 +25,36 @@ function LazyLogger() {
 
 const App = () => {
     return (
-        <DndProvider backend={HTML5Backend}>
-            <ContextProvider>
 
 
-                <AppContainer>
-                    <Navbar color="silver" light expand="md">
-                        <NavbarBrand href="/">Scripts4MQTT</NavbarBrand>
-                        <Nav tabs>
-                            <NavItem>
-                                <NavLink tag={RRNavLink} exact to="/table" activeClassName="active">Table</NavLink>
-                            </NavItem>
-                            <NavItem>
-                                <NavLink tag={RRNavLink} exact to="/lazy" activeClassName="active">Lazy</NavLink>
-                            </NavItem>
-                            <NavItem>
-                                <NavLink tag={RRNavLink} exact to="/rules" activeClassName="active">Rules</NavLink>
-                            </NavItem>
-                        </Nav>
-                    </Navbar>
 
-                    <Switch>
-                        {/* React Route way of redirecting from / -> /editor */}
-                        <Route exact path="/" render={() => (<Redirect to="/table" />)} />
-                        <Route path='/table' component={RulesLogTable}></Route>
-                        <Route path='/lazy' component={LazyLogger}></Route>
-                        <Route path='/rules' component={Editor}></Route>
-                    </Switch>
+        <AppContainer>
+            <Navbar color="silver" light expand="md">
+                <NavbarBrand href="/">Scripts4MQTT</NavbarBrand>
+                <Nav tabs>
+                    <NavItem>
+                        <NavLink tag={RRNavLink} exact to="/table" activeClassName="active">Table</NavLink>
+                    </NavItem>
+                    <NavItem>
+                        <NavLink tag={RRNavLink} exact to="/lazy" activeClassName="active">Lazy</NavLink>
+                    </NavItem>
+                    <NavItem>
+                        <NavLink tag={RRNavLink} exact to="/rules" activeClassName="active">Rules</NavLink>
+                    </NavItem>
+                </Nav>
+            </Navbar>
 
-                    <AppFooter>the footer</AppFooter>
-                </AppContainer>
-            </ContextProvider>
-        </DndProvider>
+            <Switch>
+                {/* React Route way of redirecting from / -> /editor */}
+                <Route exact path="/" render={() => (<Redirect to="/table" />)} />
+                <Route path='/table' component={RulesLogTable}></Route>
+                <Route path='/lazy' component={LazyLogger}></Route>
+                <Route path='/rules' component={Editor}></Route>
+            </Switch>
+
+            <AppFooter>the footer</AppFooter>
+        </AppContainer>
+
 
     );
 }
