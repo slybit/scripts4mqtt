@@ -19,11 +19,11 @@ const ItemRenderer = (props) => {
     const [, drop] = useDrop();
 
     return (
-      <div ref={drop}>
-        <div ref={drag} style={{ marginLeft: depth * 20 }}>{type}</div>
-      </div>
+        <div ref={drop}>
+            <div ref={drag} style={{ marginLeft: depth * 20 }}>{type}</div>
+        </div>
     );
-  };
+};
 
 export const RuleEditor = (props) => {
 
@@ -58,36 +58,32 @@ export const RuleEditor = (props) => {
 
 
     const handleChange = (items) => {
+        for (let index = 0; index < items.length; index += 1) {
+            if (!(items[index].type === 'or' || items[index].type === 'and') && findDescendants(items, index).length > 0) 
+                return;
+        }
         setData({ ...data, flatConditions: items });
     }
 
-    const handleMove = (items, index, newIndex) => {
-        if (this.state.editorVisible) return false;
-        const { path } = items[newIndex];
-        const parent = items.find(item => item.id === path[path.length - 1]);
-        // parent must be OR or AND or root (so "no parent")
-        if (!parent || (parent.type === 'or' || parent.type === 'and')) {
-            return true;
-        } else {
-            return false;
-        }
+
+    const handleEditableItemClick = () => {
+        console.log('boom');
     }
 
+   
 
-
-
+ 
     return (
         <RightColumn>
 
             <AppColumn10>
 
 
-                { data.flatConditions.length > 0 && <Sortly
+                {data.flatConditions.length > 0 && <Sortly
                     items={data.flatConditions}
-                    onChange={handleChange}
-                    onMove={handleMove}>
-                        {(props) => <ItemRenderer {...props} />}
-                    </Sortly>
+                    onChange={handleChange} >
+                    {(props) => <ConditionItemRenderer {...props} onEditableItemClick={handleEditableItemClick} />}
+                </Sortly>
                 }
 
 
@@ -140,67 +136,65 @@ const pushRightStyle = {
 
 
 
-class ConditionItemRendererClass extends React.Component {
+const ConditionItemRenderer = (props) => {
 
-    handleClick = () => {
-        this.props.onEditableItemClick("conditions", this.props.index, "flatConditions", staticData.editor.condition[this.props.type]);
+    const { data, onEditableItemClick } = props;
+    const [, drag] = useDrag();
+    const [, drop] = useDrop({
+        drop() {console.log('drop')}
+
+    });
+
+
+    const handleClick = () => {
+        onEditableItemClick("conditions", data.index, "flatConditions", staticData.editor.condition[data.type]);
+    };
+
+    let label = "";
+    let isNew = false;
+    switch (data.type) {
+        case "and":
+            label = "AND"
+            break;
+        case "or":
+            label = "OR";
+            break;
+        case "mqtt":
+            isNew = isNewItem(data, "condition", data.type);
+            const { topic } = data;
+            label = `MQTT [${topic}]`;
+            break;
+        case "alias":
+            isNew = isNewItem(data, "condition", data.type);
+            const { alias } = data;
+            label = `ALIAS [${alias}]`;
+            break;
+        case "cron":
+            isNew = isNewItem(data, "condition", data.type);
+        default:
+            label = staticData.conditions[data.type];
+            break;
     }
 
-    handleDeleteClick = (e) => {
-        e.stopPropagation();
-        // TODO: generic delete
-        this.props.handleConditionDeleteClick(this.props.id);
+    if (isNew) {
+        label = "* " + label;
     }
 
-    render() {
-        const {
-            type, path, connectDragSource, connectDropTarget,
-            isDragging, isClosestDragging
-        } = this.props;
+    const style = {
+        ...itemStyle,
+        ...(isNew ? newStyle : null),
+        marginLeft: data.depth * 30,
+    };
 
-        let label = "";
-        let isNew = false;
-        switch (type) {
-            case "and":
-                label = "AND"
-                break;
-            case "or":
-                label = "OR";
-                break;
-            case "mqtt":
-                isNew = isNewItem(this.props, "condition", type);
-                const { topic } = this.props;
-                label = `MQTT [${topic}]`;
-                break;
-            case "alias":
-                isNew = isNewItem(this.props, "condition", type);
-                const { alias } = this.props;
-                label = `ALIAS [${alias}]`;
-                break;
-            case "cron":
-                isNew = isNewItem(this.props, "condition", type);
-            default:
-                label = staticData.conditions[type];
-                break;
-        }
-        if (isNew) {
-            label = "* " + label;
-        }
-
-        const style = {
-            ...itemStyle,
-            ...(isDragging || isClosestDragging ? muteStyle : null),
-            ...(isNew ? newStyle : null),
-            marginLeft: path.length * 30,
-        };
-
-        const el = <div style={style}>
-            {label}
-            <span style={pushRightStyle}>
-                <Icon path={mdiPencilOutline} size={1} className="editIcon" onClick={this.handleClick} />
-            </span></div>;
-        return connectDragSource(connectDropTarget(el));
-    }
+    return (
+        <div ref={drop}>
+            <div ref={drag} style={style}>{label}
+                <span style={pushRightStyle}>
+                    <Icon path={mdiPencilOutline} size={1} className="editIcon" onClick={handleClick} />
+                </span>
+            </div>
+        </div>
+    );
 
 }
 
