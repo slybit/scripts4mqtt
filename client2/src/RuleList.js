@@ -31,20 +31,24 @@ export class RuleList extends React.Component {
         this.props.onEnableClick(index, newEnabledState);
     }
 
-
+    listRulesPerCategory = (category) => {
+        return this.props.rules.filter(function(item) {
+            return item.category === category
+        });
+    }
 
     render() {
 
 
         return (
             <RuleListContainer>
-            { Object.keys(this.props.data).sort().map(item => {
+            { Object.keys(this.props.categories).sort().map(category => {
                 return (
                     <div >
-                        <HorizontalContainer style={{width: "100%", background: "#007bff", color: "white", cursor: 'pointer'}} onClick={() => this.props.onCategoryClick(item)}>{item}</HorizontalContainer>
-                        <Collapse isOpen={this.props.data[item].isOpen}>
+                        <HorizontalContainer style={{width: "100%", background: "#007bff", color: "white", cursor: 'pointer'}} onClick={() => this.props.onCategoryClick(category)}>{category}</HorizontalContainer>
+                        <Collapse isOpen={this.props.categories[category].isOpen}>
                             <ul className="list-group">
-                                {this.props.data[item].rules.map(rule => {
+                                {this.listRulesPerCategory(category).map(rule => {
                                     const style = {
                                         cursor: 'pointer',
                                         padding: '10px 5px',

@@ -10,6 +10,12 @@
   background-color: red;
 }
 
+.bold_blue {
+    font-weight: bold;
+    background: ALICEBLUE;
+  }
+
+
 body {
   margin: 0;
 

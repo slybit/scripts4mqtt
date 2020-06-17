@@ -1,27 +1,24 @@
 
-
 export function flattenConditions(nested) {
-    const flattenConditionsIteratively = (nested, list, parent) => {
+    const flattenConditionsIteratively = (nested, list, depth) => {
+        // increment the id for each new item
         let id = list.length > 0 ? list[list.length - 1].id + 1 : 1;
-        let path = parent.path.slice(0);
-        if (parent.id) path.push(parent.id);
-        let item = { id: id, path: path, depth: path.length, ...nested };
+        let item = { id: id, depth: depth, ...nested };
         delete item.condition; // otherwise the nested conditions all stay in
         list.push(item);
         if ((nested.type === 'or' || nested.type === 'and') && nested.condition) {
             for (let n of nested.condition)
-                flattenConditionsIteratively(n, list, item);
+                flattenConditionsIteratively(n, list, depth + 1);
         }
     }
 
     let list = [];
-    let parent = { path: [] };
 
     if (Array.isArray(nested)) {
         for (let n of nested)
-            flattenConditionsIteratively(n, list, parent);
+            flattenConditionsIteratively(n, list, 0);
     } else
-        flattenConditionsIteratively(nested, list, parent);
+        flattenConditionsIteratively(nested, list, 0);
 
     return list;
 }
@@ -30,22 +27,41 @@ export function flattenConditions(nested) {
 
 export function buildTree(items) {
     const buildItem = (item) => {
-        const { path, isMarked, id, ...data } = item;
+        const { depth, id, ...data } = item;
         const result = {
             ...data,
-            condition: items
-                .filter(child => child.path[child.path.length - 1] === item.id)
+            condition: findDescendants(items, items.indexOf(item))
+                .filter(child => child.depth === item.depth+1)
                 .map(child => buildItem(child)),
         };
         if (result.type !== 'or' && result.type !== 'and' && result.condition.length === 0) delete result.condition;
         return result;
     };
     const tree = items
-        .filter(item => item.path.length === 0)
+        .filter(item => item.depth === 0)
         .map(item => buildItem(item));
 
     return tree;
 }
+
+
+
+export function findDescendants(items, index) {
+    const item = items[index];
+    const descendants = [];
+
+    for (let i = index + 1; i < items.length; i += 1) {
+      const next = items[i];
+
+      if (next.depth <= item.depth) {
+        break;
+      }
+
+      descendants.push(next);
+    }
+
+    return descendants;
+  };
 
 
 

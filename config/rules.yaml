@@ -1,5 +1,5 @@
 TimeDateUpdate:
-  name: Test
+  name: TDU
   category: Stuff
   order: 0
   condition:
@@ -16,6 +16,7 @@ TimeDateUpdate:
   enabled: false
   description: The description asdfasdf
   itemName: a
+  jos: TDU
 Logbook:
   name: Logbook
   category: Stuff
@@ -41,6 +42,36 @@ DoorBell:
       jmespath: val
       value: '0x01'
     - type: and
+      condition:
+        - type: and
+          condition:
+            - type: or
+              condition:
+                - type: mqtt
+                  trigger: 'no'
+                  topic: __REPLACE__
+                  operator: eq
+                  jmespath: val
+                  value: ''
+            - type: or
+              condition: []
+    - type: mqtt
+      trigger: 'no'
+      topic: __REPLACE__
+      operator: eq
+      jmespath: val
+      value: ''
+    - type: or
+      condition: []
+    - type: mqtt
+      trigger: 'no'
+      topic: __REPLACE__
+      operator: eq
+      jmespath: val
+      value: ''
+    - type: and
+      condition: []
+    - type: and
       condition: []
   ontrue:
     - type: pushover
@@ -54,13 +85,13 @@ ef2a1abf4e20:
   name: New rule
   category: default
   description: ''
-  enabled: false
+  enabled: true
   condition: []
 2bf3c2a03716:
   name: New rule
   category: default
   description: ''
-  enabled: false
+  enabled: true
   condition: []
 b59d44f48aac:
   name: New rule
@@ -74,99 +105,33 @@ b59d44f48aac:
   description: ''
   enabled: false
   condition: []
-23ddb5f2160f:
-  name: New rule
-  category: default
-  description: ''
-  enabled: false
-  condition: []
-6ba57721006b:
-  name: New rule
-  category: default
-  description: ''
-  enabled: false
-  condition: []
-fc9d8538d3be:
-  name: New rule
-  category: default
-  description: ''
-  enabled: false
-  condition: []
-0503a11f5bf2:
-  name: New rule
-  category: default
-  description: ''
-  enabled: false
-  condition: []
-e53befbbc30b:
-  name: New rule
-  category: default
-  description: ''
-  enabled: false
-  condition: []
-bb8ca3508efc:
-  name: New rule
-  category: default
-  description: ''
-  enabled: false
-  condition: []
-76e2546bae27:
-  name: New rule
-  category: default
-  description: ''
-  enabled: false
-  condition: []
-ff732b08296d:
-  name: New rule
-  category: default
-  description: ''
-  enabled: false
-  condition: []
-ead14ef7e089:
-  name: New rule
-  category: default
-  description: ''
-  enabled: false
-  condition: []
-a7555060f65c:
-  name: New rule
-  category: default
-  description: ''
-  enabled: false
-  condition: []
-61b8a52cec9c:
-  name: New rule
-  category: default
-  description: ''
-  enabled: false
-  condition: []
 8c19de6b776a:
   name: New rule
   category: default
   description: ''
   enabled: false
   condition: []
-0afee6c5a58a:
+674e5d85071b:
   name: New rule
   category: default
   description: ''
   enabled: false
   condition: []
-ea459e87573f:
+f71ef89feb8a:
   name: New rule
   category: default
   description: ''
   enabled: false
   condition: []
-955541a9a0ae:
+af28ed9ed26d:
   name: New rule
   category: default
   description: ''
   enabled: false
   condition: []
-7f0a4b0bb661:
-  name: New rule 5
-  description: ''
+dd8233542aeb:
+  name: New rule
   category: default
+  description: ''
   enabled: false
   condition: []

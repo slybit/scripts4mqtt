@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 
-import Sortly, { useDrag, useDrop, remove, findDescendants } from 'react-sortly';
+import Sortly, { useDrag, useDrop, useIsClosestDragging, findDescendants } from 'react-sortly';
 import { HorizontalContainer, AppColumn10, RightColumn, AppEditor, Header } from "./containers";
 import { Button, UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem, InputGroup, InputGroupAddon, Input, FormGroup, Label } from 'reactstrap';
 import Icon from '@mdi/react'
@@ -13,33 +13,12 @@ import { addIds, stripIds, flattenConditions, buildTree, staticData, isNewItem }
 import axios from 'axios';
 
 
-const ItemRenderer = (props) => {
-    const { data: { type, depth } } = props;
-    const [, drag] = useDrag();
-    const [, drop] = useDrop();
-
-    return (
-        <div ref={drop}>
-            <div ref={drag} style={{ marginLeft: depth * 20 }}>{type}</div>
-        </div>
-    );
-};
+const cache = {};
 
 export const RuleEditor = (props) => {
 
-    /*
-        data = {
-            ruleId: undefined,
-            name: "",
-            ontrue: [],
-            onfalse: [],
-            flatConditions: [],
-            editorVisible: false
-        };
-    */
-
     const [data, setData] = useState({
-        ruleId: undefined,
+        id: undefined,
         name: "",
         ontrue: [],
         onfalse: [],
@@ -47,41 +26,192 @@ export const RuleEditor = (props) => {
         editorVisible: false
     });
 
+
+
     useEffect(() => {
-        async function fetchData() {
-            const response = await axios.get('/api/rule/' + props.id);
-            console.log(response.data);
-            setData({ ...data, flatConditions: addIds(flattenConditions(response.data.condition)) });
-        };
-        fetchData();
+        fetchData(props.id);
     }, [props]);
 
 
-    const handleChange = (items) => {
+    /* ---------------------------------------------------------------------------------------------------------------
+    API interactions
+    --------------------------------------------------------------------------------------------------------------- */
+
+    const fetchData = async (id) => {
+        //const _cache = cache;
+        try {
+            const response = await axios.get('/api/rule/' + id);
+            // update the state
+            if (response.data.success) {
+                setData({
+                    ...data,
+                    ...response.data.rule,
+                    flatConditions: flattenConditions(response.data.rule.condition),
+                });
+                cache['namePrev'] = response.data.rule.name;
+                cache['nameHasChanged'] = false;
+            } else {
+                // TODO: alert user, editor is not visible!
+                console.log(response.data);
+            }
+        } catch (e) {
+            // TODO: alert user
+            console.log(e);
+        }
+    };
+
+    const updateData = async (itemUpdate, callback) => {
+        try {
+            const response = await axios.put('/api/rule/' + data.id, itemUpdate)
+
+            if (response.data.success) {
+                setData({
+                    ...data,
+                    ...response.data.rule,
+                    flatConditions: flattenConditions(response.data.rule.condition),
+                });
+                cache['namePrev'] = response.data.rule.name;
+                cache['nameHasChanged'] = false;
+                if (callback) callback();
+            } else {
+                // TODO: alert user, editor is not visible!
+                console.log(response.data);
+            }
+        } catch (e) {
+            // TODO: alert user
+            console.log(e);
+        }
+    };
+
+
+    /* ---------------------------------------------------------------------------------------------------------------
+    Sortly functions
+    --------------------------------------------------------------------------------------------------------------- */
+
+    const handleSortlyChange = (items) => {
         for (let index = 0; index < items.length; index += 1) {
-            if (!(items[index].type === 'or' || items[index].type === 'and') && findDescendants(items, index).length > 0) 
+            if (!(items[index].type === 'or' || items[index].type === 'and') && findDescendants(items, index).length > 0)
                 return;
         }
         setData({ ...data, flatConditions: items });
     }
 
 
+    /* ---------------------------------------------------------------------------------------------------------------
+    Inline editor functions for direct editing of items in the Rule View (outside of the dynamic editor)
+    --------------------------------------------------------------------------------------------------------------- */
+
+    // itemName is either
+    // - "name"
+    // - "description"
+    const onEditableItemChange = (e, itemName) => {
+        setData(update(data, {
+            [itemName]: { $set: e.target.value },
+            [itemName+"HasChanged"]: { $set: true }
+        }));
+    };
+
+    // itemName is either
+    // - "name"
+    // - "description"
+    const handleEditableItemCancelClick = (itemName) => {
+        setData(update(data, {
+            [itemName]: { $set: cache[itemName+"Prev"] },
+            [itemName+"HasChanged"]: { $set: false }
+        }));
+    };
+
+    // itemName is either
+    // - "name"
+    // - "description"
+    const handleEditableItemSaveClick = (itemName) => {
+        updateData({ [itemName]: data[itemName] }, props.refreshNames );
+    }
+
+
+    /* ---------------------------------------------------------------------------------------------------------------
+    Sortly functions
+    --------------------------------------------------------------------------------------------------------------- */
+
+
     const handleEditableItemClick = () => {
         console.log('boom');
     }
 
-   
 
- 
+
+    /* -------  Callback methods of ConditionEditor  ------- */
+
+    /*
+    itemType: ontrue, onfalse, flatConditions
+    subType: either one of the action types or condition types
+    */
+    const addNewItem = (itemType, subType) => {
+        let itemUpdate = undefined;
+        if (itemType === 'flatConditions') {
+            let newItem = staticData.newItems.condition[subType];
+            if (subType === "or")
+                newItem = { type: "or", condition: [] };
+            else if (subType === "and")
+                newItem = { type: "and", condition: [] };
+            itemUpdate = { condition: buildTree(stripIds(data.flatConditions)).concat(newItem) };
+        } else {
+            const newItem = staticData.newItems.action[subType];
+            itemUpdate = { [itemType]: stripIds(data[itemType]).concat(newItem) };
+        }
+
+        if (itemUpdate) updateData(itemUpdate);
+
+
+    }
+
+
+
+    // UI elements
+
+    const newConditions = Object.keys(staticData.newItems.condition).map((condition) => (
+        <DropdownItem key={condition} onClick={() => { addNewItem("flatConditions", condition) }}>{staticData.conditions[condition]}</DropdownItem>
+    ));
+
+
+
+
+
     return (
         <RightColumn>
 
             <AppColumn10>
+                <FormGroup>
+                    <Label for="name">Name</Label>
+                    <InputGroup name="name">
+                        <Input className="bold_blue" value={data.name || ""} onChange={(e) => onEditableItemChange(e, "name") } />
+                        {data.nameHasChanged && <InputGroupAddon addonType="append">
+                            <Button color="secondary"><Icon path={mdiCheck} size={1} color="white" onClick={() => handleEditableItemSaveClick("name")} /></Button>
+                            <Button color="secondary"><Icon path={mdiCancel} size={1} color="white" onClick={() => handleEditableItemCancelClick("name")} /></Button>
+                        </InputGroupAddon>}
+                    </InputGroup>
+                </FormGroup>
 
+                <HorizontalContainer>
+                    <Header>Conditions:</Header>
+                    <UncontrolledDropdown>
+                        <DropdownToggle caret>
+                            Add Condition
+                            </DropdownToggle>
+                        <DropdownMenu>
+                            <DropdownItem header>Logical</DropdownItem>
+                            <DropdownItem onClick={() => { addNewItem("flatConditions", "or") }}>OR</DropdownItem>
+                            <DropdownItem onClick={() => { addNewItem("flatConditions", "and") }}>AND</DropdownItem>
+                            <DropdownItem divider />
+                            <DropdownItem header>Condition</DropdownItem>
+                            {newConditions}
+                        </DropdownMenu>
+                    </UncontrolledDropdown>
+                </HorizontalContainer>
 
                 {data.flatConditions.length > 0 && <Sortly
                     items={data.flatConditions}
-                    onChange={handleChange} >
+                    onChange={handleSortlyChange} >
                     {(props) => <ConditionItemRenderer {...props} onEditableItemClick={handleEditableItemClick} />}
                 </Sortly>
                 }
@@ -110,11 +240,13 @@ const itemStyle = {
     border: '1px solid #ccc',
     cursor: 'move',
     padding: 10,
-    marginBottom: 4,
+    marginBottom: 4
 };
 
 const muteStyle = {
-    opacity: .3,
+    //opacity: .5,
+    boxShadow: '0px 0px 8px #666',
+    border: '1px dashed #1976d2',
 }
 
 const newStyle = {
@@ -139,9 +271,13 @@ const pushRightStyle = {
 const ConditionItemRenderer = (props) => {
 
     const { data, onEditableItemClick } = props;
-    const [, drag] = useDrag();
+    const [{ isDragging }, drag] = useDrag({
+        collect: (monitor) => ({
+            isDragging: monitor.isDragging(),
+        }),
+    });
     const [, drop] = useDrop({
-        drop() {console.log('drop')}
+        drop() { console.log('drop') }
 
     });
 
@@ -182,6 +318,7 @@ const ConditionItemRenderer = (props) => {
 
     const style = {
         ...itemStyle,
+        ...(useIsClosestDragging() || isDragging ? muteStyle : null),
         ...(isNew ? newStyle : null),
         marginLeft: data.depth * 30,
     };

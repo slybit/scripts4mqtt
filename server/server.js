@@ -19,6 +19,13 @@ const API_PORT = process.env.API_PORT || config.api.port || 4000;
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
+app.use(function (error, req, res, next) {
+    if (error) {
+      res.status(error.statusCode).send({ success: false, ...error });
+    } else {
+      next();
+    }
+  });
 app.use(morgan('dev'));
 
 router.get('/reload', (req, res) => {

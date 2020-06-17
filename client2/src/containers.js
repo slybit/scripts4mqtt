@@ -1,7 +1,7 @@
 import styled from "styled-components";
 
 
-/**  
+/**
  * Outer wrapper.
  * Provides a full width and height flex container that will host
  *    - NavBar (top bar)
@@ -61,13 +61,13 @@ export const RightColumn = styled.div`
     display: flex;
     flex: 1 1 auto;
     background: #fff;
-    padding: 5px;
     overflow-y: hidden;
 `;
 
 export const AppColumn2 = styled.div`
   flex: 0 0 20em;
   max-width: 20em;
+  padding: 5px;
   border-right: 1px solid rgba(0, 0, 0, 0.125);
   overflow-y: hidden;
 `;
@@ -76,6 +76,7 @@ export const AppColumn10 = styled.div`
   flex: 15;
   border-right: 1px solid rgba(0, 0, 0, 0.125);
   overflow-y: auto;
+  padding: 5px;
 `;
 
 
@@ -126,6 +127,6 @@ export const HorizontalContainer = styled.div`
 
 export const Header = styled.div`
   font-size: 120%;
-  font-weight: 800;
+  font-weight: 600;
 `;
 

@@ -2,10 +2,10 @@ const fs = require('fs');
 const yaml = require('js-yaml');
 const util = require('util');
 const crypto = require('crypto');
-const {logger, jsonlogger, logbooklogger} = require('./logger.js');
+const { logger, jsonlogger, logbooklogger } = require('./logger.js');
 const Engine = require('./engine.js');
-const {EMailAction, LogBookAction, PushoverAction, ScriptAction, SetValueAction, WebHookAction} = require('./actions.js')
-const {CronCondition, MqttCondition, SimpleCondition} = require('./conditions.js')
+const { EMailAction, LogBookAction, PushoverAction, ScriptAction, SetValueAction, WebHookAction } = require('./actions.js')
+const { CronCondition, MqttCondition, SimpleCondition } = require('./conditions.js')
 const Aliases = require('./aliases.js');
 
 const FILENAME = process.env.MQTT4SCRIPTS_RULES || '../config/rules.yaml';
@@ -144,7 +144,7 @@ class Rules {
                         if (c.evaluate(context) && withActions)
                             rule.scheduleActions(context);
                     }
-                }
+            }
             // TODO: add wildcard topics in the condition
         }
 
@@ -255,7 +255,25 @@ class Rules {
             list.push(category);
         }
         */
-        return categories;
+        //return categories;
+
+
+
+        let list = [];
+        for (let key in this.jsonContents) {
+            list.push({
+                key: key,
+                category: this.jsonContents[key].category ? this.jsonContents[key].category : "default",
+                order: this.jsonContents[key].order,
+                name: this.jsonContents[key].name,
+                enabled: this.jsonContents[key].enabled
+            });
+
+        }
+        return list;
+
+
+
     }
 
     createRule(input) {
@@ -291,7 +309,7 @@ class Rules {
             this.saveRules();
             return {
                 success: true,
-                newrule: {
+                rule: {
                     id: id,
                     ...this.jsonContents[id]
                 }
@@ -332,10 +350,20 @@ class Rules {
     }
     */
     getRule(id) {
-        return {
-            "id": id,
-            ...this.jsonContents[id]
-        };
+        if (id in this.jsonContents) {
+            return {
+                success: true,
+                rule: {
+                    "id": id,
+                    ...this.jsonContents[id]
+                }
+            };
+        } else {
+            return {
+                success: false,
+                message: 'rule id not found'
+            };
+        }
     }
 
     // Helper method, used by the web UI
