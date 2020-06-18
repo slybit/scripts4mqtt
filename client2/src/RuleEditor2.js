@@ -83,6 +83,33 @@ const RuleEditor = (props) => {
         }
     }
 
+    const pushConditionsUpdate = (newConditions) => {
+        pushUpdate(newConditions, (newdata) => {
+            setData(update(data, {
+                condition: { $set: newdata.condition },
+                flatConditions: { $set: flattenConditions(newdata.condition) },
+                edData: {
+                    visible: { $set: false },
+                    alertVisible: { $set: false },
+                    itemIndex: { $set: -1 }
+                }
+            }));
+        });
+    }
+
+    const pushActionsUpdate = (itemType, newActions) => {
+        pushUpdate(newActions, (newdata) => {
+            setData(update(data, {
+                [itemType]: { $set: newdata[itemType] ? addIds(newdata[itemType]) : [] },
+                edData: {
+                    visible: { $set: false },
+                    alertVisible: { $set: false },
+                    itemIndex: { $set: -1 }
+                }
+            }));
+        });
+    }
+
 
     /* ---------------------------------------------------------------------------------------------------------------
     Sortly functions
@@ -178,17 +205,7 @@ const RuleEditor = (props) => {
             const children = findDescendants(data.flatConditions, data.edData.itemIndex);
             if (children.length === 0 || (children.length > 0 && window.confirm('Delete this logic block together with its children?'))) {
                 itemUpdate = { condition: buildTree(remove(data.flatConditions, data.edData.itemIndex)) };
-                pushUpdate(itemUpdate, (newdata) => {
-                    setData(update(data, {
-                        condition: { $set: newdata.condition },
-                        flatConditions: { $set: flattenConditions(newdata.condition) },
-                        edData: {
-                            visible: { $set: false },
-                            alertVisible: { $set: false },
-                            itemIndex: { $set: -1 }
-                        }
-                    }));
-                });
+                pushConditionsUpdate(itemUpdate);
             }
             //this.setState({ editorAlertMessage: response.data.message, editorAlertVisible: true });
         } else {
@@ -197,69 +214,40 @@ const RuleEditor = (props) => {
                     update(data[itemType], { $splice: [[data.edData.itemIndex, 1]] })
                 )
             };
-            pushUpdate(itemUpdate, (newdata) => {
-                setData(update(data, {
-                    [itemType]: { $set: newdata[itemType] ? addIds(newdata[itemType]) : [] },
-                    edData: {
-                        visible: { $set: false },
-                        alertVisible: { $set: false },
-                        itemIndex: { $set: -1 }
-                    }
-                }));
-            });
+            pushActionsUpdate(itemType, itemUpdate);
         }
 
 
     };
-    const editorHandleSaveClick = (dataUpdate) => {
-        
+    const editorHandleSaveClick = async (dataUpdate) => {
         let itemType = data.edData.itemType;
         // first let server validate
-        axios.post('/api/validate/', { editorItemType: itemType, ...dataUpdate })
-            .then((response) => {
-                if (!response.data.success) {
-                    //this.setState({ editorAlertMessage: response.data.message, editorAlertVisible: true });
-                    console.log(response.data);
-                    return;
+        try {
+            let response = await axios.post('/api/validate/', { editorItemType: itemType, ...dataUpdate });
+            if (!response.data.success) {
+                //this.setState({ editorAlertMessage: response.data.message, editorAlertVisible: true });
+                console.log(response.data);
+            } else {
+                let itemUpdate = undefined;
+                // inject the update in a clone of the state
+                const cloned = update(data[itemType],
+                    { [data.edData.itemIndex]: { $set: dataUpdate } }
+                )
+                if (itemType === 'flatConditions') {
+                    itemUpdate = { condition: buildTree(cloned) };
+                    pushConditionsUpdate(itemUpdate);
                 } else {
-                    let itemUpdate = undefined;
-                    // inject the update in a clone of the state
-                    const cloned = update(data[itemType],
-                        { [data.edData.itemIndex]: { $set: dataUpdate } }
-                    )
-                    if (itemType === 'flatConditions') {
-                        itemUpdate = { condition: buildTree(cloned) };
-                        pushUpdate(itemUpdate, (newdata) => {
-                            setData(update(data, {
-                                condition: { $set: newdata.condition },
-                                flatConditions: { $set: flattenConditions(newdata.condition) },
-                                edData: {
-                                    visible: { $set: false },
-                                    alertVisible: { $set: false },
-                                    itemIndex: { $set: -1 }
-                                }
-                            }));
-                        });
-                    } else {
-                        itemUpdate = { [itemType]: stripIds(cloned) };
-                        pushUpdate(itemUpdate, (newdata) => {
-                            setData(update(data, {
-                                [itemType]: { $set: newdata[itemType] ? addIds(newdata[itemType]) : [] },
-                                edData: {
-                                    visible: { $set: false },
-                                    alertVisible: { $set: false },
-                                    itemIndex: { $set: -1 }
-                                }
-                            }));
-                        });
-                    }
+                    itemUpdate = { [itemType]: stripIds(cloned) };
+                    pushActionsUpdate(itemType, itemUpdate);
                 }
-            })
-            .catch((error) => {
-                // TODO: alert user
-                console.log(error);
-            });
+            }
+        } catch (error) {
+            // TODO: alert user
+            console.log(error);
+        };
     };
+
+    
 
     /* ---------------------------------------------------------------------------------------------------------------
     Various
@@ -281,20 +269,11 @@ const RuleEditor = (props) => {
             else if (subType === "and")
                 newItem = { type: "and", condition: [] };
             itemUpdate = { condition: buildTree(stripIds(data.flatConditions)).concat(newItem) };
-            pushUpdate(itemUpdate, (newdata) => {
-                setData(update(data, {
-                    condition: { $set: newdata.condition },
-                    flatConditions: { $set: flattenConditions(newdata.condition) }
-                }));
-            });
+            pushConditionsUpdate(itemUpdate);
         } else {
             const newItem = staticData.newItems.action[subType];
             itemUpdate = { [itemType]: stripIds(data[itemType]).concat(newItem) };
-            pushUpdate(itemUpdate, (newdata) => {
-                setData(update(data, {
-                    [itemType]: { $set: newdata[itemType] ? addIds(newdata[itemType]) : [] }
-                }));
-            });
+            pushActionsUpdate(itemType, itemUpdate);
         }
     };
 

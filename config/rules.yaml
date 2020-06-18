@@ -53,8 +53,6 @@ DoorBell:
       topic: knx/status/15/2/5
       jmespath: val
       value: '0x01'
-    - type: and
-      condition: []
     - type: alias
       trigger: 'no'
       alias: __REPLACE__
@@ -65,13 +63,15 @@ DoorBell:
       operator: eq
       jmespath: val
       value: ''
-    - type: cron
+    - type: or
+      condition: []
+    - type: alias
       trigger: 'no'
-      'on': 0 0 * * *
-      'off': '-'
+      alias: __REPLACE__
+      eval: 'true'
   ontrue:
     - type: mqtt
-      delay: '100'
+      delay: '1000'
       interval: 0
       topic: __REPLACE__
       value: __REPLACE__
@@ -82,7 +82,7 @@ DoorBell:
     - type: email
       delay: 0
       interval: 0
-      to: __REPLACE__
+      to: __REPLACE__khkh
       subject: __REPLACE__
       body: ''
   pendingOption: always
@@ -96,6 +96,12 @@ DoorBell:
       message: ''
       sound: pushover
       priority: 0
+    - type: email
+      delay: 0
+      interval: 0
+      to: __REPLACE__
+      subject: __REPLACE__
+      body: ''
   type: mqtt
   trigger: on_flip_true
   topic: knx/status/15/2/5
