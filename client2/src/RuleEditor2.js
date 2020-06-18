@@ -15,7 +15,7 @@ import axios from 'axios';
 
 const cache = {};
 
-export const RuleEditor = (props) => {
+const RuleEditor = (props) => {
 
     const [data, setData] = useState({
         id: undefined,
@@ -38,6 +38,7 @@ export const RuleEditor = (props) => {
     --------------------------------------------------------------------------------------------------------------- */
 
     const fetchData = async (id) => {
+        console.log('fetchData');
         //const _cache = cache;
         try {
             const response = await axios.get('/api/rule/' + id);
@@ -47,9 +48,11 @@ export const RuleEditor = (props) => {
                     ...data,
                     ...response.data.rule,
                     flatConditions: flattenConditions(response.data.rule.condition),
+                    nameHasChanged: false,
+                    descriptionHasChanged: false
                 });
                 cache['namePrev'] = response.data.rule.name;
-                cache['nameHasChanged'] = false;
+                cache['descriptionPrev'] = response.data.rule.name;
             } else {
                 // TODO: alert user, editor is not visible!
                 console.log(response.data);
@@ -71,7 +74,7 @@ export const RuleEditor = (props) => {
                     flatConditions: flattenConditions(response.data.rule.condition),
                 });
                 cache['namePrev'] = response.data.rule.name;
-                cache['nameHasChanged'] = false;
+                cache['descriptionPrev'] = response.data.rule.name;
                 if (callback) callback();
             } else {
                 // TODO: alert user, editor is not visible!
@@ -82,6 +85,26 @@ export const RuleEditor = (props) => {
             console.log(e);
         }
     };
+
+    const pushUpdate = async (itemUpdate) => {
+        const response = await axios.put('/api/rule/' + data.id, itemUpdate);
+        if (response.data.success) {
+            return response.data.rule;
+        } else {
+            throw (response.data.message);
+        }
+    }
+
+    const pushUpdate2 = async (itemUpdate, updateFn) => {
+        if (itemUpdate) {
+            try {
+                let newdata = await pushUpdate(itemUpdate);
+                updateFn(newdata);
+            } catch (err) {
+                console.log(err);
+            }
+        }
+    }
 
 
     /* ---------------------------------------------------------------------------------------------------------------
@@ -107,7 +130,7 @@ export const RuleEditor = (props) => {
     const onEditableItemChange = (e, itemName) => {
         setData(update(data, {
             [itemName]: { $set: e.target.value },
-            [itemName+"HasChanged"]: { $set: true }
+            [itemName + "HasChanged"]: { $set: true }
         }));
     };
 
@@ -116,8 +139,8 @@ export const RuleEditor = (props) => {
     // - "description"
     const handleEditableItemCancelClick = (itemName) => {
         setData(update(data, {
-            [itemName]: { $set: cache[itemName+"Prev"] },
-            [itemName+"HasChanged"]: { $set: false }
+            [itemName]: { $set: cache[itemName + "Prev"] },
+            [itemName + "HasChanged"]: { $set: false }
         }));
     };
 
@@ -125,7 +148,31 @@ export const RuleEditor = (props) => {
     // - "name"
     // - "description"
     const handleEditableItemSaveClick = (itemName) => {
-        updateData({ [itemName]: data[itemName] }, props.refreshNames );
+
+        /*
+        const callback = () => {
+            setData(update(data, {
+                [itemName + "HasChanged"]: { $set: false }
+            }));
+            props.refreshNames();
+        }
+
+        updateData({ [itemName]: data[itemName] }, callback);
+        */
+
+        // push the update and update the state on success
+        pushUpdate2({ [itemName]: data[itemName] }, (newdata) => {
+
+            setData(update(data, {
+                [itemName + "HasChanged"]: { $set: false },
+                [itemName]: { $set: newdata[itemName] }
+            }));
+
+            props.refreshNames();
+        });
+
+
+
     }
 
 
@@ -136,7 +183,7 @@ export const RuleEditor = (props) => {
 
     const handleEditableItemClick = () => {
         console.log('boom');
-    }
+    };
 
 
 
@@ -146,7 +193,8 @@ export const RuleEditor = (props) => {
     itemType: ontrue, onfalse, flatConditions
     subType: either one of the action types or condition types
     */
-    const addNewItem = (itemType, subType) => {
+    const addNewItem = async (itemType, subType) => {
+        // build the update
         let itemUpdate = undefined;
         if (itemType === 'flatConditions') {
             let newItem = staticData.newItems.condition[subType];
@@ -159,11 +207,14 @@ export const RuleEditor = (props) => {
             const newItem = staticData.newItems.action[subType];
             itemUpdate = { [itemType]: stripIds(data[itemType]).concat(newItem) };
         }
-
-        if (itemUpdate) updateData(itemUpdate);
-
-
-    }
+        // push the update and update the state on success
+        pushUpdate2(itemUpdate, (newdata) => {
+            setData(update(data, {
+                condition: { $set: newdata.condition },
+                flatConditions: { $set: flattenConditions(newdata.condition) }
+            }));
+        });
+    };
 
 
 
@@ -184,10 +235,20 @@ export const RuleEditor = (props) => {
                 <FormGroup>
                     <Label for="name">Name</Label>
                     <InputGroup name="name">
-                        <Input className="bold_blue" value={data.name || ""} onChange={(e) => onEditableItemChange(e, "name") } />
+                        <Input className="bold_blue" value={data.name || ""} onChange={(e) => onEditableItemChange(e, "name")} />
                         {data.nameHasChanged && <InputGroupAddon addonType="append">
                             <Button color="secondary"><Icon path={mdiCheck} size={1} color="white" onClick={() => handleEditableItemSaveClick("name")} /></Button>
                             <Button color="secondary"><Icon path={mdiCancel} size={1} color="white" onClick={() => handleEditableItemCancelClick("name")} /></Button>
+                        </InputGroupAddon>}
+                    </InputGroup>
+                </FormGroup>
+                <FormGroup>
+                    <Label for="description">Description</Label>
+                    <InputGroup name="description">
+                        <Input type="textarea" value={data.description} onChange={(e) => onEditableItemChange(e, "description")} />
+                        {data.descriptionHasChanged && <InputGroupAddon addonType="append">
+                            <Button color="secondary"><Icon path={mdiCheck} size={1} color="white" onClick={() => handleEditableItemSaveClick("description")} /></Button>
+                            <Button color="secondary"><Icon path={mdiCancel} size={1} color="white" onClick={() => handleEditableItemCancelClick("description")} /></Button>
                         </InputGroupAddon>}
                     </InputGroup>
                 </FormGroup>
@@ -334,6 +395,19 @@ const ConditionItemRenderer = (props) => {
     );
 
 }
+
+
+
+/* --------------------------------------------------------------------------------------------------------------
+Memoize our RuleEditor, such as that it does NOT get update anymore, unless we change rule by clicking
+another rule in the RuleList (Editor).
+-------------------------------------------------------------------------------------------------------------- */
+
+function ruleEditorPropsAreEqual(prevRuleEditor, nextRuleEditor) {
+    return prevRuleEditor.id === nextRuleEditor.id;
+  }
+
+export const MemoizedRuleEditor = React.memo(RuleEditor, ruleEditorPropsAreEqual);
 
 
 

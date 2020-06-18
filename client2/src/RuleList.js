@@ -31,12 +31,6 @@ export class RuleList extends React.Component {
         this.props.onEnableClick(index, newEnabledState);
     }
 
-    listRulesPerCategory = (category) => {
-        return this.props.rules.filter(function(item) {
-            return item.category === category
-        });
-    }
-
     render() {
 
 
@@ -48,7 +42,7 @@ export class RuleList extends React.Component {
                         <HorizontalContainer style={{width: "100%", background: "#007bff", color: "white", cursor: 'pointer'}} onClick={() => this.props.onCategoryClick(category)}>{category}</HorizontalContainer>
                         <Collapse isOpen={this.props.categories[category].isOpen}>
                             <ul className="list-group">
-                                {this.listRulesPerCategory(category).map(rule => {
+                                {this.props.rules.filter((item) => item.category === category).map(rule => {
                                     const style = {
                                         cursor: 'pointer',
                                         padding: '10px 5px',

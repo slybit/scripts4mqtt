@@ -32,7 +32,7 @@ Logbook:
   pendingOption: always
   enabled: false
 DoorBell:
-  name: Doorbell
+  name: Doorbellasdf
   category: Other Stuff
   order: 0
   condition:
@@ -73,6 +73,48 @@ DoorBell:
       condition: []
     - type: and
       condition: []
+    - type: mqtt
+      trigger: 'no'
+      topic: __REPLACE__
+      operator: eq
+      jmespath: val
+      value: ''
+    - type: or
+      condition: []
+    - type: and
+      condition: []
+    - type: and
+      condition: []
+    - type: mqtt
+      trigger: 'no'
+      topic: __REPLACE__
+      operator: eq
+      jmespath: val
+      value: ''
+    - type: mqtt
+      trigger: 'no'
+      topic: __REPLACE__
+      operator: eq
+      jmespath: val
+      value: ''
+    - type: cron
+      trigger: 'no'
+      'on': 0 0 * * *
+      'off': '-'
+    - type: alias
+      trigger: 'no'
+      alias: __REPLACE__
+      eval: 'true'
+    - type: mqtt
+      trigger: 'no'
+      topic: __REPLACE__
+      operator: eq
+      jmespath: val
+      value: ''
+    - type: cron
+      trigger: 'no'
+      'on': 0 0 * * *
+      'off': '-'
   ontrue:
     - type: pushover
       message: Notification from script4mqtt
@@ -81,6 +123,7 @@ DoorBell:
       priority: 1
   pendingOption: always
   enabled: false
+  description: deurbelAaassasasasdf
 ef2a1abf4e20:
   name: New rule
   category: default
@@ -123,13 +166,61 @@ f71ef89feb8a:
   description: ''
   enabled: false
   condition: []
-af28ed9ed26d:
+f6469c4b2caf:
+  name: New ruleasdf
+  category: default
+  description: ''
+  enabled: false
+  condition: []
+a1b16944408a:
   name: New rule
   category: default
   description: ''
   enabled: false
   condition: []
-dd8233542aeb:
+0d17306e96b1:
+  name: New rule
+  category: default
+  description: ''
+  enabled: false
+  condition: []
+798e5dc407bd:
+  name: New rule
+  category: default
+  description: ''
+  enabled: false
+  condition: []
+651dec0c7e7f:
+  name: New rule
+  category: default
+  description: ''
+  enabled: false
+  condition: []
+c197db5ab8f5:
+  name: New ruleasdf
+  category: default
+  description: ''
+  enabled: false
+  condition: []
+3eb3a5e19983:
+  name: New ruleasdf
+  category: default
+  description: ''
+  enabled: false
+  condition: []
+607a6f14fcdc:
+  name: New ruleasdfsadf
+  category: default
+  description: ''
+  enabled: false
+  condition: []
+1c9f16102929:
+  name: New ruleasdfsadfasdfasdf
+  category: default
+  description: ''
+  enabled: false
+  condition: []
+afb5b726710a:
   name: New rule
   category: default
   description: ''

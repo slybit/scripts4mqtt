@@ -6,7 +6,7 @@ import { LeftColumn, RightColumn, AppBody, Header, HorizontalContainer, AppColum
 import { Button, Input } from 'reactstrap';
 import { staticData, showError } from './utils';
 import { RuleList } from './RuleList';
-import { RuleEditor } from './RuleEditor2';
+import { MemoizedRuleEditor } from './RuleEditor2';
 import axios from 'axios';
 import update from 'immutability-helper';
 
@@ -27,14 +27,31 @@ class Editor extends Component {
     }
 
     /* --------------------------------------------------------------------------------------------------
-    Server interaction
+    API Server interaction
     -------------------------------------------------------------------------------------------------- */
 
     // load the rule list (categories object) from the server
-    loadRuleListFromServer = (updatedRule = undefined) => {
+    // selectedRule = id of the rule that should be marked as selected after downloading the full list
+    loadRuleListFromServer = (selectedRule = false) => {
         axios.get('/api/rules')
             .then((response) => {
-                this.updateRuleList(response.data, updatedRule);
+                let categories = {};
+                for (let rule of response.data) {
+                    categories[rule.category] = this.state.categories[rule.category] ? this.state.categories[rule.category] : { isOpen: true };
+                }
+                if (selectedRule) {
+                    this.setState({
+                        rules: response.data,
+                        categories: categories,
+                        selectedRule: selectedRule
+                    });
+                } else {
+                    this.setState({
+                        rules: response.data,
+                        categories: categories
+                    });
+                }
+
             })
             .catch((error) => {
                 showError("Cannot access the script4mqtt service.", error);
@@ -43,85 +60,53 @@ class Editor extends Component {
 
 
     /* --------------------------------------------------------------------------------------------------
-    Rule list management
+    Rule list filtering
     -------------------------------------------------------------------------------------------------- */
 
-    // updatedRule = id of the rule that was updated and should be shown in the editor
-    updateRuleList(ruleList, updatedRule = undefined) {
-        let categories = {};
-        for (let rule of ruleList) {
-            categories[rule.category] = this.state.categories[rule.category] ? this.state.categories[rule.category] : { isOpen: true };
-        }
-        if (updatedRule) {
-            categories[updatedRule.category].isOpen = true;
-            this.setState({
-                rules: ruleList,
-                categories: categories,
-                selectedRule: updatedRule
-            });
-        } else {
-            this.setState({
-                rules: ruleList,
-                categories: categories
-            });
-        }
-        
-        
-
-    }
-
-    updateFilter = (event) => {
-        this.setState({
-            filter: event.target.value,
-        });
-
-        /*
-        for (let category of Object.keys(this.state.rules)) {
-            this.setState((state) => ({
-                rules: update(state.rules, { [category]: { isOpen: { $set: true } } })
-            }));
-        }
-        */
-       for (let category in this.state.categories ) {
-           this.setState((state) => ({
-               categories: update(state.categories, { [category]: { isOpen: { $set: true } } })
-           }));
-       }
-    }
-
-
-   
-
+    // called in the render function to filter out the rules
     filterList = () => {
         let filter = this.state.filter;
-        return this.state.rules.filter(function(item) {
+        return this.state.rules.filter(function (item) {
             return item.name.toLowerCase().search(
-              filter.toLowerCase()) !== -1;
-          });
-
-        
+                filter.toLowerCase()) !== -1;
+        });
     }
-
-
 
 
     /* --------------------------------------------------------------------------------------------------
     UI handlers
     -------------------------------------------------------------------------------------------------- */
 
+    // handling of user entering data in the filter text input box
+    updateFilter = (event) => {
+        this.setState({
+            filter: event.target.value,
+        });
+        // note to self: calling setState as below (with state as a parameter) ensures that
+        // all the setStates will result in an actual update of the state
+        for (let category in this.state.categories) {
+            this.setState((state) => ({
+                categories: update(state.categories, { [category]: { isOpen: { $set: true } } })
+            }));
+        }
+    }
+
+    // called when the user clicks on a rule to select it
     handleRuleClick = (key) => {
         this.setState({ selectedRule: key });
     }
 
+    // called when a user clicks on a category; open/closes the category harmonica
     handleCategoryClick = (category) => {
         this.setState({ categories: update(this.state.categories, { [category]: { $toggle: ['isOpen'] } }) });
     }
 
+    // called when the user clicks the delete icon on a rule
     handleDeleteRuleClick = (key) => {
         axios.delete('/api/rule/' + key)
             .then((response) => {
                 if (response.data.success) {
-                    this.loadRuleListFromServer(undefined);
+                    this.loadRuleListFromServer(key === this.state.selectedRule ? false : this.state.selectedRule);
                 } else {
                     showError("Deletion not handled by script4mqtt service.", response.data);
                     console.log(response.data);
@@ -132,12 +117,12 @@ class Editor extends Component {
             });
     }
 
+    // called when a user clicks the tickbox to disable/enable a rule
     handleEnableRuleClick = (key, newEnabledState) => {
         axios.put('/api/rule/' + key, { enabled: newEnabledState })
             .then((response) => {
-                // update the state
                 if (response.data.success) {
-                    this.loadRuleListFromServer(false);
+                    this.loadRuleListFromServer(this.state.selectedRule);
                 } else {
                     showError("Rule update not handled by script4mqtt service.", response.data);
                     console.log(response.data);
@@ -148,11 +133,12 @@ class Editor extends Component {
             });
     }
 
+    // called when a user clicks the "Add" button; add a rule to the default category
     handleAddRuleClick = () => {
         axios.post('/api/rules', staticData.newItems.rule)
             .then((response) => {
                 if (response.data.success) {
-                    this.loadRuleListFromServer(response.data.rule);
+                    this.loadRuleListFromServer(response.data.rule.id);
                 } else {
                     showError("New rule action not handled by script4mqtt service.", response.data);
                     console.log(response.data);
@@ -162,6 +148,7 @@ class Editor extends Component {
                 showError("Cannot access the script4mqtt service.", error);
             });
     }
+
 
     /* --------------------------------------------------------------------------------------------------
     Render
@@ -187,17 +174,15 @@ class Editor extends Component {
                         onCategoryClick={this.handleCategoryClick}
                     />
                 </LeftColumn>
-                {this.state.selectedRule && false &&
-                    <div id={this.state.selectedRule} refreshNames={() => { this.loadRuleListFromServer(this.state.selectedRule) }} />
-                }
-                {false && this.state.selectedRule &&
+
+                {this.state.selectedRule &&
                     <DndProvider backend={HTML5Backend}>
                         <ContextProvider>
-                            <RuleEditor id={this.state.selectedRule} refreshNames={() => { this.loadRuleListFromServer(this.state.selectedRule) }} />
+                            <MemoizedRuleEditor id={this.state.selectedRule} refreshNames={() => { this.loadRuleListFromServer(false) }} />
                         </ContextProvider>
                     </DndProvider>
                 }
-                <RightColumn> <AppColumn10><pre>{JSON.stringify(this.state, null, 4)}</pre> </AppColumn10></RightColumn>
+
             </AppBody>
         );
     }
