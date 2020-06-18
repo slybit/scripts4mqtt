@@ -12,6 +12,18 @@ TimeDateUpdate:
       script: 'write(''knx/write/15/1/0'', new Date().toString());'
     - type: script
       script: 'write(''knx/write/15/1/1'', new Date().toString());'
+    - type: pushover
+      delay: 0
+      interval: 0
+      title: __REPLACE__
+      message: ''
+      sound: pushover
+      priority: 0
+    - type: mqtt
+      delay: 0
+      interval: 0
+      topic: __REPLACE__
+      value: __REPLACE__
   pendingOption: never
   enabled: false
   description: The description asdfasdf
@@ -32,7 +44,7 @@ Logbook:
   pendingOption: always
   enabled: false
 DoorBell:
-  name: Doorbellasdf
+  name: Doorbell
   category: Other Stuff
   order: 0
   condition:
@@ -115,15 +127,45 @@ DoorBell:
       trigger: 'no'
       'on': 0 0 * * *
       'off': '-'
+    - type: or
+      condition: []
+    - type: or
+      condition: []
+    - type: and
+      condition: []
   ontrue:
     - type: pushover
       message: Notification from script4mqtt
       title: Doorbell ringing!
       sound: bike
       priority: 1
+    - type: mqtt
+      delay: 0
+      interval: 0
+      topic: __REPLACE__
+      value: __REPLACE__
+    - type: email
+      delay: 0
+      interval: 0
+      to: __REPLACE__
+      subject: __REPLACE__
+      body: ''
+    - type: mqtt
+      delay: 0
+      interval: 0
+      topic: __REPLACE__
+      value: __REPLACE__
   pendingOption: always
   enabled: false
   description: deurbelAaassasasasdf
+  onfalse:
+    - type: pushover
+      delay: 0
+      interval: 0
+      title: __REPLACE__
+      message: ''
+      sound: pushover
+      priority: 0
 ef2a1abf4e20:
   name: New rule
   category: default

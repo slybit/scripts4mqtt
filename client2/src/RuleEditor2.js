@@ -48,6 +48,8 @@ const RuleEditor = (props) => {
                     ...data,
                     ...response.data.rule,
                     flatConditions: flattenConditions(response.data.rule.condition),
+                    ontrue: response.data.rule.ontrue ? addIds(response.data.rule.ontrue) : [],
+                    onfalse: response.data.rule.onfalse ? addIds(response.data.rule.onfalse) : [],
                     nameHasChanged: false,
                     descriptionHasChanged: false
                 });
@@ -63,43 +65,17 @@ const RuleEditor = (props) => {
         }
     };
 
-    const updateData = async (itemUpdate, callback) => {
-        try {
-            const response = await axios.put('/api/rule/' + data.id, itemUpdate)
 
-            if (response.data.success) {
-                setData({
-                    ...data,
-                    ...response.data.rule,
-                    flatConditions: flattenConditions(response.data.rule.condition),
-                });
-                cache['namePrev'] = response.data.rule.name;
-                cache['descriptionPrev'] = response.data.rule.name;
-                if (callback) callback();
-            } else {
-                // TODO: alert user, editor is not visible!
-                console.log(response.data);
-            }
-        } catch (e) {
-            // TODO: alert user
-            console.log(e);
-        }
-    };
-
-    const pushUpdate = async (itemUpdate) => {
-        const response = await axios.put('/api/rule/' + data.id, itemUpdate);
-        if (response.data.success) {
-            return response.data.rule;
-        } else {
-            throw (response.data.message);
-        }
-    }
-
-    const pushUpdate2 = async (itemUpdate, updateFn) => {
+    const pushUpdate = async (itemUpdate, updateFn) => {
         if (itemUpdate) {
             try {
-                let newdata = await pushUpdate(itemUpdate);
-                updateFn(newdata);
+                const response = await axios.put('/api/rule/' + data.id, itemUpdate);
+                if (response.data.success) {
+                    updateFn(response.data.rule);
+                } else {
+                    // TODO: alert user, editor is not visible!
+                    console.log(response.data);
+                }
             } catch (err) {
                 console.log(err);
             }
@@ -124,9 +100,8 @@ const RuleEditor = (props) => {
     Inline editor functions for direct editing of items in the Rule View (outside of the dynamic editor)
     --------------------------------------------------------------------------------------------------------------- */
 
-    // itemName is either
-    // - "name"
-    // - "description"
+    // called when the user edits the data in the name/description input field
+    // itemName is either "name" or "description"
     const onEditableItemChange = (e, itemName) => {
         setData(update(data, {
             [itemName]: { $set: e.target.value },
@@ -134,9 +109,8 @@ const RuleEditor = (props) => {
         }));
     };
 
-    // itemName is either
-    // - "name"
-    // - "description"
+    // called when the user cancels the edit of the name/description input
+    // itemName is either "name" or "description"
     const handleEditableItemCancelClick = (itemName) => {
         setData(update(data, {
             [itemName]: { $set: cache[itemName + "Prev"] },
@@ -144,35 +118,18 @@ const RuleEditor = (props) => {
         }));
     };
 
-    // itemName is either
-    // - "name"
-    // - "description"
+    // called when the user commits the edit of the name/description input
+    // itemName is either "name" or "description"
     const handleEditableItemSaveClick = (itemName) => {
-
-        /*
-        const callback = () => {
-            setData(update(data, {
-                [itemName + "HasChanged"]: { $set: false }
-            }));
-            props.refreshNames();
-        }
-
-        updateData({ [itemName]: data[itemName] }, callback);
-        */
-
         // push the update and update the state on success
-        pushUpdate2({ [itemName]: data[itemName] }, (newdata) => {
-
+        pushUpdate({ [itemName]: data[itemName] }, (newdata) => {
             setData(update(data, {
                 [itemName + "HasChanged"]: { $set: false },
                 [itemName]: { $set: newdata[itemName] }
             }));
-
-            props.refreshNames();
+            // call the refreshNames function of the parent Editor component to update its list of rules
+            if (itemName === 'name') props.refreshNames();
         });
-
-
-
     }
 
 
@@ -194,8 +151,9 @@ const RuleEditor = (props) => {
     subType: either one of the action types or condition types
     */
     const addNewItem = async (itemType, subType) => {
-        // build the update
+        // build the update and update the state on succes
         let itemUpdate = undefined;
+
         if (itemType === 'flatConditions') {
             let newItem = staticData.newItems.condition[subType];
             if (subType === "or")
@@ -203,17 +161,22 @@ const RuleEditor = (props) => {
             else if (subType === "and")
                 newItem = { type: "and", condition: [] };
             itemUpdate = { condition: buildTree(stripIds(data.flatConditions)).concat(newItem) };
+            pushUpdate(itemUpdate, (newdata) => {
+                setData(update(data, {
+                    condition: { $set: newdata.condition },
+                    flatConditions: { $set: flattenConditions(newdata.condition) }
+                }));
+            });
         } else {
             const newItem = staticData.newItems.action[subType];
             itemUpdate = { [itemType]: stripIds(data[itemType]).concat(newItem) };
+            pushUpdate(itemUpdate, (newdata) => {
+                setData(update(data, {
+                    [itemType]: { $set: newdata[itemType] ? addIds(newdata[itemType]) : [] }
+                }));
+            });
         }
-        // push the update and update the state on success
-        pushUpdate2(itemUpdate, (newdata) => {
-            setData(update(data, {
-                condition: { $set: newdata.condition },
-                flatConditions: { $set: flattenConditions(newdata.condition) }
-            }));
-        });
+        //response.data.rule.ontrue ? addIds(response.data.rule.ontrue) : [],
     };
 
 
@@ -224,7 +187,13 @@ const RuleEditor = (props) => {
         <DropdownItem key={condition} onClick={() => { addNewItem("flatConditions", condition) }}>{staticData.conditions[condition]}</DropdownItem>
     ));
 
+    const newOntrueActions = Object.keys(staticData.newItems.action).map((action) => (
+        <DropdownItem key={action} onClick={() => { addNewItem("ontrue", action) }}>{staticData.actions[action]}</DropdownItem>
+    ));
 
+    const newOnfalseActions = Object.keys(staticData.newItems.action).map((action) => (
+        <DropdownItem key={action} onClick={() => { addNewItem("onfalse", action) }}>{staticData.actions[action]}</DropdownItem>
+    ));
 
 
 
@@ -270,12 +239,52 @@ const RuleEditor = (props) => {
                     </UncontrolledDropdown>
                 </HorizontalContainer>
 
-                {data.flatConditions.length > 0 && <Sortly
-                    items={data.flatConditions}
-                    onChange={handleSortlyChange} >
-                    {(props) => <ConditionItemRenderer {...props} onEditableItemClick={handleEditableItemClick} />}
-                </Sortly>
+                {
+                    data.flatConditions.length > 0 && <Sortly
+                        items={data.flatConditions}
+                        onChange={handleSortlyChange} >
+                        {(props) => <ConditionItemRenderer {...props} onEditableItemClick={handleEditableItemClick} />}
+                    </Sortly>
                 }
+
+                <HorizontalContainer>
+                    <Header>On True:</Header>
+                    <UncontrolledDropdown>
+                        <DropdownToggle caret>
+                            Add OnTrue Action
+                            </DropdownToggle>
+                        <DropdownMenu>
+                            {newOntrueActions}
+                        </DropdownMenu>
+                    </UncontrolledDropdown>
+                </HorizontalContainer>
+                <ul className="list-group">
+                    <ActionItemRenderer
+                        actions={data.ontrue}
+                        type="ontrue"
+                        handleEditableItemClick={handleEditableItemClick}
+                    />
+                </ul>
+
+                <HorizontalContainer>
+                    <Header>On False:</Header>
+                    <UncontrolledDropdown>
+                        <DropdownToggle caret>
+                            Add OnFalse Action
+                            </DropdownToggle>
+                        <DropdownMenu>
+                            {newOnfalseActions}
+                        </DropdownMenu>
+                    </UncontrolledDropdown>
+                </HorizontalContainer>
+                <ul className="list-group">
+                    <ActionItemRenderer
+                        actions={data.onfalse}
+                        type="onfalse"
+                        handleEditableItemClick={handleEditableItemClick}
+
+                    />
+                </ul>
 
 
 
@@ -397,6 +406,29 @@ const ConditionItemRenderer = (props) => {
 }
 
 
+const ActionItemRenderer = (props) => {
+
+    const ontrueActions = props.actions.map((action, index) => {
+        const isNew = isNewItem(action, "action", action.type);
+        const style = {
+            cursor: 'pointer',
+            ...(isNew ? newStyle : null)
+        };
+        return (
+            <li className="list-group-item"
+                key={action._id} id={action._id}
+                style={style}
+                onClick={() => props.handleEditableItemClick("actions", index, props.type, staticData.editor.action[action.type])}>
+                {isNew ? "* " : ""} {staticData.actions[action.type]}
+            </li>
+        )
+    });
+
+    return ontrueActions;
+
+}
+
+
 
 /* --------------------------------------------------------------------------------------------------------------
 Memoize our RuleEditor, such as that it does NOT get update anymore, unless we change rule by clicking
@@ -405,7 +437,7 @@ another rule in the RuleList (Editor).
 
 function ruleEditorPropsAreEqual(prevRuleEditor, nextRuleEditor) {
     return prevRuleEditor.id === nextRuleEditor.id;
-  }
+}
 
 export const MemoizedRuleEditor = React.memo(RuleEditor, ruleEditorPropsAreEqual);
 
