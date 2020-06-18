@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 
-import Sortly, { useDrag, useDrop, useIsClosestDragging, findDescendants } from 'react-sortly';
+import Sortly, { useDrag, useDrop, useIsClosestDragging, findDescendants, remove } from 'react-sortly';
 import { HorizontalContainer, AppColumn10, RightColumn, AppEditor, Header } from "./containers";
 import { Button, UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem, InputGroup, InputGroupAddon, Input, FormGroup, Label } from 'reactstrap';
 import Icon from '@mdi/react'
@@ -9,7 +9,7 @@ import update from 'immutability-helper';
 //import ReactJson from 'react-json-view';
 //import format from 'string-format';
 import { addIds, stripIds, flattenConditions, buildTree, staticData, isNewItem } from './utils';
-//import { DynamicEditor } from './DynamicEditor'
+import { DynamicEditor } from './DynamicEditor'
 import axios from 'axios';
 
 
@@ -23,7 +23,7 @@ const RuleEditor = (props) => {
         ontrue: [],
         onfalse: [],
         flatConditions: [],
-        editorVisible: false
+        edData: { visible: false }
     });
 
 
@@ -47,6 +47,7 @@ const RuleEditor = (props) => {
                 setData({
                     ...data,
                     ...response.data.rule,
+                    edData: { visible: false },
                     flatConditions: flattenConditions(response.data.rule.condition),
                     ontrue: response.data.rule.ontrue ? addIds(response.data.rule.ontrue) : [],
                     onfalse: response.data.rule.onfalse ? addIds(response.data.rule.onfalse) : [],
@@ -134,22 +135,141 @@ const RuleEditor = (props) => {
 
 
     /* ---------------------------------------------------------------------------------------------------------------
-    Sortly functions
+    Dynamic editor functions
+    --------------------------------------------------------------------------------------------------------------- */
+
+    // called when the user clicks on the 'edit' button of a condition or action
+    const handleEditableItemClick = (majorType, index, itemType, model) => {
+        console.log(majorType);
+        console.log(index);
+        console.log(itemType);
+        console.log(model);
+
+        const edData = {
+            visible: true,
+            data: data[itemType][index],        // copy of data we could also access using the pointers
+            model: model,
+            itemIndex: index,
+            itemType: itemType,
+            title: staticData[majorType][data[itemType][index].type],           // copy of data we could also access using the pointers
+            alertVisible: false
+        }
+
+        setData(update(data, {
+            edData: { $set: edData }
+        }));
+
+    };
+
+    const editorHandleCancelClick = () => {
+        setData(update(data, {
+            edData: {
+                visible: { $set: false },
+                alertVisible: { $set: false },
+                itemIndex: { $set: -1 }
+            }
+        }));
+    };
+
+    const editorHandleDeleteClick = () => {
+        let itemUpdate = undefined;
+        let itemType = data.edData.itemType;
+        if (itemType === 'flatConditions') {
+            const children = findDescendants(data.flatConditions, data.edData.itemIndex);
+            if (children.length === 0 || (children.length > 0 && window.confirm('Delete this logic block together with its children?'))) {
+                itemUpdate = { condition: buildTree(remove(data.flatConditions, data.edData.itemIndex)) };
+                pushUpdate(itemUpdate, (newdata) => {
+                    setData(update(data, {
+                        condition: { $set: newdata.condition },
+                        flatConditions: { $set: flattenConditions(newdata.condition) },
+                        edData: {
+                            visible: { $set: false },
+                            alertVisible: { $set: false },
+                            itemIndex: { $set: -1 }
+                        }
+                    }));
+                });
+            }
+            //this.setState({ editorAlertMessage: response.data.message, editorAlertVisible: true });
+        } else {
+            itemUpdate = {
+                [itemType]: stripIds(
+                    update(data[itemType], { $splice: [[data.edData.itemIndex, 1]] })
+                )
+            };
+            pushUpdate(itemUpdate, (newdata) => {
+                setData(update(data, {
+                    [itemType]: { $set: newdata[itemType] ? addIds(newdata[itemType]) : [] },
+                    edData: {
+                        visible: { $set: false },
+                        alertVisible: { $set: false },
+                        itemIndex: { $set: -1 }
+                    }
+                }));
+            });
+        }
+
+
+    };
+    const editorHandleSaveClick = (dataUpdate) => {
+        
+        let itemType = data.edData.itemType;
+        // first let server validate
+        axios.post('/api/validate/', { editorItemType: itemType, ...dataUpdate })
+            .then((response) => {
+                if (!response.data.success) {
+                    //this.setState({ editorAlertMessage: response.data.message, editorAlertVisible: true });
+                    console.log(response.data);
+                    return;
+                } else {
+                    let itemUpdate = undefined;
+                    // inject the update in a clone of the state
+                    const cloned = update(data[itemType],
+                        { [data.edData.itemIndex]: { $set: dataUpdate } }
+                    )
+                    if (itemType === 'flatConditions') {
+                        itemUpdate = { condition: buildTree(cloned) };
+                        pushUpdate(itemUpdate, (newdata) => {
+                            setData(update(data, {
+                                condition: { $set: newdata.condition },
+                                flatConditions: { $set: flattenConditions(newdata.condition) },
+                                edData: {
+                                    visible: { $set: false },
+                                    alertVisible: { $set: false },
+                                    itemIndex: { $set: -1 }
+                                }
+                            }));
+                        });
+                    } else {
+                        itemUpdate = { [itemType]: stripIds(cloned) };
+                        pushUpdate(itemUpdate, (newdata) => {
+                            setData(update(data, {
+                                [itemType]: { $set: newdata[itemType] ? addIds(newdata[itemType]) : [] },
+                                edData: {
+                                    visible: { $set: false },
+                                    alertVisible: { $set: false },
+                                    itemIndex: { $set: -1 }
+                                }
+                            }));
+                        });
+                    }
+                }
+            })
+            .catch((error) => {
+                // TODO: alert user
+                console.log(error);
+            });
+    };
+
+    /* ---------------------------------------------------------------------------------------------------------------
+    Various
     --------------------------------------------------------------------------------------------------------------- */
 
 
-    const handleEditableItemClick = () => {
-        console.log('boom');
-    };
+    // Called when the user either add new condition or action
+    // itemType: ontrue, onfalse, flatConditions
+    // subType: either one of the action types or condition types
 
-
-
-    /* -------  Callback methods of ConditionEditor  ------- */
-
-    /*
-    itemType: ontrue, onfalse, flatConditions
-    subType: either one of the action types or condition types
-    */
     const addNewItem = async (itemType, subType) => {
         // build the update and update the state on succes
         let itemUpdate = undefined;
@@ -176,12 +296,13 @@ const RuleEditor = (props) => {
                 }));
             });
         }
-        //response.data.rule.ontrue ? addIds(response.data.rule.ontrue) : [],
     };
 
 
 
-    // UI elements
+    /* ---------------------------------------------------------------------------------------------------------------
+    UI elements
+    --------------------------------------------------------------------------------------------------------------- */
 
     const newConditions = Object.keys(staticData.newItems.condition).map((condition) => (
         <DropdownItem key={condition} onClick={() => { addNewItem("flatConditions", condition) }}>{staticData.conditions[condition]}</DropdownItem>
@@ -195,7 +316,9 @@ const RuleEditor = (props) => {
         <DropdownItem key={action} onClick={() => { addNewItem("onfalse", action) }}>{staticData.actions[action]}</DropdownItem>
     ));
 
-
+    /* ---------------------------------------------------------------------------------------------------------------
+    Main render
+    --------------------------------------------------------------------------------------------------------------- */
 
     return (
         <RightColumn>
@@ -262,7 +385,7 @@ const RuleEditor = (props) => {
                     <ActionItemRenderer
                         actions={data.ontrue}
                         type="ontrue"
-                        handleEditableItemClick={handleEditableItemClick}
+                        onEditableItemClick={handleEditableItemClick}
                     />
                 </ul>
 
@@ -281,7 +404,7 @@ const RuleEditor = (props) => {
                     <ActionItemRenderer
                         actions={data.onfalse}
                         type="onfalse"
-                        handleEditableItemClick={handleEditableItemClick}
+                        onEditableItemClick={handleEditableItemClick}
 
                     />
                 </ul>
@@ -292,6 +415,21 @@ const RuleEditor = (props) => {
             </AppColumn10>
             <AppColumn10>
                 {<pre className='code'>{JSON.stringify(data, undefined, 4)}</pre>}
+            </AppColumn10>
+
+            <AppColumn10>
+                {data.edData.visible && <DynamicEditor
+                    visible={data.edData.visible}
+                    editorData={data.edData.data}
+                    title={data.edData.title}
+                    model={data.edData.model}
+                    key={data.edData.data._id}
+                    alertVisible={data.edData.alertVisible}
+                    alert={data.edData.alertMessage}
+                    onHandleSaveClick={editorHandleSaveClick}
+                    onHandleCancelClick={editorHandleCancelClick}
+                    onHandleDeleteClick={editorHandleDeleteClick} />
+                }
             </AppColumn10>
 
 
@@ -340,7 +478,7 @@ const pushRightStyle = {
 
 const ConditionItemRenderer = (props) => {
 
-    const { data, onEditableItemClick } = props;
+    const { data, index, onEditableItemClick } = props;
     const [{ isDragging }, drag] = useDrag({
         collect: (monitor) => ({
             isDragging: monitor.isDragging(),
@@ -353,7 +491,7 @@ const ConditionItemRenderer = (props) => {
 
 
     const handleClick = () => {
-        onEditableItemClick("conditions", data.index, "flatConditions", staticData.editor.condition[data.type]);
+        onEditableItemClick("conditions", index, "flatConditions", staticData.editor.condition[data.type]);
     };
 
     let label = "";
@@ -418,7 +556,7 @@ const ActionItemRenderer = (props) => {
             <li className="list-group-item"
                 key={action._id} id={action._id}
                 style={style}
-                onClick={() => props.handleEditableItemClick("actions", index, props.type, staticData.editor.action[action.type])}>
+                onClick={() => props.onEditableItemClick("actions", index, props.type, staticData.editor.action[action.type])}>
                 {isNew ? "* " : ""} {staticData.actions[action.type]}
             </li>
         )

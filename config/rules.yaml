@@ -50,69 +50,11 @@ DoorBell:
   condition:
     - type: mqtt
       trigger: on_flip_true
-      topic: knx/status/15/2/3
+      topic: knx/status/15/2/5
       jmespath: val
       value: '0x01'
     - type: and
-      condition:
-        - type: and
-          condition:
-            - type: or
-              condition:
-                - type: mqtt
-                  trigger: 'no'
-                  topic: __REPLACE__
-                  operator: eq
-                  jmespath: val
-                  value: ''
-            - type: or
-              condition: []
-    - type: mqtt
-      trigger: 'no'
-      topic: __REPLACE__
-      operator: eq
-      jmespath: val
-      value: ''
-    - type: or
       condition: []
-    - type: mqtt
-      trigger: 'no'
-      topic: __REPLACE__
-      operator: eq
-      jmespath: val
-      value: ''
-    - type: and
-      condition: []
-    - type: and
-      condition: []
-    - type: mqtt
-      trigger: 'no'
-      topic: __REPLACE__
-      operator: eq
-      jmespath: val
-      value: ''
-    - type: or
-      condition: []
-    - type: and
-      condition: []
-    - type: and
-      condition: []
-    - type: mqtt
-      trigger: 'no'
-      topic: __REPLACE__
-      operator: eq
-      jmespath: val
-      value: ''
-    - type: mqtt
-      trigger: 'no'
-      topic: __REPLACE__
-      operator: eq
-      jmespath: val
-      value: ''
-    - type: cron
-      trigger: 'no'
-      'on': 0 0 * * *
-      'off': '-'
     - type: alias
       trigger: 'no'
       alias: __REPLACE__
@@ -127,34 +69,22 @@ DoorBell:
       trigger: 'no'
       'on': 0 0 * * *
       'off': '-'
-    - type: or
-      condition: []
-    - type: or
-      condition: []
-    - type: and
-      condition: []
   ontrue:
-    - type: pushover
-      message: Notification from script4mqtt
-      title: Doorbell ringing!
-      sound: bike
-      priority: 1
     - type: mqtt
-      delay: 0
+      delay: '100'
       interval: 0
       topic: __REPLACE__
       value: __REPLACE__
+    - type: script
+      delay: 0
+      interval: 0
+      script: ''
     - type: email
       delay: 0
       interval: 0
       to: __REPLACE__
       subject: __REPLACE__
       body: ''
-    - type: mqtt
-      delay: 0
-      interval: 0
-      topic: __REPLACE__
-      value: __REPLACE__
   pendingOption: always
   enabled: false
   description: deurbelAaassasasasdf
@@ -166,6 +96,11 @@ DoorBell:
       message: ''
       sound: pushover
       priority: 0
+  type: mqtt
+  trigger: on_flip_true
+  topic: knx/status/15/2/5
+  jmespath: val
+  value: '0x01'
 ef2a1abf4e20:
   name: New rule
   category: default
