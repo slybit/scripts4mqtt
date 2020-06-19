@@ -171,7 +171,7 @@ export const staticData = {
                 type: "email",
                 delay: 0,
                 interval: 0,
-                to: "__REPLACE__",
+                to: "__REPLACE__@mail.com",
                 subject: "__REPLACE__",
                 body: ""
             },

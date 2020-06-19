@@ -4,6 +4,7 @@ import { Navbar, NavbarBrand, Nav, NavItem, NavLink } from 'reactstrap';
 import { AppContainer, AppFooter, NonFlexBody, AppBody, AppNav, AppColumn2, AppColumn10 } from './containers.js';
 import { RulesLogTable } from './RulesLogTable.js';
 import Editor from './Editor.js';
+import { Aliases } from './Aliases';
 import logo from './logo.svg';
 import './App.css';
 
@@ -41,15 +42,19 @@ const App = () => {
                     <NavItem>
                         <NavLink tag={RRNavLink} exact to="/rules" activeClassName="active">Rules</NavLink>
                     </NavItem>
+                    <NavItem>
+                        <NavLink tag={RRNavLink} exact to="/aliases" activeClassName="active">Aliases</NavLink>
+                    </NavItem>
                 </Nav>
             </Navbar>
 
             <Switch>
                 {/* React Route way of redirecting from / -> /editor */}
-                <Route exact path="/" render={() => (<Redirect to="/table" />)} />
+                <Route exact path="/" render={() => (<Redirect to="/rules" />)} />
                 <Route path='/table' component={RulesLogTable}></Route>
                 <Route path='/lazy' component={LazyLogger}></Route>
                 <Route path='/rules' component={Editor}></Route>
+                <Route path='/aliases' component={Aliases}></Route>
             </Switch>
 
             <AppFooter>the footer</AppFooter>

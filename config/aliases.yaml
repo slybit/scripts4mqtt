@@ -1,5 +1,4 @@
 A:
-  - knx/set/0/0/200
   - knx/alias
 a:
   - knx/status/14/0/14

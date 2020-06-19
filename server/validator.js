@@ -33,11 +33,12 @@ function validate(data) {
         } else if (data.editorItemType === "ontrue" || data.editorItemType === "onfalse") {
             switch (data.type) {
                 case "mqtt":
-                    validateMqttAction
+                    validateMqttAction(data);
                     break;
                 case "script":
                     break;
                 case "email":
+                    validateEmailAction(data);
                     break;
                 case "pushover":
                     break;

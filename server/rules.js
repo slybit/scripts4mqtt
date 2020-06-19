@@ -11,7 +11,6 @@ const Aliases = require('./aliases.js');
 const FILENAME = process.env.MQTT4SCRIPTS_RULES || '../config/rules.yaml';
 
 // TODO:
-// - remove stupid alias mechanism
 // - destroy pending actions when updating a rule !!!
 
 
@@ -87,6 +86,7 @@ class Rules {
         } else {
             expanded.push(rule)
         }
+        console.log(expanded);
         return expanded;
     }
 
@@ -94,11 +94,9 @@ class Rules {
     // returns an array of the unique aliases it found
     listAliases(json, aliases) {
         if (Array.isArray(json)) {
-            let result = [];
             for (let c of json) {
                 this.listAliases(c, aliases);
             }
-            return result;
         } else {
             if (!json.type) {
                 throw new Error('No type provided for condition.');
@@ -258,7 +256,14 @@ class Rules {
                 this.testRuleUpdate(id, input);
                 Object.assign(this.jsonContents[id], input);
             }
+            // clear pending actions for the rule
+            let ruleSet = this.rules[id];
+            for (let rule of ruleSet) {
+                rule.cancelPendingActions();
+            }
+            // clear the existing rule
             this.rules[id] = [];
+            // create it again with updated data
             let expandedRules = this.expandAliases(this.jsonContents[id]);
             for (let r of expandedRules) {
                 this.rules[id].push(new Rule(id, r));
@@ -453,6 +458,7 @@ class Rule {
                     result.push(new ScriptAction(a, this));
                     break;
                 case "email":
+                    console.log('creating new email action');
                     result.push(new EMailAction(a, this));
                     break;
                 case "pushover":
