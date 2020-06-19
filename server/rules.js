@@ -10,6 +10,12 @@ const Aliases = require('./aliases.js');
 
 const FILENAME = process.env.MQTT4SCRIPTS_RULES || '../config/rules.yaml';
 
+// TODO:
+// - remove stupid alias mechanism
+// - destroy pending actions when updating a rule !!!
+
+
+
 const topicToArray = function (topic) {
     return topic.split('/');
 }
@@ -186,22 +192,6 @@ class Rules {
      * API
      -------------------------------------------------------------------------------------------- */
 
-    reload() {
-        try {
-            this.validateRulesFile();
-        } catch (err) {
-            return ({
-                'success': false,
-                'error': err.message
-            });
-        }
-        // validation ok
-        this.loadRules();
-        return ({
-            'success': true
-        });
-    }
-
     validateRulesFile() {
         logger.info("Validating rules file");
         if (fs.existsSync(FILENAME)) {
@@ -229,36 +219,6 @@ class Rules {
 
 
     listAllRules() {
-        let categories = {};
-        for (let key in this.jsonContents) {
-            let categoryName = this.jsonContents[key].category ? this.jsonContents[key].category : "default";
-            let category = categories[categoryName];
-            if (!category) {
-                category = {
-                    isOpen: true,
-                    rules: []
-                };
-                categories[categoryName] = category;
-            }
-            category.rules.push({
-                key: key,
-                order: this.jsonContents[key].order,
-                category: categoryName,
-                name: this.jsonContents[key].name,
-                enabled: this.jsonContents[key].enabled
-            });
-        }
-        /*
-        let list = [];
-        for (let category of Object.keys(categories)) {
-            console.log(category);
-            list.push(category);
-        }
-        */
-        //return categories;
-
-
-
         let list = [];
         for (let key in this.jsonContents) {
             list.push({
@@ -271,9 +231,6 @@ class Rules {
 
         }
         return list;
-
-
-
     }
 
     createRule(input) {
@@ -428,21 +385,12 @@ class Rules {
  * Rule
 -------------------------------------------------------------------------------------------- */
 
-
-const PendingOptions = Object.freeze({
-    "never": 10,
-    "always": 11,
-    "topic": 12
-});
-
-
 class Rule {
 
     constructor(id, json) {
         this.id = id;
         this.name = json.name;
         this.enabled = json.enabled === undefined ? true : json.enabled;
-        this.pendingOption = PendingOptions[json.pendingOption] ? PendingOptions[json.pendingOption] : PendingOptions["always"];
         this.conditions = [];
         this.logic = this.parseCondition(json.condition);
         this.onFalseActions = this.parseActions(json.onfalse);
@@ -531,7 +479,7 @@ class Rule {
             - context.topic = topic that triggered the action as a string (1/2/3)
      - for a Cron condition:
             - context.date = the timestamp of when the action was triggered
-            - context.topic = "__cron__" -> we abuse this to be able to keep track of pending actions using context.topic also when the condition was a cron task
+            - context.topic = "__cron__"
     */
     scheduleActions(context) {
         if (context.topic === "__cron__") {
@@ -549,12 +497,13 @@ class Rule {
         if (Rule.evalLogic(this.logic)) {
             logger.info("Rule [%s]: scheduling TRUE actions", this.name);
             actions = this.onTrueActions;
-            this.cancelPendingActions(this.onFalseActions);
         } else {
             logger.info("Rule [%s]: scheduling FALSE actions", this.name);
             actions = this.onFalseActions;
-            this.cancelPendingActions(this.onTrueActions);
         }
+        logger.info("Rule [%s]: cancelling all pending actions (delay and repeat)", this.name);
+        this.cancelPendingActions();
+
         for (let a of actions) {
             //console.log(a);
             if (a.delay > 0) {
@@ -565,27 +514,26 @@ class Rule {
                 a.execute(context);
             }
             if (a.interval > 0) {
-                if (a.repeater === undefined) {
-                    logger.info('Rule [%s]: Schedule - repeated execution with interval of %d millesecs', a.rule.name, a.interval);
-                    a.repeater = setInterval(a.execute.bind(a, context), a.interval);
-                } else {
-                    logger.info('Rule [%s]: Leaving existing repeated execution with interval of %d millesecs', a.rule.name, a.interval);
-                }
+                logger.info('Rule [%s]: Schedule - repeated execution with interval of %d millesecs', a.rule.name, a.interval);
+                a.repeater = setInterval(a.execute.bind(a, context), a.interval);
+
             }
         }
     }
 
-    cancelPendingActions(actions) {
-        for (let a of actions) {
-            if (a.pending !== undefined) {
-                clearTimeout(a.pending);
-                a.pending = undefined;
-                logger.info('Rule [%s]:  cancelled pending action', a.rule.name);
-            }
-            if (a.repeater !== undefined) {
-                clearInterval(a.repeater);
-                a.repeater = undefined;
-                logger.info('Rule [%s]:  cancelled repeating action', a.rule.name);
+    cancelPendingActions() {
+        for (let actions of [this.onFalseActions, this.onTrueActions]) {
+            for (let a of actions) {
+                if (a.pending !== undefined) {
+                    clearTimeout(a.pending);
+                    a.pending = undefined;
+                    logger.info('Rule [%s]:  cancelled pending action', a.rule.name);
+                }
+                if (a.repeater !== undefined) {
+                    clearInterval(a.repeater);
+                    a.repeater = undefined;
+                    logger.info('Rule [%s]:  cancelled repeating action', a.rule.name);
+                }
             }
         }
     }

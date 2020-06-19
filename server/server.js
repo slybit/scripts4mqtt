@@ -28,10 +28,6 @@ app.use(function (error, req, res, next) {
   });
 app.use(morgan('dev'));
 
-router.get('/reload', (req, res) => {
-    res.json(rules.reload());
-});
-
 router.get('/rules', (req, res) => {
     res.json(rules.listAllRules());
 });

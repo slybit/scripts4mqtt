@@ -100,7 +100,16 @@ DoorBell:
   category: default
   description: ''
   enabled: false
-  condition: []
+  condition:
+    - type: cron
+      trigger: always
+      'on': '* * * * *'
+      'off': '-'
+  ontrue:
+    - type: logbook
+      delay: 0
+      interval: '10000'
+      message: ontrue of test
 493235c8de28:
   name: New rule
   category: default

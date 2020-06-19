@@ -130,11 +130,16 @@ Any number of them can be combined using OR and AND operations.
 
 ### Delay and repetition
 
-In case either an action is pending a delayed activatio or is repeating, a new trigger of the condition block will have the following consequences:
-* pending delayed action: reset the delay timer on the same evaluation and cancel the action if opposite evaluation
-* repeating action: leave alone on the same evaluation and cancel the action if opposite evaluation
+The execution of an action can be delayed and or repeated.
 
-For example, if a delayed action that was part of the True actions, will be cancelled on a false evaluation after a trigger in the condition block. A true evaluation of the evaluation block would reset the counter.
+In case either of these options is used for one or more actions in a rule, the following will happen we the condition block of that rule is triggered again:
+* All pending actions (delayed and repeating) will be cancelled.
+* New delayed and/or repeating actions will be created with the updated context.
+
+This means that:
+* In case a re-trigger happens sooner than the delay of an action, that action's delay will be reset.
+* In case of a running repeating action, the action's context will be updated to reflect the new trigger conditions.
+
 
 ### Delay
 
