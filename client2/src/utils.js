@@ -108,7 +108,9 @@ export const staticData = {
     conditions: {
         mqtt: "MQTT",
         alias: "Alias",
-        cron: "Cron expression"
+        cron: "Cron expression",
+        or: "Logic operator",
+        and: "Logic operator"
     },
     actions: {
         mqtt: "MQTT",

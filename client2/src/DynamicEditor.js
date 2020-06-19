@@ -71,17 +71,17 @@ export class DynamicEditor extends React.Component {
                 />;
             } else if (type === "simple-editor") {
                 input =
-                <div className="script_editor_area">
-                    <Editor
-                        value={value}
-                        id={key}
-                        name={key}
-                        onValueChange={ v => { this.setState( { [key]: v } ) }}
-                        highlight={value => highlight(value, languages.js)}
-                        padding={10}
-                        className="script_editor code"
-                    />
-                </div>;
+                    <div className="script_editor_area">
+                        <Editor
+                            value={value}
+                            id={key}
+                            name={key}
+                            onValueChange={v => { this.setState({ [key]: v }) }}
+                            highlight={value => highlight(value, languages.js)}
+                            padding={10}
+                            className="script_editor code"
+                        />
+                    </div>;
             } else if (type === "select") {
                 const options = m.options.map((o) => {
                     return (<option key={o.value} value={o.value}>{o.label}</option>);
@@ -107,7 +107,7 @@ export class DynamicEditor extends React.Component {
     render() {
         return (
             <Modal isOpen={this.props.visible} fade={false} toggle={this.props.editorHandleCancelClick} size="xl">
-            
+
                 <ModalHeader toggle={this.props.onHandleCancelClick}>{this.props.title}</ModalHeader>
                 <ModalBody>
                     <Form className="form">
@@ -124,7 +124,7 @@ export class DynamicEditor extends React.Component {
                         <Button color="danger" outline onClick={this.props.onHandleDeleteClick}>Delete</Button>
                         <span>
                             <Button color="primary" outline={true} onClick={this.props.onHandleCancelClick}>Cancel</Button>{' '}
-                            <Button color="primary" onClick={() => {this.props.onHandleSaveClick(this.state);}}>Save</Button>
+                            <Button color="primary" onClick={() => { this.props.onHandleSaveClick(this.state); }}>Save</Button>
                         </span>
                     </FormGroup>
 
@@ -132,7 +132,7 @@ export class DynamicEditor extends React.Component {
             </Modal>
 
 
-            
+
         );
     }
 

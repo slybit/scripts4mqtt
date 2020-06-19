@@ -53,22 +53,14 @@ DoorBell:
       topic: knx/status/15/2/5
       jmespath: val
       value: '0x01'
-    - type: alias
-      trigger: 'no'
-      alias: __REPLACE__
-      eval: 'true'
     - type: mqtt
       trigger: 'no'
       topic: __REPLACE__
       operator: eq
       jmespath: val
       value: ''
-    - type: or
+    - type: and
       condition: []
-    - type: alias
-      trigger: 'no'
-      alias: __REPLACE__
-      eval: 'true'
   ontrue:
     - type: mqtt
       delay: '1000'
@@ -78,16 +70,14 @@ DoorBell:
     - type: script
       delay: 0
       interval: 0
-      script: ''
-    - type: email
-      delay: 0
-      interval: 0
-      to: __REPLACE__khkh
-      subject: __REPLACE__
-      body: ''
+      script: |-
+        let a = {};
+        for (const a of []) {
+          console.log('test');
+        }
   pendingOption: always
   enabled: false
-  description: deurbelAaassasasasdf
+  description: deurbel
   onfalse:
     - type: pushover
       delay: 0
@@ -96,114 +86,22 @@ DoorBell:
       message: ''
       sound: pushover
       priority: 0
-    - type: email
+    - type: script
       delay: 0
       interval: 0
-      to: __REPLACE__
-      subject: __REPLACE__
-      body: ''
+      script: ''
   type: mqtt
   trigger: on_flip_true
   topic: knx/status/15/2/5
   jmespath: val
   value: '0x01'
-ef2a1abf4e20:
-  name: New rule
-  category: default
-  description: ''
-  enabled: true
-  condition: []
-2bf3c2a03716:
-  name: New rule
-  category: default
-  description: ''
-  enabled: true
-  condition: []
-b59d44f48aac:
+5ac67717893b:
   name: New rule
   category: default
   description: ''
   enabled: false
   condition: []
-76b2870b34bc:
-  name: New rule
-  category: default
-  description: ''
-  enabled: false
-  condition: []
-8c19de6b776a:
-  name: New rule
-  category: default
-  description: ''
-  enabled: false
-  condition: []
-674e5d85071b:
-  name: New rule
-  category: default
-  description: ''
-  enabled: false
-  condition: []
-f71ef89feb8a:
-  name: New rule
-  category: default
-  description: ''
-  enabled: false
-  condition: []
-f6469c4b2caf:
-  name: New ruleasdf
-  category: default
-  description: ''
-  enabled: false
-  condition: []
-a1b16944408a:
-  name: New rule
-  category: default
-  description: ''
-  enabled: false
-  condition: []
-0d17306e96b1:
-  name: New rule
-  category: default
-  description: ''
-  enabled: false
-  condition: []
-798e5dc407bd:
-  name: New rule
-  category: default
-  description: ''
-  enabled: false
-  condition: []
-651dec0c7e7f:
-  name: New rule
-  category: default
-  description: ''
-  enabled: false
-  condition: []
-c197db5ab8f5:
-  name: New ruleasdf
-  category: default
-  description: ''
-  enabled: false
-  condition: []
-3eb3a5e19983:
-  name: New ruleasdf
-  category: default
-  description: ''
-  enabled: false
-  condition: []
-607a6f14fcdc:
-  name: New ruleasdfsadf
-  category: default
-  description: ''
-  enabled: false
-  condition: []
-1c9f16102929:
-  name: New ruleasdfsadfasdfasdf
-  category: default
-  description: ''
-  enabled: false
-  condition: []
-afb5b726710a:
+493235c8de28:
   name: New rule
   category: default
   description: ''

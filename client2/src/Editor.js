@@ -10,6 +10,7 @@ import { MemoizedRuleEditor } from './RuleEditor2';
 import axios from 'axios';
 import update from 'immutability-helper';
 
+
 class Editor extends Component {
     constructor() {
         super();
@@ -39,19 +40,12 @@ class Editor extends Component {
                 for (let rule of response.data) {
                     categories[rule.category] = this.state.categories[rule.category] ? this.state.categories[rule.category] : { isOpen: true };
                 }
-                if (selectedRule) {
-                    this.setState({
-                        rules: response.data,
-                        categories: categories,
-                        selectedRule: selectedRule
-                    });
-                } else {
-                    this.setState({
-                        rules: response.data,
-                        categories: categories
-                    });
-                }
 
+                this.setState({
+                    rules: response.data,
+                    categories: categories,
+                    selectedRule: selectedRule
+                });
             })
             .catch((error) => {
                 showError("Cannot access the script4mqtt service.", error);
@@ -178,7 +172,7 @@ class Editor extends Component {
                 {this.state.selectedRule &&
                     <DndProvider backend={HTML5Backend}>
                         <ContextProvider>
-                            <MemoizedRuleEditor id={this.state.selectedRule} refreshNames={() => { this.loadRuleListFromServer(false) }} />
+                            <MemoizedRuleEditor id={this.state.selectedRule} refreshNames={() => { this.loadRuleListFromServer(this.state.selectedRule) }} />
                         </ContextProvider>
                     </DndProvider>
                 }

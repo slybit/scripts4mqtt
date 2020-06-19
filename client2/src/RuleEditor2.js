@@ -182,6 +182,8 @@ const RuleEditor = (props) => {
             alertVisible: false
         }
 
+        console.log(edData);
+
         setData(update(data, {
             edData: { $set: edData }
         }));
@@ -392,9 +394,9 @@ const RuleEditor = (props) => {
 
 
             </AppColumn10>
-            <AppColumn10>
+            {false && <AppColumn10>
                 {<pre className='code'>{JSON.stringify(data, undefined, 4)}</pre>}
-            </AppColumn10>
+            </AppColumn10>}
 
             <AppColumn10>
                 {data.edData.visible && <DynamicEditor

@@ -13,7 +13,74 @@
 .bold_blue {
     font-weight: bold;
     background: ALICEBLUE;
-  }
+}
+
+.deleteIcon {
+  fill: grey
+}
+
+.aliasButton {
+  margin: 3px;
+  padding: 2px 2px 2px 6px;
+}
+
+.deleteIcon:hover {
+  fill: orangered
+}
+
+.editIcon {
+  fill: grey
+}
+
+.editIcon:hover {
+  fill: cornflowerblue
+}
+
+.container_editor_area {
+  tab-size: 4ch;
+  max-height: 80vh;
+  max-width: 80vh;
+  overflow: auto;
+  margin: 1.67em 0;
+}
+
+.container__editor {
+  font-variant-ligatures: common-ligatures;
+  background-color: #fafafa;
+  border-radius: 3px;
+  font-family: 'Fira code', 'Fira Mono', Consolas, Menlo, Courier, monospace;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.container__editor textarea {
+  outline: 0;
+
+}
+
+
+
+.script_editor_area {
+  tab-size: 4ch;
+  max-height: 30em;
+  overflow: auto;
+}
+
+.code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace;
+  background: #e7e7e7;
+  border: 1px solid rgba(0, 0, 0, 0.125);
+}
+
+.script_editor {
+  font-variant-ligatures: common-ligatures;
+  background-color: #fafafa;
+  border-color: orange;
+  border-radius: 3px;
+  font-family: 'Fira code', 'Fira Mono', Consolas, Menlo, Courier, monospace;
+  font-size: 14px;
+  line-height: 1.5;
+}
 
 
 body {
@@ -33,34 +100,4 @@ code {
     monospace;
 }
 
-.react-sanfona {
 
-}
-
-.react-sanfona-item-title {
-  background-color: #fafafa;
-  border-top: 1px solid #ccc;
-  color: #333;
-  padding: 5px;
-  transition: background-color .3s;
-}
-
-.react-sanfona-item:first-child .react-sanfona-item-title {
-  border-top: none;
-}
-
-.react-sanfona-item-expanded .react-sanfona-item-title {
-  background-color: rgb(81, 88, 197);
-  color: #fff;
-
-
-}
-
-.react-sanfona-item-body-wrapper {
-  color: #666;
-  position: relative;
-}
-
-.react-sanfona-item-body-wrapper:hover .tooltip {
-  opacity: 1;
-}
