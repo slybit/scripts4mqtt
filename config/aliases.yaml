@@ -1,8 +1,10 @@
 A:
-  - knx/alias
-a:
-  - knx/status/14/0/14
+  - knx/A1
+  - knx/A2
+B:
+  - knx/B1
+  - knx/B2
 C:
-  - knx/alias
-  - knx/belias
-  - knx/celias
+  - knx/C1
+  - knx/C2
+  - knx/C3

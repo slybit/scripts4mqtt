@@ -39,15 +39,12 @@ class Rules {
         }
 
         for (let key in this.jsonContents) {
-            console.log(key);
             try {
-                let expandedRules = this.expandAliases(this.jsonContents[key]);
                 this.rules[key] = [];
-                for (let r of expandedRules) {
-                    let rule = new Rule(key, r);
-                    this.rules[key].push(rule);
-                    logger.info('loaded %s', rule.toString());
+                for (let json of Rules.buildRuleSet(this.jsonContents[key])) {
+                    this.rules[key].push(new Rule(key, json));
                 }
+
             } catch (e) {
                 logger.error('Error loading rule [%s]', key);
                 logger.error(e.toString());
@@ -56,65 +53,74 @@ class Rules {
         }
     }
 
-    // returns a list of 'rule' json definitions after exploding the alias to its topics (if any)
-    // the input is the json description of a single rule
-    expandAliases(rule) {
-        let aliases = new Aliases();
-        let expanded = [];
 
+    // build a set of rules by expanding all the aliases in a rule condition
+    static buildRuleSet(rule) {
+        let aliases = new Aliases();
+        let ruleSet = [rule];
         let ruleAliases = [];
-        this.listAliases(rule.condition, ruleAliases);
-        // only one alias per rule is allowed!
-        if (ruleAliases.length > 1) {
-            throw new Error('Only one alias allowed in a rule. Multiple aliases were found in rule: ' + rule.name);
-        }
-        // if there are any alias conditions defined, explode the rule into multiple rules - one per alias
-        if (ruleAliases.length === 1) {
-            console.log("alias found in " + rule.name);
-            let str = JSON.stringify(rule);
-            let aliasstr = '"alias":"' + ruleAliases[0] + '"';
-            // go over all the topics in the alias and create a new rule per topic
-            let i = 0;
-            for (let topic of aliases.getTopics(ruleAliases[0])) {
-                let n = str.replace(/"type":"alias"/g, '"type":"mqtt"');
-                var re = new RegExp(aliasstr, 'g');
-                n = n.replace(re, '"topic":"' + topic + '"');
-                let newRule = JSON.parse(n);
-                expanded.push(newRule);
-                i++;
+        Rules.listAliases(rule.condition, ruleAliases);
+        for (let alias of ruleAliases) {
+            let newRuleSet = []
+            for (let c of ruleSet) {
+                let topics = aliases.getTopics(alias);
+                if (topics.length === 0) throw "Unknown or empty alias used.";
+                for (let topic of topics) {
+                    let clone = JSON.parse(JSON.stringify(c));
+                    Rules.replaceAlias(clone.condition, alias, topic);
+                    newRuleSet.push(clone);
+                }
             }
-        } else {
-            expanded.push(rule)
+            ruleSet = newRuleSet;
         }
-        console.log(expanded);
-        return expanded;
+        return ruleSet;
     }
 
-    // go through a 'condition' JSON statement and extract all the aliases from one or more alias conditions, if any
+    // go through a 'condition' JSON statement and extract all the aliases from one or more alias conditions
     // returns an array of the unique aliases it found
-    listAliases(json, aliases) {
-        if (Array.isArray(json)) {
-            for (let c of json) {
-                this.listAliases(c, aliases);
-            }
+    static listAliases(condition, aliases) {
+        if (Array.isArray(condition)) {
+            for (let c of condition) this.listAliases(c, aliases);
         } else {
-            if (!json.type) {
-                throw new Error('No type provided for condition.');
-            }
-            switch (json.type.toLowerCase()) {
+            if (!condition.type) throw new Error('No type provided for condition.');
+            switch (condition.type.toLowerCase()) {
                 case "and":
                 case "or":
-                    if (!json.condition) {
-                        throw new Error("OR and AND conditions cannot be empty.");
-                    }
-                    this.listAliases(json.condition, aliases);
+                    if (!condition.condition) throw new Error("OR and AND conditions cannot be empty.");
+                    this.listAliases(condition.condition, aliases);
                     break;
                 case "alias":
-                    if (!aliases.includes(json.alias)) aliases.push(json.alias);
+                    if (!aliases.includes(condition.alias)) aliases.push(condition.alias);
                     break;
             }
         }
     }
+
+    // replaces all 
+    static replaceAlias(condition, aliasId, topic) {
+        if (Array.isArray(condition)) {
+            for (let c of condition) Rules.replaceAlias(c, aliasId, topic);
+        } else {
+            if (!condition.type) throw new Error('No type provided for condition.');
+            switch (condition.type.toLowerCase()) {
+                case "and":
+                case "or":
+                    if (!condition.condition) throw new Error("OR and AND conditions cannot be empty.");
+                    Rules.replaceAlias(condition.condition, aliasId, topic);
+                    break;
+                case "alias":
+                    if (condition.alias === aliasId) {
+                        delete condition.alias;
+                        condition.type = "mqtt";
+                        condition.topic = topic;
+                    }
+                    break;
+            }
+        }
+
+    }
+
+
 
     saveRules() {
         logger.info("saving rules");
@@ -203,7 +209,7 @@ class Rules {
 
         for (let key in this.jsonContents) {
             try {
-                let expandedRules = this.expandAliases(this.jsonContents[key]);
+                let expandedRules = Rules.buildRuleSet(this.jsonContents[key]);
                 for (let r of expandedRules) {
                     new Rule(key, r);
                 }
@@ -261,13 +267,12 @@ class Rules {
             for (let rule of ruleSet) {
                 rule.cancelPendingActions();
             }
-            // clear the existing rule
-            this.rules[id] = [];
-            // create it again with updated data
-            let expandedRules = this.expandAliases(this.jsonContents[id]);
+            // replace the rule set 
+            let expandedRules = Rules.buildRuleSet(this.jsonContents[id]);
             for (let r of expandedRules) {
-                this.rules[id].push(new Rule(id, r));
+                new Rule(id, r);
             }
+
             this.saveRules();
             return {
                 success: true,
@@ -286,10 +291,11 @@ class Rules {
         // make a hard copy, apply changes and test
         const cloned = JSON.parse(JSON.stringify(this.jsonContents[id]));
         Object.assign(cloned, input);
-        let expandedRules = this.expandAliases(cloned);
+        let expandedRules = Rules.buildRuleSet(cloned);
         for (let r of expandedRules) {
             new Rule(id, r);
         }
+
     }
 
     deleteRule(id) {
@@ -405,6 +411,8 @@ class Rule {
     static generateId() {
         return crypto.randomBytes(6).toString("hex");
     }
+
+
 
     static evalLogic(logic) {
         // logic can only be an array in the first iteration

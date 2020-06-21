@@ -48,85 +48,42 @@ DoorBell:
   category: Other Stuff
   order: 0
   condition:
-    - type: mqtt
-      trigger: on_flip_true
-      topic: knx/status/15/2/5
-      jmespath: val
-      value: '0x01'
-    - type: mqtt
+    - type: alias
       trigger: 'no'
-      topic: __REPLACE__
+      alias: A
       operator: eq
       jmespath: val
       value: ''
-    - type: and
-      condition: []
-    - type: mqtt
-      trigger: 'no'
-      topic: __REPLACE__
-      operator: eq
-      jmespath: val
-      value: ''
+    - type: or
+      condition:
+        - type: alias
+          trigger: 'no'
+          alias: A
+          operator: eq
+          jmespath: val
+          value: ''
+        - type: alias
+          trigger: 'no'
+          alias: B
+          operator: eq
+          jmespath: val
+          value: ''
+        - type: alias
+          trigger: 'no'
+          alias: C
+          operator: eq
+          jmespath: val
+          value: ''
   ontrue:
     - type: mqtt
-      delay: '1000'
+      delay: 0
       interval: 0
       topic: __REPLACE__
       value: __REPLACE__
-    - type: script
-      delay: 0
-      interval: 0
-      script: |-
-        let a = {};
-        for (const a of []) {
-          console.log('test');
-        }
-  pendingOption: always
   enabled: false
   description: deurbel
   onfalse:
-    - type: pushover
-      delay: 0
-      interval: 0
-      title: __REPLACE__
-      message: ''
-      sound: pushover
-      priority: 0
     - type: script
       delay: 0
       interval: 0
       script: ''
-    - type: mqtt
-      delay: 0
-      interval: 0
-      topic: __REPLACE__
-      value: __REPLACE__
-    - type: pushover
-      delay: 0
-      interval: 0
-      title: __REPLACE__
-      message: ''
-      sound: pushover
-      priority: 0
-  type: mqtt
-  trigger: on_flip_true
-  topic: knx/status/15/2/5
-  jmespath: val
-  value: '0x01'
-5ac67717893b:
-  name: New rule
-  category: default
-  description: ''
-  enabled: false
-  condition: []
-  ontrue:
-    - type: logbook
-      delay: 0
-      interval: '5000'
-      message: ontrue of test
-493235c8de28:
-  name: New rule
-  category: default
-  description: ''
-  enabled: false
-  condition: []
