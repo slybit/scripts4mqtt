@@ -6,9 +6,12 @@ import 'prismjs/themes/prism.css'
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 
+
+
 ReactDOM.render(
   <React.StrictMode>
     <BrowserRouter>
+      
       <App />
     </BrowserRouter>
   </React.StrictMode>,

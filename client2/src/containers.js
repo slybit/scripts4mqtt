@@ -1,6 +1,27 @@
 import styled from "styled-components";
 
 
+export const Column = styled.div`
+display: flex;
+flex-direction: column;
+flex: 1;
+overflow: hidden;
+`;
+
+
+export const TopRow = styled.div`
+flex: 0 0 auto;
+padding: 5px 0;
+overflow: hidden;
+`;
+
+export const BottomRow = styled.div`
+flex: 20;
+overflow: hidden;
+`;
+
+
+
 /**
  * Outer wrapper.
  * Provides a full width and height flex container that will host

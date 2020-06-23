@@ -53,6 +53,12 @@ class Rules {
         }
     }
 
+    listUsedAliases() {
+        let usedAliases = [];
+        for (let id in this.jsonContents) Rules.listAliases(this.jsonContents[id].condition, usedAliases);
+        return usedAliases;
+    }
+
 
     // build a set of rules by expanding all the aliases in a rule condition
     static buildRuleSet(rule) {
@@ -96,7 +102,7 @@ class Rules {
         }
     }
 
-    // replaces all 
+    // replaces all
     static replaceAlias(condition, aliasId, topic) {
         if (Array.isArray(condition)) {
             for (let c of condition) Rules.replaceAlias(c, aliasId, topic);
@@ -267,7 +273,7 @@ class Rules {
             for (let rule of ruleSet) {
                 rule.cancelPendingActions();
             }
-            // replace the rule set 
+            // replace the rule set
             let expandedRules = Rules.buildRuleSet(this.jsonContents[id]);
             for (let r of expandedRules) {
                 new Rule(id, r);

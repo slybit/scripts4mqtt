@@ -1,6 +1,6 @@
 TimeDateUpdate:
   name: TDU
-  category: Stuff
+  category: Nice stuuff
   order: 0
   condition:
     - type: cron
@@ -26,7 +26,7 @@ TimeDateUpdate:
       value: __REPLACE__
   pendingOption: never
   enabled: false
-  description: The description asdfasdf
+  description: The description asdfasdfasdfasdfasdfsf
   itemName: a
   jos: TDU
 Logbook:
@@ -45,7 +45,7 @@ Logbook:
   enabled: false
 DoorBell:
   name: Doorbell
-  category: Other Stuff
+  category: Nice stuuff
   order: 0
   condition:
     - type: alias
@@ -62,18 +62,20 @@ DoorBell:
           operator: eq
           jmespath: val
           value: ''
-        - type: alias
-          trigger: 'no'
-          alias: B
-          operator: eq
-          jmespath: val
-          value: ''
-        - type: alias
-          trigger: 'no'
-          alias: C
-          operator: eq
-          jmespath: val
-          value: ''
+        - type: and
+          condition:
+            - type: alias
+              trigger: 'no'
+              alias: A
+              operator: eq
+              jmespath: val
+              value: ''
+            - type: alias
+              trigger: 'no'
+              alias: C
+              operator: eq
+              jmespath: val
+              value: ''
   ontrue:
     - type: mqtt
       delay: 0
@@ -81,7 +83,7 @@ DoorBell:
       topic: __REPLACE__
       value: __REPLACE__
   enabled: false
-  description: deurbel
+  description: Safari
   onfalse:
     - type: script
       delay: 0

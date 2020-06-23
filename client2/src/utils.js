@@ -1,3 +1,4 @@
+import { store } from 'react-notifications-component';
 
 export function flattenConditions(nested) {
     const flattenConditionsIteratively = (nested, list, depth) => {
@@ -31,7 +32,7 @@ export function buildTree(items) {
         const result = {
             ...data,
             condition: findDescendants(items, items.indexOf(item))
-                .filter(child => child.depth === item.depth+1)
+                .filter(child => child.depth === item.depth + 1)
                 .map(child => buildItem(child)),
         };
         if (result.type !== 'or' && result.type !== 'and' && result.condition.length === 0) delete result.condition;
@@ -51,17 +52,17 @@ export function findDescendants(items, index) {
     const descendants = [];
 
     for (let i = index + 1; i < items.length; i += 1) {
-      const next = items[i];
+        const next = items[i];
 
-      if (next.depth <= item.depth) {
-        break;
-      }
+        if (next.depth <= item.depth) {
+            break;
+        }
 
-      descendants.push(next);
+        descendants.push(next);
     }
 
     return descendants;
-  };
+};
 
 
 
@@ -102,6 +103,20 @@ export function isNewItem(item, type, subtype) {
 
 export function showError(msg, error) {
     alert(msg + "\n\n" + error);
+}
+
+export function showNotification(title, message, type) {
+    store.addNotification({
+        title: title,
+        message: message,
+        type: type,
+        insert: "top",
+        container: "top-right",
+        dismiss: {
+          duration: 5000,
+          onScreen: true
+        }
+      });
 }
 
 export const staticData = {
@@ -232,8 +247,8 @@ export const staticData = {
                     key: "operator", label: "Operator", type: "select", options: [
                         { value: "eq", label: "= (equals)" },
                         { value: "gt", label: "> (greater than)" },
-                        { value: "lt", label: "< (less than)"},
-                        { value: "neq", label: "!= (not equal to)"}
+                        { value: "lt", label: "< (less than)" },
+                        { value: "neq", label: "!= (not equal to)" }
                     ]
                 },
                 { key: "value", label: "Value", props: { required: true } }
@@ -248,14 +263,17 @@ export const staticData = {
                         { value: "always", label: "Always" }
                     ]
                 },
-                { key: "alias", label: "Alias", props: { required: true } },
+                { key: "alias_", label: "Alias_", props: { required: true } },
+                {
+                    key: "alias", label: "Alias", type: "select", options: []
+                },
                 { key: "jmespath", label: "jmespath", props: { required: true } },
                 {
                     key: "operator", label: "Operator", type: "select", options: [
                         { value: "eq", label: "= (equals)" },
                         { value: "gt", label: "> (greater than)" },
-                        { value: "lt", label: "< (less than)"},
-                        { value: "neq", label: "!= (not equal to)"}
+                        { value: "lt", label: "< (less than)" },
+                        { value: "neq", label: "!= (not equal to)" }
                     ]
                 },
                 { key: "value", label: "Value", props: { required: true } }
@@ -276,14 +294,14 @@ export const staticData = {
         },
         action: {
             mqtt: [
-                { key: "delay", label: "Delay"},
-                { key: "interval", label: "Interval"},
+                { key: "delay", label: "Delay" },
+                { key: "interval", label: "Interval" },
                 { key: "topic", label: "Topic", props: { required: true } },
                 { key: "value", label: "Value", props: { required: true } },
             ],
             pushover: [
-                { key: "delay", label: "Delay"},
-                { key: "interval", label: "Interval"},
+                { key: "delay", label: "Delay" },
+                { key: "interval", label: "Interval" },
                 { key: "title", label: "Title", props: { required: true } },
                 { key: "message", label: "Message", type: "textarea", props: { rows: 5 } },
                 {
@@ -323,26 +341,26 @@ export const staticData = {
                 }
             ],
             email: [
-                { key: "delay", label: "Delay"},
-                { key: "interval", label: "Interval"},
+                { key: "delay", label: "Delay" },
+                { key: "interval", label: "Interval" },
                 { key: "to", label: "To", props: { required: true } },
                 { key: "subject", label: "Subject" },
                 { key: "body", label: "Body", type: "textarea", props: { rows: 10 } }
             ],
             script: [
-                { key: "delay", label: "Delay"},
-                { key: "interval", label: "Interval"},
+                { key: "delay", label: "Delay" },
+                { key: "interval", label: "Interval" },
                 { key: "script", label: "Script", type: "simple-editor", props: { rows: 30, style: { fontFamily: 'monospace', fontSize: '1rem' } } }
             ],
             logbook: [
-                { key: "delay", label: "Delay"},
-                { key: "interval", label: "Interval"},
-                { key: "message", label: "Message"}
+                { key: "delay", label: "Delay" },
+                { key: "interval", label: "Interval" },
+                { key: "message", label: "Message" }
             ],
             webhook: [
-                { key: "delay", label: "Delay"},
-                { key: "interval", label: "Interval"},
-                { key: "url", label: "URL"}
+                { key: "delay", label: "Delay" },
+                { key: "interval", label: "Interval" },
+                { key: "url", label: "URL" }
             ]
         }
     }

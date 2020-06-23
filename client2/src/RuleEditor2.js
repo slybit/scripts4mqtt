@@ -52,10 +52,12 @@ const RuleEditor = (props) => {
                     ontrue: response.data.rule.ontrue ? addIds(response.data.rule.ontrue) : [],
                     onfalse: response.data.rule.onfalse ? addIds(response.data.rule.onfalse) : [],
                     nameHasChanged: false,
-                    descriptionHasChanged: false
+                    descriptionHasChanged: false,
+                    categoryHasChange: false
                 });
                 cache['namePrev'] = response.data.rule.name;
-                cache['descriptionPrev'] = response.data.rule.name;
+                cache['descriptionPrev'] = response.data.rule.description;
+                cache['categoryPrev'] = response.data.rule.category;
             } else {
                 // TODO: alert user, editor is not visible!
                 console.log(response.data);
@@ -155,8 +157,9 @@ const RuleEditor = (props) => {
                 [itemName + "HasChanged"]: { $set: false },
                 [itemName]: { $set: newdata[itemName] }
             }));
+            cache[itemName + "Prev"] = newdata[itemName];
             // call the refreshNames function of the parent Editor component to update its list of rules
-            if (itemName === 'name') props.refreshNames();
+            if (itemName === 'name' || itemName === 'category') props.refreshNames();
         });
     }
 
@@ -249,7 +252,7 @@ const RuleEditor = (props) => {
         };
     };
 
-    
+
 
     /* ---------------------------------------------------------------------------------------------------------------
     Various
@@ -297,6 +300,10 @@ const RuleEditor = (props) => {
         <DropdownItem key={action} onClick={() => { addNewItem("onfalse", action) }}>{staticData.actions[action]}</DropdownItem>
     ));
 
+    const categoryDatalist = props.categories.map((category) => (
+        <option key={category} value={category} label={category}/>
+    ));
+
     /* ---------------------------------------------------------------------------------------------------------------
     Main render
     --------------------------------------------------------------------------------------------------------------- */
@@ -312,6 +319,19 @@ const RuleEditor = (props) => {
                         {data.nameHasChanged && <InputGroupAddon addonType="append">
                             <Button color="secondary"><Icon path={mdiCheck} size={1} color="white" onClick={() => handleEditableItemSaveClick("name")} /></Button>
                             <Button color="secondary"><Icon path={mdiCancel} size={1} color="white" onClick={() => handleEditableItemCancelClick("name")} /></Button>
+                        </InputGroupAddon>}
+                    </InputGroup>
+                </FormGroup>
+                <FormGroup>
+                    <Label for="category">Category</Label>
+                    <InputGroup name="category">
+                        <Input value={data.category} list="categories"  onChange={(e) => onEditableItemChange(e, "category")} />
+                        <datalist id="categories">
+                            {categoryDatalist}
+                        </datalist>
+                        {data.categoryHasChanged && <InputGroupAddon addonType="append">
+                            <Button color="secondary"><Icon path={mdiCheck} size={1} color="white" onClick={() => handleEditableItemSaveClick("category")} /></Button>
+                            <Button color="secondary"><Icon path={mdiCancel} size={1} color="white" onClick={() => handleEditableItemCancelClick("category")} /></Button>
                         </InputGroupAddon>}
                     </InputGroup>
                 </FormGroup>
@@ -386,7 +406,6 @@ const RuleEditor = (props) => {
                         actions={data.onfalse}
                         type="onfalse"
                         onEditableItemClick={handleEditableItemClick}
-
                     />
                 </ul>
 
@@ -394,9 +413,11 @@ const RuleEditor = (props) => {
 
 
             </AppColumn10>
-            {false && <AppColumn10>
-                {<pre className='code'>{JSON.stringify(data, undefined, 4)}</pre>}
-            </AppColumn10>}
+            {
+                false && <AppColumn10>
+                    {<pre className='code'>{JSON.stringify(data, undefined, 4)}</pre>}
+                </AppColumn10>
+            }
 
             <AppColumn10>
                 {data.edData.visible && <DynamicEditor
@@ -415,7 +436,7 @@ const RuleEditor = (props) => {
 
 
 
-        </RightColumn>
+        </RightColumn >
     );
 
 }
@@ -471,9 +492,31 @@ const ConditionItemRenderer = (props) => {
     });
 
 
-    const handleClick = () => {
-        onEditableItemClick("conditions", index, "flatConditions", staticData.editor.condition[data.type]);
+    const handleClick = async () => {
+        // on the fly add in data to the model
+        let model = staticData.editor.condition[data.type];
+        if (data.type === 'alias') {
+            try {
+                let response = await axios.get('/api/aliases');
+                if (response.data.success) {
+                    let aliasModel = model.find((item) => (item.key === 'alias'));
+                    aliasModel.options = [];
+                    for (let alias in response.data.aliases) {
+                        aliasModel.options.push({ value: alias, label: alias });
+                    }
+                } else {
+                    console.log("Error returned by the server: " + response.data.message);
+                }
+            } catch (error) {
+                console.log("Cannot access the script4mqtt service. " + error);
+            }
+        }
+        onEditableItemClick("conditions", index, "flatConditions", model);
     };
+
+
+
+
 
     let label = "";
     let isNew = false;

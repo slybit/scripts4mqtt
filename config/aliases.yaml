@@ -1,10 +1,7 @@
 A:
-  - knx/A1
-  - knx/A2
-B:
-  - knx/B1
-  - knx/B2
+  - REPLACE/ME
+  - knx/AA/b
 C:
-  - knx/C1
-  - knx/C2
   - knx/C3
+  - knx/C2
+  - knx/C1

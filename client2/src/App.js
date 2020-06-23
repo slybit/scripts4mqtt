@@ -5,11 +5,14 @@ import { AppContainer, AppFooter, NonFlexBody, AppBody, AppNav, AppColumn2, AppC
 import { RulesLogTable } from './RulesLogTable.js';
 import Editor from './Editor.js';
 import { Aliases } from './Aliases';
+import { Config } from './Config';
 import logo from './logo.svg';
 import './App.css';
 
 import { render } from 'react-dom';
 import { LazyLog, ScrollFollow } from 'react-lazylog';
+import ReactNotification from 'react-notifications-component'
+import 'react-notifications-component/dist/theme.css'
 
 
 function LazyLogger() {
@@ -26,6 +29,8 @@ function LazyLogger() {
 
 const App = () => {
     return (
+        <div><ReactNotification />
+
 
 
 
@@ -45,6 +50,9 @@ const App = () => {
                     <NavItem>
                         <NavLink tag={RRNavLink} exact to="/aliases" activeClassName="active">Aliases</NavLink>
                     </NavItem>
+                    <NavItem>
+                        <NavLink tag={RRNavLink} exact to="/config" activeClassName="active">Config</NavLink>
+                    </NavItem>
                 </Nav>
             </Navbar>
 
@@ -55,10 +63,12 @@ const App = () => {
                 <Route path='/lazy' component={LazyLogger}></Route>
                 <Route path='/rules' component={Editor}></Route>
                 <Route path='/aliases' component={Aliases}></Route>
+                <Route path='/config' component={Config}></Route>
             </Switch>
 
             <AppFooter>the footer</AppFooter>
         </AppContainer>
+        </div>
 
 
     );

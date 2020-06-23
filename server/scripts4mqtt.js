@@ -4,6 +4,7 @@ const {logger, mqttlogger} = require('./logger.js');
 const Engine = require('./engine.js');
 const config = require('./config.js').parse();
 const { pushover } = require('./utils.js');
+const rules =  require('./rules.js');
 
 //jsonlogger.error("test", {test: 'hallo', bla: 'adsf'});
 
@@ -12,7 +13,7 @@ if (config.api && config.api.enabled === true) {
     require('./server.js');
 }
 
-const  rules  = require('./rules.js');
+
 
 let justStarted = true;
 

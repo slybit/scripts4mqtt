@@ -2,6 +2,7 @@ const fs = require('fs');
 const yaml = require('js-yaml');
 const util = require('util');
 const validator = require('./validator.js');
+
 const { logger, jsonlogger, logbooklogger } = require('./logger.js');
 const config = require('./config.js').parse();
 
@@ -14,7 +15,6 @@ class Aliases {
     }
 
     loadAliases() {
-        this.jsonContents = {};
         this.aliases = {};
         if (fs.existsSync(FILENAME)) {
             try {
@@ -65,7 +65,7 @@ class Aliases {
                 aliases: this.aliases
             };
         } catch (err) {
-            logger.warn(err);
+            logger.warn(err.message);
             return { success: false, error: err.message };
         }
 
@@ -73,6 +73,10 @@ class Aliases {
 
     deleteAlias(id) {
         try {
+            // first check if the alias is in use or not
+            let usedAliases = require('./rules.js').listUsedAliases();
+            if (usedAliases.includes(id)) throw new Error('Cannot delete alias, alias is in use.');
+            // continue if not in use
             delete this.aliases[id];
             this.saveAliases();
             return {
@@ -80,7 +84,7 @@ class Aliases {
                 aliases: this.aliases
             };
         } catch (err) {
-            logger.warn(err);
+            logger.warn(err.message);
             return { success: false, error: err.message };
         }
 
@@ -97,6 +101,9 @@ class Aliases {
             }
             if (new Set(list).size !== list.length) {
                 throw new Error('Duplicate topic in list');
+            }
+            if (list.length < 1) {
+                throw new Error('Alias topic list cannot be empty');
             }
         } catch (err) {
             throw err;

@@ -172,7 +172,7 @@ class Editor extends Component {
                 {this.state.selectedRule &&
                     <DndProvider backend={HTML5Backend}>
                         <ContextProvider>
-                            <MemoizedRuleEditor id={this.state.selectedRule} refreshNames={() => { this.loadRuleListFromServer(this.state.selectedRule) }} />
+                            <MemoizedRuleEditor id={this.state.selectedRule} categories={Object.keys(this.state.categories)} refreshNames={() => { this.loadRuleListFromServer(this.state.selectedRule) }} />
                         </ContextProvider>
                     </DndProvider>
                 }
