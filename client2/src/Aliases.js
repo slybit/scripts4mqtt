@@ -14,6 +14,7 @@ export class Aliases extends Component {
     constructor() {
         super();
         this.data = {};                 // data as received by the server
+        this.cache = {};
         this.state = {
             newAliasModalVisible: false,
             newAliasNameAlert: false,
@@ -65,14 +66,20 @@ export class Aliases extends Component {
         // the selected alias name is either indiciated by the server or the first in the sorted list
         let name = data.name ? data.name : (Object.keys(data.aliases).length > 0 ? Object.keys(data.aliases).sort()[0] : undefined);
         this.data = data;
+        // set the cache so we can update the enabled state of the Save button
+        if (this.cache.selectedAlias !== name) {
+            this.cache.selectedAlias = name;
+            this.cache.topicsAsText = this.topics2String(this.data.aliases[name]);
+        }
         this.setState({
             newAliasModalVisible: false,
             newAliasNameAlert: false,
             aliasList: Object.keys(data.aliases).sort(),
             topics: data.aliases[name],
-            topicsAsText: this.topics2String(data.aliases[name]),
-            selectedAlias: name
+            topicsAsText: this.topics2String(this.data.aliases[name]),
+            selectedAlias: name,
         });
+
     }
 
     topics2String(topics) {
@@ -169,12 +176,19 @@ export class Aliases extends Component {
     ----------------------------------------------------------------------------------------------------------------------- */
 
     setCurrentAlias(name) {
+        // update the cache so we can update the enabled state of the Save button
+        if (this.cache.selectedAlias !== name) {
+            this.cache.selectedAlias = name;
+            this.cache.topicsAsText = this.topics2String(this.data.aliases[name]);
+            console.log('cache set');
+        }
         this.setState({
             newAliasModalVisible: false,
             topics: this.data.aliases[name],
             topicsAsText: this.topics2String(this.data.aliases[name]),
             selectedAlias: name,
         });
+
     }
 
     handleAddAliasClick = () => {
@@ -234,6 +248,7 @@ export class Aliases extends Component {
                 </LeftColumn>
                 {this.state.selectedAlias &&
                     <TopicsEditor
+                        saveDisabled={this.cache.topicsAsText === this.state.topicsAsText}
                         topicsAsText={this.state.topicsAsText}
                         selectedAlias={this.state.selectedAlias}
                         handleSaveClick={this.topicsEditorHandleSaveClick}
@@ -273,7 +288,7 @@ function AliasNameInput(props) {
                 </Form>
                 <Alert color="primary" isOpen={true}>
                     Alias names cannot be changed later and must be unique.
-        </Alert>
+                </Alert>
                 <Alert color="danger" isOpen={props.alertVisible}>
                     {props.alert}
                 </Alert>
@@ -310,7 +325,7 @@ function TopicsEditor(props) {
                     <Title>{props.selectedAlias}</Title>
                     <FormGroup style={{ margin: "0 15px" }}>
                         <span>
-                            <Button color="primary" onClick={props.handleSaveClick}>&nbsp;&nbsp;Save&nbsp;&nbsp;</Button>
+                            <Button color="primary" onClick={props.handleSaveClick} disabled={props.saveDisabled}>&nbsp;&nbsp;Save&nbsp;&nbsp;</Button>
                         </span>
                     </FormGroup>
 
@@ -318,7 +333,7 @@ function TopicsEditor(props) {
                 <BottomRow>
                     <Form style={{ height: '100%', padding: '15px' }}>
                         <FormGroup style={{ height: '100%' }}>
-                            <Input style={{ height: '100%', resize: 'none', 'font-family': 'monospace' }} type="textarea" name="topicsAsText" id="topicsAsText" value={props.topicsAsText} onChange={props.onTopicsAsTextChange} />
+                            <Input style={{ height: '100%', resize: 'none', fontFamily: 'monospace' }} type="textarea" name="topicsAsText" id="topicsAsText" value={props.topicsAsText} onChange={props.onTopicsAsTextChange} />
                         </FormGroup>
                     </Form>
                 </BottomRow>

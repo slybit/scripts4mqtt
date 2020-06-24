@@ -38,7 +38,7 @@ export class RuleList extends React.Component {
             <RuleListContainer>
             { Object.keys(this.props.categories).sort().map(category => {
                 return (
-                    <div >
+                    <div key={category}>
                         <HorizontalContainer style={{width: "100%", background: "#007bff", color: "white", cursor: 'pointer'}} onClick={() => this.props.onCategoryClick(category)}>{category}</HorizontalContainer>
                         <Collapse isOpen={this.props.categories[category].isOpen}>
                             <ul className="list-group">
