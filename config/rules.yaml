@@ -89,3 +89,33 @@ DoorBell:
       delay: 0
       interval: 0
       script: ''
+40a98767884e:
+  name: New rule
+  category: default
+  description: ''
+  enabled: false
+  condition: []
+d25f8c914a65:
+  name: New rule
+  category: default
+  description: ''
+  enabled: false
+  condition:
+    - type: mqtt
+      trigger: 'no'
+      topic: __REPLACE__
+      operator: eq
+      jmespath: val
+      value: ''
+  ontrue:
+    - type: email
+      delay: 0
+      interval: 0
+      to: __REPLACE__@mail.com
+      subject: __REPLACE__
+      body: ''
+  onfalse:
+    - type: webhook
+      delay: 0
+      interval: 0
+      url: __REPLACE__

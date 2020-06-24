@@ -61,6 +61,8 @@ class Rules {
 
 
     // build a set of rules by expanding all the aliases in a rule condition
+    // input = json describing a rule config
+    // output = array of json objects describing all the expanded rules
     static buildRuleSet(rule) {
         let aliases = new Aliases();
         let ruleSet = [rule];
@@ -260,23 +262,27 @@ class Rules {
     - input: JSON with one or more properties (name, condition, ontrue, onfalse)
     */
     updateRule(id, input, newrule = false) {
-        try {
+        //try {
             if (newrule) {
                 this.jsonContents[id] = input;
             } else {
                 // test the update, this will throw an exception if not ok
                 this.testRuleUpdate(id, input);
+                // assign the new input to the full jsonContents
                 Object.assign(this.jsonContents[id], input);
+                // clear pending actions for the rule
+                let ruleSet = this.rules[id];
+                for (let rule of ruleSet) {
+                    rule.cancelPendingActions();
+                }
             }
-            // clear pending actions for the rule
-            let ruleSet = this.rules[id];
-            for (let rule of ruleSet) {
-                rule.cancelPendingActions();
-            }
+
+
             // replace the rule set
+            this.rules[id] = [];
             let expandedRules = Rules.buildRuleSet(this.jsonContents[id]);
             for (let r of expandedRules) {
-                new Rule(id, r);
+                this.rules[id].push(new Rule(id, r));
             }
 
             this.saveRules();
@@ -287,10 +293,10 @@ class Rules {
                     ...this.jsonContents[id]
                 }
             };
-        } catch (err) {
-            logger.warn(err.message);
-            return { success: false, message: err.message };
-        }
+        //} catch (err) {
+        //    logger.warn(err.message);
+        //    return { success: false, message: err.message };
+        //}
     }
 
     testRuleUpdate(id, input) {

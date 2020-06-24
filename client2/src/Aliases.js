@@ -262,13 +262,13 @@ const spacerStyle = {
 
 function AliasNameInput(props) {
     return (
-        <Modal isOpen={true} fade={false} toggle={props.handleCancelClick} size="lg">
+        <Modal isOpen={true} fade={false} toggle={props.handleCancelClick} autoFocus={false} size="lg">
             <ModalHeader toggle={props.handleCancelClick}>New Alias Name</ModalHeader>
             <ModalBody>
                 <Form className="form">
                     <FormGroup>
                         <Label for="newAliasName" >New alias name:</Label>
-                        <Input id="newAliasName" value={props.aliasName} onChange={props.onAliasNameChange} />
+                        <Input id="newAliasName" value={props.aliasName} onChange={props.onAliasNameChange} autoFocus={true} />
                     </FormGroup>
                 </Form>
                 <Alert color="primary" isOpen={true}>
