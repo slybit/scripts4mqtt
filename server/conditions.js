@@ -126,7 +126,16 @@ class MqttCondition extends Condition {
             logger.error(err.stack);
         }
         logger.info("Rule [%s]: MQTT Condition state updated from %s to %s; flipped = %s", this.rule.name, this.oldState, this.state, this.flipped());
-        jsonlogger.info("MQTT condition evaluated", { ruleId: this.rule.id, ruleName: this.rule.name, type: "condition", subtype: "mqtt", details: `topic: ${this.topic}, value: ${JSON.stringify(message)}, oldState: ${this.oldState}, state: ${this.state}, flipped: ${this.flipped()}` });
+        jsonlogger.info("MQTT condition evaluated", {
+            ruleId: this.rule.id,
+            ruleName: this.rule.name,
+            type: "condition",
+            subtype: "mqtt",
+            oldState: this.oldState ? "true" : "false",
+            state: this.state ? "true" : "false",
+            triggered: this.triggered() ? "true" : "false",
+            details: `topic: ${this.topic}, value: ${JSON.stringify(message, null, 1)}`,
+         });
         return this.triggered();
     }
 
@@ -160,7 +169,15 @@ class CronCondition extends Condition {
 
         if (match) {
             logger.info('Rule [%s]: cron evaluated: state: %s, match: %s, flipped: %s', this.rule.name, this.state, match, this.flipped());
-            jsonlogger.info("Cron condition evaluated", { ruleId: this.rule.id, ruleName: this.rule.name, type: "condition", subtype: "cron", details: `match: ${match}, state: ${this.state}, flipped: ${this.flipped()}` });
+            jsonlogger.info("Cron condition evaluated", {
+                ruleId: this.rule.id,
+                ruleName: this.rule.name,
+                type: "condition",
+                subtype: "cron",
+                oldState: this.oldState ? "true" : "false",
+                state: this.state ? "true" : "false",
+                triggered: this.triggered() ? "true" : "false",
+            });
         }
         return match && this.triggered()
     }

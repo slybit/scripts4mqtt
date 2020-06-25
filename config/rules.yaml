@@ -56,46 +56,37 @@ Logbook:
   order: 1
   condition:
     - type: cron
-      trigger: always
-      'off': ''
+      trigger: on_flip_true
+      'off': '*/2 * * * *'
       'on': '*/1 * * * *'
   ontrue:
     - type: logbook
       message: test to logbook123
   pendingOption: always
-  enabled: false
+  enabled: true
 DoorBell:
-  name: Doorbell
+  name: Temp
   category: Nice stuuff
   order: 0
   condition:
-    - type: or
-      condition:
-        - type: and
-          condition: []
     - type: mqtt
-      trigger: 'no'
-      topic: __REPLACE__
-      operator: eq
+      trigger: always
+      topic: knx/status/Verwarming/Actuele_temperatuur/Living
+      operator: gt
       jmespath: val
-      value: ''
-    - type: cron
-      trigger: 'no'
-      'on': 0 0 * * *
-      'off': '-'
+      value: '24'
   ontrue:
-    - type: mqtt
+    - type: logbook
       delay: 0
       interval: 0
-      topic: __REPLACE__
-      value: __REPLACE__
-  enabled: false
+      message: Hot
+  enabled: true
   description: Safari
   onfalse:
-    - type: script
+    - type: logbook
       delay: 0
       interval: 0
-      script: ''
+      message: Cold
 40a98767884e:
   name: New rule
   category: default

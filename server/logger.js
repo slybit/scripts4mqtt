@@ -6,7 +6,7 @@ const readline = require('readline');
 const fs = require('fs');
 const path = require('path');
 const { Writable } = require('stream');
- 
+
 
 const LOGPATH = config.logpath || '../logs/';
 const LOGBUFFERSIZE = 500;
@@ -32,6 +32,12 @@ const consoleFormat = combine(
   })
 );
 
+// custom formatter to add timestamp for sorting
+const addTS = format((info, opts) => {
+    info.ts = Date.now();
+    return info;
+});
+
 // Transport for the application logs
 var defaultTransport = new (transports.DailyRotateFile)({
   filename: 'default-%DATE%.log',
@@ -42,6 +48,9 @@ var defaultTransport = new (transports.DailyRotateFile)({
   format: format.combine(format.timestamp(), format.splat(), format.json())
 });
 
+
+
+
 // Transport for the Rules logs
 var rulesTransport = new (transports.DailyRotateFile)({
   filename: 'rules-%DATE%.log',
@@ -49,7 +58,7 @@ var rulesTransport = new (transports.DailyRotateFile)({
   zippedArchive: false,
   maxFiles: '14d',
   dirname: LOGPATH,
-  format: format.combine(format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }), format.json())
+  format: format.combine(format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }), addTS(), format.json())
 });
 
 // Transport for the MQTT logs
@@ -59,7 +68,7 @@ let mqttTransport = new (transports.DailyRotateFile)({
   zippedArchive: false,
   maxFiles: '14d',
   dirname: LOGPATH,
-  format: format.combine(format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }), format.json())
+  format: format.combine(format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }), addTS(), format.json())
 });
 
 // Transport for the LogBook logs
@@ -69,7 +78,7 @@ let logbookTransport = new (transports.DailyRotateFile)({
   zippedArchive: false,
   maxFiles: '12',
   dirname: LOGPATH,
-  format: format.combine(format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }), format.json())
+  format: format.combine(format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }), addTS(), format.json())
 });
 
 // Memory transport
@@ -82,7 +91,7 @@ let streamTransport = new (transports.Stream)({
       return `${msg.timestamp} | ` + format.colorize().colorize(msg.level, `${msg.level.padEnd(7).toUpperCase()}`) +  ` | ${msg.message}`;
     })
   ),
-}); 
+});
 
 
 
@@ -142,11 +151,12 @@ const getLogs = function (prefix) {
 
         for (let f of logfiles) {
           console.log(f);
-          await parseLogFile(path.join(LOGPATH, f), MAXLINES - logs.length, logs);          
+          await parseLogFile(path.join(LOGPATH, f), MAXLINES - logs.length, logs);
           if (logs.length > MAXLINES) break;
         }
         // keep at max MAXLINES
-        logs.splice(MAXLINES);
+        logs.splice(MAXLINES)
+        logs.sort((a, b) => (a.ts > b.ts) ? -1 : 1);
         resolve(logs);
   });
 }
@@ -175,7 +185,7 @@ const parseLogFile = function (filename, maxLineCount, logs) {
       }
       resolve(logs);
     });
-    
+
   });
 }
 

@@ -83,7 +83,7 @@ let setMqttHandlers = function (mqttClient) {
     mqttClient.on('reconnect', function () {
         logger.info('MQTT trying to reconnect');
     });
-/*
+
     mqttClient.on('message', function (topic, message, packet) {
         processMessage(topic, message, packet); // this will update the store with the values
         // ignore the initial retained messages
@@ -95,7 +95,7 @@ let setMqttHandlers = function (mqttClient) {
         // send the message to the rule engine
         rules.mqttConditionChecker(topic, withActions);
     });
-    */
+    
 }
 
 
