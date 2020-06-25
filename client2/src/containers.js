@@ -85,6 +85,18 @@ export const RightColumn = styled.div`
     overflow-y: hidden;
 `;
 
+
+export const RightColumnCenter = styled.div`
+    display: flex;
+    flex: 1 1 auto;
+    background: #fff;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    overflow-y: hidden;
+`;
+
+
 export const AppColumn2 = styled.div`
   flex: 0 0 20em;
   max-width: 20em;
@@ -151,3 +163,14 @@ export const Header = styled.div`
   font-weight: 600;
 `;
 
+export const Logo = styled.div`
+  font-size: 300%;
+  font-weight: 600;
+  color: #EEEFF2
+`;
+
+export const SubLogo = styled.div`
+  font-size: 120%;
+  font-weight: 400;
+  color: #EEEFF2
+`;

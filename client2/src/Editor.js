@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { ContextProvider } from 'react-sortly';
-import { LeftColumn, RightColumn, AppBody, Header, HorizontalContainer, AppColumn10 } from "./containers";
+import { LeftColumn, AppBody, Header, HorizontalContainer, RightColumnCenter, Logo, SubLogo } from "./containers";
 import { Button, Input } from 'reactstrap';
 import { staticData, showError } from './utils';
 import { RuleList } from './RuleList';
@@ -175,6 +175,9 @@ class Editor extends Component {
                             <MemoizedRuleEditor id={this.state.selectedRule} categories={Object.keys(this.state.categories)} refreshNames={() => { this.loadRuleListFromServer(this.state.selectedRule) }} />
                         </ContextProvider>
                     </DndProvider>
+                }
+
+                {!this.state.selectedRule && <RightColumnCenter><Logo>Scripts4MQTT</Logo><SubLogo>Automation for MQTT</SubLogo></RightColumnCenter>
                 }
 
             </AppBody>

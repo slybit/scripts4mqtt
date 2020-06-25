@@ -102,9 +102,6 @@ class Aliases {
             if (new Set(list).size !== list.length) {
                 throw new Error('Duplicate topic in list');
             }
-            if (list.length < 1) {
-                throw new Error('Alias topic list cannot be empty');
-            }
         } catch (err) {
             throw err;
         }

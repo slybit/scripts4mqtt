@@ -1,9 +1,9 @@
-import React, { Component, useState, useEffect } from "react";
+import React, { Component  } from "react";
 import { Button, Form, FormGroup, Label, Input, Alert, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
-import { AppBody, Title, HorizontalContainer, AppContent, AppMain } from "./containers";
-import { LeftColumn, RightColumn, Header, AppColumn10, Column, TopRow, BottomRow } from "./containers";
+import { Header, AppBody, Title, HorizontalContainer } from "./containers";
+import { LeftColumn, RightColumn, Column, TopRow, BottomRow } from "./containers";
 import { AliasList } from './AliasList';
-import { staticData, showError, showNotification } from './utils';
+import { showNotification } from './utils';
 import axios from 'axios';
 import update from 'immutability-helper';
 
@@ -13,12 +13,11 @@ export class Aliases extends Component {
 
     constructor() {
         super();
-        this.data = {};                 // data as received by the server
-        this.cache = {};
+        this.data = {};                   // data as received by the server
+        this.cache = {};                  // local cache used to keep track whether user has made changes to the topic list
         this.state = {
             newAliasModalVisible: false,
             newAliasNameAlert: false,
-            topics: [],                   // list of topics related to the current alias
             topicsAsText: "",
             aliasList: [],                // list of aliases
             selectedAlias: undefined,     // current alias
@@ -40,7 +39,7 @@ export class Aliases extends Component {
                 this.initState(response.data);
             })
             .catch((error) => {
-                showError("Cannot access the script4mqtt service.", error);
+                showNotification("Error", "Cannot access the script4mqtt service", "danger");
             });
     }
 
@@ -51,12 +50,11 @@ export class Aliases extends Component {
                 if (response.data.success) {
                     this.initState(response.data);
                 } else {
-                    showError("Alias update not accepted by script4mqtt service.", response.data.error);
-                    console.log(response.data);
+                    showNotification("Alias update not accepted by script4mqtt service", response.data.error, "warning");
                 }
             })
             .catch((error) => {
-                showError("Cannot access the script4mqtt service.", error);
+                showNotification("Error", "Cannot access the script4mqtt service", "danger");
             });
 
     }
@@ -67,16 +65,13 @@ export class Aliases extends Component {
         let name = data.name ? data.name : (Object.keys(data.aliases).length > 0 ? Object.keys(data.aliases).sort()[0] : undefined);
         this.data = data;
         // set the cache so we can update the enabled state of the Save button
-        if (this.cache.selectedAlias !== name) {
-            this.cache.selectedAlias = name;
-            this.cache.topicsAsText = this.topics2String(this.data.aliases[name]);
-        }
+        this.cache.selectedAlias = name;
+        if (name) this.cache.topicsAsText = this.topics2String(this.data.aliases[name]);
         this.setState({
             newAliasModalVisible: false,
             newAliasNameAlert: false,
-            aliasList: Object.keys(data.aliases).sort(),
-            topics: data.aliases[name],
-            topicsAsText: this.topics2String(this.data.aliases[name]),
+            aliasList: Object.keys(data.aliases) ? Object.keys(data.aliases).sort() : [],
+            topicsAsText: name ? this.topics2String(this.data.aliases[name]) : "",
             selectedAlias: name,
         });
 
@@ -100,7 +95,6 @@ export class Aliases extends Component {
 
 
     // Validate a topic to see if it's valid or not.
-
     validateTopic(topic) {
         var parts = topic.split('/')
         for (var i = 0; i < parts.length; i++) {
@@ -108,7 +102,6 @@ export class Aliases extends Component {
                 continue
             }
             if (parts[i] === '#') {
-                // for Rule #2
                 return i === parts.length - 1
             }
             if (parts[i].indexOf('+') !== -1 || parts[i].indexOf('#') !== -1) {
@@ -127,6 +120,7 @@ export class Aliases extends Component {
     New alias editor callbacks
     ----------------------------------------------------------------------------------------------------------------------- */
 
+    // Called when the user is editing the name in the New Alias modal
     aliasNameEditorHandleAliasNameChange = (e) => {
         this.setState({
             newAliasName: e.target.value,
@@ -135,15 +129,17 @@ export class Aliases extends Component {
         });
     }
 
+    // Called when the user clicks Cancel in the New Alias modal
     aliasNameEditorHandleCancelClick = () => {
         this.setState({
             newAliasModalVisible: false
         });
     }
 
+    // Called when the user clicks Save in the New Alias modal
     aliasNameEditorHandleSaveClick = () => {
         let newAlias = {};
-        newAlias[this.state.newAliasName] = ["REPLACE/ME"];
+        newAlias[this.state.newAliasName] = [];
         this.pushAliasUpdateToServer(newAlias);
     }
 
@@ -151,23 +147,22 @@ export class Aliases extends Component {
     Topic editor callbacks
     ----------------------------------------------------------------------------------------------------------------------- */
 
-    topicsEditorHandleSaveClick = () => {
-        try {
-            let topics = this.string2topics(this.state.topicsAsText);
-            let updatedAlias = {};
-            updatedAlias[this.state.selectedAlias] = update(this.state.topics,  { $set: topics } );
-            this.pushAliasUpdateToServer(updatedAlias);
-            showNotification("Success", "Topic list updated", 'success');
-        } catch (err) {
-            //window.alert(err);
-            showNotification("Topic list not saved", err.message, 'warning');
-        }
-
-    };
-
+    // Called when the user is editing the topics in the topic editor
     topicsEditorHandleTopicAsTexChange = (e) => {
         this.setState({ topicsAsText: e.target.value });
     }
+
+    // Called when the user clicks Save in the topic editor
+    topicsEditorHandleSaveClick = () => {
+        try {
+            let updatedAlias = {};
+            updatedAlias[this.state.selectedAlias] = this.string2topics(this.state.topicsAsText); // this will throw an error if any of the topics is invalid
+            this.pushAliasUpdateToServer(updatedAlias);
+            showNotification("Success", "Topic list updated", 'success');
+        } catch (err) {
+            showNotification("Topic list not saved", err.message, 'warning');
+        }
+    };
 
 
 
@@ -175,24 +170,24 @@ export class Aliases extends Component {
     Aliast list callbacks
     ----------------------------------------------------------------------------------------------------------------------- */
 
+    // called when the user clicks an alias in the list
     setCurrentAlias(name) {
-        // update the cache so we can update the enabled state of the Save button
-        if (this.cache.selectedAlias !== name) {
+        // only if the user did not make any changes or after he approves, select the alias he clicked
+        if (this.cache.topicsAsText === this.state.topicsAsText || window.confirm('You have unsaved changes that will be lost. Continue?')) {
+            // update the cache
             this.cache.selectedAlias = name;
             this.cache.topicsAsText = this.topics2String(this.data.aliases[name]);
-            console.log('cache set');
+            // set the state
+            this.setState({
+                selectedAlias: name,
+                topicsAsText: this.topics2String(this.data.aliases[name]),
+                newAliasModalVisible: false
+            });
         }
-        this.setState({
-            newAliasModalVisible: false,
-            topics: this.data.aliases[name],
-            topicsAsText: this.topics2String(this.data.aliases[name]),
-            selectedAlias: name,
-        });
-
     }
 
+    // called when the user click the 'Add' button in the alias list
     handleAddAliasClick = () => {
-        console.log("add alias");
         this.setState({
             newAliasModalVisible: true,
             newAliasName: "",
@@ -201,6 +196,7 @@ export class Aliases extends Component {
         });
     }
 
+    // called when the user clicks the 'Delete' icon of an alias in the list
     handleDeleteAliasClick = (aliasId) => {
         axios.delete('/api/alias/' + aliasId)
             .then((response) => {
@@ -235,7 +231,7 @@ export class Aliases extends Component {
 
                 <LeftColumn>
                     <HorizontalContainer>
-                        <Title>Aliases</Title>
+                        <Header>Aliases</Header>
                         <Button onClick={this.handleAddAliasClick}>Add</Button>
                     </HorizontalContainer>
                     {!this.state.selectedAlias && <Title>No aliases defined. Create one...</Title>}
@@ -302,8 +298,6 @@ function AliasNameInput(props) {
                     </span>
                 </FormGroup>
             </ModalFooter>
-
-
         </Modal>
     );
 
@@ -317,16 +311,14 @@ function AliasNameInput(props) {
 function TopicsEditor(props) {
 
     return (
-
         <RightColumn>
-
             <Column>
                 <TopRow>
-                    <Title>{props.selectedAlias}</Title>
+
                     <FormGroup style={{ margin: "0 15px" }}>
-                        <span>
-                            <Button color="primary" onClick={props.handleSaveClick} disabled={props.saveDisabled}>&nbsp;&nbsp;Save&nbsp;&nbsp;</Button>
-                        </span>
+                        <Header>Alias name: {props.selectedAlias}</Header><br/>
+                        <Button color="primary" onClick={props.handleSaveClick} disabled={props.saveDisabled}>&nbsp;&nbsp;Save&nbsp;&nbsp;</Button>
+
                     </FormGroup>
 
                 </TopRow>
@@ -338,10 +330,7 @@ function TopicsEditor(props) {
                     </Form>
                 </BottomRow>
             </Column>
-
         </RightColumn>
-
-
     );
 }
 

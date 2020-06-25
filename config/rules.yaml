@@ -7,6 +7,27 @@ TimeDateUpdate:
       trigger: always
       'off': ''
       'on': 15 * * * *
+    - type: alias
+      trigger: on_flip
+      alias: B
+      operator: eq
+      jmespath: val
+      value: ''
+      alias_: drty
+    - type: alias
+      trigger: 'no'
+      alias: A
+      operator: eq
+      jmespath: val
+      value: ''
+    - type: and
+      condition: []
+    - type: alias
+      trigger: 'no'
+      alias: B
+      operator: eq
+      jmespath: val
+      value: ''
   ontrue:
     - type: script
       script: 'write(''knx/write/15/1/0'', new Date().toString());'
@@ -48,34 +69,20 @@ DoorBell:
   category: Nice stuuff
   order: 0
   condition:
-    - type: alias
+    - type: or
+      condition:
+        - type: and
+          condition: []
+    - type: mqtt
       trigger: 'no'
-      alias: A
+      topic: __REPLACE__
       operator: eq
       jmespath: val
       value: ''
-    - type: or
-      condition:
-        - type: alias
-          trigger: 'no'
-          alias: A
-          operator: eq
-          jmespath: val
-          value: ''
-        - type: and
-          condition:
-            - type: alias
-              trigger: 'no'
-              alias: A
-              operator: eq
-              jmespath: val
-              value: ''
-            - type: alias
-              trigger: 'no'
-              alias: C
-              operator: eq
-              jmespath: val
-              value: ''
+    - type: cron
+      trigger: 'no'
+      'on': 0 0 * * *
+      'off': '-'
   ontrue:
     - type: mqtt
       delay: 0
@@ -119,3 +126,15 @@ d25f8c914a65:
       delay: 0
       interval: 0
       url: __REPLACE__
+1ee2b441c213:
+  name: New rule
+  category: default
+  description: ''
+  enabled: false
+  condition: []
+4d68d8f9f6fb:
+  name: New rule
+  category: default
+  description: ''
+  enabled: false
+  condition: []

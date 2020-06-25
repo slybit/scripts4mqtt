@@ -21,7 +21,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(function (error, req, res, next) {
     if (error) {
-      res.status(error.statusCode).send({ success: false, ...error });
+      res.status(error.statusCode).send({ success: false, error: error.type, ...error });
     } else {
       next();
     }

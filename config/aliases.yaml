@@ -1,9 +1,7 @@
 A:
-  - REPLACE/ME
-  - knx/AA/b
-C:
-  - knx/C3
-  - knx/C2
-  - knx/C1
-D:
-  - REPLACE/ME
+  - A
+  - B
+B:
+  - ''
+C: []
+d: []

@@ -72,7 +72,6 @@ class Rules {
             let newRuleSet = []
             for (let c of ruleSet) {
                 let topics = aliases.getTopics(alias);
-                if (topics.length === 0) throw "Unknown or empty alias used.";
                 for (let topic of topics) {
                     let clone = JSON.parse(JSON.stringify(c));
                     Rules.replaceAlias(clone.condition, alias, topic);
@@ -262,7 +261,7 @@ class Rules {
     - input: JSON with one or more properties (name, condition, ontrue, onfalse)
     */
     updateRule(id, input, newrule = false) {
-        //try {
+        try {
             if (newrule) {
                 this.jsonContents[id] = input;
             } else {
@@ -293,10 +292,10 @@ class Rules {
                     ...this.jsonContents[id]
                 }
             };
-        //} catch (err) {
-        //    logger.warn(err.message);
-        //    return { success: false, message: err.message };
-        //}
+        } catch (err) {
+            logger.warn(err.message);
+            return { success: false, error: err.message };
+        }
     }
 
     testRuleUpdate(id, input) {
@@ -341,7 +340,7 @@ class Rules {
         } else {
             return {
                 success: false,
-                message: 'rule id not found'
+                error: 'rule id not found'
             };
         }
     }

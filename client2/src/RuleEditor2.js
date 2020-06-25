@@ -500,7 +500,7 @@ const ConditionItemRenderer = (props) => {
                 let response = await axios.get('/api/aliases');
                 if (response.data.success) {
                     let aliasModel = model.find((item) => (item.key === 'alias'));
-                    aliasModel.options = [];
+                    aliasModel.options = [{ value: "__REPLACE__", label: "(none)" }];
                     for (let alias in response.data.aliases) {
                         aliasModel.options.push({ value: alias, label: alias });
                     }
