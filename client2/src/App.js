@@ -39,17 +39,19 @@ const App = () => {
                 <NavbarBrand href="/">Scripts4MQTT</NavbarBrand>
                 <Nav tabs>
                     <NavItem>
-                        <NavLink tag={RRNavLink} exact to="/table" activeClassName="active">Table</NavLink>
-                    </NavItem>
-                    <NavItem>
-                        <NavLink tag={RRNavLink} exact to="/lazy" activeClassName="active">Lazy</NavLink>
-                    </NavItem>
-                    <NavItem>
                         <NavLink tag={RRNavLink} exact to="/rules" activeClassName="active">Rules</NavLink>
                     </NavItem>
                     <NavItem>
                         <NavLink tag={RRNavLink} exact to="/aliases" activeClassName="active">Aliases</NavLink>
                     </NavItem>
+                    <NavItem>
+                        <NavLink tag={RRNavLink} exact to="/logs/rules" activeClassName="active">Rule logs</NavLink>
+                    </NavItem>
+                    <NavItem>
+                        <NavLink tag={RRNavLink} exact to="/logs/server" activeClassName="active">Server logs</NavLink>
+                    </NavItem>
+
+
                     <NavItem>
                         <NavLink tag={RRNavLink} exact to="/config" activeClassName="active">Config</NavLink>
                     </NavItem>
@@ -59,10 +61,10 @@ const App = () => {
             <Switch>
                 {/* React Route way of redirecting from / -> /editor */}
                 <Route exact path="/" render={() => (<Redirect to="/rules" />)} />
-                <Route path='/table' component={RulesLogTable}></Route>
-                <Route path='/lazy' component={LazyLogger}></Route>
                 <Route path='/rules' component={Editor}></Route>
                 <Route path='/aliases' component={Aliases}></Route>
+                <Route path='/logs/rules' component={RulesLogTable}></Route>
+                <Route path='/logs/server' component={LazyLogger}></Route>
                 <Route path='/config' component={Config}></Route>
             </Switch>
 
