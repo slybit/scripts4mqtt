@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Table, Button, Container, Row, Col } from 'reactstrap';
-import { AppContainer, AppFooter, AppBody, AppNav, AppColumn2, AppColumn10, RightColumn } from './containers.js';
+import { Form, FormGroup, Label, Input } from 'reactstrap';
+import { AppContainer, AppFooter, AppBody, AppNav, AppColumn2, AppColumn10, RightColumn, NonFlexBody, RightColumnCenter } from './containers.js';
 import axios from 'axios';
 import styled from 'styled-components'
 import { useTable, usePagination, useFilters } from 'react-table'
@@ -48,8 +49,6 @@ const Styles = styled.div`
       }
     }
   }
-
-
 `
 
 
@@ -105,7 +104,7 @@ function SelectColumnFilter({
 }
 
 
-function TheTable({ columns, data }) {
+function TheTable({ columns, data, fetchData }) {
 
     const defaultColumn = React.useMemo(
         () => ({
@@ -151,108 +150,107 @@ function TheTable({ columns, data }) {
 
     // Render the UI for your table
     return (
-        <AppColumn10>
-            <pre>
-                <code>
-                    {JSON.stringify(
-                        {
-                            pageIndex,
-                            pageSize,
-                            pageCount,
-                            canNextPage,
-                            canPreviousPage,
-                        },
-                        null,
-                        2
-                    )}
-                </code>
-            </pre>
-            <Table striped  {...getTableProps()}>
-                <thead>
-                    {headerGroups.map(headerGroup => (
-                        <tr {...headerGroup.getHeaderGroupProps()}>
-                            {headerGroup.headers.map(column => (
-                                <th
-                                    {...column.getHeaderProps({
-                                        className: column.narrow ? 'narrow' : '',
-                                    })}
-                                >
-                                    {column.render('Header')}
-                                    {/* Render the columns filter UI */}
-                                    <div>{column.canFilter ? column.render('Filter') : null}</div>
-                                </th>
-                            ))}
-                        </tr>
-                    ))}
-                </thead>
-                <tbody {...getTableBodyProps()}>
-                    {page.map((row, i) => {
-                        prepareRow(row)
-                        return (
-                            <tr {...row.getRowProps()}>
-                                {row.cells.map(cell => {
-                                    return <td
-                                        {...cell.getCellProps({
-                                            className: cell.column.narrow ? 'narrow' : '',
+
+            <Styles>
+                <Table striped  {...getTableProps()}>
+                    <thead>
+                        {headerGroups.map(headerGroup => (
+                            <tr {...headerGroup.getHeaderGroupProps()}>
+                                {headerGroup.headers.map(column => (
+                                    <th
+                                        {...column.getHeaderProps({
+                                            className: column.narrow ? 'narrow' : '',
                                         })}
                                     >
-                                        {cell.render('Cell')}
-                                    </td>
-                                })}
+                                        {column.render('Header')}
+                                        {/* Render the columns filter UI */}
+                                        <div>{column.canFilter ? column.render('Filter') : null}</div>
+                                    </th>
+                                ))}
                             </tr>
-                        )
-                    })}
-                </tbody>
-            </Table>
-            {/*
-            Pagination can be built however you'd like.
-            This is just a very basic UI implementation:
-          */}
-            <div className="pagination">
-                <Button onClick={() => gotoPage(0)} disabled={!canPreviousPage}>
-                    {'<<'}
-                </Button>{' '}
-                <Button onClick={() => previousPage()} disabled={!canPreviousPage}>
-                    {'<'}
-                </Button>{' '}
-                <Button onClick={() => nextPage()} disabled={!canNextPage}>
-                    {'>'}
-                </Button>{' '}
-                <Button onClick={() => gotoPage(pageCount - 1)} disabled={!canNextPage}>
-                    {'>>'}
-                </Button>{' '}
-                <span>
-                    Page{' '}
-                    <strong>
-                        {pageIndex + 1} of {pageOptions.length}
-                    </strong>{' '}
-                </span>
-                <span>
-                    | Go to page:{' '}
-                    <input
-                        type="number"
-                        defaultValue={pageIndex + 1}
-                        onChange={e => {
-                            const page = e.target.value ? Number(e.target.value) - 1 : 0
-                            gotoPage(page)
-                        }}
-                        style={{ width: '100px' }}
-                    />
-                </span>{' '}
-                <select
-                    value={pageSize}
-                    onChange={e => {
-                        setPageSize(Number(e.target.value))
-                    }}
-                >
-                    {[10, 20, 30, 40, 50].map(pageSize => (
-                        <option key={pageSize} value={pageSize}>
-                            Show {pageSize}
-                        </option>
-                    ))}
-                </select>
-            </div>
-        </AppColumn10>
+                        ))}
+                    </thead>
+                    <tbody {...getTableBodyProps()}>
+                        {page.map((row, i) => {
+                            prepareRow(row)
+                            return (
+                                <tr {...row.getRowProps()}>
+                                    {row.cells.map(cell => {
+                                        return <td
+                                            {...cell.getCellProps({
+                                                className: cell.column.narrow ? 'narrow' : '',
+                                            })}
+                                        >
+                                            {cell.render('Cell')}
+                                        </td>
+                                    })}
+                                </tr>
+                            )
+                        })}
+                    </tbody>
+                </Table>
+                    <Form inline>
+                        <FormGroup className="mb-2 mr-sm-2 mb-sm-0">
+                            <Button onClick={fetchData}>Refresh</Button>
+                        </FormGroup>
+                        <FormGroup className="mb-2 mr-sm-2 mb-sm-0">
+                            <Button onClick={() => gotoPage(0)} disabled={!canPreviousPage}>{'<<'}</Button>
+                        </FormGroup>
+                        <FormGroup className="mb-2 mr-sm-2 mb-sm-0">
+                            <Button onClick={() => previousPage()} disabled={!canPreviousPage}>{'<'}</Button>
+                        </FormGroup>
+                        <FormGroup className="mb-2 mr-sm-2 mb-sm-0">
+                            <span>
+                                Page{' '}
+                                <strong>
+                                    {pageIndex + 1} of {pageOptions.length}
+                                </strong>{' '}
+                            </span>
+                        </FormGroup>
+                        <FormGroup className="mb-2 mr-sm-2 mb-sm-0">
+                            <Button onClick={() => nextPage()} disabled={!canNextPage}>{'>'}</Button>
+                        </FormGroup>
+                        <FormGroup className="mb-2 mr-sm-2 mb-sm-0">
+                            <Button onClick={() => gotoPage(pageCount - 1)} disabled={!canNextPage}>{'>>'}</Button>
+                        </FormGroup>
+
+
+                        <FormGroup className="mb-2 mr-sm-2 mb-sm-0">
+                            <Label for="goToPage" className="mr-sm-2">Go to page:</Label>
+                            <Input
+                                type="number"
+                                name="goToPage"
+                                defaultValue={pageIndex + 1}
+                                onChange={e => {
+                                    const page = e.target.value ? Number(e.target.value) - 1 : 0
+                                    gotoPage(page)
+                                }}
+                                style={{ width: '100px' }}
+                            />
+                        </FormGroup>
+                        <FormGroup className="mb-2 mr-sm-2 mb-sm-0">
+                            <Label for="pageSize" className="mr-sm-2">Page size:</Label>
+                            <Input
+                                type="select"
+                                name="pageSize"
+                                id="pageSize"
+                                value={pageSize}
+                                onChange={e => {
+                                    setPageSize(Number(e.target.value))
+                                }}
+                            >
+                                {[10, 20, 30, 40, 50].map(pageSize => (
+                                    <option key={pageSize} value={pageSize}>
+                                        {pageSize}
+                                    </option>
+                                ))}
+                            </Input>
+                        </FormGroup>
+                    </Form>
+
+
+            </Styles>
+
     )
 }
 
@@ -261,12 +259,12 @@ export function RulesLogTable() {
 
     const [data, setData] = useState([]);
 
-    useEffect(() => {
-        async function fetchData() {
-            const response = await axios.get('/api/logs/rules');
+    const fetchData = async function () {
+        const response = await axios.get('/api/logs/rules');
+        setData(response.data);
+    };
 
-            setData(response.data);
-        };
+    useEffect(() => {
         fetchData();
     }, []);
 
@@ -274,7 +272,7 @@ export function RulesLogTable() {
         {
             Header: 'Timestamp',
             accessor: 'timestamp',
-            narrow: true
+            narrow: true,
         },
         {
             Header: 'Rule name',
@@ -304,7 +302,7 @@ export function RulesLogTable() {
             filter: 'equals',
             narrow: true,
             Cell: ({ cell }) => {
-                return (<div style={{textAlign: 'center'}}>{cell.value === undefined ? null : cell.value === 'true' ? '✓' : '✗'}</div>);
+                return (<div style={{ textAlign: 'center' }}>{cell.value === undefined ? null : cell.value === 'true' ? '✓' : '✗'}</div>);
             }
         },
         {
@@ -314,7 +312,7 @@ export function RulesLogTable() {
             filter: 'equals',
             narrow: true,
             Cell: ({ cell }) => {
-                return (<div style={{textAlign: 'center'}}>{cell.value === undefined ? null : cell.value === 'true' ? '✓' : '✗'}</div>);
+                return (<div style={{ textAlign: 'center' }}>{cell.value === undefined ? null : cell.value === 'true' ? '✓' : '✗'}</div>);
             }
         },
         {
@@ -324,7 +322,7 @@ export function RulesLogTable() {
             filter: 'equals',
             narrow: true,
             Cell: ({ cell }) => {
-                return (<div style={{textAlign: 'center'}}>{cell.value === undefined ? null : cell.value === 'true' ? '✅' : '✗'}</div>);
+                return (<div style={{ textAlign: 'center' }}>{cell.value === undefined ? null : cell.value === 'true' ? '✅' : '✗'}</div>);
             }
         },
         {
@@ -332,13 +330,14 @@ export function RulesLogTable() {
             accessor: 'details'
         }];
 
+
+
     return (
-
-        <Styles>
-            <TheTable columns={columns} data={data} />
-        </Styles>
-
-
+        <RightColumn>
+            <AppColumn10>
+                <TheTable columns={columns} data={data} fetchData={fetchData}/>
+            </AppColumn10>
+        </RightColumn>
     )
 
 

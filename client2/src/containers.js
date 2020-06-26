@@ -107,7 +107,6 @@ export const AppColumn2 = styled.div`
 
 export const AppColumn10 = styled.div`
   flex: 15;
-  border-right: 1px solid rgba(0, 0, 0, 0.125);
   overflow-y: auto;
   padding: 5px;
 `;
