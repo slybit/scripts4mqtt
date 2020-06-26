@@ -165,11 +165,11 @@ export const Header = styled.div`
 export const Logo = styled.div`
   font-size: 300%;
   font-weight: 600;
-  color: #EEEFF2
+  color: #c8cbcf
 `;
 
 export const SubLogo = styled.div`
   font-size: 120%;
   font-weight: 400;
-  color: #EEEFF2
+  color: #c8cbcf
 `;

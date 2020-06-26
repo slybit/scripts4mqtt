@@ -99,7 +99,8 @@ const logger = createLogger({
   level: config.loglevel,
   transports: [
     new transports.Console({
-      format: consoleFormat
+      format: consoleFormat,
+      level: 'error'
     }),
     //new transports.File({
     //  filename: 'default.log',
@@ -150,7 +151,6 @@ const getLogs = function (prefix) {
         const logfiles = files.filter(file => file.startsWith(prefix+'-')).sort().reverse();
 
         for (let f of logfiles) {
-          console.log(f);
           await parseLogFile(path.join(LOGPATH, f), MAXLINES - logs.length, logs);
           if (logs.length > MAXLINES) break;
         }

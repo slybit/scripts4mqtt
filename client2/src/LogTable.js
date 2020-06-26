@@ -6,8 +6,6 @@ import axios from 'axios';
 import styled from 'styled-components'
 import { useTable, usePagination, useFilters } from 'react-table'
 
-//✓☑✅' : '☐❌✗'
-
 const Styles = styled.div`
   /* This is required to make the table full-width */
   display: block;
@@ -72,7 +70,7 @@ function DefaultColumnFilter({
 
 // This is a custom filter UI for selecting
 // a unique option from a list
-function SelectColumnFilter({
+export function SelectColumnFilter({
     column: { filterValue, setFilter, preFilteredRows, id },
 }) {
     // Calculate the options for filtering
@@ -94,7 +92,7 @@ function SelectColumnFilter({
             }}
         >
             <option value="">All</option>
-            {options.map((option, i) => (
+            {Array.from(options).sort().map((option, i) => (
                 <option key={i} value={option}>
                     {option}
                 </option>
@@ -255,87 +253,27 @@ function TheTable({ columns, data, fetchData }) {
 }
 
 
-export function RulesLogTable() {
+export function LogTable(props) {
 
     const [data, setData] = useState([]);
 
     const fetchData = async function () {
-        const response = await axios.get('/api/logs/rules');
+        const response = await axios.get(props.url);
         setData(response.data);
     };
 
     useEffect(() => {
         fetchData();
-    }, []);
+    }, [props]);
 
-    const columns = [
-        {
-            Header: 'Timestamp',
-            accessor: 'timestamp',
-            narrow: true,
-        },
-        {
-            Header: 'Rule name',
-            accessor: 'ruleName',
-            Filter: SelectColumnFilter,
-            filter: 'includes',
-            narrow: true,
-        },
-        {
-            Header: 'Type',
-            accessor: 'type',
-            Filter: SelectColumnFilter,
-            filter: 'equals',
-            narrow: true,
-        },
-        {
-            Header: 'Subtype',
-            accessor: 'subtype',
-            Filter: SelectColumnFilter,
-            filter: 'equals',
-            narrow: true,
-        },
-        {
-            Header: 'Old State',
-            accessor: 'oldState',
-            Filter: SelectColumnFilter,
-            filter: 'equals',
-            narrow: true,
-            Cell: ({ cell }) => {
-                return (<div style={{ textAlign: 'center' }}>{cell.value === undefined ? null : cell.value === 'true' ? '1' : '0'}</div>);
-            }
-        },
-        {
-            Header: 'State',
-            accessor: 'state',
-            Filter: SelectColumnFilter,
-            filter: 'equals',
-            narrow: true,
-            Cell: ({ cell }) => {
-                return (<div style={{ textAlign: 'center' }}>{cell.value === undefined ? null : cell.value === 'true' ? '1' : '0'}</div>);
-            }
-        },
-        {
-            Header: 'Triggered',
-            accessor: 'triggered',
-            Filter: SelectColumnFilter,
-            filter: 'equals',
-            narrow: true,
-            Cell: ({ cell }) => {
-                return (<div style={{ textAlign: 'center' }}>{cell.value === undefined ? null : cell.value === 'true' ? '✅' : '✗'}</div>);
-            }
-        },
-        {
-            Header: 'Details',
-            accessor: 'details'
-        }];
+    
 
 
 
     return (
         <RightColumn>
             <AppColumn10>
-                <TheTable columns={columns} data={data} fetchData={fetchData}/>
+                <TheTable columns={props.columns} data={data} fetchData={fetchData}/>
             </AppColumn10>
         </RightColumn>
     )

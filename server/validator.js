@@ -45,7 +45,6 @@ function validate(data) {
             }
         }
     } catch (err) {
-        console.log(err);
         return {
             success: false,
             message: err.message

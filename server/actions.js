@@ -80,7 +80,6 @@ class ScriptAction extends Action {
         } catch (err) {
             logger.error('Rule [%s]: ERROR running script:\n# ----- start script -----\n%s\n# -----  end script  -----', this.rule.name, this.script);
             logger.error(err);
-            console.log(err.stack);
         }
     }
 

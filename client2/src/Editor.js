@@ -4,11 +4,20 @@ import { HTML5Backend } from 'react-dnd-html5-backend';
 import { ContextProvider } from 'react-sortly';
 import { LeftColumn, AppBody, Header, HorizontalContainer, RightColumnCenter, Logo, SubLogo } from "./containers";
 import { Button, Input } from 'reactstrap';
+import {
+    Card,
+    CardBody,
+    CardText,
+    CardTitle,
+    Container
+} from 'reactstrap';
 import { staticData, showError } from './utils';
 import { RuleList } from './RuleList';
-import { MemoizedRuleEditor } from './RuleEditor2';
+import { MemoizedRuleEditor } from './RuleEditor';
 import axios from 'axios';
 import update from 'immutability-helper';
+
+const metaData = require('./metadata.json');
 
 
 class Editor extends Component {
@@ -177,8 +186,11 @@ class Editor extends Component {
                     </DndProvider>
                 }
 
-                {!this.state.selectedRule && <RightColumnCenter><Logo>Scripts4MQTT</Logo><SubLogo>Automation for MQTT</SubLogo></RightColumnCenter>
-                }
+                {!this.state.selectedRule && <RightColumnCenter>
+                    <Logo>Scripts4MQTT</Logo>
+                    <SubLogo>Automation for MQTT</SubLogo>
+                    <SubLogo>Build: {metaData.build} ({metaData.date})</SubLogo>
+                </RightColumnCenter>}
 
             </AppBody>
         );

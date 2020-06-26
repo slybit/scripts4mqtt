@@ -316,18 +316,7 @@ class Rules {
         return { success: true };
     }
 
-    /*
-    getRule(id) {
-        let cloned = Object.assign({}, this.jsonContents[id]);
-        let list = [];
-        let parent = {path: []};
-        this.flattenConditions( this.jsonContents[id].condition, list, parent);
-        let c2 = JSON.parse(JSON.stringify(list));
-        console.log(JSON.stringify(this.nestConditions(c2), undefined, 4));
-        cloned.flatConditions = list;
-        return cloned;
-    }
-    */
+    
     getRule(id) {
         if (id in this.jsonContents) {
             return {
@@ -345,20 +334,7 @@ class Rules {
         }
     }
 
-    // Helper method, used by the web UI
-    /*
-    flattenConditions(nested, list, parent) {
-        let id = list.length > 0 ? list[list.length-1].id + 1 : 1;
-        let path = parent.path.slice(0);
-        if (parent.id) path.push(parent.id);
-        let item = {id: id, type: nested.type, options: nested.options, path: path, isMarked: false};
-        list.push(item);
-        if (nested.type == 'or' || nested.type == 'and') {
-            for (let n of nested.condition)
-                this.flattenConditions(n, list, item);
-        }
-    }
-    */
+    
 
     // Helper method, used by the web UI
     nestConditions(flatened) {
@@ -374,9 +350,7 @@ class Rules {
         };
 
         function insert(item, cond) {
-            console.log(cond.condition);
             if (cond.id === item.path[item.path.length - 1]) {
-                console.log('found');
                 delete item.path;
                 if (item.type === 'or' || item.type === 'and') {
                     item.condition = [];
@@ -477,7 +451,6 @@ class Rule {
                     result.push(new ScriptAction(a, this));
                     break;
                 case "email":
-                    console.log('creating new email action');
                     result.push(new EMailAction(a, this));
                     break;
                 case "pushover":
@@ -530,7 +503,6 @@ class Rule {
         this.cancelPendingActions();
 
         for (let a of actions) {
-            //console.log(a);
             if (a.delay > 0) {
                 logger.info('Rule [%s]: Schedule - delayed execution in %d millesecs', a.rule.name, a.delay);
                 a.pending = setTimeout(a.execute.bind(a, context), a.delay);
