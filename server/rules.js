@@ -158,7 +158,7 @@ class Rules {
                 for (let c of rule.conditions)
                     if ((c instanceof MqttCondition) && (c.topic === topic)) {
                         logger.silly('Rule [%s]: matches topic [%s], evaluating...', rule.name, topic);
-                        if (c.evaluate(context) && withActions)
+                        if (c.evaluate(withActions) && withActions)
                             rule.scheduleActions(context);
                     }
             }

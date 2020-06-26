@@ -59,7 +59,7 @@ class Condition {
             - value
         It must return True if a complete evaluation of the rule is required, False if not.
     */
-    evaluate(context) {
+    evaluate(canTrigger = true) {
         throw new Error('You have to implement the method evaluate!');
     }
 }
@@ -76,23 +76,10 @@ class MqttCondition extends Condition {
         validateMqttCondition(json);
     }
 
-    evaluate(context) {
+    // the canTrigger parameter is used to prevent any triggers for retained messages
+    evaluate(canTrigger) {
         this.oldState = this.state;
         this.state = false;
-        /*
-        let data = {};
-        data.M = Engine.getInstance().mqttStore.get(this.topic) ? Engine.getInstance().mqttStore.get(this.topic).data : undefined;
-        data.T = topicToArray(this.topic);
-        try {
-            let script = mustache.render(this.eval, data);
-            //logger.debug('evaluating script:\n# ----- start script -----\n%s\n# -----  end script  -----', script);
-            this.state = Engine.getInstance().runScript(script);
-        } catch (err) {
-            logger.error(err);
-            console.log(err.stack);
-        }
-        */
-
         let message = Engine.getInstance().mqttStore.get(this.topic) ? Engine.getInstance().mqttStore.get(this.topic).data : undefined;
         try {
             if (this.value == "*") {
@@ -133,10 +120,10 @@ class MqttCondition extends Condition {
             subtype: "mqtt",
             oldState: this.oldState ? "true" : "false",
             state: this.state ? "true" : "false",
-            triggered: this.triggered() ? "true" : "false",
+            triggered: canTrigger && this.triggered() ? "true" : "false",
             details: `topic: ${this.topic}, value: ${JSON.stringify(message, null, 1)}`,
          });
-        return this.triggered();
+        return canTrigger && this.triggered();
     }
 
 }
@@ -151,7 +138,8 @@ class CronCondition extends Condition {
         validateCronCondition(json);
     }
 
-    evaluate(context) {
+    // the canTrigger parameter is used to prevent any triggers for retained messages
+    evaluate(canTrigger = true) {
         this.oldState = this.state;
         let match = false;
         const currTime = new Date();
@@ -176,10 +164,10 @@ class CronCondition extends Condition {
                 subtype: "cron",
                 oldState: this.oldState ? "true" : "false",
                 state: this.state ? "true" : "false",
-                triggered: this.triggered() ? "true" : "false",
+                triggered: canTrigger && this.triggered() ? "true" : "false",
             });
         }
-        return match && this.triggered()
+        return match && canTrigger && this.triggered()
     }
 }
 

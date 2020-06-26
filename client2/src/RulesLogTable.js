@@ -302,7 +302,7 @@ export function RulesLogTable() {
             filter: 'equals',
             narrow: true,
             Cell: ({ cell }) => {
-                return (<div style={{ textAlign: 'center' }}>{cell.value === undefined ? null : cell.value === 'true' ? '✓' : '✗'}</div>);
+                return (<div style={{ textAlign: 'center' }}>{cell.value === undefined ? null : cell.value === 'true' ? '1' : '0'}</div>);
             }
         },
         {
@@ -312,7 +312,7 @@ export function RulesLogTable() {
             filter: 'equals',
             narrow: true,
             Cell: ({ cell }) => {
-                return (<div style={{ textAlign: 'center' }}>{cell.value === undefined ? null : cell.value === 'true' ? '✓' : '✗'}</div>);
+                return (<div style={{ textAlign: 'center' }}>{cell.value === undefined ? null : cell.value === 'true' ? '1' : '0'}</div>);
             }
         },
         {
