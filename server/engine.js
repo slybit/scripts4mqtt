@@ -22,7 +22,7 @@ It exposes the following functions:
 
 const vm = require('vm');
 const axios = require('axios');
-const {logger} = require('./logger.js');
+const { logger } = require('./logger.js');
 
 const store = new Map();
 const testStore = new Map(); // only used for testing scripts
@@ -32,13 +32,13 @@ class Engine {
 
     constructor(mqttClient) {
         this.mqttClient = mqttClient;
-        this.store = store;        
+        this.store = store;
         this.mqttStore = mqttStore;
         this.vm = vm;
         this.sandbox = {
             log: logger,
             context: {},
-            store: this.store,            
+            store: this.store,
             mqttStore: this.mqttStore,
             mqttClient: this.mqttClient,
             vm: vm,
@@ -46,17 +46,17 @@ class Engine {
             put: function (key, value) {
                 store.set(key, value);
             },
-            get: function(key, defaultValue) {
+            get: function (key, defaultValue) {
                 if (store.get(key) === undefined) {
                     return defaultValue;
                 } else {
                     return store.get(key);
                 }
             },
-            read: function(topic) {
+            read: function (topic) {
                 return mqttStore.get(topic);
             },
-            write: function(topic, message, retain = false) {
+            write: function (topic, message, retain = false) {
                 let data = "";
                 if (typeof message === 'string' || message instanceof Buffer || message instanceof ArrayBuffer) {
                     data = message;
@@ -68,7 +68,7 @@ class Engine {
                     }
                 }
                 logger.info('ScriptAction published %s -> %s', topic, data);
-                return mqttClient.publish(topic, data, {'retain' : retain});
+                return mqttClient.publish(topic, data, { 'retain': retain });
             }
 
         }
@@ -81,17 +81,17 @@ class Engine {
             put: function (key, value) {
                 testStore.set(key, value);
             },
-            get: function(key, defaultValue) {
+            get: function (key, defaultValue) {
                 if (testStore.get(key) === undefined) {
                     return defaultValue;
                 } else {
                     return testStore.get(key);
                 }
             },
-            read: function(topic) {
+            read: function (topic) {
                 return mqttStore.get(topic);
             },
-            write: function(topic, message, retain = false) {
+            write: function (topic, message, retain = false) {
                 if (!isNaN(message)) message = message.toString();
                 logger.info('TESTING script result: ScriptAction published %s -> %s', topic, message);
                 return true;
@@ -121,12 +121,28 @@ class Engine {
     dumpStore() {
         let a = [];
         for (let key of this.mqttStore.keys()) {
-            a.push({"topic": key, "value": JSON.stringify(this.mqttStore.get(key).data)});
+            a.push({ "topic": key, "value": JSON.stringify(this.mqttStore.get(key).data) });
         }
         for (let key of this.store.keys()) {
-            a.push({"topic": "__STORE__" + key, "value": JSON.stringify(this.store.get(key))});
+            a.push({ "topic": "__STORE__" + key, "value": JSON.stringify(this.store.get(key)) });
         }
         return a;
+    }
+
+    dumpTopics() {
+        try {
+            let a = [];
+            for (let key of this.mqttStore.keys()) a.push(key);
+            return {
+                success: true,
+                topics: a.sort()
+            };
+        } catch (err) {
+            return {
+                success: false,
+                error: err.message
+            };
+        }
     }
 
 }
@@ -145,6 +161,6 @@ class Singleton {
         return Singleton.instance;
     }
 
-  }
+}
 
 module.exports = Singleton;

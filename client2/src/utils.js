@@ -241,7 +241,7 @@ export const staticData = {
                         { value: "always", label: "Always" }
                     ]
                 },
-                { key: "topic", label: "Topic", props: { required: true } },
+                { key: "topic", label: "Topic", type: "datalist", props: { required: true } },
                 { key: "jmespath", label: "jmespath", props: { required: true } },
                 {
                     key: "operator", label: "Operator", type: "select", options: [

@@ -122,6 +122,12 @@ router.get('/store', (req, res) => {
     }
 });
 
+router.get('/topics', (req, res) => {
+        const dump = Engine.getInstance().dumpTopics();
+        res.json(dump);
+});
+
+
 router.get('/logbook', async (req, res) => {
     try {
         const logs = await getLogbookLogs();

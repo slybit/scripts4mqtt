@@ -125,6 +125,11 @@ const RuleEditor = (props) => {
         setData({ ...data, flatConditions: items });
     }
 
+    const handleConditionDrop = () => {
+        let itemUpdate = { condition: buildTree(data.flatConditions) };
+        pushConditionsUpdate(itemUpdate);
+    }
+
 
     /* ---------------------------------------------------------------------------------------------------------------
     Inline editor functions for direct editing of items in the Rule View (outside of the dynamic editor)
@@ -301,7 +306,7 @@ const RuleEditor = (props) => {
     ));
 
     const categoryDatalist = props.categories.map((category) => (
-        <option key={category} value={category} label={category}/>
+        <option key={category} value={category} label={category} />
     ));
 
     /* ---------------------------------------------------------------------------------------------------------------
@@ -325,7 +330,7 @@ const RuleEditor = (props) => {
                 <FormGroup>
                     <Label for="category">Category</Label>
                     <InputGroup name="category">
-                        <Input value={data.category} list="categories"  onChange={(e) => onEditableItemChange(e, "category")} />
+                        <Input value={data.category || ""} list="categories" onChange={(e) => onEditableItemChange(e, "category")} />
                         <datalist id="categories">
                             {categoryDatalist}
                         </datalist>
@@ -367,7 +372,7 @@ const RuleEditor = (props) => {
                     data.flatConditions.length > 0 && <Sortly
                         items={data.flatConditions}
                         onChange={handleSortlyChange} >
-                        {(props) => <ConditionItemRenderer {...props} onEditableItemClick={handleEditableItemClick} />}
+                        {(props) => <ConditionItemRenderer {...props} onEditableItemClick={handleEditableItemClick} onConditionDropped={handleConditionDrop}/>}
                     </Sortly>
                 }
 
@@ -487,16 +492,21 @@ const ConditionItemRenderer = (props) => {
         }),
     });
     const [, drop] = useDrop({
-        drop() { console.log('drop') }
+        drop() { 
+            console.log('drop');
+            props.onConditionDropped();
+         }
 
     });
 
 
     const handleClick = async () => {
+        // 
         // on the fly add in data to the model
+        //
         let model = staticData.editor.condition[data.type];
-        if (data.type === 'alias') {
-            try {
+        try {
+            if (data.type === 'alias') {
                 let response = await axios.get('/api/aliases');
                 if (response.data.success) {
                     let aliasModel = model.find((item) => (item.key === 'alias'));
@@ -507,10 +517,22 @@ const ConditionItemRenderer = (props) => {
                 } else {
                     console.log("Error returned by the server: " + response.data.message);
                 }
-            } catch (error) {
-                console.log("Cannot access the script4mqtt service. " + error);
+            } else if (data.type === 'mqtt') {
+                let response = await axios.get('/api/topics');
+                if (response.data.success) {
+                    let mqttModel = model.find((item) => (item.key === 'topic'));
+                    mqttModel.options = [];
+                    for (let topic of response.data.topics) {
+                        mqttModel.options.push({ value: topic, label: topic });
+                    }
+                } else {
+                    console.log("Error returned by the server: " + response.data.message);
+                }
             }
+        } catch (error) {
+            console.log("Cannot access the script4mqtt service. " + error);
         }
+        console.log(model);
         onEditableItemClick("conditions", index, "flatConditions", model);
     };
 
