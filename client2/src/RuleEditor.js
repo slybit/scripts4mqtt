@@ -579,7 +579,7 @@ const ConditionItemRenderer = (props) => {
         <div ref={drop}>
             <div ref={drag} style={style} ><span style={{cursor: 'pointer'}} onClick={handleClick}>{label}</span>
                 <span style={pushRightStyle}>
-                    <Icon path={mdiDelete} size={1} className="editIcon" onClick={(e) => {props.onDeleteClick('flatConditions', index)}} />
+                    <Icon path={mdiDelete} size={1} className="deleteIcon" onClick={(e) => {props.onDeleteClick('flatConditions', index)}} />
                 </span>
             </div>
         </div>
@@ -602,7 +602,7 @@ const ActionItemRenderer = (props) => {
                 >
                 {isNew ? "* " : ""} <span style={{cursor: 'pointer'}} onClick={() => props.onEditableItemClick("actions", index, props.type, staticData.editor.action[action.type])}>{staticData.actions[action.type]}</span>
                 <span style={pushRightStyle}>
-                    <Icon path={mdiDelete} size={1} className="editIcon" onClick={(e) => {props.onDeleteClick(props.type, index)}} />
+                    <Icon path={mdiDelete} size={1} className="deleteIcon" onClick={(e) => {props.onDeleteClick(props.type, index)}} />
                 </span>
             </li>
         )
