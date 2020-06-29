@@ -81,6 +81,7 @@ class Editor extends Component {
   handleAddRuleClick = () => {
     axios.post('/api/rules', staticData.newItems.rule)
       .then((response) => {
+        console.log(response);
         if (response.data.success) {
           this.loadRuleListFromServer(false);
         } else {

@@ -45,14 +45,8 @@ function validate(data) {
             }
         }
     } catch (err) {
-        return {
-            success: false,
-            message: err.message
-        }
-    }
-
-    return {
-        success: true
+        logger.error(err.message);
+        throw err;
     }
 
 }

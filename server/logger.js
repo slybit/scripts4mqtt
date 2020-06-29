@@ -100,7 +100,7 @@ const logger = createLogger({
   transports: [
     new transports.Console({
       format: consoleFormat,
-      level: 'debug'
+      level: 'error'
     }),
     //new transports.File({
     //  filename: 'default.log',

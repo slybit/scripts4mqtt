@@ -44,10 +44,7 @@ class Aliases {
      */
 
     listAliases() {
-        return {
-            success: true,
-            aliases: this.aliases
-        };
+        return {aliases: this.aliases};
     }
 
     /*
@@ -60,13 +57,12 @@ class Aliases {
             Object.assign(this.aliases, input);
             this.saveAliases();
             return {
-                success: true,
                 name: Object.keys(input)[0],
                 aliases: this.aliases
             };
         } catch (err) {
-            logger.warn(err.message);
-            return { success: false, error: err.message };
+            logger.error(err.message);
+            throw err;
         }
 
     }
@@ -80,12 +76,11 @@ class Aliases {
             delete this.aliases[id];
             this.saveAliases();
             return {
-                success: true,
                 aliases: this.aliases
             };
         } catch (err) {
             logger.warn(err.message);
-            return { success: false, error: err.message };
+            throw err;
         }
 
     }

@@ -130,19 +130,9 @@ class Engine {
     }
 
     dumpTopics() {
-        try {
-            let a = [];
-            for (let key of this.mqttStore.keys()) a.push(key);
-            return {
-                success: true,
-                topics: a.sort()
-            };
-        } catch (err) {
-            return {
-                success: false,
-                error: err.message
-            };
-        }
+        let a = [];
+        for (let key of this.mqttStore.keys()) a.push(key);
+        return a;
     }
 
 }

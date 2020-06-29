@@ -7,6 +7,7 @@ const Engine = require('./engine.js');
 const { EMailAction, LogBookAction, PushoverAction, ScriptAction, SetValueAction, WebHookAction } = require('./actions.js')
 const { CronCondition, MqttCondition, SimpleCondition } = require('./conditions.js')
 const Aliases = require('./aliases.js');
+const { error } = require('winston');
 
 const FILENAME = process.env.MQTT4SCRIPTS_RULES || '../config/rules.yaml';
 
@@ -241,7 +242,7 @@ class Rules {
             });
 
         }
-        return list;
+        return { rules: list };
     }
 
     createRule(input) {
@@ -250,8 +251,9 @@ class Rules {
             // test the input, this will throw an exception if not ok
             new Rule(id, input);
         } catch (err) {
-            logger.warn(err);
-            return { success: false, error: err.message };
+            let error = new Error("Error during new rule creation: " + err.message);
+            logger.error(error);
+            throw error;
         }
         return this.updateRule(id, input, true);
     }
@@ -276,7 +278,6 @@ class Rules {
                 }
             }
 
-
             // replace the rule set
             this.rules[id] = [];
             let expandedRules = Rules.buildRuleSet(this.jsonContents[id]);
@@ -286,15 +287,14 @@ class Rules {
 
             this.saveRules();
             return {
-                success: true,
                 rule: {
                     id: id,
                     ...this.jsonContents[id]
                 }
             };
         } catch (err) {
-            logger.warn(err.message);
-            return { success: false, error: err.message };
+            logger.error(err.message);
+            throw error;
         }
     }
 
@@ -310,31 +310,33 @@ class Rules {
     }
 
     deleteRule(id) {
+        // clear pending actions for the rule
+        let ruleSet = this.rules[id];
+        for (let rule of ruleSet) {
+            rule.cancelPendingActions();
+        }
         delete this.rules[id];
         delete this.jsonContents[id];
         this.saveRules();
-        return { success: true };
     }
 
-    
+
     getRule(id) {
         if (id in this.jsonContents) {
             return {
-                success: true,
                 rule: {
                     "id": id,
                     ...this.jsonContents[id]
                 }
             };
         } else {
-            return {
-                success: false,
-                error: 'rule id not found'
-            };
+            const error = new Error('Rule id not found: ' + id);
+            logger.error(error);
+            throw error;
         }
     }
 
-    
+
 
     // Helper method, used by the web UI
     nestConditions(flatened) {

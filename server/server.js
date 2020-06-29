@@ -5,7 +5,7 @@ const path = require('path');
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
 const { logBufferStatic, logBufferDynamic, logger, getRuleLogs, getMqttLogs, getLogbookLogs } = require('./logger.js');
-const { getConfig, updateConfig, getMetaData } = require('./config.js');
+const { getConfig, updateConfig  } = require('./config.js');
 const config = require('./config.js').parse();
 const rules = require('./rules.js');
 const Engine = require('./engine.js');
@@ -19,124 +19,141 @@ const API_PORT = process.env.API_PORT || config.api.port || 4000;
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
+// input error catching
 app.use(function (error, req, res, next) {
+    console.log('initial middle ware');
     if (error) {
-      res.status(error.statusCode).send({ success: false, error: error.type, ...error });
+        res.status(error.statusCode).send({ success: false, error: error.type, ...error });
     } else {
-      next();
+        next();
     }
-  });
+});
 app.use(morgan('dev'));
 
-router.get('/rules', (req, res) => {
-    res.json(rules.listAllRules());
+router.get('/rules', (req, res, next) => {
+    res.locals.data = rules.listAllRules();
+    next();
 });
 
-router.post('/rules', (req, res) => {
-    res.json(rules.createRule(req.body));
+router.post('/rules', (req, res, next) => {
+    res.locals.data = rules.createRule(req.body);
+    next();
 });
 
-router.get('/rule/:ruleId', (req, res) => {
-    res.json(rules.getRule(req.params.ruleId));
+router.get('/rule/:ruleId', (req, res, next) => {
+    res.locals.data = rules.getRule(req.params.ruleId);
+    next();
 });
 
-router.put('/rule/:ruleId', (req, res) => {
-    res.json(rules.updateRule(req.params.ruleId, req.body));
+router.put('/rule/:ruleId', (req, res, next) => {
+    res.locals.data = rules.updateRule(req.params.ruleId, req.body);
+    next();
 });
 
-router.delete('/rule/:ruleId', (req, res) => {
-    res.json(rules.deleteRule(req.params.ruleId));
+router.delete('/rule/:ruleId', (req, res, next) => {
+    res.locals.data = true;
+    rules.deleteRule(req.params.ruleId);
+    next();
 });
 
-router.get('/aliases', (req, res) => {
+router.get('/aliases', (req, res, next) => {
     let aliases = new Aliases();
-    res.json(aliases.listAliases());
+    res.locals.data = aliases.listAliases();
+    next();
 });
 
-router.post('/aliases', (req, res) => {
+router.post('/aliases', (req, res, next) => {
     let aliases = new Aliases();
-    res.json(aliases.updateAlias(req.body));
+    res.locals.data = aliases.updateAlias(req.body);
+    next();
 });
 
-router.delete('/alias/:aliasId', (req, res) => {
+router.delete('/alias/:aliasId', (req, res, next) => {
     let aliases = new Aliases();
-    res.json(aliases.deleteAlias(req.params.aliasId));
+    res.locals.data = aliases.deleteAlias(req.params.aliasId);
+    next();
 });
 
-router.post('/validate', (req, res) => {
-    res.json(validator.validate(req.body));
+
+router.post('/validate', (req, res, next) => {
+    res.locals.data = true;
+    validator.validate(req.body);
+    next();
 });
 
+
+router.get('/store', (req, res, next) => {
+    res.locals.data = {data: Engine.getInstance().dumpStore()};
+    next();
+});
+
+router.get('/topics', (req, res, next) => {
+    res.locals.data = {topics: Engine.getInstance().dumpTopics()};
+    next();
+});
+
+// for these API calls, we send the respose here.
+// the async methods make it difficult to use the mechanism with next()
 router.get('/logs/rules', async (req, res) => {
     try {
-        const logs = await getRuleLogs();
-        res.json(logs);
+        res.json({
+            success: true,
+            data: await getRuleLogs()
+        });
     } catch (err) {
         logger.error('Error parsing logs');
-        res.json([]);
+        res.json({
+            success: false,
+            error: err.message
+        });
     }
 });
 
 router.get('/logs/mqtt', async (req, res) => {
     try {
-        const logs = await getMqttLogs();
-        res.json(logs);
+        res.json({
+            success: true,
+            data: await getMqttLogs()
+        });
     } catch (err) {
         logger.error('Error parsing logs');
-        res.json([]);
+        res.json({
+            success: false,
+            error: err.message
+        });
     }
-});
-
-
-router.get('/config', (req, res) => {
-    res.json({ config: getConfig() });
-});
-
-router.post('/config', (req, res) => {
-    let response = updateConfig(req.body);
-    res.json(response);
-    if (response.success) {
-        // restart using a child process
-        /*
-                spawn(process.argv[0], process.argv.slice(1), {
-                    detached: true,
-                    stdio: 'inherit'
-                }).unref();
-                // kill the parent process;
-                process.exit();
-        */
-    }
-});
-
-router.get('/meta', (req, res) => {
-    res.json({ meta: getMetaData() });
-});
-
-router.get('/store', (req, res) => {
-    try {
-        const dump = Engine.getInstance().dumpStore();
-        res.json(dump);
-    } catch (err) {
-        logger.error('Error dumping store');
-        res.json([]);
-    }
-});
-
-router.get('/topics', (req, res) => {
-        const dump = Engine.getInstance().dumpTopics();
-        res.json(dump);
 });
 
 
 router.get('/logbook', async (req, res) => {
     try {
-        const logs = await getLogbookLogs();
-        res.json(logs);
+        res.json({
+            success: true,
+            data: await getLogbookLogs()
+        });
     } catch (err) {
-        logger.error('Error parsing logbook logs');
-        res.json([]);
+        logger.error('Error parsing logs');
+        res.json({
+            success: false,
+            error: err.message
+        });
     }
 });
+
+
+
+router.get('/config', (req, res, next) => {
+    res.locals.data = { config: getConfig() };
+    next();
+});
+
+router.post('/config', (req, res, next) => {
+    res.locals.data = true;
+    updateConfig(req.body);
+    next();
+});
+
+
 
 router.get('/infinite', async (req, res) => {
     try {
@@ -162,6 +179,23 @@ router.get('/infinite', async (req, res) => {
 
 
 app.use('/api', router);
+// output  catching
+router.use(function (req, res, next) {
+    if (res.locals.data) {
+        res.json({
+            success: true,
+            ...res.locals.data
+        });
+    } else {
+        next();
+    }
+});
+
+// output error catching
+router.use(function (error, req, res, next) {
+    logger.error(error.message);
+    res.json({ success: false, error: error.message });
+});
 
 // ----
 /*

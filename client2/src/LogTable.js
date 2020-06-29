@@ -5,6 +5,7 @@ import { AppContainer, AppFooter, AppBody, AppNav, AppColumn2, AppColumn10, Righ
 import axios from 'axios';
 import styled from 'styled-components'
 import { useTable, usePagination, useFilters } from 'react-table'
+import { showNotification } from "./utils.js";
 
 const Styles = styled.div`
   /* This is required to make the table full-width */
@@ -259,14 +260,18 @@ export function LogTable(props) {
 
     const fetchData = async function () {
         const response = await axios.get(props.url);
-        setData(response.data);
+        if (response.data.success) {
+            setData(response.data.data);
+        } else {
+            showNotification("Error", "Error loading logs from server", "danger");
+        }
     };
 
     useEffect(() => {
         fetchData();
     }, [props]);
 
-    
+
 
 
 

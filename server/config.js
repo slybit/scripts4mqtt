@@ -8,23 +8,6 @@ const fs = require('fs');
 
 const FILE = process.env.MQTT4SCRIPTS_CONFIG || '../config/config.yaml';
 
-/* Exported
-Returns the build meta data
-*/
-getMetaData = function () {
-  try {
-    let content = fs.readFileSync('../config/metadata.json');
-    var metadata = JSON.parse(content);
-    return metadata;
-  } catch (err) {
-    console.log(err);
-    return {
-      build: "unknown",
-      data: "unknown"
-    };
-  }
-}
-
 
 /* Exported
 Returns a string representation of the current configuration file
@@ -50,21 +33,8 @@ It will first parse this string and if formatting is ok, it will store the strin
 Note that this has no effect on the running instance. A restart is required to take effect.
 */
 updateConfig = function (c) {
-
-  try {
     yaml.safeLoad(c.config);
-  } catch (err) {
-    console.log(err);
-    return { success: false, error: err.message };
-  }
-
-  try {
     fs.writeFileSync(FILE, c.config);
-  } catch (e) {
-    console.log(err);
-    return { success: false, error: err.message };
-  }
-  return { success: true };
 }
 
 
@@ -91,4 +61,4 @@ parse = function () {
   }
 }
 
-module.exports = { parse, getConfig, updateConfig, getMetaData }
+module.exports = { parse, getConfig, updateConfig }

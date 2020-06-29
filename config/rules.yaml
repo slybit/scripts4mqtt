@@ -5,7 +5,7 @@ TimeDateUpdate:
   condition:
     - type: mqtt
       trigger: 'no'
-      topic: __REPLACE__
+      topic: hass/status/ventilation/high
       operator: eq
       jmespath: val
       value: ''
@@ -34,6 +34,10 @@ TimeDateUpdate:
           trigger: always
           'off': ''
           'on': 15 * * * *
+        - type: cron
+          trigger: always
+          'on': 0 0 * * *
+          'off': '-'
   ontrue:
     - type: script
       script: 'write(''knx/write/15/1/0'', new Date().toString());'
@@ -71,7 +75,7 @@ Logbook:
   pendingOption: always
   enabled: true
 DoorBell:
-  name: Temp
+  name: Temp1
   category: Nice stuuff
   order: 0
   condition:
@@ -93,12 +97,6 @@ DoorBell:
       delay: 0
       interval: 0
       message: Cold
-40a98767884e:
-  name: New rule
-  category: default
-  description: ''
-  enabled: false
-  condition: []
 d25f8c914a65:
   name: New rule
   category: default
@@ -123,13 +121,7 @@ d25f8c914a65:
       delay: 0
       interval: 0
       url: __REPLACE__
-1ee2b441c213:
-  name: New rule
-  category: default
-  description: ''
-  enabled: false
-  condition: []
-4d68d8f9f6fb:
+'78903448e823':
   name: New rule
   category: default
   description: ''

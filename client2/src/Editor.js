@@ -46,12 +46,12 @@ class Editor extends Component {
         axios.get('/api/rules')
             .then((response) => {
                 let categories = {};
-                for (let rule of response.data) {
+                for (let rule of response.data.rules) {
                     categories[rule.category] = this.state.categories[rule.category] ? this.state.categories[rule.category] : { isOpen: true };
                 }
 
                 this.setState({
-                    rules: response.data,
+                    rules: response.data.rules,
                     categories: categories,
                     selectedRule: selectedRule
                 });
