@@ -3,58 +3,23 @@ TimeDateUpdate:
   category: New
   order: 0
   condition:
-    - type: mqtt
-      trigger: 'no'
-      topic: hass/status/ventilation/high
-      operator: eq
-      jmespath: val
-      value: ''
     - type: and
       condition:
+        - type: mqtt
+          trigger: 'no'
+          topic: hass/status/ventilation/high
+          operator: eq
+          jmespath: val
+          value: ''
         - type: alias
           trigger: 'no'
           alias: A
           operator: eq
           jmespath: val
           value: ''
-        - type: alias
-          trigger: 'no'
-          alias: B
-          operator: eq
-          jmespath: val
-          value: ''
-        - type: alias
-          trigger: on_flip
-          alias: __REPLACE__
-          operator: eq
-          jmespath: val
-          value: ''
-          alias_: drty
-        - type: cron
-          trigger: always
-          'off': ''
-          'on': 15 * * * *
-        - type: cron
-          trigger: always
-          'on': 0 0 * * *
-          'off': '-'
   ontrue:
     - type: script
-      script: 'write(''knx/write/15/1/0'', new Date().toString());'
-    - type: script
       script: 'write(''knx/write/15/1/1'', new Date().toString());'
-    - type: pushover
-      delay: 0
-      interval: 0
-      title: __REPLACE__
-      message: ''
-      sound: pushover
-      priority: 0
-    - type: mqtt
-      delay: 0
-      interval: 0
-      topic: __REPLACE__
-      value: __REPLACE__
   pendingOption: never
   enabled: false
   description: The description asdfasdfasdfasdfasdfsf
