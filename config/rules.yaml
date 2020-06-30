@@ -49,6 +49,12 @@ Logbook:
   ontrue:
     - type: logbook
       message: test to logbook123
+      enabled: false
+    - type: logbook
+      delay: 0
+      interval: 0
+      message: Should not appear
+      enabled: false
   pendingOption: always
   enabled: true
 DoorBell:

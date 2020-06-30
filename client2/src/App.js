@@ -44,7 +44,12 @@ const dataStoreColumns = [
     },
     {
         Header: 'Value',
-        accessor: 'value'
+        accessor: 'value',
+        Cell: row => (
+            <span title={row.value}>
+                {row.value}
+            </span>
+        )
     }
 ];
 
@@ -109,7 +114,12 @@ const ruleLogColumns = [
     },
     {
         Header: 'Details',
-        accessor: 'details'
+        accessor: 'details',
+        Cell: row => (
+            <span title={row.value}>
+                {row.value}
+            </span>
+        )
     }
 ];
 
@@ -127,9 +137,32 @@ const mqttLogColumns = [
     },
     {
         Header: 'Message',
-        accessor: 'msg'
+        accessor: 'msg',
+        Cell: row => (
+            <span title={row.value}>
+                {row.value}
+            </span>
+        )
     }
 ];
+
+// Logbook logs
+const logBookUrl = '/api/logbook';
+const logBookColumns = [
+    {
+        Header: 'Timestamp',
+        accessor: 'timestamp',
+        narrow: true
+    },
+    {
+        Header: 'Message',
+        accessor: 'message',
+        Cell: row => (
+            <span title={row.value}>
+                {row.value}
+            </span>
+        )
+    }];
 
 const App = () => {
 
@@ -148,6 +181,9 @@ const App = () => {
                         </NavItem>
                         <NavItem>
                             <NavLink tag={RRNavLink} exact to="/aliases" activeClassName="active">Aliases</NavLink>
+                        </NavItem>
+                        <NavItem>
+                            <NavLink tag={RRNavLink} exact to="/logbook" activeClassName="active">Log book</NavLink>
                         </NavItem>
                         <NavItem>
                             <NavLink tag={RRNavLink} exact to="/logs/rules" activeClassName="active">Rule logs</NavLink>
@@ -174,6 +210,9 @@ const App = () => {
                     <Route exact path="/" render={() => (<Redirect to="/rules" />)} />
                     <Route path='/rules' component={Editor}></Route>
                     <Route path='/aliases' component={Aliases}></Route>
+                    <Route path='/logbook' render={(props) => (
+                        <LogTable {...props} url={logBookUrl} columns={logBookColumns} />
+                    )}></Route>
                     <Route path='/logs/rules' render={(props) => (
                         <LogTable {...props} url={ruleLogUrl} columns={ruleLogColumns} />
                     )}></Route>
