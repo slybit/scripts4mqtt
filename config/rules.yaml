@@ -37,19 +37,38 @@ TimeDateUpdate:
   description: The description asdfasdfasdfasdfasdfsf
   itemName: a
   jos: TDU
+  onfalse:
+    - type: script
+      delay: 0
+      enabled: true
+      interval: 0
+      script: ''
+    - type: webhook
+      delay: 0
+      enabled: true
+      interval: 0
+      url: __REPLACE__
 Logbook:
   name: Logbook
   category: Stuff
   order: 1
   condition:
-    - type: cron
-      trigger: on_flip_true
-      'off': '*/2 * * * *'
-      'on': '*/1 * * * *'
+    - type: or
+      condition:
+        - type: cron
+          trigger: on_flip_true
+          'off': '*/2 * * * *'
+          'on': '*/1 * * * *'
+    - type: mqtt
+      trigger: always
+      topic: test
+      operator: eq
+      jmespath: val
+      value: '1'
   ontrue:
     - type: logbook
-      message: test to logbook123
-      enabled: false
+      message: 'test to logbook: {{M}} {{topic}} {{M.val}}'
+      enabled: true
     - type: logbook
       delay: 0
       interval: 0

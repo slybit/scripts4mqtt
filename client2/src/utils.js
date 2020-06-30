@@ -172,6 +172,7 @@ export const staticData = {
                 type: "mqtt",
                 delay: 0,
                 interval: 0,
+                enabled: true,
                 topic: "__REPLACE__",
                 value: "__REPLACE__"
             },
@@ -179,6 +180,7 @@ export const staticData = {
                 type: "pushover",
                 delay: 0,
                 interval: 0,
+                enabled: true,
                 title: "__REPLACE__",
                 message: "",
                 sound: "pushover",
@@ -188,6 +190,7 @@ export const staticData = {
                 type: "email",
                 delay: 0,
                 interval: 0,
+                enabled: true,
                 to: "__REPLACE__@mail.com",
                 subject: "__REPLACE__",
                 body: ""
@@ -195,18 +198,21 @@ export const staticData = {
             script: {
                 type: "script",
                 delay: 0,
+                enabled: true,
                 interval: 0,
                 script: ""
             },
             logbook: {
                 type: "logbook",
                 delay: 0,
+                enabled: true,
                 interval: 0,
                 message: ""
             },
             webhook: {
                 type: "webhook",
                 delay: 0,
+                enabled: true,
                 interval: 0,
                 url: "__REPLACE__"
             }

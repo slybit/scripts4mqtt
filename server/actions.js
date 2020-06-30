@@ -28,7 +28,6 @@ class Action {
 }
 
 class SetValueAction extends Action {
-
     constructor(json, rule) {
         super(json, rule);
         this.topic = json.topic;
@@ -127,7 +126,7 @@ class EMailAction extends Action {
                 SMTPTransporter.sendMail(mailOptions, function (err, info) {
                     if (err) {
                         logger.error('Rule [%s]: ERROR EMailAction failed', action.rule.name);
-                        logger.error(err);
+                        logger.error(err.message);
                     } else {
                         logger.info('Rule [%s]: EMailAction executed', action.rule.name);
                         jsonlogger.info("EMailAction executed", { ruleId: action.rule.id, ruleName: action.rule.name, type: "action", subtype: "email", details: `subject: ${data.subject}` });
@@ -170,7 +169,7 @@ class PushoverAction extends Action {
                 pushover.send(data, function (err, result) {
                     if (err) {
                         logger.error('Rule [%s]: ERROR sending Pushover notification', action.rule.name);
-                        logger.error(err);
+                        logger.error(err.message);
                     } else {
                         logger.info('Rule [%s]: Pushover notification sent succesfully', action.rule.name);
                         jsonlogger.info("PushoverAction executed", { ruleId: action.rule.id, ruleName: action.rule.name, type: "action", subtype: "pushover", details: `subject: ${data.title}` });
@@ -197,6 +196,7 @@ class LogBookAction extends Action {
 
     execute(context) {
         super.execute(context);
+        console.log(JSON.stringify(context, null, 4));
         if (this.enabled) {
             if (this.message !== undefined) {
                 try {
