@@ -399,8 +399,6 @@ class Rule {
         return crypto.randomBytes(6).toString("hex");
     }
 
-
-
     static evalLogic(logic) {
         // logic can only be an array in the first iteration
         // we just turn it in an "or"

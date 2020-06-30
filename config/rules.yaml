@@ -20,6 +20,18 @@ TimeDateUpdate:
   ontrue:
     - type: script
       script: 'write(''knx/write/15/1/1'', new Date().toString());'
+      enabled: true
+    - type: mqtt
+      delay: 0
+      interval: 0
+      topic: __REPLACE__
+      value: __REPLACE__
+      enabled: true
+    - type: logbook
+      delay: 0
+      interval: 0
+      message: ''
+      enabled: true
   pendingOption: never
   enabled: false
   description: The description asdfasdfasdfasdfasdfsf

@@ -4,7 +4,7 @@ import Sortly, { useDrag, useDrop, useIsClosestDragging, findDescendants, remove
 import { HorizontalContainer, AppColumn10, RightColumn, AppEditor, Header } from "./containers";
 import { Button, UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem, InputGroup, InputGroupAddon, Input, FormGroup, Label } from 'reactstrap';
 import Icon from '@mdi/react'
-import { mdiPencilOutline, mdiCancel, mdiCheck, mdiDelete } from '@mdi/js'
+import { mdiCheckboxBlankOutline, mdiCheckBoxOutline, mdiCancel, mdiCheck, mdiDelete } from '@mdi/js'
 import update from 'immutability-helper';
 //import ReactJson from 'react-json-view';
 //import format from 'string-format';
@@ -257,6 +257,29 @@ const RuleEditor = (props) => {
         };
     };
 
+    // toggle the enabled state of an item (action or condition)
+    // currenlty only used for actions
+    const editorHandleEnableClick = async (itemType, itemIndex) => {
+        try {
+            let itemUpdate = undefined;
+            // inject the update in a clone of the state
+            const cloned = update(data[itemType],
+                { [itemIndex]: { $toggle: ['enabled'] } }
+            )
+            if (itemType === 'flatConditions') {
+                itemUpdate = { condition: buildTree(cloned) };
+                pushConditionsUpdate(itemUpdate);
+            } else {
+                itemUpdate = { [itemType]: stripIds(cloned) };
+                pushActionsUpdate(itemType, itemUpdate);
+            }
+        } catch (error) {
+            // TODO: alert user
+            console.log(error);
+        };
+
+    }
+
 
 
     /* ---------------------------------------------------------------------------------------------------------------
@@ -372,8 +395,8 @@ const RuleEditor = (props) => {
                     data.flatConditions.length > 0 && <Sortly
                         items={data.flatConditions}
                         onChange={handleSortlyChange} >
-                        {(props) => <ConditionItemRenderer {...props} 
-                            onEditableItemClick={handleEditableItemClick} 
+                        {(props) => <ConditionItemRenderer {...props}
+                            onEditableItemClick={handleEditableItemClick}
                             onConditionDropped={handleConditionDrop}
                             onDeleteClick={editorHandleDeleteClick}
                         />}
@@ -397,6 +420,7 @@ const RuleEditor = (props) => {
                         type="ontrue"
                         onEditableItemClick={handleEditableItemClick}
                         onDeleteClick={editorHandleDeleteClick}
+                        onEnableClick={editorHandleEnableClick}
                     />
                 </ul>
 
@@ -417,6 +441,7 @@ const RuleEditor = (props) => {
                         type="onfalse"
                         onEditableItemClick={handleEditableItemClick}
                         onDeleteClick={editorHandleDeleteClick}
+                        onEnableClick={editorHandleEnableClick}
                     />
                 </ul>
 
@@ -496,7 +521,7 @@ const ConditionItemRenderer = (props) => {
         drop() {
             console.log('drop');
             props.onConditionDropped();
-         }
+        }
 
     });
 
@@ -577,9 +602,9 @@ const ConditionItemRenderer = (props) => {
 
     return (
         <div ref={drop}>
-            <div ref={drag} style={style} ><span style={{cursor: 'pointer'}} onClick={handleClick}>{label}</span>
+            <div ref={drag} style={style} ><span style={{ cursor: 'pointer' }} onClick={handleClick}>{label}</span>
                 <span style={pushRightStyle}>
-                    <Icon path={mdiDelete} size={1} className="deleteIcon" onClick={(e) => {props.onDeleteClick('flatConditions', index)}} />
+                    <Icon path={mdiDelete} size={1} className="deleteIcon" onClick={(e) => { props.onDeleteClick('flatConditions', index) }} />
                 </span>
             </div>
         </div>
@@ -599,10 +624,11 @@ const ActionItemRenderer = (props) => {
             <li className="list-group-item"
                 key={action._id} id={action._id}
                 style={style}
-                >
-                {isNew ? "* " : ""} <span style={{cursor: 'pointer'}} onClick={() => props.onEditableItemClick("actions", index, props.type, staticData.editor.action[action.type])}>{staticData.actions[action.type]}</span>
+            >
+                <Icon path={action.enabled ? mdiCheckBoxOutline : mdiCheckboxBlankOutline} style={{ cursor: 'pointer' }} className="editIcon" size={1} onClick={(e) => { props.onEnableClick(props.type, index) }} />
+                {isNew ? "* " : ""} <span style={{ cursor: 'pointer' }} onClick={() => props.onEditableItemClick("actions", index, props.type, staticData.editor.action[action.type])}>{staticData.actions[action.type]}</span>
                 <span style={pushRightStyle}>
-                    <Icon path={mdiDelete} size={1} className="deleteIcon" onClick={(e) => {props.onDeleteClick(props.type, index)}} />
+                    <Icon path={mdiDelete} size={1} className="deleteIcon" onClick={(e) => { props.onDeleteClick(props.type, index) }} />
                 </span>
             </li>
         )
