@@ -196,7 +196,6 @@ class LogBookAction extends Action {
 
     execute(context) {
         super.execute(context);
-        console.log(JSON.stringify(context, null, 4));
         if (this.enabled) {
             if (this.message !== undefined) {
                 try {

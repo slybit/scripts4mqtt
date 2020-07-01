@@ -89,7 +89,11 @@ export const RightColumn = styled.div`
 export const RightColumnCenter = styled.div`
     display: flex;
     flex: 1 1 auto;
-    background: #fff;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-image: url("icon-customfab01.png");
+    background-color: rgba(255, 255, 255, 0.90) !important;
+    background-blend-mode: color;
     flex-direction: column;
     justify-content: center;
     align-items: center;
@@ -165,11 +169,11 @@ export const Header = styled.div`
 export const Logo = styled.div`
   font-size: 300%;
   font-weight: 600;
-  color: #c8cbcf
+  
 `;
 
 export const SubLogo = styled.div`
   font-size: 120%;
   font-weight: 400;
-  color: #c8cbcf
+  
 `;

@@ -17,18 +17,19 @@ const router = express.Router();
 
 const API_PORT = process.env.API_PORT || config.api.port || 4000;
 
+//app.use(morgan('dev'));
+
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 // input error catching
 app.use(function (error, req, res, next) {
-    console.log('initial middle ware');
     if (error) {
         res.status(error.statusCode).send({ success: false, error: error.type, ...error });
     } else {
         next();
     }
 });
-app.use(morgan('dev'));
+
 
 router.get('/rules', (req, res, next) => {
     res.locals.data = rules.listAllRules();

@@ -75,7 +75,7 @@ Logbook:
       message: Should not appear
       enabled: false
   pendingOption: always
-  enabled: true
+  enabled: false
 DoorBell:
   name: Temp1
   category: Nice stuuff
@@ -92,7 +92,7 @@ DoorBell:
       delay: 0
       interval: 0
       message: Hot
-  enabled: true
+  enabled: false
   description: Safari
   onfalse:
     - type: logbook
