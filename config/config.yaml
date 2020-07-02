@@ -1,10 +1,12 @@
 # Sets the log level for the debug logs that will be created in the `logpath`
 # One of 'error', 'warn', 'info', 'verbose', debug', 'silly'
 loglevel: 'silly'
-# test
 # The location where the logs files will be stored. This can be relative or absolute.
 # This should not be touched when running scripts4mqtt inside a docker container.
 logpath: '../logs'
+# Debug mode
+# If enabled, the server console will output detailed logs
+debug: false
 # Enable the API and React client and set the port on which it will listen.
 api:
   enabled: true

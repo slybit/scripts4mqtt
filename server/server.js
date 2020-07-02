@@ -17,7 +17,7 @@ const router = express.Router();
 
 const API_PORT = process.env.API_PORT || config.api.port || 4000;
 
-//app.use(morgan('dev'));
+if (config.debug) app.use(morgan('dev'));
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
@@ -199,13 +199,13 @@ router.use(function (error, req, res, next) {
 });
 
 // ----
-/*
+
 const client = express.Router();
 client.use(express.static(path.join(__dirname, '..', 'client', 'build')));
 client.get('/*', function (req, res) {
     res.sendFile(path.join(__dirname, '..', 'client', 'build', 'index.html'));
 });
 app.use('/', client);
-*/
+
 // -----
-app.listen(API_PORT, () => logger.info('Listening on port %s', API_PORT));
+app.listen(API_PORT, () => console.log(`Listening on port %s`, API_PORT));

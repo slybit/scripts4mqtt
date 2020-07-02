@@ -100,7 +100,7 @@ const logger = createLogger({
   transports: [
     new transports.Console({
       format: consoleFormat,
-      level: 'error'
+      level: config.debug ? 'silly' : 'error'     // overwrite the error level for the server console logs
     }),
     //new transports.File({
     //  filename: 'default.log',

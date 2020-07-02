@@ -1,406 +1,475 @@
-import React from "react";
-import { Title, Container, HorizontalContainer, AppContent, AppMain, AppEditor, Header } from "./containers";
+import React, { useState, useEffect } from "react";
+
+import Sortly, { useDrag, useDrop, useIsClosestDragging, findDescendants, remove } from 'react-sortly';
+import { HorizontalContainer, AppColumn10, RightColumn, AppEditor, Header } from "./containers";
 import { Button, UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem, InputGroup, InputGroupAddon, Input, FormGroup, Label } from 'reactstrap';
 import Icon from '@mdi/react'
-import { mdiPencilOutline, mdiCancel, mdiCheck } from '@mdi/js'
+import { mdiCheckboxBlankOutline, mdiCheckBoxOutline, mdiCancel, mdiCheck, mdiDelete } from '@mdi/js'
 import update from 'immutability-helper';
-import ReactJson from 'react-json-view';
-import format from 'string-format';
-import Sortly, { remove, findDescendants } from 'react-sortly';
+//import ReactJson from 'react-json-view';
+//import format from 'string-format';
 import { addIds, stripIds, flattenConditions, buildTree, staticData, isNewItem } from './utils';
 import { DynamicEditor } from './DynamicEditor'
 import axios from 'axios';
 
-export class RuleEditor extends React.Component {
 
-    constructor(props) {
-        super(props);
-        this.state = {
-            ruleId: undefined,
-            name: "",
-            ontrue: [],
-            onfalse: [],
-            flatConditions: [],
-            editorVisible: false
-        };
-    }
+const cache = {};
 
-    componentDidMount() {
-        this.loadRuleFromServer(this.props.id);
-    }
+const RuleEditor = (props) => {
 
-    componentDidUpdate(prevProps) {
-        if (prevProps.id !== this.props.id) {
-            this.loadRuleFromServer(this.props.id);
+    const [data, setData] = useState({
+        id: undefined,
+        name: "",
+        ontrue: [],
+        onfalse: [],
+        flatConditions: [],
+        edData: { visible: false }
+    });
+
+
+
+    useEffect(() => {
+        fetchData(props.id);
+    }, [props]);
+
+
+    /* ---------------------------------------------------------------------------------------------------------------
+    API interactions
+    --------------------------------------------------------------------------------------------------------------- */
+
+    const fetchData = async (id) => {
+        console.log('fetchData');
+        //const _cache = cache;
+        try {
+            const response = await axios.get('/api/rule/' + id);
+            // update the state
+            if (response.data.success) {
+                setData({
+                    ...data,
+                    ...response.data.rule,
+                    edData: { visible: false },
+                    flatConditions: flattenConditions(response.data.rule.condition),
+                    ontrue: response.data.rule.ontrue ? addIds(response.data.rule.ontrue) : [],
+                    onfalse: response.data.rule.onfalse ? addIds(response.data.rule.onfalse) : [],
+                    nameHasChanged: false,
+                    descriptionHasChanged: false,
+                    categoryHasChange: false
+                });
+                cache['namePrev'] = response.data.rule.name;
+                cache['descriptionPrev'] = response.data.rule.description;
+                cache['categoryPrev'] = response.data.rule.category;
+            } else {
+                // TODO: alert user, editor is not visible!
+                console.log(response.data);
+            }
+        } catch (e) {
+            // TODO: alert user
+            console.log(e);
         }
-    }
-
-    loadRuleFromServer(id) {
-        axios.get('/api/rule/' + id)
-            .then((response) => {
-                this.setStateFromServerData(response.data);
-            })
-            .catch((error) => {
-                console.log(error);
-            });
-    }
-
-    setStateFromServerData(data) {
-        this.setState({
-            source: JSON.parse(JSON.stringify(data)), // taking independant copy of the data
-            ruleId: data.id,
-            name: data.name,
-            namePrev: data.name,
-            nameHasChanged: false,
-            description: data.description ? data.description : "",
-            descriptionPrev: data.description ? data.description : "",
-            descriptionHasChanged: false,
-            ontrue: data.ontrue ? addIds(data.ontrue) : [],
-            onfalse: data.onfalse ? addIds(data.onfalse) : [],
-            flatConditions: addIds(flattenConditions(data.condition)),
-            editorVisible: false,
-            editorItemIndex: -1,
-            editorAlertVisible: false,
-        });
-    }
+    };
 
 
-
-
-
-    handleEditableItemClick = (majorType, index, itemType, model) => {
-        this.setState({
-            editorVisible: true,
-            editorData: this.state[itemType][index],
-            editorModel: model,
-            editorItemIndex: index,
-            editorItemType: itemType,
-            editorTitle: staticData[majorType][this.state[itemType][index].type],
-            editorAlertVisible: false
-        });
-    }
-
-
-
-    // itemName is either
-    // - "name"
-    // - "description"
-    onEditableItemChange = (e, itemName) => {
-        this.setState({ [itemName]: e.target.value, [itemName+"HasChanged"]: true });
-    }
-
-    // itemName is either
-    // - "name"
-    // - "description"
-    handleEditableItemCancelClick = (itemName) => {
-        this.setState({ [itemName]: this.state[itemName+"Prev"], [itemName+"HasChanged"]: false });
-    }
-
-    // itemName is either
-    // - "name"
-    // - "description"
-    handleEditableItemSaveClick = (itemName) => {
-        axios.put('/api/rule/' + this.state.ruleId, { [itemName]: this.state[itemName] })
-            .then((response) => {
-                // update the state
+    const pushUpdate = async (itemUpdate, updateFn) => {
+        if (itemUpdate) {
+            try {
+                const response = await axios.put('/api/rule/' + data.id, itemUpdate);
                 if (response.data.success) {
-                    this.setStateFromServerData(response.data.newrule);
-                    this.props.refreshNames();
+                    updateFn(response.data.rule);
                 } else {
                     // TODO: alert user, editor is not visible!
                     console.log(response.data);
                 }
-            })
-            .catch((error) => {
-                // TODO: alert user
-                console.log(error);
-            });
-    }
-
-
-
-
-
-    handleChange = (items) => {
-        this.setState({ flatConditions: items });
-    }
-
-    handleMove = (items, index, newIndex) => {
-        if (this.state.editorVisible) return false;
-        const { path } = items[newIndex];
-        const parent = items.find(item => item.id === path[path.length - 1]);
-        // parent must be OR or AND or root (so "no parent")
-        if (!parent || (parent.type === 'or' || parent.type === 'and')) {
-            return true;
-        } else {
-            return false;
+            } catch (err) {
+                console.log(err);
+            }
         }
     }
 
+    const pushConditionsUpdate = (newConditions) => {
+        pushUpdate(newConditions, (newdata) => {
+            setData(update(data, {
+                condition: { $set: newdata.condition },
+                flatConditions: { $set: flattenConditions(newdata.condition) },
+                edData: {
+                    visible: { $set: false },
+                    alertVisible: { $set: false },
+                    itemIndex: { $set: -1 }
+                }
+            }));
+        });
+    }
+
+    const pushActionsUpdate = (itemType, newActions) => {
+        pushUpdate(newActions, (newdata) => {
+            setData(update(data, {
+                [itemType]: { $set: newdata[itemType] ? addIds(newdata[itemType]) : [] },
+                edData: {
+                    visible: { $set: false },
+                    alertVisible: { $set: false },
+                    itemIndex: { $set: -1 }
+                }
+            }));
+        });
+    }
 
 
+    /* ---------------------------------------------------------------------------------------------------------------
+    Sortly functions
+    --------------------------------------------------------------------------------------------------------------- */
 
-    /* -------  Callback methods of ConditionEditor  ------- */
+    const handleSortlyChange = (items) => {
+        for (let index = 0; index < items.length; index += 1) {
+            if (!(items[index].type === 'or' || items[index].type === 'and') && findDescendants(items, index).length > 0)
+                return;
+        }
+        setData({ ...data, flatConditions: items });
+    }
 
-    /*
-    itemType: ontrue, onfalse, flatConditions
-    subType: either one of the action types or condition types
-    */
-    addNewItem = (itemType, subType) => {
+    const handleConditionDrop = () => {
+        let itemUpdate = { condition: buildTree(data.flatConditions) };
+        pushConditionsUpdate(itemUpdate);
+    }
+
+
+    /* ---------------------------------------------------------------------------------------------------------------
+    Inline editor functions for direct editing of items in the Rule View (outside of the dynamic editor)
+    --------------------------------------------------------------------------------------------------------------- */
+
+    // called when the user edits the data in the name/description input field
+    // itemName is either "name" or "description"
+    const onEditableItemChange = (e, itemName) => {
+        setData(update(data, {
+            [itemName]: { $set: e.target.value },
+            [itemName + "HasChanged"]: { $set: true }
+        }));
+    };
+
+    // called when the user cancels the edit of the name/description input
+    // itemName is either "name" or "description"
+    const handleEditableItemCancelClick = (itemName) => {
+        setData(update(data, {
+            [itemName]: { $set: cache[itemName + "Prev"] },
+            [itemName + "HasChanged"]: { $set: false }
+        }));
+    };
+
+    // called when the user commits the edit of the name/description input
+    // itemName is either "name" or "description"
+    const handleEditableItemSaveClick = (itemName) => {
+        // push the update and update the state on success
+        pushUpdate({ [itemName]: data[itemName] }, (newdata) => {
+            setData(update(data, {
+                [itemName + "HasChanged"]: { $set: false },
+                [itemName]: { $set: newdata[itemName] }
+            }));
+            cache[itemName + "Prev"] = newdata[itemName];
+            // call the refreshNames function of the parent Editor component to update its list of rules
+            if (itemName === 'name' || itemName === 'category') props.refreshNames();
+        });
+    }
+
+
+    /* ---------------------------------------------------------------------------------------------------------------
+    Dynamic editor functions
+    --------------------------------------------------------------------------------------------------------------- */
+
+    // called when the user clicks on the 'edit' button of a condition or action
+    const handleEditableItemClick = (majorType, index, itemType, model) => {
+        console.log(majorType);
+        console.log(index);
+        console.log(itemType);
+        console.log(model);
+
+        const edData = {
+            visible: true,
+            data: data[itemType][index],        // copy of data we could also access using the pointers
+            model: model,
+            itemIndex: index,
+            itemType: itemType,
+            title: staticData[majorType][data[itemType][index].type],           // copy of data we could also access using the pointers
+            alertVisible: false
+        }
+
+        setData(update(data, {
+            edData: { $set: edData }
+        }));
+
+    };
+
+    const editorHandleCancelClick = () => {
+        setData(update(data, {
+            edData: {
+                visible: { $set: false },
+                alertVisible: { $set: false },
+                itemIndex: { $set: -1 }
+            }
+        }));
+    };
+
+
+    const editorHandleDeleteClick = (itemType, itemIndex) => {
         let itemUpdate = undefined;
+        if (itemType === 'flatConditions') {
+            const children = findDescendants(data.flatConditions, itemIndex);
+            if (children.length === 0 || (children.length > 0 && window.confirm('Delete this logic block together with its children?'))) {
+                itemUpdate = { condition: buildTree(remove(data.flatConditions, itemIndex)) };
+                pushConditionsUpdate(itemUpdate);
+            }
+            //this.setState({ editorAlertMessage: response.data.message, editorAlertVisible: true });
+        } else {
+            itemUpdate = {
+                [itemType]: stripIds(
+                    update(data[itemType], { $splice: [[itemIndex, 1]] })
+                )
+            };
+            pushActionsUpdate(itemType, itemUpdate);
+        }
+    };
+
+
+
+
+    const editorHandleSaveClick = async (dataUpdate) => {
+        let itemType = data.edData.itemType;
+        // first let server validate
+        try {
+            let response = await axios.post('/api/validate/', { editorItemType: itemType, ...dataUpdate });
+            if (!response.data.success) {
+                //this.setState({ editorAlertMessage: response.data.message, editorAlertVisible: true });
+                console.log(response.data);
+            } else {
+                let itemUpdate = undefined;
+                // inject the update in a clone of the state
+                const cloned = update(data[itemType],
+                    { [data.edData.itemIndex]: { $set: dataUpdate } }
+                )
+                if (itemType === 'flatConditions') {
+                    itemUpdate = { condition: buildTree(cloned) };
+                    pushConditionsUpdate(itemUpdate);
+                } else {
+                    itemUpdate = { [itemType]: stripIds(cloned) };
+                    pushActionsUpdate(itemType, itemUpdate);
+                }
+            }
+        } catch (error) {
+            // TODO: alert user
+            console.log(error);
+        };
+    };
+
+    // toggle the enabled state of an item (action or condition)
+    // currenlty only used for actions
+    const editorHandleEnableClick = async (itemType, itemIndex) => {
+        try {
+            let itemUpdate = undefined;
+            // inject the update in a clone of the state
+            const cloned = update(data[itemType],
+                { [itemIndex]: { $toggle: ['enabled'] } }
+            )
+            if (itemType === 'flatConditions') {
+                itemUpdate = { condition: buildTree(cloned) };
+                pushConditionsUpdate(itemUpdate);
+            } else {
+                itemUpdate = { [itemType]: stripIds(cloned) };
+                pushActionsUpdate(itemType, itemUpdate);
+            }
+        } catch (error) {
+            // TODO: alert user
+            console.log(error);
+        };
+
+    }
+
+
+
+    /* ---------------------------------------------------------------------------------------------------------------
+    Various
+    --------------------------------------------------------------------------------------------------------------- */
+
+
+    // Called when the user either add new condition or action
+    // itemType: ontrue, onfalse, flatConditions
+    // subType: either one of the action types or condition types
+
+    const addNewItem = async (itemType, subType) => {
+        // build the update and update the state on succes
+        let itemUpdate = undefined;
+
         if (itemType === 'flatConditions') {
             let newItem = staticData.newItems.condition[subType];
             if (subType === "or")
                 newItem = { type: "or", condition: [] };
             else if (subType === "and")
                 newItem = { type: "and", condition: [] };
-            itemUpdate = { condition: buildTree(stripIds(this.state.flatConditions)).concat(newItem) };
+            itemUpdate = { condition: buildTree(stripIds(data.flatConditions)).concat(newItem) };
+            pushConditionsUpdate(itemUpdate);
         } else {
             const newItem = staticData.newItems.action[subType];
-            itemUpdate = { [itemType]: stripIds(this.state[itemType]).concat(newItem) };
+            itemUpdate = { [itemType]: stripIds(data[itemType]).concat(newItem) };
+            pushActionsUpdate(itemType, itemUpdate);
         }
-
-        if (itemUpdate) {
-            axios.put('/api/rule/' + this.state.ruleId, itemUpdate)
-                .then((response) => {
-                    // update the state
-                    if (response.data.success) {
-                        this.setStateFromServerData(response.data.newrule);
-                    } else {
-                        // TODO: alert user, editor is not visible!
-                        console.log(response.data);
-                    }
-                })
-                .catch((error) => {
-                    // TODO: alert user
-                    console.log(error);
-                });
-        }
-
-    }
+    };
 
 
 
+    /* ---------------------------------------------------------------------------------------------------------------
+    UI elements
+    --------------------------------------------------------------------------------------------------------------- */
 
-    editorHandleCancelClick = () => {
-        this.setState({ editorAlertVisible: false, editorVisible: false, editorItemIndex: -1 });
-    }
+    const newConditions = Object.keys(staticData.newItems.condition).map((condition) => (
+        <DropdownItem key={condition} onClick={() => { addNewItem("flatConditions", condition) }}>{staticData.conditions[condition]}</DropdownItem>
+    ));
 
-    editorHandleDeleteClick = () => {
-        let itemUpdate = undefined;
-        if (this.state.editorItemType === 'flatConditions') {
-            const children = findDescendants(this.state.flatConditions, this.state.editorItemIndex);
-            if (children.length === 0 || (children.length > 0 && window.confirm('Delete this logic block together with its children?'))) {
-                itemUpdate = { condition: buildTree(stripIds(remove(this.state.flatConditions, this.state.editorItemIndex))) };
-            }
-        } else {
-            // TODO: can be simplified by first applying stripIds (as this creates a hard copy)
-            itemUpdate = {
-                [this.state.editorItemType]: stripIds(
-                    update(this.state[this.state.editorItemType], { $splice: [[this.state.editorItemIndex, 1]] })
-                )
-            };
-        }
+    const newOntrueActions = Object.keys(staticData.newItems.action).map((action) => (
+        <DropdownItem key={action} onClick={() => { addNewItem("ontrue", action) }}>{staticData.actions[action]}</DropdownItem>
+    ));
 
-        if (itemUpdate) {
-            axios.put('/api/rule/' + this.state.ruleId, itemUpdate)
-                .then((response) => {
-                    // update the state
-                    if (response.data.success) {
-                        this.setStateFromServerData(response.data.newrule);
-                    } else {
-                        this.setState({ editorAlertMessage: response.data.message, editorAlertVisible: true });
-                        //console.log(response.data);
-                    }
-                })
-                .catch((error) => {
-                    // TODO: alert user
-                    console.log(error);
-                });
-        }
-    }
+    const newOnfalseActions = Object.keys(staticData.newItems.action).map((action) => (
+        <DropdownItem key={action} onClick={() => { addNewItem("onfalse", action) }}>{staticData.actions[action]}</DropdownItem>
+    ));
 
-    editorHandleSaveClick = (newData) => {
-        // first let server validate
-        axios.post('/api/validate/', { editorItemType: this.state.editorItemType, ...newData })
-            .then((response) => {
-                if (!response.data.success) {
-                    this.setState({ editorAlertMessage: response.data.message, editorAlertVisible: true });
-                    //console.log(response.data);
-                    return;
-                } else {
-                    this.pushUpdateToServer(newData)
-                        .then((response) => {
-                            // update the state
-                            if (response.data.success) {
-                                this.setStateFromServerData(response.data.newrule);
-                            } else {
-                                this.setState({ editorAlertMessage: response.data.message, editorAlertVisible: true });
-                                //console.log(response.data);
-                            }
-                        })
-                        .catch((error) => {
-                            // TODO: alert user
-                            console.log(error);
-                        });
-                }
-            })
-            .catch((error) => {
-                // TODO: alert user
-                console.log(error);
-            });
-    }
+    const categoryDatalist = props.categories.map((category) => (
+        <option key={category} value={category} label={category} />
+    ));
 
-    pushUpdateToServer = (newData) => {
-        // create update of the relevant section of state without mutating state
-        let itemUpdate = {};
-        const cloned = update(this.state[this.state.editorItemType],
-            { [this.state.editorItemIndex]: { $set: newData } }
-        )
-        if (this.state.editorItemType === 'flatConditions') {
-            itemUpdate = { condition: buildTree(stripIds(cloned)) }
-        }
-        else
-            itemUpdate = { [this.state.editorItemType]: stripIds(cloned) }
-        // push item to the server
-        return axios.put('/api/rule/' + this.state.ruleId, itemUpdate);
-    }
+    /* ---------------------------------------------------------------------------------------------------------------
+    Main render
+    --------------------------------------------------------------------------------------------------------------- */
 
+    return (
+        <RightColumn>
 
+            <AppColumn10>
+                <FormGroup>
+                    <Label for="name">Name</Label>
+                    <InputGroup name="name">
+                        <Input className="bold_blue" value={data.name || ""} onChange={(e) => onEditableItemChange(e, "name")} />
+                        {data.nameHasChanged && <InputGroupAddon addonType="append">
+                            <Button color="secondary"><Icon path={mdiCheck} size={1} color="white" onClick={() => handleEditableItemSaveClick("name")} /></Button>
+                            <Button color="secondary"><Icon path={mdiCancel} size={1} color="white" onClick={() => handleEditableItemCancelClick("name")} /></Button>
+                        </InputGroupAddon>}
+                    </InputGroup>
+                </FormGroup>
+                <FormGroup>
+                    <Label for="category">Category</Label>
+                    <InputGroup name="category">
+                        <Input value={data.category || ""} list="categories" onChange={(e) => onEditableItemChange(e, "category")} />
+                        <datalist id="categories">
+                            {categoryDatalist}
+                        </datalist>
+                        {data.categoryHasChanged && <InputGroupAddon addonType="append">
+                            <Button color="secondary"><Icon path={mdiCheck} size={1} color="white" onClick={() => handleEditableItemSaveClick("category")} /></Button>
+                            <Button color="secondary"><Icon path={mdiCancel} size={1} color="white" onClick={() => handleEditableItemCancelClick("category")} /></Button>
+                        </InputGroupAddon>}
+                    </InputGroup>
+                </FormGroup>
+                <FormGroup>
+                    <Label for="description">Description</Label>
+                    <InputGroup name="description">
+                        <Input type="textarea" value={data.description} onChange={(e) => onEditableItemChange(e, "description")} />
+                        {data.descriptionHasChanged && <InputGroupAddon addonType="append">
+                            <Button color="secondary"><Icon path={mdiCheck} size={1} color="white" onClick={() => handleEditableItemSaveClick("description")} /></Button>
+                            <Button color="secondary"><Icon path={mdiCancel} size={1} color="white" onClick={() => handleEditableItemCancelClick("description")} /></Button>
+                        </InputGroupAddon>}
+                    </InputGroup>
+                </FormGroup>
 
-    ConditionItemRenderer = props => (
-        <ConditionItemRendererClass
-            {...props}
-            onEditableItemClick={this.handleEditableItemClick}
-        />
-    )
-
-    render() {
-        const newConditions = Object.keys(staticData.newItems.condition).map((condition) => (
-            <DropdownItem key={condition} onClick={() => { this.addNewItem("flatConditions", condition) }}>{staticData.conditions[condition]}</DropdownItem>
-        ));
-
-        const newOntrueActions = Object.keys(staticData.newItems.action).map((action) => (
-            <DropdownItem key={action} onClick={() => { this.addNewItem("ontrue", action) }}>{staticData.actions[action]}</DropdownItem>
-        ));
-
-        const newOnfalseActions = Object.keys(staticData.newItems.action).map((action) => (
-            <DropdownItem key={action} onClick={() => { this.addNewItem("onfalse", action) }}>{staticData.actions[action]}</DropdownItem>
-        ));
-
-
-        return (
-            <AppMain>
-
-                <AppContent>
-                    <FormGroup>
-                        <Label for="name">Name</Label>
-                        <InputGroup name="name">
-                            <Input className="bold_blue" value={this.state.name} onChange={(e) => this.onEditableItemChange(e, "name") } />
-                            {this.state.nameHasChanged && <InputGroupAddon addonType="append">
-                                <Button color="secondary"><Icon path={mdiCheck} size={1} color="white" onClick={() => this.handleEditableItemSaveClick("name")} /></Button>
-                                <Button color="secondary"><Icon path={mdiCancel} size={1} color="white" onClick={() => this.handleEditableItemCancelClick("name")} /></Button>
-                            </InputGroupAddon>}
-                        </InputGroup>
-                    </FormGroup>
-                    <FormGroup>
-                        <Label for="description">Description</Label>
-                        <InputGroup name="description">
-                            <Input type="textarea" value={this.state.description} onChange={(e) => this.onEditableItemChange(e, "description") } />
-                            {this.state.descriptionHasChanged && <InputGroupAddon addonType="append">
-                                <Button color="secondary"><Icon path={mdiCheck} size={1} color="white" onClick={() => this.handleEditableItemSaveClick("description")} /></Button>
-                                <Button color="secondary"><Icon path={mdiCancel} size={1} color="white" onClick={() => this.handleEditableItemCancelClick("description")} /></Button>
-                            </InputGroupAddon>}
-                        </InputGroup>
-                    </FormGroup>
-                    <HorizontalContainer>
-                        <Header>Conditions:</Header>
-                        <UncontrolledDropdown>
-                            <DropdownToggle caret>
-                                Add Condition
+                <HorizontalContainer>
+                    <Header>Conditions:</Header>
+                    <UncontrolledDropdown>
+                        <DropdownToggle caret>
+                            Add Condition
                             </DropdownToggle>
-                            <DropdownMenu>
-                                <DropdownItem header>Logical</DropdownItem>
-                                <DropdownItem onClick={() => { this.addNewItem("flatConditions", "or") }}>OR</DropdownItem>
-                                <DropdownItem onClick={() => { this.addNewItem("flatConditions", "and") }}>AND</DropdownItem>
-                                <DropdownItem divider />
-                                <DropdownItem header>Condition</DropdownItem>
-                                {newConditions}
-                            </DropdownMenu>
-                        </UncontrolledDropdown>
-                    </HorizontalContainer>
+                        <DropdownMenu>
+                            <DropdownItem header>Logical</DropdownItem>
+                            <DropdownItem onClick={() => { addNewItem("flatConditions", "or") }}>OR</DropdownItem>
+                            <DropdownItem onClick={() => { addNewItem("flatConditions", "and") }}>AND</DropdownItem>
+                            <DropdownItem divider />
+                            <DropdownItem header>Condition</DropdownItem>
+                            {newConditions}
+                        </DropdownMenu>
+                    </UncontrolledDropdown>
+                </HorizontalContainer>
 
-                    <Sortly
-                        items={this.state.flatConditions}
-                        itemRenderer={this.ConditionItemRenderer}
-                        onChange={this.handleChange}
-                        onMove={this.handleMove}
+                {
+                    data.flatConditions.length > 0 && <Sortly
+                        items={data.flatConditions}
+                        onChange={handleSortlyChange} >
+                        {(props) => <ConditionItemRenderer {...props}
+                            onEditableItemClick={handleEditableItemClick}
+                            onConditionDropped={handleConditionDrop}
+                            onDeleteClick={editorHandleDeleteClick}
+                        />}
+                    </Sortly>
+                }
+
+                <HorizontalContainer>
+                    <Header>On True:</Header>
+                    <UncontrolledDropdown>
+                        <DropdownToggle caret>
+                            Add OnTrue Action
+                            </DropdownToggle>
+                        <DropdownMenu>
+                            {newOntrueActions}
+                        </DropdownMenu>
+                    </UncontrolledDropdown>
+                </HorizontalContainer>
+                <ul className="list-group">
+                    <ActionItemRenderer
+                        actions={data.ontrue}
+                        type="ontrue"
+                        onEditableItemClick={handleEditableItemClick}
+                        onDeleteClick={editorHandleDeleteClick}
+                        onEnableClick={editorHandleEnableClick}
                     />
+                </ul>
 
-                    <HorizontalContainer>
-                        <Header>On True:</Header>
-                        <UncontrolledDropdown>
-                            <DropdownToggle caret>
-                                Add OnTrue Action
+                <HorizontalContainer>
+                    <Header>On False:</Header>
+                    <UncontrolledDropdown>
+                        <DropdownToggle caret>
+                            Add OnFalse Action
                             </DropdownToggle>
-                            <DropdownMenu>
-                                {newOntrueActions}
-                            </DropdownMenu>
-                        </UncontrolledDropdown>
-                    </HorizontalContainer>
-                    <ul className="list-group">
-                        <ActionItemRendererClass
-                            actions={this.state.ontrue}
-                            type="ontrue"
-                            handleEditableItemClick={this.handleEditableItemClick}
-                        />
-                    </ul>
-
-                    <HorizontalContainer>
-                        <Header>On False:</Header>
-                        <UncontrolledDropdown>
-                            <DropdownToggle caret>
-                                Add OnFalse Action
-                            </DropdownToggle>
-                            <DropdownMenu>
-                                {newOnfalseActions}
-                            </DropdownMenu>
-                        </UncontrolledDropdown>
-                    </HorizontalContainer>
-                    <ul className="list-group">
-                        <ActionItemRendererClass
-                            actions={this.state.onfalse}
-                            type="onfalse"
-                            handleEditableItemClick={this.handleEditableItemClick}
-                        />
-                    </ul>
+                        <DropdownMenu>
+                            {newOnfalseActions}
+                        </DropdownMenu>
+                    </UncontrolledDropdown>
+                </HorizontalContainer>
+                <ul className="list-group">
+                    <ActionItemRenderer
+                        actions={data.onfalse}
+                        type="onfalse"
+                        onEditableItemClick={handleEditableItemClick}
+                        onDeleteClick={editorHandleDeleteClick}
+                        onEnableClick={editorHandleEnableClick}
+                    />
+                </ul>
 
 
 
-                    {false && <pre className='code'>{JSON.stringify(this.state, undefined, 4)}</pre>}
 
+            </AppColumn10>
+            {
+                false && <AppColumn10>
+                    {<pre className='code'>{JSON.stringify(data, undefined, 4)}</pre>}
+                </AppColumn10>
+            }
 
-                </AppContent>
-                <AppEditor>
-                    <ReactJson src={this.state.source} displayDataTypes={false} enableClipboard={false} displayObjectSize={false} name={false} />
-                </AppEditor>
-
-
-                {this.state.editorVisible && <DynamicEditor
-                    visible={this.state.editorVisible}
-                    editorData={this.state.editorData}
-                    title={this.state.editorTitle}
-                    model={this.state.editorModel}
-                    key={this.state.editorData._id}
-                    alertVisible={this.state.editorAlertVisible}
-                    alert={this.state.editorAlertMessage}
-                    editorHandleSaveClick={this.editorHandleSaveClick}
-                    editorHandleCancelClick={this.editorHandleCancelClick}
-                    editorHandleDeleteClick={this.editorHandleDeleteClick} />
+            <AppColumn10>
+                {data.edData.visible && <DynamicEditor
+                    edData={data.edData}
+                    key={data.edData.data._id}
+                    onHandleSaveClick={editorHandleSaveClick}
+                    onHandleCancelClick={editorHandleCancelClick}
+                    onHandleDeleteClick={editorHandleDeleteClick} />
                 }
-            </AppMain>
-        );
-    }
+            </AppColumn10>
+
+
+
+        </RightColumn >
+    );
+
 }
 
 /* --------------------------------------------------------------------------------------------------------------------
@@ -412,11 +481,13 @@ const itemStyle = {
     border: '1px solid #ccc',
     cursor: 'move',
     padding: 10,
-    marginBottom: 4,
+    marginBottom: 4
 };
 
 const muteStyle = {
-    opacity: .3,
+    //opacity: .5,
+    boxShadow: '0px 0px 8px #666',
+    border: '1px dashed #1976d2',
 }
 
 const newStyle = {
@@ -436,91 +507,149 @@ const pushRightStyle = {
   Condition and Action item renderers
 -------------------------------------------------------------------------------------------------------------------- */
 
-class ActionItemRendererClass extends React.Component {
-    render() {
-        const ontrueActions = this.props.actions.map((action, index) => {
-            const isNew = isNewItem(action, "action", action.type);
-            const style = {
-                cursor: 'pointer',
-                ...(isNew ? newStyle : null)
-            };
-            return (
-                <li className="list-group-item"
-                    key={action._id} id={action._id}
-                    style={style}
-                    onClick={() => this.props.handleEditableItemClick("actions", index, this.props.type, staticData.editor.action[action.type])}>
-                    {isNew ? "* " : ""} {staticData.actions[action.type]}
-                </li>
-            )
+
+
+const ConditionItemRenderer = (props) => {
+
+    const { data, index, onEditableItemClick } = props;
+    const [{ isDragging }, drag] = useDrag({
+        collect: (monitor) => ({
+            isDragging: monitor.isDragging(),
+        }),
+    });
+    const [, drop] = useDrop({
+        drop() {
+            console.log('drop');
+            props.onConditionDropped();
         }
-        );
-        return ontrueActions;
+
+    });
+
+
+    const handleClick = async () => {
+        //
+        // on the fly add in data to the model
+        //
+        let model = staticData.editor.condition[data.type];
+        try {
+            if (data.type === 'alias') {
+                let response = await axios.get('/api/aliases');
+                if (response.data.success) {
+                    let aliasModel = model.find((item) => (item.key === 'alias'));
+                    aliasModel.options = [{ value: "__REPLACE__", label: "(none)" }];
+                    for (let alias in response.data.aliases) {
+                        aliasModel.options.push({ value: alias, label: alias });
+                    }
+                } else {
+                    console.log("Error returned by the server: " + response.data.message);
+                }
+            } else if (data.type === 'mqtt') {
+                let response = await axios.get('/api/topics');
+                if (response.data.success) {
+                    let mqttModel = model.find((item) => (item.key === 'topic'));
+                    mqttModel.options = [];
+                    for (let topic of response.data.topics) {
+                        mqttModel.options.push({ value: topic, label: topic });
+                    }
+                } else {
+                    console.log("Error returned by the server: " + response.data.message);
+                }
+            }
+        } catch (error) {
+            console.log("Cannot access the script4mqtt service. " + error);
+        }
+        console.log(model);
+        onEditableItemClick("conditions", index, "flatConditions", model);
+    };
+
+
+    let label = "";
+    let isNew = false;
+    switch (data.type) {
+        case "and":
+            label = "AND"
+            break;
+        case "or":
+            label = "OR";
+            break;
+        case "mqtt":
+            isNew = isNewItem(data, "condition", data.type);
+            const { topic } = data;
+            label = `MQTT [${topic}]`;
+            break;
+        case "alias":
+            isNew = isNewItem(data, "condition", data.type);
+            const { alias } = data;
+            label = `ALIAS [${alias}]`;
+            break;
+        case "cron":
+            isNew = isNewItem(data, "condition", data.type);
+        default:
+            label = staticData.conditions[data.type];
+            break;
     }
+
+    if (isNew) {
+        label = "* " + label;
+    }
+
+    const style = {
+        ...itemStyle,
+        ...(useIsClosestDragging() || isDragging ? muteStyle : null),
+        ...(isNew ? newStyle : null),
+        marginLeft: data.depth * 30,
+    };
+
+    return (
+        <div ref={drop}>
+            <div ref={drag} style={style} ><span style={{ cursor: 'pointer' }} onClick={handleClick}>{label}</span>
+                <span style={pushRightStyle}>
+                    <Icon path={mdiDelete} size={1} className="deleteIcon" onClick={(e) => { props.onDeleteClick('flatConditions', index) }} />
+                </span>
+            </div>
+        </div>
+    );
+
 }
 
-class ConditionItemRendererClass extends React.Component {
 
-    handleClick = () => {
-        this.props.onEditableItemClick("conditions", this.props.index, "flatConditions", staticData.editor.condition[this.props.type]);
-    }
+const ActionItemRenderer = (props) => {
 
-    handleDeleteClick = (e) => {
-        e.stopPropagation();
-        // TODO: generic delete
-        this.props.handleConditionDeleteClick(this.props.id);
-    }
-
-    render() {
-        const {
-            type, path, connectDragSource, connectDropTarget,
-            isDragging, isClosestDragging
-        } = this.props;
-
-        let label = "";
-        let isNew = false;
-        switch (type) {
-            case "and":
-                label = "AND"
-                break;
-            case "or":
-                label = "OR";
-                break;
-            case "mqtt":
-                isNew = isNewItem(this.props, "condition", type);
-                const { topic } = this.props;
-                label = format("MQTT [{}]", topic);
-                break;
-            case "alias":
-                isNew = isNewItem(this.props, "condition", type);
-                const { alias } = this.props;
-                label = format("ALIAS [{}]", alias);
-                break;
-            case "cron":
-                isNew = isNewItem(this.props, "condition", type);
-            default:
-                label = staticData.conditions[type];
-                break;
-        }
-        if (isNew) {
-            label = "* " + label;
-        }
-
+    const ontrueActions = props.actions.map((action, index) => {
+        const isNew = isNewItem(action, "action", action.type);
         const style = {
-            ...itemStyle,
-            ...(isDragging || isClosestDragging ? muteStyle : null),
-            ...(isNew ? newStyle : null),
-            marginLeft: path.length * 30,
+            ...(isNew ? newStyle : null)
         };
+        return (
+            <li className="list-group-item"
+                key={action._id} id={action._id}
+                style={style}
+            >
+                <Icon path={action.enabled ? mdiCheckBoxOutline : mdiCheckboxBlankOutline} style={{ cursor: 'pointer' }} className="editIcon" size={1} onClick={(e) => { props.onEnableClick(props.type, index) }} />
+                {isNew ? "* " : ""} <span style={{ cursor: 'pointer' }} onClick={() => props.onEditableItemClick("actions", index, props.type, staticData.editor.action[action.type])}>{staticData.actions[action.type]}</span>
+                <span style={pushRightStyle}>
+                    <Icon path={mdiDelete} size={1} className="deleteIcon" onClick={(e) => { props.onDeleteClick(props.type, index) }} />
+                </span>
+            </li>
+        )
+    });
 
-        const el = <div style={style}>
-            {label}
-            <span style={pushRightStyle}>
-                <Icon path={mdiPencilOutline} size={1} className="editIcon" onClick={this.handleClick} />
-            </span></div>;
-        return connectDragSource(connectDropTarget(el));
-    }
+    return ontrueActions;
 
 }
+
+
+
+/* --------------------------------------------------------------------------------------------------------------
+Memoize our RuleEditor, such as that it does NOT get update anymore, unless we change rule by clicking
+another rule in the RuleList (Editor).
+-------------------------------------------------------------------------------------------------------------- */
+
+function ruleEditorPropsAreEqual(prevRuleEditor, nextRuleEditor) {
+    return prevRuleEditor.id === nextRuleEditor.id;
+}
+
+export const MemoizedRuleEditor = React.memo(RuleEditor, ruleEditorPropsAreEqual);
 
 
 

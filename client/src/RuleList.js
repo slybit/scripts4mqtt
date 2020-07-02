@@ -1,6 +1,9 @@
 import React from "react";
 import Icon from '@mdi/react'
 import { mdiDelete, mdiCheckboxBlankOutline, mdiCheckBoxOutline } from '@mdi/js'
+import { HorizontalContainer, RuleListContainer } from "./containers";
+import { Collapse } from 'reactstrap';
+
 
 const pushRightStyle = {
     float: 'right',
@@ -14,6 +17,10 @@ const selectedStyle = {
 
 export class RuleList extends React.Component {
 
+    constructor(props) {
+        super(props);
+    }
+
     handleDeleteClick = (e, key) => {
         e.stopPropagation();
         this.props.onDeleteClick(key);
@@ -24,32 +31,45 @@ export class RuleList extends React.Component {
         this.props.onEnableClick(index, newEnabledState);
     }
 
-
-
     render() {
 
-        const items = this.props.data.map((rule, index) => {
 
-            const style = {
-                cursor: 'pointer',
-                ...(rule.key === this.props.selectedRule ? selectedStyle: null)
-            }
-
-            return (
-
-                <li className={`list-group-item ${rule.enabled ? "bold" : ""}`} key={rule.key} id={rule.key} style={style} onClick={() => this.props.onClick(rule.key)}>
-                <Icon path={rule.enabled ? mdiCheckBoxOutline : mdiCheckboxBlankOutline} className="editIcon" size={1} onClick={(e) => this.handleEnableClick(e, rule.key, !rule.enabled)}/>
-                {' '}{rule.name}
-                <span style={pushRightStyle}>
-                    <Icon path={mdiDelete} size={1} className="deleteIcon" onClick={(e) => this.handleDeleteClick(e, rule.key)}/>
-                </span>
-                </li>
-            )
-        });
         return (
-            <ul className="list-group">
-                {items}
-            </ul>
+            <RuleListContainer>
+            { Object.keys(this.props.categories).sort().map(category => {
+                return (
+                    <div key={category}>
+                        <HorizontalContainer style={{width: "100%", background: "#007bff", color: "white", cursor: 'pointer'}} onClick={() => this.props.onCategoryClick(category)}>{category}</HorizontalContainer>
+                        <Collapse isOpen={this.props.categories[category].isOpen}>
+                            <ul className="list-group">
+                                {this.props.rules.filter((item) => item.category === category).map(rule => {
+                                    const style = {
+                                        cursor: 'pointer',
+                                        padding: '10px 5px',
+                                        ...(rule.key === this.props.selectedRule ? selectedStyle : null)
+                                    }
+
+                                    return (
+                                        <li className={`list-group-item ${rule.enabled ? "bold" : ""}`} key={rule.key} id={rule.key} style={style} onClick={() => { this.props.onClick(rule.key); }}>
+                                            <Icon path={rule.enabled ? mdiCheckBoxOutline : mdiCheckboxBlankOutline} className="editIcon" size={1} onClick={(e) => this.handleEnableClick(e, rule.key, !rule.enabled)} />
+                                            {' '}{rule.name}
+                                            <span style={pushRightStyle}>
+                                                <Icon path={mdiDelete} size={1} className="deleteIcon" onClick={(e) => this.handleDeleteClick(e, rule.key)} />
+                                            </span>
+                                        </li>
+                                    )
+                                })
+                                }
+                            </ul>
+                        </Collapse>
+                    </div>
+                )
+            }) }
+            </RuleListContainer>
         );
+
+
+
+
     }
 }

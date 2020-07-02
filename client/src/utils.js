@@ -1,27 +1,25 @@
-
+import { store } from 'react-notifications-component';
 
 export function flattenConditions(nested) {
-    const flattenConditionsIteratively = (nested, list, parent) => {
+    const flattenConditionsIteratively = (nested, list, depth) => {
+        // increment the id for each new item
         let id = list.length > 0 ? list[list.length - 1].id + 1 : 1;
-        let path = parent.path.slice(0);
-        if (parent.id) path.push(parent.id);
-        let item = { id: id, path: path, ...nested };
+        let item = { id: id, depth: depth, ...nested };
         delete item.condition; // otherwise the nested conditions all stay in
         list.push(item);
         if ((nested.type === 'or' || nested.type === 'and') && nested.condition) {
             for (let n of nested.condition)
-                flattenConditionsIteratively(n, list, item);
+                flattenConditionsIteratively(n, list, depth + 1);
         }
     }
 
     let list = [];
-    let parent = { path: [] };
 
     if (Array.isArray(nested)) {
         for (let n of nested)
-            flattenConditionsIteratively(n, list, parent);
+            flattenConditionsIteratively(n, list, 0);
     } else
-        flattenConditionsIteratively(nested, list, parent);
+        flattenConditionsIteratively(nested, list, 0);
 
     return list;
 }
@@ -30,22 +28,41 @@ export function flattenConditions(nested) {
 
 export function buildTree(items) {
     const buildItem = (item) => {
-        const { path, isMarked, id, ...data } = item;
+        const { depth, id, ...data } = item;
         const result = {
             ...data,
-            condition: items
-                .filter(child => child.path[child.path.length - 1] === item.id)
+            condition: findDescendants(items, items.indexOf(item))
+                .filter(child => child.depth === item.depth + 1)
                 .map(child => buildItem(child)),
         };
         if (result.type !== 'or' && result.type !== 'and' && result.condition.length === 0) delete result.condition;
         return result;
     };
     const tree = items
-        .filter(item => item.path.length === 0)
+        .filter(item => item.depth === 0)
         .map(item => buildItem(item));
 
     return tree;
 }
+
+
+
+export function findDescendants(items, index) {
+    const item = items[index];
+    const descendants = [];
+
+    for (let i = index + 1; i < items.length; i += 1) {
+        const next = items[i];
+
+        if (next.depth <= item.depth) {
+            break;
+        }
+
+        descendants.push(next);
+    }
+
+    return descendants;
+};
 
 
 
@@ -88,11 +105,27 @@ export function showError(msg, error) {
     alert(msg + "\n\n" + error);
 }
 
+export function showNotification(title, message, type) {
+    store.addNotification({
+        title: title,
+        message: message,
+        type: type,
+        insert: "top",
+        container: "top-right",
+        dismiss: {
+          duration: 5000,
+          onScreen: true
+        }
+      });
+}
+
 export const staticData = {
     conditions: {
         mqtt: "MQTT",
         alias: "Alias",
-        cron: "Cron expression"
+        cron: "Cron expression",
+        or: "Logic operator",
+        and: "Logic operator"
     },
     actions: {
         mqtt: "MQTT",
@@ -105,6 +138,7 @@ export const staticData = {
     newItems: {
         rule: {
             name: "New rule",
+            category: "default",
             description: "",
             enabled: false,
             condition: []
@@ -122,7 +156,9 @@ export const staticData = {
                 type: "alias",
                 trigger: "no",
                 alias: "__REPLACE__",
-                eval: "true"
+                operator: "eq",
+                jmespath: "val",
+                value: ""
             },
             cron: {
                 type: "cron",
@@ -136,6 +172,7 @@ export const staticData = {
                 type: "mqtt",
                 delay: 0,
                 interval: 0,
+                enabled: true,
                 topic: "__REPLACE__",
                 value: "__REPLACE__"
             },
@@ -143,6 +180,7 @@ export const staticData = {
                 type: "pushover",
                 delay: 0,
                 interval: 0,
+                enabled: true,
                 title: "__REPLACE__",
                 message: "",
                 sound: "pushover",
@@ -152,25 +190,29 @@ export const staticData = {
                 type: "email",
                 delay: 0,
                 interval: 0,
-                to: "__REPLACE__",
+                enabled: true,
+                to: "__REPLACE__@mail.com",
                 subject: "__REPLACE__",
                 body: ""
             },
             script: {
                 type: "script",
                 delay: 0,
+                enabled: true,
                 interval: 0,
                 script: ""
             },
             logbook: {
                 type: "logbook",
                 delay: 0,
+                enabled: true,
                 interval: 0,
                 message: ""
             },
             webhook: {
                 type: "webhook",
                 delay: 0,
+                enabled: true,
                 interval: 0,
                 url: "__REPLACE__"
             }
@@ -205,14 +247,14 @@ export const staticData = {
                         { value: "always", label: "Always" }
                     ]
                 },
-                { key: "topic", label: "Topic", props: { required: true } },
+                { key: "topic", label: "Topic", type: "datalist", props: { required: true } },
                 { key: "jmespath", label: "jmespath", props: { required: true } },
                 {
                     key: "operator", label: "Operator", type: "select", options: [
                         { value: "eq", label: "= (equals)" },
                         { value: "gt", label: "> (greater than)" },
-                        { value: "lt", label: "< (less than)"},
-                        { value: "neq", label: "!= (not equal to)"}
+                        { value: "lt", label: "< (less than)" },
+                        { value: "neq", label: "!= (not equal to)" }
                     ]
                 },
                 { key: "value", label: "Value", props: { required: true } }
@@ -227,8 +269,20 @@ export const staticData = {
                         { value: "always", label: "Always" }
                     ]
                 },
-                { key: "alias", label: "Alias", props: { required: true } },
-                { key: "eval", label: "Eval", props: { required: true } }
+                { key: "alias_", label: "Alias_", props: { required: true } },
+                {
+                    key: "alias", label: "Alias", type: "select", options: []
+                },
+                { key: "jmespath", label: "jmespath", props: { required: true } },
+                {
+                    key: "operator", label: "Operator", type: "select", options: [
+                        { value: "eq", label: "= (equals)" },
+                        { value: "gt", label: "> (greater than)" },
+                        { value: "lt", label: "< (less than)" },
+                        { value: "neq", label: "!= (not equal to)" }
+                    ]
+                },
+                { key: "value", label: "Value", props: { required: true } }
             ],
             cron: [
                 {
@@ -246,14 +300,14 @@ export const staticData = {
         },
         action: {
             mqtt: [
-                { key: "delay", label: "Delay"},
-                { key: "interval", label: "Interval"},
+                { key: "delay", label: "Delay" },
+                { key: "interval", label: "Interval" },
                 { key: "topic", label: "Topic", props: { required: true } },
                 { key: "value", label: "Value", props: { required: true } },
             ],
             pushover: [
-                { key: "delay", label: "Delay"},
-                { key: "interval", label: "Interval"},
+                { key: "delay", label: "Delay" },
+                { key: "interval", label: "Interval" },
                 { key: "title", label: "Title", props: { required: true } },
                 { key: "message", label: "Message", type: "textarea", props: { rows: 5 } },
                 {
@@ -293,26 +347,26 @@ export const staticData = {
                 }
             ],
             email: [
-                { key: "delay", label: "Delay"},
-                { key: "interval", label: "Interval"},
+                { key: "delay", label: "Delay" },
+                { key: "interval", label: "Interval" },
                 { key: "to", label: "To", props: { required: true } },
                 { key: "subject", label: "Subject" },
                 { key: "body", label: "Body", type: "textarea", props: { rows: 10 } }
             ],
             script: [
-                { key: "delay", label: "Delay"},
-                { key: "interval", label: "Interval"},
+                { key: "delay", label: "Delay" },
+                { key: "interval", label: "Interval" },
                 { key: "script", label: "Script", type: "simple-editor", props: { rows: 30, style: { fontFamily: 'monospace', fontSize: '1rem' } } }
             ],
             logbook: [
-                { key: "delay", label: "Delay"},
-                { key: "interval", label: "Interval"},
-                { key: "message", label: "Message"}
+                { key: "delay", label: "Delay" },
+                { key: "interval", label: "Interval" },
+                { key: "message", label: "Message" }
             ],
             webhook: [
-                { key: "delay", label: "Delay"},
-                { key: "interval", label: "Interval"},
-                { key: "url", label: "URL"}
+                { key: "delay", label: "Delay" },
+                { key: "interval", label: "Interval" },
+                { key: "url", label: "URL" }
             ]
         }
     }

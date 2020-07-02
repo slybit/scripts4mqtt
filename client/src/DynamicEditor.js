@@ -37,9 +37,10 @@ export class DynamicEditor extends React.Component {
         super(props);
         console.log(props);
         this.state = {};
-        Object.assign(this.state, props.editorData);
+        Object.assign(this.state, props.edData.data);
         console.log(this.state);
     }
+
 
     onChange = (e, key) => {
         this.setState({
@@ -48,12 +49,9 @@ export class DynamicEditor extends React.Component {
 
     }
 
-    handleSaveClick = () => {
-        this.props.editorHandleSaveClick(this.state);
-    }
 
     renderForm = () => {
-        const model = this.props.model;
+        const model = this.props.edData.model;
 
         const formUI = model.map((m) => {
             let key = m.key;
@@ -74,23 +72,34 @@ export class DynamicEditor extends React.Component {
                 />;
             } else if (type === "simple-editor") {
                 input =
-                <div className="script_editor_area">
-                    <Editor
-                        value={value}
-                        id={key}
-                        name={key}
-                        onValueChange={ v => { this.setState( { [key]: v } ) }}
-                        highlight={value => highlight(value, languages.js)}
-                        padding={10}
-                        className="script_editor code"
-                    />
-                </div>;
+                    <div className="script_editor_area">
+                        <Editor
+                            value={value}
+                            id={key}
+                            name={key}
+                            onValueChange={v => { this.setState({ [key]: v }) }}
+                            highlight={value => highlight(value, languages.js)}
+                            padding={10}
+                            className="script_editor code"
+                        />
+                    </div>;
             } else if (type === "select") {
                 const options = m.options.map((o) => {
                     return (<option key={o.value} value={o.value}>{o.label}</option>);
                 });
                 //console.log("Select default: ", value);
                 input = <select className="form-control" value={value} onChange={(e) => { this.onChange(e, target) }}>{options}</select>;
+            } else if (type === "datalist") {
+                const options = m.options.map((o) => {
+                    return (<option key={o.value} value={o.value}>{o.label}</option>);
+                });
+                //console.log("Select default: ", value);
+                input = <div>
+                            <Input value={value} list={"datalist"+key} onChange={(e) => { this.onChange(e, target) }} />
+                            <datalist id={"datalist"+key}>
+                                {options}
+                            </datalist>
+                        </div>;
             }
 
 
@@ -109,31 +118,33 @@ export class DynamicEditor extends React.Component {
 
     render() {
         return (
-            <Modal isOpen={this.props.visible} fade={false} toggle={this.props.editorHandleCancelClick} size="xl">
-                <ModalHeader toggle={this.props.editorHandleCancelClick}>{this.props.title}</ModalHeader>
+            <Modal isOpen={this.props.edData.visible} fade={false} toggle={this.props.editorHandleCancelClick} size="xl">
+
+                <ModalHeader toggle={this.props.onHandleCancelClick}>{this.props.edData.title}</ModalHeader>
                 <ModalBody>
                     <Form className="form">
                         {this.renderForm()}
                     </Form>
-                    <Alert color="danger" isOpen={this.props.alertVisible === true}>
-                        {this.props.alert}
+                    <Alert color="danger" isOpen={this.props.edData.alertVisible === true}>
+                        {this.props.edData.alertMessage}
                     </Alert>
                 </ModalBody>
                 <ModalFooter>
 
 
                     <FormGroup style={spacerStyle}>
-                        <Button color="danger" outline onClick={this.props.editorHandleDeleteClick}>Delete</Button>
+                        <Button color="danger" outline onClick={() => {this.props.onHandleDeleteClick(this.props.edData.itemType, this.props.edData.itemIndex)}}>Delete</Button>
                         <span>
-                            <Button color="primary" outline={true} onClick={this.props.editorHandleCancelClick}>Cancel</Button>{' '}
-                            <Button color="primary" onClick={this.handleSaveClick}>Save</Button>
+                            <Button color="primary" outline={true} onClick={this.props.onHandleCancelClick}>Cancel</Button>{' '}
+                            <Button color="primary" onClick={() => { this.props.onHandleSaveClick(this.state); }}>Save</Button>
                         </span>
                     </FormGroup>
 
                 </ModalFooter>
-
-
             </Modal>
+
+
+
         );
     }
 
