@@ -56,10 +56,11 @@ class SetValueAction extends Action {
                 }
                 Engine.getInstance().mqttClient.publish(this.topic, data);
                 logger.info('Rule [%s]: SetValueAction published %s -> %s', this.rule.name, this.topic, data);
-                jsonlogger.info("SetValueAction executed", { ruleId: this.rule.id, ruleName: this.rule.name, type: "action", subtype: "mqtt", details: `[${data}] to ${this.topic}` });
+                jsonlogger.info("SetValueAction executed", { ruleId: this.rule.id, ruleName: this.rule.name, type: "action", subtype: "mqtt", details: `[${data}] to ${this.topic}`, triggered: "true" });
             }
         } else {
             logger.info('Rule [%s]: SetValueAction not executed: DISABLED', this.rule.name);
+            jsonlogger.info("SetValueAction not executed (disabled)", { ruleId: this.rule.id, ruleName: this.rule.name, type: "action", subtype: "mqtt", details: 'Action disabled', triggered: "false" });
         }
 
         //TODO: add option for retain true or false
@@ -81,13 +82,14 @@ class ScriptAction extends Action {
             try {
                 Engine.getInstance().runScript(this.script, context);
                 logger.info('Rule [%s]: ScriptAction executed', this.rule.name);
-                jsonlogger.info("ScriptAction executed", { ruleId: this.rule.id, ruleName: this.rule.name, type: "action", subtype: "script" });
+                jsonlogger.info("ScriptAction executed", { ruleId: this.rule.id, ruleName: this.rule.name, type: "action", subtype: "script", triggered: "true" });
             } catch (err) {
                 logger.error('Rule [%s]: ERROR running script:\n# ----- start script -----\n%s\n# -----  end script  -----', this.rule.name, this.script);
                 logger.error(err.message);
             }
         } else {
             logger.info('Rule [%s]: ScriptAction not executed: DISABLED', this.rule.name);
+            jsonlogger.info("ScriptAction not executed (disabled)", { ruleId: this.rule.id, ruleName: this.rule.name, type: "action", subtype: "script", details: 'Action disabled', triggered: "false" });
         }
     }
 
@@ -129,7 +131,7 @@ class EMailAction extends Action {
                         logger.error(err.message);
                     } else {
                         logger.info('Rule [%s]: EMailAction executed', action.rule.name);
-                        jsonlogger.info("EMailAction executed", { ruleId: action.rule.id, ruleName: action.rule.name, type: "action", subtype: "email", details: `subject: ${data.subject}` });
+                        jsonlogger.info("EMailAction executed", { ruleId: action.rule.id, ruleName: action.rule.name, type: "action", subtype: "email", details: `subject: ${data.subject}`, triggered: "true" });
                     }
                 });
             } catch (err) {
@@ -138,6 +140,7 @@ class EMailAction extends Action {
             }
         } else {
             logger.info('Rule [%s]: EMailAction not executed: DISABLED', this.rule.name);
+            jsonlogger.info("EMailAction not executed (disabled)", { ruleId: this.rule.id, ruleName: this.rule.name, type: "action", subtype: "email", details: 'Action disabled', triggered: "false" });
         }
     }
 
@@ -172,7 +175,7 @@ class PushoverAction extends Action {
                         logger.error(err.message);
                     } else {
                         logger.info('Rule [%s]: Pushover notification sent succesfully', action.rule.name);
-                        jsonlogger.info("PushoverAction executed", { ruleId: action.rule.id, ruleName: action.rule.name, type: "action", subtype: "pushover", details: `subject: ${data.title}` });
+                        jsonlogger.info("PushoverAction executed", { ruleId: action.rule.id, ruleName: action.rule.name, type: "action", subtype: "pushover", details: `subject: ${data.title}`, triggered: "true" });
                     }
                 });
             } catch (err) {
@@ -181,6 +184,7 @@ class PushoverAction extends Action {
             }
         } else {
             logger.info('Rule [%s]: PushoverAction not executed: DISABLED', this.rule.name);
+            jsonlogger.info("PushoverAction not executed", { ruleId: this.rule.id, ruleName: this.rule.name, type: "action", subtype: "pushover", details: 'Action disabled', triggered: "false" });
         }
     }
 
@@ -202,7 +206,7 @@ class LogBookAction extends Action {
                     let finalMessage = mustache.render(this.message, context);
                     logbooklogger.info(finalMessage);
                     logger.info('Rule [%s]: LogBookAction called with message %s', this.rule.name, finalMessage);
-                    jsonlogger.info("LogBookAction executed", { ruleId: this.rule.id, ruleName: this.rule.name, type: "action", subtype: "logbook", details: `message: ${finalMessage}` });
+                    jsonlogger.info("LogBookAction executed", { ruleId: this.rule.id, ruleName: this.rule.name, type: "action", subtype: "logbook", details: `message: ${finalMessage}`, triggered: "true" });
                 } catch (err) {
                     logger.error('Rule [%s]: ERROR LogBookAction failed', this.rule.name);
                     logger.error(err.message);
@@ -210,6 +214,7 @@ class LogBookAction extends Action {
             }
         } else {
             logger.info('Rule [%s]: LogBookAction not executed: DISABLED', this.rule.name);
+            jsonlogger.info("LogBookAction not executed", { ruleId: this.rule.id, ruleName: this.rule.name, type: "action", subtype: "logbook", details: 'Action disabled', triggered: "false" });
         }
     }
 
@@ -233,7 +238,7 @@ class WebHookAction extends Action {
                 axios.get(url)
                     .then((response) => {
                         logger.info('Rule [%s]: WebHookAction request sent succesfully', action.rule.name);
-                        jsonlogger.info("WebHookAction executed", { ruleId: action.rule.id, ruleName: action.rule.name, type: "action", subtype: "webhook", details: `return code: ${response.status}, url: ${url}` });
+                        jsonlogger.info("WebHookAction executed", { ruleId: action.rule.id, ruleName: action.rule.name, type: "action", subtype: "webhook", details: `return code: ${response.status}, url: ${url}`, triggered: "true" });
                     })
                     .catch((err) => {
                         logger.error('Rule [%s]: ERROR sending WebHookAction request', action.rule.name);
@@ -245,6 +250,7 @@ class WebHookAction extends Action {
             }
         } else {
             logger.info('Rule [%s]: WebHookAction not executed: DISABLED', this.rule.name);
+            jsonlogger.info("WebHookAction not executed", { ruleId: action.rule.id, ruleName: action.rule.name, type: "action", subtype: "webhook", details: 'Action disabled', triggered: "false" });
         }
     }
 

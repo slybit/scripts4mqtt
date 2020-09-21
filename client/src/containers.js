@@ -57,21 +57,20 @@ export const AppFooter = styled.div`
 // -----------------------------------
 
 /**
- * Left column, non-scrolling, hosting the search bar and rule list
+ * Left column, scrolling, hosting the search bar and rule list
  */
 export const LeftColumn = styled.div`
   flex: 0 0 20em;
   max-width: 40em;
   border-right: 1px solid rgba(0, 0, 0, 0.125);
-  overflow-y: hidden;
+  overflow-y: auto;
 `;
 
 /**
- * Scrollable container, hosting the list of rules
+ * Empty container, hosting the list of rules
  */
 export const RuleListContainer = styled.div`
-  overflow-y: auto;
-  height: 100%
+
 `;
 
 /**
@@ -169,11 +168,11 @@ export const Header = styled.div`
 export const Logo = styled.div`
   font-size: 300%;
   font-weight: 600;
-  
+
 `;
 
 export const SubLogo = styled.div`
   font-size: 120%;
   font-weight: 400;
-  
+
 `;

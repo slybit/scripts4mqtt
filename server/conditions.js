@@ -122,6 +122,8 @@ class MqttCondition extends Condition {
             state: this.state ? "true" : "false",
             triggered: canTrigger && this.triggered() ? "true" : "false",
             details: `topic: ${this.topic}, value: ${JSON.stringify(message, null, 1)}`,
+            topic: `${this.topic}`,
+            value: message
          });
         return canTrigger && this.triggered();
     }

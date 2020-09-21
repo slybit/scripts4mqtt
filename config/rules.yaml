@@ -1,131 +1,767 @@
 TimeDateUpdate:
-  name: TDU
-  category: New
-  order: 0
+  name: TimeDateUpdate
+  condition:
+    - type: cron
+      trigger: always
+      'off': ''
+      'on': 15 * * * *
+  ontrue:
+    - type: script
+      script: 'write(''knx/write/15/1/0'', new Date().toString());'
+      enabled: true
+    - type: script
+      script: 'write(''knx/write/15/1/1'', new Date().toString());'
+      enabled: true
+  enabled: true
+  pendingOption: always
+  onfalse: []
+  description: Send date and time to KNX every hour
+Bel:
+  name: Bel
+  condition:
+    type: mqtt
+    trigger: on_flip_true
+    topic: knx/status/15/2/3
+    jmespath: val
+    value: 1
+  ontrue:
+    - type: pushover
+      message: Notification from script4mqtt
+      title: Bel! Bel!
+      sound: bike
+      priority: 1
+      enabled: true
+    - type: mqtt
+      delay: 0
+      interval: 0
+      topic: slybot/message
+      value: Bel! Bel!
+      enabled: true
+    - type: mqtt
+      delay: 0
+      interval: 0
+      topic: unifi/snap
+      value: '["G3_Pro_Voordeur"]'
+      enabled: true
+  enabled: true
+  pendingOption: always
+  description: Send pushover notification when somebody rings the bel
+Achtergevel:
+  name: Afdak_achteraan
   condition:
     - type: and
       condition:
         - type: mqtt
-          trigger: 'no'
-          topic: hass/status/ventilation/high
-          operator: eq
+          topic: knx/status/15/2/30
           jmespath: val
-          value: ''
-        - type: alias
-          trigger: 'no'
-          alias: A
-          operator: eq
+          value: 1
+          trigger: on_flip
+        - type: or
+          condition:
+            - type: mqtt
+              trigger: always
+              topic: knx/status/14/0/14
+              jmespath: val
+              value: 0
+            - type: mqtt
+              trigger: always
+              topic: knx/status/14/0/15
+              jmespath: val
+              value: 0
+  ontrue:
+    - type: mqtt
+      topic: knx/set/0/0/208
+      value: 1
+      enabled: true
+  onfalse:
+    - type: mqtt
+      topic: knx/set/0/0/208
+      value: 0
+      delay: '120000'
+      enabled: true
+  enabled: true
+  pendingOption: always
+  description: >-
+    If dark, turn on the light when the door opens. Turn off 2 minutes after
+    closing the door.
+Voordeur:
+  name: Voordeur
+  condition:
+    - type: and
+      condition:
+        - type: mqtt
+          topic: knx/status/15/2/30
           jmespath: val
-          value: ''
+          value: 1
+        - type: mqtt
+          trigger: always
+          topic: knx/status/14/0/1
+          jmespath: val
+          value: 0
+  ontrue:
+    - type: mqtt
+      topic: knx/set/0/0/200
+      value: 1
+      enabled: true
+    - type: mqtt
+      topic: knx/set/0/0/201
+      value: 1
+      enabled: true
+    - type: mqtt
+      topic: knx/set/0/0/202
+      value: 1
+      enabled: true
+  onfalse:
+    - type: mqtt
+      delay: '120000'
+      topic: knx/set/0/0/200
+      value: '0'
+      enabled: true
+    - type: mqtt
+      delay: '120000'
+      topic: knx/set/0/0/201
+      value: '0'
+      enabled: true
+    - type: mqtt
+      delay: '120000'
+      topic: knx/set/0/0/202
+      value: '0'
+      enabled: true
+  enabled: true
+  pendingOption: always
+  description: >-
+    If dark, turn on the light when the door opens. Turn off 2 minutes after
+    closing the door.
+Afdak:
+  name: Afdak lichten
+  condition:
+    type: mqtt
+    trigger: always
+    topic: knx/status/15/2/10
+    jmespath: val
+    value: 0
   ontrue:
     - type: script
-      script: 'write(''knx/write/15/1/1'', new Date().toString());'
+      script: |-
+        var a = get("mode", 0);
+        a = (a + 1) % 4;
+        put("mode", a);
+        log.info(a);
+        switch (a) {
+          case 0:
+            write("knx/write/0/0/207", 0);
+            write("knx/write/0/0/208", 0);
+            break;
+          case 1:
+            write("knx/write/0/0/207", "1");
+            write("knx/write/0/0/208", "0");
+            break;
+          case 2:
+            write("knx/write/0/0/207", "1");
+            write("knx/write/0/0/208", "1");
+            break;
+          case 3:
+            write("knx/write/0/0/207", "0");
+            write("knx/write/0/0/208", "1");
+            break;
+        }
       enabled: true
+  enabled: true
+  pendingOption: always
+  description: >-
+    When pushing the button in the living room, go through a sequence to control
+    the outer lights.
+StatusBeneden:
+  name: StatusBeneden
+  condition:
+    - type: or
+      condition:
+        - type: mqtt
+          trigger: always
+          topic: knx/status/0/1/15
+          jmespath: val
+          value: 1
+        - type: mqtt
+          trigger: always
+          topic: knx/status/0/1/16
+          jmespath: val
+          value: 1
+        - type: mqtt
+          trigger: always
+          topic: knx/status/0/1/17
+          jmespath: val
+          value: 1
+        - type: mqtt
+          trigger: always
+          topic: knx/status/0/1/18
+          jmespath: val
+          value: 1
+        - type: mqtt
+          trigger: always
+          topic: knx/status/0/1/19
+          jmespath: val
+          value: 1
+        - type: mqtt
+          trigger: always
+          topic: knx/status/0/1/20
+          jmespath: val
+          value: 1
+        - type: mqtt
+          trigger: always
+          topic: knx/status/0/1/22
+          jmespath: val
+          value: 1
+        - type: mqtt
+          trigger: always
+          topic: knx/status/0/1/23
+          jmespath: val
+          value: 1
+        - type: mqtt
+          trigger: always
+          topic: knx/status/0/1/207
+          jmespath: val
+          value: 1
+        - type: mqtt
+          trigger: always
+          topic: knx/status/0/1/208
+          jmespath: val
+          value: 1
+        - type: mqtt
+          trigger: always
+          topic: knx/status/0/1/211
+          jmespath: val
+          value: 1
+        - type: mqtt
+          trigger: always
+          topic: knx/status/0/1/212
+          jmespath: val
+          value: 1
+  ontrue:
+    - type: mqtt
+      topic: knx/set/0/6/1
+      value: 1
+      enabled: true
+  onfalse:
+    - type: mqtt
+      topic: knx/set/0/6/1
+      value: 0
+      enabled: true
+  enabled: true
+  pendingOption: always
+  description: >-
+    Control the status led of downstairs lights. I any light is on, the status
+    led is turned on.
+BadkamerVentilatie:
+  name: Badkamer Ventilatie
+  condition:
+    - type: mqtt
+      trigger: on_flip
+      topic: knx/status/15/2/6
+      jmespath: val
+      value: 1
+  ontrue:
+    - type: mqtt
+      topic: hass/write/ventilation
+      value: high
+      enabled: true
+    - type: mqtt
+      topic: hass/write/ventilation
+      value: low
+      delay: 600000
+      enabled: true
+    - type: mqtt
+      delay: 0
+      interval: 0
+      topic: knx/set/15/2/7
+      value: '1'
+      enabled: true
+  enabled: true
+  pendingOption: always
+  onfalse:
+    - type: mqtt
+      delay: 0
+      interval: 0
+      topic: knx/set/15/2/7
+      value: '0'
+      enabled: true
+    - type: mqtt
+      delay: 0
+      interval: 0
+      topic: hass/write/ventilation
+      value: low
+      enabled: true
+  description: >-
+    Triggered by button in bathroom. "Abuses" the hassio MQTT messages to
+    control the ventilation.
+Ventilatie:
+  name: Ventilatie
+  condition:
+    - type: mqtt
+      trigger: always
+      topic: hass/write/ventilation
+      jmespath: val
+      value: '*'
+  ontrue:
+    - type: script
+      script: |-
+        var mode = read("hass/write/ventilation").data.val;
+        log.info(JSON.stringify(mode));
+        switch (mode) {
+          case "off":
+            write("knx/write/2/0/0", 0);
+            write("hass/status/ventilation/off", 1, true);
+            write("hass/status/ventilation/low", 0, true);
+            write("hass/status/ventilation/medium", 0, true);
+            write("hass/status/ventilation/high", 0, true);
+            break;
+          case "low":
+            write("knx/write/2/0/0", "1");
+            write("knx/write/2/2/1", "1");
+            write("hass/status/ventilation/off", 0, true);
+            write("hass/status/ventilation/low", 1, true);
+            write("hass/status/ventilation/medium", 0, true);
+            write("hass/status/ventilation/high", 0, true);
+            break;
+          case "medium":
+            write("knx/write/2/0/0", "1");
+            write("knx/write/2/2/2", "1");
+            write("hass/status/ventilation/off", 0, true);
+            write("hass/status/ventilation/low", 0, true);
+            write("hass/status/ventilation/medium", 1, true);
+            write("hass/status/ventilation/high", 0, true);
+            break;
+          case "high":
+            write("knx/write/2/0/0", "1");
+            write("knx/write/2/2/3", "1");
+            write("hass/status/ventilation/off", 0, true);
+            write("hass/status/ventilation/low", 0, true);
+            write("hass/status/ventilation/medium", 0, true);
+            write("hass/status/ventilation/high", 1, true);
+            break;
+        }
+      delay: '0'
+      enabled: true
+  enabled: true
+  pendingOption: always
+  description: |-
+    Bridges hassio -> KNX ventilation
+    (does *not* update hassio state if KNX ventilation is controlled elsewhere)
+5d099834910c:
+  name: Ventilatie-zomer
+  enabled: true
+  condition:
+    - type: cron
+      trigger: always
+      'on': '30 2 * 5,6,7,8,9 *'
+      'off': '0 8 * 5,6,7,8,9 *'
+  ontrue:
+    - type: mqtt
+      delay: 0
+      topic: hass/write/ventilation
+      value: medium
+      enabled: true
+  onfalse:
+    - type: mqtt
+      delay: 0
+      topic: hass/write/ventilation
+      value: low
+      enabled: true
+  pendingOption: always
+a25f66c75076:
+  name: Ventilatie-winter
+  enabled: true
+  condition:
+    - type: cron
+      trigger: always
+      'on': '0 10 * 1,2,3,4,10,11,12 *'
+      'off': '0 16 * 1,2,3,4,10,11,12 *'
+  ontrue:
+    - type: mqtt
+      delay: 0
+      topic: hass/write/ventilation
+      value: medium
+      enabled: true
+  onfalse:
+    - type: mqtt
+      delay: 0
+      topic: hass/write/ventilation
+      value: low
+      enabled: true
+  pendingOption: always
+befd082fe8ba:
+  name: Test
+  enabled: false
+  condition:
+    - type: mqtt
+      trigger: always
+      topic: __remove__knx/status/31/7/0
+      jmespath: val
+      value: '0x00'
+    - type: or
+      condition:
+        - type: mqtt
+          trigger: 'no'
+          topic: __REPLACE__
+          operator: eq
+          jmespath: val
+          value: qty
+        - type: or
+          condition:
+            - type: or
+              condition:
+                - type: or
+                  condition:
+                    - type: mqtt
+                      trigger: 'no'
+                      topic: __REPLACE__
+                      operator: eq
+                      jmespath: val
+                      value: j
+        - type: or
+          condition: []
+    - type: alias
+      trigger: 'no'
+      alias: __REPLACE__
+      eval: 'true'
+  ontrue:
+    - type: pushover
+      delay: 0
+      title: Test
+      message: test
+      sound: pushover
+      priority: 0
+    - type: email
+      delay: 0
+      to: seys.stefaan@gmail.com
+      subject: Bel! Boem! Bel!
+      body: |-
+        Somebody rang the door my lord.
+
+        - Your trusty servant, scripts4mqtt
+  pendingOption: always
+  onfalse:
     - type: mqtt
       delay: 0
       interval: 0
       topic: __REPLACE__
       value: __REPLACE__
-      enabled: true
-    - type: logbook
+    - type: pushover
       delay: 0
       interval: 0
+      title: __REPLACE__
       message: ''
-      enabled: true
-  pendingOption: never
-  enabled: false
-  description: The description asdfasdfasdfasdfasdfsf
-  itemName: a
-  jos: TDU
-  onfalse:
+      sound: pushover
+      priority: 0
+    - type: mqtt
+      delay: 0
+      interval: 0
+      topic: __REPLACE__
+      value: __REPLACE__
+    - type: pushover
+      delay: 0
+      interval: 0
+      title: __REPLACE__
+      message: ''
+      sound: pushover
+      priority: 0
+    - type: pushover
+      delay: 0
+      interval: 0
+      title: __REPLACE__
+      message: ''
+      sound: pushover
+      priority: 0
+    - type: mqtt
+      delay: 0
+      interval: 0
+      topic: __REPLACE__
+      value: __REPLACE__
     - type: script
       delay: 0
-      enabled: true
       interval: 0
       script: ''
-    - type: webhook
-      delay: 0
-      enabled: true
-      interval: 0
-      url: __REPLACE__
-Logbook:
-  name: Logbook
-  category: Stuff
-  order: 1
-  condition:
-    - type: or
-      condition:
-        - type: cron
-          trigger: on_flip_true
-          'off': '*/2 * * * *'
-          'on': '*/1 * * * *'
-    - type: mqtt
-      trigger: always
-      topic: test
-      operator: eq
-      jmespath: val
-      value: '1'
-  ontrue:
-    - type: logbook
-      message: 'test to logbook: {{M}} {{topic}} {{M.val}}'
-      enabled: true
-    - type: logbook
-      delay: 0
-      interval: 0
-      message: Should not appear
-      enabled: false
-  pendingOption: always
-  enabled: false
-DoorBell:
-  name: Temp1
-  category: Nice stuuff
-  order: 0
-  condition:
-    - type: mqtt
-      trigger: always
-      topic: knx/status/Verwarming/Actuele_temperatuur/Living
-      operator: gt
-      jmespath: val
-      value: '24'
-  ontrue:
-    - type: logbook
-      delay: 0
-      interval: 0
-      message: Hot
-  enabled: false
-  description: Safari
-  onfalse:
-    - type: logbook
-      delay: 0
-      interval: 0
-      message: Cold
-d25f8c914a65:
-  name: New rule
-  category: default
-  description: ''
-  enabled: false
-  condition:
-    - type: mqtt
-      trigger: 'no'
-      topic: __REPLACE__
-      operator: eq
-      jmespath: val
-      value: ''
-  ontrue:
     - type: email
       delay: 0
       interval: 0
-      to: __REPLACE__@mail.com
+      to: __REPLACE__asdf
       subject: __REPLACE__
       body: ''
-  onfalse:
-    - type: webhook
+  description: fasas
+d976b3e963fb:
+  name: Voordeur - notification
+  enabled: true
+  condition:
+    - type: and
+      condition:
+        - type: mqtt
+          trigger: on_flip_true
+          topic: knx/status/14/0/1
+          jmespath: val
+          value: 0
+        - type: mqtt
+          trigger: 'no'
+          topic: knx/status/0/1/11
+          jmespath: val
+          value: 0
+  ontrue:
+    - type: pushover
+      delay: 0
+      title: Voordeur open
+      message: Voordeur werd geopend.
+      sound: pianobar
+      priority: 0
+      enabled: true
+    - type: logbook
+      delay: 0
+      message: Voordeur geopened
+      enabled: true
+    - type: mqtt
       delay: 0
       interval: 0
-      url: __REPLACE__
-'78903448e823':
-  name: New rule
-  category: default
-  description: ''
+      topic: slybot/message
+      value: Voordeur werd geopend.
+      enabled: true
+  pendingOption: always
+bdcb2e6336d3:
+  name: Achterdeur - notification
+  enabled: true
+  condition:
+    - type: mqtt
+      trigger: on_flip_true
+      topic: knx/status/14/0/0
+      jmespath: val
+      value: 0
+  ontrue:
+    - type: pushover
+      delay: 0
+      title: Achterdeur open
+      message: Achterdeur werd geopend.
+      sound: pianobar
+      priority: 0
+      enabled: true
+    - type: logbook
+      delay: 0
+      message: Achterdeur geopened
+      enabled: true
+    - type: mqtt
+      delay: 0
+      interval: 0
+      topic: slybot/message
+      value: Achterdeur werd geopend.
+      enabled: true
+  pendingOption: always
+603d1965a1ab:
+  name: Simulatie
   enabled: false
-  condition: []
+  condition:
+    - type: cron
+      trigger: on_flip
+      'on': 34 16 * * *
+      'off': 41 1 * * *
+  ontrue:
+    - type: mqtt
+      delay: 0
+      topic: knx/set/0/0/20
+      value: '1'
+    - type: mqtt
+      delay: 0
+      topic: knx/set/0/0/18
+      value: 1
+    - type: mqtt
+      delay: 0
+      topic: knx/set/0/0/22
+      value: 1
+    - type: mqtt
+      delay: 0
+      topic: knx/set/0/0/21
+      value: 1
+  onfalse:
+    - type: mqtt
+      delay: 0
+      topic: knx/set/0/0/18
+      value: '0'
+    - type: mqtt
+      delay: 0
+      topic: knx/set/0/0/20
+      value: '0'
+    - type: mqtt
+      delay: 0
+      topic: knx/set/0/0/21
+      value: '0'
+    - type: mqtt
+      delay: 0
+      topic: knx/set/0/0/22
+      value: '0'
+  description: ''
+bae8ad969d85:
+  name: Unifi motion detection
+  enabled: true
+  pendingOption: always
+  condition:
+    - type: mqtt
+      trigger: always
+      topic: unifi/detection
+      jmespath: ''
+      value: '*'
+  ontrue:
+    - type: logbook
+      delay: 0
+      message: 'Unifi Motion Detected: {{{M.meta.cameraName}}}'
+      enabled: true
+9a0d1e6b0910:
+  name: Alarm_status
+  enabled: true
+  pendingOption: never
+  condition:
+    - type: mqtt
+      trigger: always
+      topic: alarm/state
+      jmespath: ''
+      value: '*'
+  ontrue:
+    - type: script
+      delay: 0
+      script: |-
+        var state = read("alarm/state").data.val;
+        log.info(JSON.stringify(state));
+        switch (state) {
+          case "ready":
+            write("hass/alarm/availability", "online");
+            write("hass/alarm/state", "disarmed");
+            break;
+          case "not_ready":
+            write("hass/alarm/availability", "offline");
+            break;
+          case "pending_armed":
+            write("hass/alarm/state", "pending");
+            break;
+          case "armed":
+            write("hass/alarm/state", "armed_away");
+            break;
+          case "pending_alarm":
+            write("hass/alarm/state", "pending");
+            break;
+          case "alarm":
+            write("hass/alarm/state", "triggered");
+            break;
+        }
+      enabled: true
+  onfalse: []
+  description: |-
+    Republish alarm states for home assistant
+    mqttalarm (alarm/state)  ->  hassio (hass/alarm/state)
+22be734eaeb3:
+  name: Alarm - slybot
+  enabled: true
+  condition:
+    - type: and
+      condition:
+        - type: mqtt
+          trigger: 'no'
+          topic: alarm/state
+          jmespath: val
+          value: alarm
+        - type: mqtt
+          trigger: always
+          topic: unifi/recording
+          jmespath: val
+          value: '*'
+  ontrue:
+    - type: mqtt
+      delay: 0
+      interval: 0
+      topic: slybot/photo
+      value: '{{{M.snapshot}}}'
+      enabled: true
+  description: Forward recordings to slybot when alarm is in "alarm" state
+e4ff2a054896:
+  name: Verwarming boven
+  description: |-
+    Zet de verwarming boven (behalve badkamer) op "comfort" of op "frost".
+    Wordt gestuurd door Hassio en door klokje (om vastlopen te vermijden).
+  enabled: true
+  condition:
+    - type: mqtt
+      trigger: always
+      topic: hassio/write/verwarming
+      operator: eq
+      jmespath: val
+      value: comfort
+  ontrue:
+    - type: mqtt
+      delay: 0
+      interval: 0
+      topic: knx/set/4/1/2
+      value: '1'
+      enabled: true
+    - type: mqtt
+      delay: 0
+      interval: 0
+      topic: knx/set/4/1/3
+      value: '1'
+      enabled: true
+    - type: mqtt
+      delay: 0
+      interval: 0
+      topic: knx/set/4/1/4
+      value: '1'
+      enabled: true
+    - type: mqtt
+      delay: 0
+      interval: 0
+      topic: knx/set/4/1/5
+      value: '1'
+      enabled: true
+  onfalse:
+    - type: mqtt
+      delay: 0
+      interval: 0
+      topic: knx/set/4/1/2
+      value: '4'
+      enabled: true
+    - type: mqtt
+      delay: 0
+      interval: 0
+      topic: knx/set/4/1/3
+      value: '4'
+      enabled: true
+    - type: mqtt
+      delay: 0
+      interval: 0
+      topic: knx/set/4/1/4
+      value: '4'
+      enabled: true
+    - type: mqtt
+      delay: 0
+      interval: 0
+      topic: knx/set/4/1/5
+      value: '4'
+      enabled: true
+23b9d5306707:
+  name: Openen deuren via slybot
+  description: Openen deuren via command slybot (telegram).
+  enabled: true
+  condition:
+    - type: mqtt
+      trigger: always
+      topic: slybot/write/physicalaccess/frontdoor
+      operator: eq
+      jmespath: val
+      value: open
+    - type: mqtt
+      trigger: always
+      topic: slybot/write/physicalaccess/garage
+      operator: eq
+      jmespath: val
+      value: open
+  ontrue:
+    - type: script
+      delay: 0
+      interval: 0
+      script: |-
+        if (context.topic === "slybot/write/physicalaccess/frontdoor") {
+          write("knx/write/15/2/2", 1, false);
+        } else if (context.topic === "slybot/write/physicalaccess/garage") {
+          write("knx/write/15/2/0", 1, false);
+        }
+      enabled: true

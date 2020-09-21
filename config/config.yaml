@@ -6,7 +6,11 @@ loglevel: 'silly'
 logpath: '../logs'
 # Debug mode
 # If enabled, the server console will output detailed logs
-debug: false
+debug: true
+# Enable logging to elastic search
+es:
+  enabled: true
+  node: 'http://es.jules.home'
 # Enable the API and React client and set the port on which it will listen.
 api:
   enabled: true

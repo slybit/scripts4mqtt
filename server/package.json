@@ -17,8 +17,9 @@
     "path": "^0.12.7",
     "pushover-notifications": "^1.2.0",
     "sancronos-validator": "^1.2.0",
-    "winston": "^3.1.0",
-    "winston-daily-rotate-file": "^3.8.0"
+    "winston": "^3.3.3",
+    "winston-daily-rotate-file": "^4.5.0",
+    "winston-elasticsearch": "^0.9.0"
   },
   "devDependencies": {},
   "scripts": {
