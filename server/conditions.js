@@ -1,7 +1,7 @@
 const mustache = require('mustache');
 const jmespath = require('jmespath');
 const { validateMqttCondition, validateAliasCondition, validateCronCondition } = require('./validator');
-const { logger, ruleslogger, logbooklogger } = require('./logger.js');
+const { logger, logbooklogger } = require('./logger.js');
 const Engine = require('./engine.js');
 const Aliases = require('./aliases.js');
 const cronmatch = require('./cronmatch.js');
@@ -76,16 +76,17 @@ class MqttCondition extends Condition {
         validateMqttCondition(json);
     }
 
-    // the canTrigger parameter is used to prevent any triggers for retained messages
+    // the canTrigger parameter is used to prevent any triggers for retained messages or during creation of the rule objects
     evaluate(canTrigger) {
         this.oldState = this.state;
         this.state = false;
         let message = Engine.getInstance().mqttStore.get(this.topic) ? Engine.getInstance().mqttStore.get(this.topic).data : undefined;
+        let data = undefined;
         try {
             if (this.value == "*") {
                 this.state = true;
             } else {
-                let data = undefined;
+                
                 if (this.jmespath && message)
                     data = jmespath.search(message, this.jmespath);
                 else
@@ -106,14 +107,12 @@ class MqttCondition extends Condition {
                         this.state = !(data == this.value);
                         break;
                 }
-                logger.silly("Compared [%s] %s [%s]", data, this.operator, this.value);
             }
         } catch (err) {
-            logger.error('could not parse message to json: %s', message);
-            logger.error(err.stack);
+            logger.error('Error during MqttCondition evaluation', {error: `Could not parse message to json: ${message}`});
+            //logger.error(err.stack);
         }
-        logger.info("Rule [%s]: MQTT Condition state updated from %s to %s; flipped = %s", this.rule.name, this.oldState, this.state, this.flipped());
-        ruleslogger.info("MQTT condition evaluated", {
+        logger.info("MQTT condition evaluated", {
             ruleId: this.rule.id,
             ruleName: this.rule.name,
             type: "condition",
@@ -123,7 +122,8 @@ class MqttCondition extends Condition {
             triggered: canTrigger && this.triggered() ? "true" : "false",
             details: `topic: ${this.topic}, value: ${JSON.stringify(message, null, 1)}`,
             topic: `${this.topic}`,
-            value: message
+            value: message,
+            comparison: `[${data}] ${this.operator} [${this.value}]`
          });
         return canTrigger && this.triggered();
     }
@@ -158,8 +158,8 @@ class CronCondition extends Condition {
         }
 
         if (match) {
-            logger.info('Rule [%s]: cron evaluated: state: %s, match: %s, flipped: %s', this.rule.name, this.state, match, this.flipped());
-            ruleslogger.info("Cron condition evaluated", {
+            //logger.info('Rule [%s]: cron evaluated: state: %s, match: %s, flipped: %s', this.rule.name, this.state, match, this.flipped());
+            logger.info("Cron condition evaluated", {
                 ruleId: this.rule.id,
                 ruleName: this.rule.name,
                 type: "condition",

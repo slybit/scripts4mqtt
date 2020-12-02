@@ -2,7 +2,7 @@ const fs = require('fs');
 const yaml = require('js-yaml');
 const util = require('util');
 const crypto = require('crypto');
-const { logger, ruleslogger, logbooklogger } = require('./logger.js');
+const { logger, logbooklogger } = require('./logger.js');
 const Engine = require('./engine.js');
 const { EMailAction, LogBookAction, PushoverAction, ScriptAction, SetValueAction, WebHookAction } = require('./actions.js')
 const { CronCondition, MqttCondition, SimpleCondition } = require('./conditions.js')
@@ -23,11 +23,6 @@ const topicToArray = function (topic) {
 class Rules {
     constructor() {
         this.lastMinutes = -1;
-        // both loadRules and scheduleTimerConditionChecker REQUIRE that the Engine singleton has been initialized
-        // this is why in the main scripts4mqtt.js file, the 'const rules = new Rules()' MUST be after the creation
-        // of the Engine singleton!!
-        this.loadRules();
-        this.scheduleTimerConditionChecker();
     }
 
     loadRules() {
@@ -135,7 +130,7 @@ class Rules {
 
 
     saveRules() {
-        logger.info("saving rules");
+        logger.info("Saving rules");
         try {
             fs.writeFileSync(FILENAME, yaml.safeDump(this.jsonContents));
         } catch (e) {
@@ -162,7 +157,7 @@ class Rules {
             for (let rule of ruleSet) {
                 for (let c of rule.conditions)
                     if ((c instanceof MqttCondition) && (c.topic === topic)) {
-                        logger.silly('Rule [%s]: matches topic [%s], evaluating...', rule.name, topic);
+                        logger.silly('Rule: topic matches, evaluating...', {ruleId: rule.id, ruleName: rule.name, topic: topic});
                         if (c.evaluate(withActions) && withActions)
                             rule.scheduleActions(context);
                     }
@@ -191,7 +186,7 @@ class Rules {
                 for (let rule of ruleSet) {
                     for (let c of rule.conditions)
                         if ((c instanceof CronCondition)) {
-                            logger.silly('Rule [%s]: cron tick, evaluating cron expressions', rule.name);
+                            logger.silly('Rule: cron tick, evaluating cron expressions', {ruleId: rule.id, ruleName: rule.name});
                             if (c.evaluate())
                                 rule.scheduleActions(context);
                         }
@@ -604,5 +599,5 @@ class Rule {
 
 
 
-//const rules = new Rules();
-module.exports = Rules;
+const rules = new Rules();
+module.exports = rules;

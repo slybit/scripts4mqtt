@@ -1,4 +1,4 @@
-const {logger, ruleslogger} = require('./logger.js');
+const {logger} = require('./logger.js');
 const sancronos = require('sancronos-validator');
 
 /*
@@ -45,7 +45,7 @@ function validate(data) {
             }
         }
     } catch (err) {
-        logger.error(err.message);
+        logger.error("Error during item evaluation", {error: err.message});
         throw err;
     }
 

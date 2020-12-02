@@ -3,7 +3,7 @@ const yaml = require('js-yaml');
 const util = require('util');
 const validator = require('./validator.js');
 
-const { logger, ruleslogger, logbooklogger } = require('./logger.js');
+const { logger, logbooklogger } = require('./logger.js');
 const config = require('./config.js').parse();
 
 const FILENAME = process.env.MQTT4SCRIPTS_RULES || '../config/aliases.yaml';
@@ -27,7 +27,7 @@ class Aliases {
     }
 
     saveAliases() {
-        logger.info("saving aliases");
+        logger.info("Saving aliases");
         try {
             fs.writeFileSync(FILENAME, yaml.safeDump(this.aliases));
         } catch (e) {

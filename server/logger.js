@@ -12,36 +12,62 @@ const { Writable } = require('stream');
 const LOGPATH = config.logpath || '../logs/';
 const LOGBUFFERSIZE = 500;
 
+
 /* -----------------------------------------------------------------------------------------------
-    STANDARD LOGGER with 3 transports:
+    Custom formatters
+----------------------------------------------------------------------------------------------- */
+
+// custom formatter to add timestamp for sorting
+const addTS = format((info, opts) => {
+    info.ts = Date.now();
+    return info;
+});
+
+// custom formatter to create a numeric and string version of value.val
+// this is required since the value.val can contain both strings and numbers, giving issues
+// with elastic search indices
+const valueAdder = format((info) => {
+    if (info.value && info.value.val !== undefined) {
+        if (!isNaN(info.value.val)) {
+            // if it is a number
+            info.value.val_num = info.value.val;
+            info.value.val = info.value.val.toString();
+        }
+    }
+    return info;
+});
+
+
+// Only log rule related log events
+const filterRules = format((info, opts) => {
+    if (info.ruleId) { return info; }
+    return false;
+});
+
+/* -----------------------------------------------------------------------------------------------
+    STANDARD LOGGER with these transports:
        - console
-       - stream
+       - stream (for UI)
        - file in log folder
        - elasticsearch
+       - rule logs (for UI)
     The log level is defined by the user in the config
 ----------------------------------------------------------------------------------------------- */
 
-// Transport for the default application logs (= normal logs as a flat file)
-let defaultTransport = new (transports.DailyRotateFile)({
-    filename: 'default-%DATE%.log',
+// Transport for the Rules logs
+let rulesTransport = new (transports.DailyRotateFile)({
+    level: 'info',
+    filename: 'rules-%DATE%.log',
     datePattern: 'YYYY-MM-DD',
     zippedArchive: false,
     maxFiles: '14d',
     dirname: LOGPATH,
-    //format: format.combine(format.timestamp(), format.splat(), format.json())
-    format: combine(
-        timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
-        format.splat(),
-        printf(({ level, message, timestamp }) => {
-            return `${timestamp} | ${level.padEnd(7).toUpperCase()} | ${message}`;
-        })
-    )
+    format: format.combine(filterRules(), format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }), addTS(), format.json())
 });
 
 
 
 // Stream transport (purely in memory)
-
 const logBufferStatic = [];
 const logBufferDynamic = [];
 const stream = new Writable();
@@ -54,36 +80,18 @@ stream._write = (chunk, encoding, next) => {
 }
 
 let streamTransport = new (transports.Stream)({
+    level: config.loglevel,
     stream: stream,
     format: format.combine(
         format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
         format.splat(),
-        format.printf((msg) => {
-            return `${msg.timestamp} | ` + format.colorize().colorize(msg.level, `${msg.level.padEnd(7).toUpperCase()}`) + ` | ${msg.message}`;
+        format.printf((info) => {
+            let {timestamp, level, message, ...leftovers} = info;
+            return `${info.timestamp} | ` + format.colorize().colorize(info.level, `${info.level.padEnd(7).toUpperCase()}`) + ` | ${info.message} | ${JSON.stringify(leftovers)}`;
         })
     ),
 });
 
-// custom formatter to add timestamp for sorting
-const addTS = format((info, opts) => {
-    info.ts = Date.now();
-    return info;
-});
-
-
-// custom formatter to create a numeric and string version of value.val
-// this is required since the value.val can contain both strings and numbers, giving issues
-// with elastic search indices
-const myFormatter = format((info) => {
-    if (info.value && info.value.val !== undefined) {
-        if (!isNaN(info.value.val)) {
-            // if it is a number
-            info.value.val_num = info.value.val;
-            info.value.val = info.value.val.toString();
-        }
-    }
-    return info;
-})();
 
 
 // Transport for the Elastic Search export
@@ -91,13 +99,33 @@ let esTransport = undefined;
 if (config.es && config.es.enabled) {
     const esTransportOpts = {
         level: config.loglevel,
-        format: combine(format.splat(), myFormatter),
+        format: combine(format.splat(), valueAdder),
         clientOpts: {
             node: config.es.node ? config.es.node : 'http://localhost:9200'
         }
     };
     esTransport = new transports.Elasticsearch(esTransportOpts)
 }
+
+// Transport for the default application logs (= normal logs as a flat file)
+let defaultTransport = new (transports.DailyRotateFile)({
+    level: config.loglevel,
+    filename: 'default-%DATE%.log',
+    datePattern: 'YYYY-MM-DD',
+    zippedArchive: false,
+    maxFiles: '14d',
+    dirname: LOGPATH,
+    //format: format.combine(format.timestamp(), format.splat(), format.json())
+    format: combine(
+        timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
+        format.splat(),
+        printf((info) => {
+            let {timestamp, level, message, ...leftovers} = info;
+            return `${info.timestamp} | ${info.level.padEnd(7).toUpperCase()} | ${message} | ${JSON.stringify(leftovers)}`;
+        })
+    )
+
+});
 
 
 
@@ -108,8 +136,9 @@ const transportsList = [
         format: combine(
             timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
             format.splat(),
-            printf(({ level, message, timestamp }) => {
-                return `${timestamp} | ${level.padEnd(7).toUpperCase()} | ${message}`;
+            printf((info) => {
+                let {timestamp, level, message, ...leftovers} = info;
+                return `${info.timestamp} | ${info.level.padEnd(7).toUpperCase()} | ${message} | ${JSON.stringify(leftovers)}`;
             })
         ),
         level: config.debug ? 'silly' : 'error'     // overwrite the error level for the server console logs
@@ -119,6 +148,7 @@ const transportsList = [
     //  format: format.combine(format.timestamp(), format.splat(), format.json()),
     //}),
     defaultTransport,
+    rulesTransport,
     streamTransport
 ];
 
@@ -126,39 +156,11 @@ if (esTransport) transportsList.push(esTransport);
 
 // create the logger itself
 const logger = createLogger({
-    level: config.loglevel,
+    //level: config.loglevel,
     transports: transportsList
 });
 
 
-
-
-
-
-
-
-
-/* -----------------------------------------------------------------------------------------------
-    RULES LOGGER - Used in the UI
-    The log level is fixed.
------------------------------------------------------------------------------------------------ */
-
-
-// Transport for the Rules logs
-let rulesTransport = new (transports.DailyRotateFile)({
-    filename: 'rules-%DATE%.log',
-    datePattern: 'YYYY-MM-DD',
-    zippedArchive: false,
-    maxFiles: '14d',
-    dirname: LOGPATH,
-    format: format.combine(format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }), addTS(), format.json())
-});
-
-const ruleslogger = createLogger({
-    transports: [
-        rulesTransport
-    ]
-});
 
 
 
@@ -286,4 +288,4 @@ const parseLogFile = function (filename, maxLineCount, logs) {
 
 
 
-module.exports = { logBufferDynamic, logBufferStatic, logger, ruleslogger, mqttlogger, logbooklogger, getRuleLogs, getMqttLogs, getLogbookLogs };
+module.exports = { logBufferDynamic, logBufferStatic, logger, mqttlogger, logbooklogger, getRuleLogs, getMqttLogs, getLogbookLogs };

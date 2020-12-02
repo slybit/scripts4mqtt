@@ -102,7 +102,7 @@ router.get('/logs/rules', async (req, res) => {
             data: await getRuleLogs()
         });
     } catch (err) {
-        logger.error('Error parsing logs');
+        logger.error('Error parsing rules logs');
         res.json({
             success: false,
             error: err.message
@@ -117,7 +117,7 @@ router.get('/logs/mqtt', async (req, res) => {
             data: await getMqttLogs()
         });
     } catch (err) {
-        logger.error('Error parsing logs');
+        logger.error('Error parsing MQTT logs');
         res.json({
             success: false,
             error: err.message
@@ -133,7 +133,7 @@ router.get('/logbook', async (req, res) => {
             data: await getLogbookLogs()
         });
     } catch (err) {
-        logger.error('Error parsing logs');
+        logger.error('Error parsing logbook logs');
         res.json({
             success: false,
             error: err.message
@@ -173,7 +173,7 @@ router.get('/infinite', async (req, res) => {
             }
         }, 300);
     } catch (err) {
-        logger.error('Error parsing logbook logs');
+        logger.error('Error parsing stream logs');
         res.json([]);
     }
 });
@@ -194,7 +194,7 @@ router.use(function (req, res, next) {
 
 // output error catching
 router.use(function (error, req, res, next) {
-    logger.error(error.message);
+    logger.error("Error responding to API request", {error: error.message});
     res.json({ success: false, error: error.message });
 });
 
@@ -208,4 +208,7 @@ client.get('/*', function (req, res) {
 app.use('/', client);
 
 // -----
-app.listen(API_PORT, () => console.log(`Listening on port %s`, API_PORT));
+app.listen(API_PORT, () => {
+    logger.info(`API Server started. Listening on port ${API_PORT}`);
+    console.log(`API Server started. Listening on port %s`, API_PORT)
+});

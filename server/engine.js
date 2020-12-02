@@ -64,10 +64,10 @@ class Engine {
                     try {
                         data = message.toString();
                     } catch (err) {
-                        logger.error("Could not convert value to String - sending empty message");
+                        logger.error("Error executing write in script", {error: "Could not convert value to String - sending empty message"});
                     }
                 }
-                logger.info('ScriptAction published %s -> %s', topic, data);
+                logger.info('ScriptAction published MQTT message', {topic: topic, msg: data, retain: retain});
                 return mqttClient.publish(topic, data, { 'retain': retain });
             }
 
@@ -93,7 +93,7 @@ class Engine {
             },
             write: function (topic, message, retain = false) {
                 if (!isNaN(message)) message = message.toString();
-                logger.info('TESTING script result: ScriptAction published %s -> %s', topic, message);
+                logger.info('TESTING script result: ScriptAction published MQTT message', {topic: topic, msg: data, retain: retain});
                 return true;
             }
 
@@ -111,7 +111,7 @@ class Engine {
     }
 
     testScript(script, context) {
-        logger.debug('testing script:\n# ----- start script -----\n%s\n# -----  end script  -----', script);
+        //logger.debug('testing script:\n# ----- start script -----\n%s\n# -----  end script  -----', script);
         return vm.runInContext(script, this.testbox);
     }
 

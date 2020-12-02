@@ -3,9 +3,8 @@ const mqtt = require('mqtt');
 const {logger, mqttlogger} = require('./logger.js');
 const Engine = require('./engine.js');
 const config = require('./config.js').parse();
-const Rules =  require('./rules.js');
-
-//ruleslogger.error("test", {test: 'hallo', bla: 'adsf'});
+const rules =  require('./rules.js');
+const {saveJSONParse} = require('./utils.js');
 
 // starts the API server
 if (config.api && config.api.enabled === true) {
@@ -18,14 +17,15 @@ const mqttClient = mqtt.connect(config.mqtt.url, config.mqtt.options);
 const engine = Engine.getInstance(mqttClient);
 
 // initiate the rules
-const rules = new Rules();
-
+// both loadRules and scheduleTimerConditionChecker REQUIRE that the Engine singleton has been initialized
+rules.loadRules();
+rules.scheduleTimerConditionChecker();
 
 
 let processMessage = function (topic, message, packet) {
     // message is a Buffer, so first convert it to a String
     message = message.toString();
-    logger.silly("MQTT received %s : %s", topic, message);
+    logger.silly("MQTT received", {topic: topic, msg: saveJSONParse(message)});
     // now parse the data
     let data = undefined;
     if (message === 'true') {
@@ -52,10 +52,11 @@ let processMessage = function (topic, message, packet) {
     // - or a bunch of fields taken from the message if the message was JSON
 
     if (!data) {
-        logger.warn('did not understand message %s on topic %s', message, topic)
+        logger.warn('Could not parse this MQTT message', {topic: topic, msg: saveJSONParse(message)})
     } else {
         engine.mqttStore.set(topic, { 'data': data, 'packet': packet });
     }
+
 }
 
 
@@ -65,11 +66,11 @@ let setMqttHandlers = function (mqttClient) {
         if (config.topics) {
             for (const topic of config.topics) {
                 mqttClient.subscribe(topic);
-                logger.verbose('subscribed to %s', topic);
+                logger.info('MQTT subscribed', {topic: topic});
             }
         } else {
             mqttClient.subscribe('#');
-            logger.verbose('subscribed to all topics');
+            logger.info('MQTT subscribed to all topics');
         }
     });
 
