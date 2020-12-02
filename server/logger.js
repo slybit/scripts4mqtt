@@ -12,6 +12,64 @@ const { Writable } = require('stream');
 const LOGPATH = config.logpath || '../logs/';
 const LOGBUFFERSIZE = 500;
 
+/* -----------------------------------------------------------------------------------------------
+    STANDARD LOGGER with 3 transports:
+       - console
+       - stream
+       - file in log folder
+       - elasticsearch
+    The log level is defined by the user in the config
+----------------------------------------------------------------------------------------------- */
+
+// Transport for the default application logs (= normal logs as a flat file)
+let defaultTransport = new (transports.DailyRotateFile)({
+    filename: 'default-%DATE%.log',
+    datePattern: 'YYYY-MM-DD',
+    zippedArchive: false,
+    maxFiles: '14d',
+    dirname: LOGPATH,
+    //format: format.combine(format.timestamp(), format.splat(), format.json())
+    format: combine(
+        timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
+        format.splat(),
+        printf(({ level, message, timestamp }) => {
+            return `${timestamp} | ${level.padEnd(7).toUpperCase()} | ${message}`;
+        })
+    )
+});
+
+
+
+// Stream transport (purely in memory)
+
+const logBufferStatic = [];
+const logBufferDynamic = [];
+const stream = new Writable();
+stream._write = (chunk, encoding, next) => {
+    logBufferStatic.push(chunk.toString());
+    if (logBufferStatic.length > LOGBUFFERSIZE) logBufferStatic.shift();
+    logBufferDynamic.push(chunk.toString());
+    if (logBufferDynamic.length > LOGBUFFERSIZE) logBufferDynamic.shift();
+    next();
+}
+
+let streamTransport = new (transports.Stream)({
+    stream: stream,
+    format: format.combine(
+        format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
+        format.splat(),
+        format.printf((msg) => {
+            return `${msg.timestamp} | ` + format.colorize().colorize(msg.level, `${msg.level.padEnd(7).toUpperCase()}`) + ` | ${msg.message}`;
+        })
+    ),
+});
+
+// custom formatter to add timestamp for sorting
+const addTS = format((info, opts) => {
+    info.ts = Date.now();
+    return info;
+});
+
 
 // custom formatter to create a numeric and string version of value.val
 // this is required since the value.val can contain both strings and numbers, giving issues
@@ -28,35 +86,6 @@ const myFormatter = format((info) => {
 })();
 
 
-
-const logBufferStatic = [];
-const logBufferDynamic = [];
-const stream = new Writable();
-stream._write = (chunk, encoding, next) => {
-    logBufferStatic.push(chunk.toString());
-    if (logBufferStatic.length > LOGBUFFERSIZE) logBufferStatic.shift();
-    logBufferDynamic.push(chunk.toString());
-    if (logBufferDynamic.length > LOGBUFFERSIZE) logBufferDynamic.shift();
-    next();
-}
-
-// format for stream and console
-const consoleFormat = combine(
-    timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
-    format.splat(),
-    printf(({ level, message, timestamp }) => {
-        return `${timestamp} | ${level.padEnd(7).toUpperCase()} | ${message}`;
-    })
-);
-
-// custom formatter to add timestamp for sorting
-const addTS = format((info, opts) => {
-    info.ts = Date.now();
-    return info;
-});
-
-
-
 // Transport for the Elastic Search export
 let esTransport = undefined;
 if (config.es && config.es.enabled) {
@@ -70,17 +99,49 @@ if (config.es && config.es.enabled) {
     esTransport = new transports.Elasticsearch(esTransportOpts)
 }
 
-// Transport for the application logs
-var defaultTransport = new (transports.DailyRotateFile)({
-    filename: 'default-%DATE%.log',
-    datePattern: 'YYYY-MM-DD',
-    zippedArchive: false,
-    maxFiles: '14d',
-    dirname: LOGPATH,
-    format: format.combine(format.timestamp(), format.splat(), format.json())
+
+
+
+// list of transports for the json logger, add the esTransport if enabled
+const transportsList = [
+    new transports.Console({
+        format: combine(
+            timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
+            format.splat(),
+            printf(({ level, message, timestamp }) => {
+                return `${timestamp} | ${level.padEnd(7).toUpperCase()} | ${message}`;
+            })
+        ),
+        level: config.debug ? 'silly' : 'error'     // overwrite the error level for the server console logs
+    }),
+    //new transports.File({
+    //  filename: 'default.log',
+    //  format: format.combine(format.timestamp(), format.splat(), format.json()),
+    //}),
+    defaultTransport,
+    streamTransport
+];
+
+if (esTransport) transportsList.push(esTransport);
+
+// create the logger itself
+const logger = createLogger({
+    level: config.loglevel,
+    transports: transportsList
 });
 
 
+
+
+
+
+
+
+
+/* -----------------------------------------------------------------------------------------------
+    RULES LOGGER - Used in the UI
+    The log level is fixed.
+----------------------------------------------------------------------------------------------- */
 
 
 // Transport for the Rules logs
@@ -93,6 +154,18 @@ let rulesTransport = new (transports.DailyRotateFile)({
     format: format.combine(format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }), addTS(), format.json())
 });
 
+const ruleslogger = createLogger({
+    transports: [
+        rulesTransport
+    ]
+});
+
+
+
+/* -----------------------------------------------------------------------------------------------
+    MQTT LOGGER - Used in the UI
+    The log level is fixed.
+----------------------------------------------------------------------------------------------- */
 
 
 // Transport for the MQTT logs
@@ -105,6 +178,20 @@ let mqttTransport = new (transports.DailyRotateFile)({
     format: format.combine(format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }), addTS(), format.json())
 });
 
+
+const mqttlogger = createLogger({
+    transports: [
+        mqttTransport
+    ],
+});
+
+
+/* -----------------------------------------------------------------------------------------------
+    LOGBOOK LOGGER - Used in the UI
+    The log level is fixed.
+----------------------------------------------------------------------------------------------- */
+
+
 // Transport for the LogBook logs
 let logbookTransport = new (transports.DailyRotateFile)({
     filename: 'logbook-%DATE%.log',
@@ -115,58 +202,27 @@ let logbookTransport = new (transports.DailyRotateFile)({
     format: format.combine(format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }), addTS(), format.json())
 });
 
-// Memory transport
-let streamTransport = new (transports.Stream)({
-    stream: stream,
-    format: format.combine(
-        format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
-        format.splat(),
-        format.printf((msg) => {
-            return `${msg.timestamp} | ` + format.colorize().colorize(msg.level, `${msg.level.padEnd(7).toUpperCase()}`) + ` | ${msg.message}`;
-        })
-    ),
-});
-
-
-
-
-
-const logger = createLogger({
-    level: config.loglevel,
+const logbooklogger = createLogger({
     transports: [
-        new transports.Console({
-            format: consoleFormat,
-            level: config.debug ? 'silly' : 'error'     // overwrite the error level for the server console logs
-        }),
-        //new transports.File({
-        //  filename: 'default.log',
-        //  format: format.combine(format.timestamp(), format.splat(), format.json()),
-        //}),
-        defaultTransport,
-        streamTransport
+        logbookTransport
     ]
 });
 
 
-// list of transports for the json logger, add the esTransport if enabled
-const transportsList = [rulesTransport];
-if (esTransport) transportsList.push(esTransport);
 
-const jsonlogger = createLogger({
-    transports: transportsList
-});
 
-const mqttlogger = createLogger({
-    transports: [
-        mqttTransport
-    ],
-});
 
-const logbooklogger = createLogger({
-    transports: [
-        logbookTransport
-    ],
-});
+
+
+
+
+
+
+
+
+
+
+
 
 
 const getRuleLogs = function () {
@@ -230,4 +286,4 @@ const parseLogFile = function (filename, maxLineCount, logs) {
 
 
 
-module.exports = { logBufferDynamic, logBufferStatic, logger, jsonlogger, mqttlogger, logbooklogger, getRuleLogs, getMqttLogs, getLogbookLogs };
+module.exports = { logBufferDynamic, logBufferStatic, logger, ruleslogger, mqttlogger, logbooklogger, getRuleLogs, getMqttLogs, getLogbookLogs };

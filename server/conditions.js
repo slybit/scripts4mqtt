@@ -1,7 +1,7 @@
 const mustache = require('mustache');
 const jmespath = require('jmespath');
 const { validateMqttCondition, validateAliasCondition, validateCronCondition } = require('./validator');
-const { logger, jsonlogger, logbooklogger } = require('./logger.js');
+const { logger, ruleslogger, logbooklogger } = require('./logger.js');
 const Engine = require('./engine.js');
 const Aliases = require('./aliases.js');
 const cronmatch = require('./cronmatch.js');
@@ -113,7 +113,7 @@ class MqttCondition extends Condition {
             logger.error(err.stack);
         }
         logger.info("Rule [%s]: MQTT Condition state updated from %s to %s; flipped = %s", this.rule.name, this.oldState, this.state, this.flipped());
-        jsonlogger.info("MQTT condition evaluated", {
+        ruleslogger.info("MQTT condition evaluated", {
             ruleId: this.rule.id,
             ruleName: this.rule.name,
             type: "condition",
@@ -159,7 +159,7 @@ class CronCondition extends Condition {
 
         if (match) {
             logger.info('Rule [%s]: cron evaluated: state: %s, match: %s, flipped: %s', this.rule.name, this.state, match, this.flipped());
-            jsonlogger.info("Cron condition evaluated", {
+            ruleslogger.info("Cron condition evaluated", {
                 ruleId: this.rule.id,
                 ruleName: this.rule.name,
                 type: "condition",

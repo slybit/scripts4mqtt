@@ -3,7 +3,7 @@ const yaml = require('js-yaml');
 const util = require('util');
 const validator = require('./validator.js');
 
-const { logger, jsonlogger, logbooklogger } = require('./logger.js');
+const { logger, ruleslogger, logbooklogger } = require('./logger.js');
 const config = require('./config.js').parse();
 
 const FILENAME = process.env.MQTT4SCRIPTS_RULES || '../config/aliases.yaml';

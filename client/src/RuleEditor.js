@@ -45,6 +45,7 @@ const RuleEditor = (props) => {
             // update the state
             if (response.data.success) {
                 setData({
+                    ...staticData.newItems.rule,
                     ...data,
                     ...response.data.rule,
                     edData: { visible: false },

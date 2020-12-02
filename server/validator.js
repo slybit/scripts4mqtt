@@ -1,4 +1,4 @@
-const {logger, jsonlogger} = require('./logger.js');
+const {logger, ruleslogger} = require('./logger.js');
 const sancronos = require('sancronos-validator');
 
 /*

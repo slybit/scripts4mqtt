@@ -3,26 +3,23 @@ const mqtt = require('mqtt');
 const {logger, mqttlogger} = require('./logger.js');
 const Engine = require('./engine.js');
 const config = require('./config.js').parse();
-const { pushover } = require('./utils.js');
-const rules =  require('./rules.js');
+const Rules =  require('./rules.js');
 
-//jsonlogger.error("test", {test: 'hallo', bla: 'adsf'});
+//ruleslogger.error("test", {test: 'hallo', bla: 'adsf'});
 
 // starts the API server
 if (config.api && config.api.enabled === true) {
     require('./server.js');
 }
 
-
-
 let justStarted = true;
 
 const mqttClient = mqtt.connect(config.mqtt.url, config.mqtt.options);
 const engine = Engine.getInstance(mqttClient);
-// we start the timer checker here (and not in the constructor of the Rules class),
-// because otherwise a condition might already trigger before the engine singleton
-// has been initialized
-rules.scheduleTimerConditionChecker();
+
+// initiate the rules
+const rules = new Rules();
+
 
 
 let processMessage = function (topic, message, packet) {
@@ -95,7 +92,7 @@ let setMqttHandlers = function (mqttClient) {
         // send the message to the rule engine
         rules.mqttConditionChecker(topic, withActions);
     });
-    
+
 }
 
 

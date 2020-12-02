@@ -2,7 +2,7 @@ const fs = require('fs');
 const yaml = require('js-yaml');
 const util = require('util');
 const crypto = require('crypto');
-const { logger, jsonlogger, logbooklogger } = require('./logger.js');
+const { logger, ruleslogger, logbooklogger } = require('./logger.js');
 const Engine = require('./engine.js');
 const { EMailAction, LogBookAction, PushoverAction, ScriptAction, SetValueAction, WebHookAction } = require('./actions.js')
 const { CronCondition, MqttCondition, SimpleCondition } = require('./conditions.js')
@@ -23,7 +23,11 @@ const topicToArray = function (topic) {
 class Rules {
     constructor() {
         this.lastMinutes = -1;
+        // both loadRules and scheduleTimerConditionChecker REQUIRE that the Engine singleton has been initialized
+        // this is why in the main scripts4mqtt.js file, the 'const rules = new Rules()' MUST be after the creation
+        // of the Engine singleton!!
         this.loadRules();
+        this.scheduleTimerConditionChecker();
     }
 
     loadRules() {
@@ -41,11 +45,11 @@ class Rules {
 
         for (let key in this.jsonContents) {
             try {
+                // try to build the Rule object and add it to the this.rules list
                 this.rules[key] = [];
                 for (let json of Rules.buildRuleSet(this.jsonContents[key])) {
                     this.rules[key].push(new Rule(key, json));
                 }
-
             } catch (e) {
                 logger.error('Error loading rule [%s]', key);
                 logger.error(e.toString());
@@ -142,7 +146,7 @@ class Rules {
 
 
     /*
-      This method is called by the mqtt library for every message that was recieved.
+      This method is called by the mqtt library for every message that was received.
       It will go over all MqttConditions in all rules and evaluate them.
       Only the topic of the message is provided, the data should be taken from 'engine.mqttStore'
     */
@@ -567,14 +571,20 @@ class Rule {
                     break;
                 case "mqtt":
                     c = new MqttCondition(json, this);
+                    // we evaluate the condition now, but prevent any triggers, to initiate the state values
+                    c.evaluate(false);
                     this.conditions.push(c);
                     break;
                 case "cron":
                     c = new CronCondition(json, this);
+                    // we evaluate the condition now, but prevent any triggers, to initiate the state values
+                    c.evaluate(false);
                     this.conditions.push(c);
                     break;
                 case "simple":
                     c = new SimpleCondition(json, this);
+                    // we evaluate the condition now, but prevent any triggers, to initiate the state values
+                    c.evaluate(false);
                     this.conditions.push(c);
                     break;
                 default:
@@ -594,5 +604,5 @@ class Rule {
 
 
 
-const rules = new Rules();
-module.exports = rules;
+//const rules = new Rules();
+module.exports = Rules;

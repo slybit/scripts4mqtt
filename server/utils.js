@@ -1,7 +1,7 @@
 const nodemailer = require('nodemailer');
 const Push = require('pushover-notifications');
 const config = require('./config.js').parse();
-const {logger, jsonlogger} = require('./logger.js');
+const {logger, ruleslogger} = require('./logger.js');
 
 
 const SMTPTransporter = config.email ? nodemailer.createTransport( config.email.service ) : undefined;
