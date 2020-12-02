@@ -35,7 +35,7 @@ const valueAdder = format((info) => {
         }
     }
     return info;
-});
+})();
 
 
 // Only log rule related log events
