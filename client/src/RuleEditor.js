@@ -45,8 +45,8 @@ const RuleEditor = (props) => {
             // update the state
             if (response.data.success) {
                 setData({
-                    ...staticData.newItems.rule,
                     ...data,
+                    ...staticData.newItems.rule, // this makes sure that a properties missing in response.data.rule or filled in with blancs
                     ...response.data.rule,
                     edData: { visible: false },
                     flatConditions: flattenConditions(response.data.rule.condition),
