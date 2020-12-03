@@ -29,8 +29,8 @@ const addTS = format((info, opts) => {
 const valueAdder = format((info) => {
     if (info.value && info.value.val !== undefined) {
         if (!isNaN(info.value.val)) {
-            // if it is a number
-            info.value.val_num = info.value.val;
+            // if it is a number or string representing a number
+            info.value.val_num = Number(info.value.val);
             info.value.val = info.value.val.toString();
         }
     }
@@ -119,6 +119,7 @@ let defaultTransport = new (transports.DailyRotateFile)({
     format: combine(
         timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
         format.splat(),
+        valueAdder,
         printf((info) => {
             let {timestamp, level, message, ...leftovers} = info;
             return `${info.timestamp} | ${info.level.padEnd(7).toUpperCase()} | ${message} | ${JSON.stringify(leftovers)}`;

@@ -86,7 +86,7 @@ class MqttCondition extends Condition {
             if (this.value == "*") {
                 this.state = true;
             } else {
-                
+
                 if (this.jmespath && message)
                     data = jmespath.search(message, this.jmespath);
                 else
@@ -122,7 +122,7 @@ class MqttCondition extends Condition {
             triggered: canTrigger && this.triggered() ? "true" : "false",
             details: `topic: ${this.topic}, value: ${JSON.stringify(message, null, 1)}`,
             topic: `${this.topic}`,
-            value: message,
+            value: {... message},        // we clone message here, because the valueAdder log formatter changes this object
             comparison: `[${data}] ${this.operator} [${this.value}]`
          });
         return canTrigger && this.triggered();

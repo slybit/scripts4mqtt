@@ -33,7 +33,7 @@ class Rules {
             try {
                 this.jsonContents = yaml.safeLoad(fs.readFileSync(FILENAME, 'utf8'));
             } catch (e) {
-                logger.error(e.toString());
+                logger.error("Error parsing rules", {error: e.toString()});
                 process.exit(1);
             }
         }
@@ -46,8 +46,7 @@ class Rules {
                     this.rules[key].push(new Rule(key, json));
                 }
             } catch (e) {
-                logger.error('Error loading rule [%s]', key);
-                logger.error(e.toString());
+                logger.error('Error loading rule', {ruleId: key, error: e.toString()});
                 process.exit(1);
             }
         }
@@ -134,7 +133,7 @@ class Rules {
         try {
             fs.writeFileSync(FILENAME, yaml.safeDump(this.jsonContents));
         } catch (e) {
-            logger.error(e);
+            logger.error("Error saving rules", {error: e.message});
         }
     }
 
@@ -221,8 +220,7 @@ class Rules {
                     new Rule(key, r);
                 }
             } catch (e) {
-                logger.error('Error while validating rule [%s]', key);
-                logger.error(e.toString());
+                logger.error('Error while validating rule', {ruleId: key, error: e.toString()});
                 throw (new Error('Error while validating rule [' + key + ']'));
             }
         }
@@ -251,7 +249,7 @@ class Rules {
             new Rule(id, input);
         } catch (err) {
             let error = new Error("Error during new rule creation: " + err.message);
-            logger.error(error);
+            logger.error("Error during new rule creation", {input: input, error: err.message});
             throw error;
         }
         return this.updateRule(id, input, true);
@@ -292,7 +290,7 @@ class Rules {
                 }
             };
         } catch (err) {
-            logger.error(err.message);
+            logger.error("Error updating rule", {id: id, input: input, error: err.message});
             throw error;
         }
     }
@@ -330,7 +328,7 @@ class Rules {
             };
         } else {
             const error = new Error('Rule id not found: ' + id);
-            logger.error(error);
+            logger.error("Error getting rule. Rule id not found", {id: id});
             throw error;
         }
     }
@@ -480,37 +478,37 @@ class Rule {
     */
     scheduleActions(context) {
         if (context.topic === "__cron__") {
-            logger.info('Rule [%s]: TRIGGERED by cron tick', this.name);
+            logger.debug('Rule triggered by cron tick', {ruleId: this.id, ruleName: this.name});
         } else {
-            logger.info('Rule [%s]: TRIGGERED by topic [%s]', this.name, context.topic);
+            logger.debug('Rule triggered by topic', {ruleId: this.id, ruleName: this.name, topic: context.topic});
         }
 
         if (!this.enabled) {
-            logger.info('Rule [%s]: Rule disabled, not scheduling actions', this.name);
+            logger.debug('Rule disabled, not scheduling actions', {ruleId: this.id, ruleName: this.name});
             return;
         }
 
         let actions = [];
         if (Rule.evalLogic(this.logic)) {
-            logger.info("Rule [%s]: scheduling TRUE actions", this.name);
+            logger.debug("Rule scheduling TRUE actions", {ruleId: this.id, ruleName: this.name});
             actions = this.onTrueActions;
         } else {
-            logger.info("Rule [%s]: scheduling FALSE actions", this.name);
+            logger.debug("Rule scheduling FALSE actions", {ruleId: this.id, ruleName: this.name});
             actions = this.onFalseActions;
         }
-        logger.info("Rule [%s]: cancelling all pending actions (delay and repeat)", this.name);
+        logger.debug("Rule cancelling all pending actions (delay and repeat)", {ruleId: this.id, ruleName: this.name});
         this.cancelPendingActions();
 
         for (let a of actions) {
             if (a.delay > 0) {
-                logger.info('Rule [%s]: Schedule - delayed execution in %d millesecs', a.rule.name, a.delay);
+                logger.debug('Rule action schedule - delayed execution', {ruleId: a.rule.id, ruleName: a.rule.name, delay: a.delay});
                 a.pending = setTimeout(a.execute.bind(a, context), a.delay);
             } else if (a.delay == 0) {
-                logger.info('Rule [%s]: schedule - immediate execution', a.rule.name);
+                logger.debug('Rule action schedule - immediate execution', {ruleId: a.rule.id, ruleName: a.rule.name});
                 a.execute(context);
             }
             if (a.interval > 0) {
-                logger.info('Rule [%s]: Schedule - repeated execution with interval of %d millesecs', a.rule.name, a.interval);
+                logger.debug('Rule action schedule - repeated execution with interval', {ruleId: a.rule.id, ruleName: a.rule.name, interval: a.interval});
                 a.repeater = setInterval(a.execute.bind(a, context), a.interval);
 
             }
@@ -523,12 +521,12 @@ class Rule {
                 if (a.pending !== undefined) {
                     clearTimeout(a.pending);
                     a.pending = undefined;
-                    logger.info('Rule [%s]:  cancelled pending action', a.rule.name);
+                    logger.debug('Rule pending action cancelled', {ruleId: a.rule.id, ruleName: a.rule.name});
                 }
                 if (a.repeater !== undefined) {
                     clearInterval(a.repeater);
                     a.repeater = undefined;
-                    logger.info('Rule [%s]:  cancelled repeating action', a.rule.name);
+                    logger.debug('Rule repeating action cancelled', {ruleId: a.rule.id, ruleName: a.rule.name});
                 }
             }
         }

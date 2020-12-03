@@ -1,5 +1,6 @@
 TimeDateUpdate:
   name: TimeDateUpdate
+  category: default
   condition:
     - type: cron
       trigger: always
@@ -18,6 +19,7 @@ TimeDateUpdate:
   description: Send date and time to KNX every hour
 Bel:
   name: Bel
+  category: default
   condition:
     type: mqtt
     trigger: on_flip_true
@@ -47,7 +49,8 @@ Bel:
   pendingOption: always
   description: Send pushover notification when somebody rings the bel
 Achtergevel:
-  name: Afdak_achteraan
+  name: Shuifdeuren + Achterdeur
+  category: Raam contacten
   condition:
     - type: and
       condition:
@@ -68,11 +71,18 @@ Achtergevel:
               topic: knx/status/14/0/15
               jmespath: val
               value: 0
+            - type: mqtt
+              trigger: on_flip
+              topic: knx/status/14/0/0
+              operator: eq
+              jmespath: val
+              value: '0'
   ontrue:
     - type: mqtt
       topic: knx/set/0/0/208
       value: 1
       enabled: true
+      delay: ''
   onfalse:
     - type: mqtt
       topic: knx/set/0/0/208
@@ -86,6 +96,7 @@ Achtergevel:
     closing the door.
 Voordeur:
   name: Voordeur
+  category: Raam contacten
   condition:
     - type: and
       condition:
@@ -134,6 +145,7 @@ Voordeur:
     closing the door.
 Afdak:
   name: Afdak lichten
+  category: Lichten
   condition:
     type: mqtt
     trigger: always
@@ -173,6 +185,7 @@ Afdak:
     the outer lights.
 StatusBeneden:
   name: StatusBeneden
+  category: default
   condition:
     - type: or
       condition:
@@ -275,6 +288,12 @@ BadkamerVentilatie:
       topic: knx/set/15/2/7
       value: '1'
       enabled: true
+    - type: mqtt
+      delay: '600000'
+      interval: 0
+      enabled: true
+      topic: knx/set/15/2/7
+      value: '0'
   enabled: true
   pendingOption: always
   onfalse:
@@ -293,8 +312,10 @@ BadkamerVentilatie:
   description: >-
     Triggered by button in bathroom. "Abuses" the hassio MQTT messages to
     control the ventilation.
+  category: Ventilatie
 Ventilatie:
   name: Ventilatie
+  category: default
   condition:
     - type: mqtt
       trigger: always
@@ -348,6 +369,7 @@ Ventilatie:
     (does *not* update hassio state if KNX ventilation is controlled elsewhere)
 5d099834910c:
   name: Ventilatie-zomer
+  category: Ventilatie
   enabled: true
   condition:
     - type: cron
@@ -369,6 +391,7 @@ Ventilatie:
   pendingOption: always
 a25f66c75076:
   name: Ventilatie-winter
+  category: Ventilatie
   enabled: true
   condition:
     - type: cron
@@ -390,6 +413,7 @@ a25f66c75076:
   pendingOption: always
 befd082fe8ba:
   name: Test
+  category: default
   enabled: false
   condition:
     - type: mqtt
@@ -489,6 +513,7 @@ befd082fe8ba:
   description: fasas
 d976b3e963fb:
   name: Voordeur - notification
+  category: default
   enabled: true
   condition:
     - type: and
@@ -496,11 +521,6 @@ d976b3e963fb:
         - type: mqtt
           trigger: on_flip_true
           topic: knx/status/14/0/1
-          jmespath: val
-          value: 0
-        - type: mqtt
-          trigger: 'no'
-          topic: knx/status/0/1/11
           jmespath: val
           value: 0
   ontrue:
@@ -522,8 +542,10 @@ d976b3e963fb:
       value: Voordeur werd geopend.
       enabled: true
   pendingOption: always
+  description: Sends notification when the front door is opened
 bdcb2e6336d3:
   name: Achterdeur - notification
+  category: default
   enabled: true
   condition:
     - type: mqtt
@@ -550,8 +572,10 @@ bdcb2e6336d3:
       value: Achterdeur werd geopend.
       enabled: true
   pendingOption: always
+  description: Sends notification when the back door is opened
 603d1965a1ab:
   name: Simulatie
+  category: default
   enabled: false
   condition:
     - type: cron
@@ -595,6 +619,7 @@ bdcb2e6336d3:
   description: ''
 bae8ad969d85:
   name: Unifi motion detection
+  category: default
   enabled: true
   pendingOption: always
   condition:
@@ -610,6 +635,7 @@ bae8ad969d85:
       enabled: true
 9a0d1e6b0910:
   name: Alarm_status
+  category: default
   enabled: true
   pendingOption: never
   condition:
@@ -652,6 +678,7 @@ bae8ad969d85:
     mqttalarm (alarm/state)  ->  hassio (hass/alarm/state)
 22be734eaeb3:
   name: Alarm - slybot
+  category: default
   enabled: true
   condition:
     - type: and
@@ -676,6 +703,7 @@ bae8ad969d85:
   description: Forward recordings to slybot when alarm is in "alarm" state
 e4ff2a054896:
   name: Verwarming boven
+  category: Verwarming
   description: |-
     Zet de verwarming boven (behalve badkamer) op "comfort" of op "frost".
     Wordt gestuurd door Hassio en door klokje (om vastlopen te vermijden).
@@ -739,6 +767,7 @@ e4ff2a054896:
       enabled: true
 23b9d5306707:
   name: Openen deuren via slybot
+  category: default
   description: Openen deuren via command slybot (telegram).
   enabled: true
   condition:
@@ -764,4 +793,81 @@ e4ff2a054896:
         } else if (context.topic === "slybot/write/physicalaccess/garage") {
           write("knx/write/15/2/0", 1, false);
         }
+
       enabled: true
+6635dfbef89f:
+  name: Dressing uitzetten na 1 uur
+  category: Lichten
+  description: ''
+  enabled: true
+  condition:
+    - type: mqtt
+      trigger: always
+      topic: knx/status/0/1/101
+      operator: eq
+      jmespath: val
+      value: '1'
+  ontrue:
+    - type: mqtt
+      delay: '3600000'
+      interval: 0
+      enabled: true
+      topic: knx/set/0/0/101
+      value: '0'
+    - type: logbook
+      delay: '3600000'
+      enabled: true
+      interval: 0
+      message: Dressing werd uitgezet
+15b20fd1ae5d:
+  name: Verwarming badkamer
+  category: Verwarming
+  description: Sturen badkamer verwarming
+  enabled: true
+  condition:
+    - type: cron
+      trigger: always
+      'on': 0 6 * * *
+      'off': 0 9 * * *
+    - type: cron
+      trigger: always
+      'on': 0 19 * * *
+      'off': 0 22 * * *
+  ontrue:
+    - type: mqtt
+      delay: 0
+      interval: 0
+      enabled: true
+      topic: knx/set/4/1/1
+      value: '1'
+  onfalse:
+    - type: mqtt
+      delay: 0
+      interval: 0
+      enabled: true
+      topic: knx/set/4/1/1
+      value: '2'
+46a7e322129b:
+  name: Nachthal
+  category: Lichten
+  description: Doet nachthal 's avond aan en 's morgens uit
+  enabled: true
+  condition:
+    - type: cron
+      trigger: on_flip
+      'on': 30 19 * * *
+      'off': 0 8 * * *
+  ontrue:
+    - type: mqtt
+      delay: 0
+      interval: 0
+      enabled: true
+      topic: knx/set/0/0/104
+      value: '1'
+  onfalse:
+    - type: mqtt
+      delay: 0
+      interval: 0
+      enabled: true
+      topic: knx/set/0/0/104
+      value: '0'

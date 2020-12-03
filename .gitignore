@@ -10,3 +10,4 @@ default-*.log
 rules-*.log
 mqtt-*.log
 logbook-*.log
+publish_docker.sh
