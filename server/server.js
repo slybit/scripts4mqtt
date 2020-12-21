@@ -157,6 +157,8 @@ router.post('/config', (req, res, next) => {
 
 
 router.get('/infinite', async (req, res) => {
+    // clear an existing interval if any
+    if (router.__infinite) clearInterval(router.__infinite);
     try {
         res.setHeader('Transfer-Encoding', 'chunked');
         res.setHeader('Access-Control-Allow-Origin', '*');
@@ -167,7 +169,8 @@ router.get('/infinite', async (req, res) => {
             res.write(Buffer.from(`${line}`))
         }
         logBufferDynamic.length = 0;
-        setInterval(() => {
+        // start an interval to keep pushing logs
+        router.__infinite = setInterval(() => {
             while (logBufferDynamic.length > 0) {
                 res.write(Buffer.from(`${logBufferDynamic.shift()}`))
             }
