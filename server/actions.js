@@ -150,7 +150,9 @@ class PushoverAction extends Action {
             message: json.message,
             title: json.title,
             sound: json.sound ? json.sound : "none",
-            priority: json.priority ? json.priority : 0
+            priority: json.priority ? json.priority : 0,
+            retry: 30,
+            expire: 3600
         }
     }
 

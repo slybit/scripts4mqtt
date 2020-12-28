@@ -793,7 +793,6 @@ e4ff2a054896:
         } else if (context.topic === "slybot/write/physicalaccess/garage") {
           write("knx/write/15/2/0", 1, false);
         }
-
       enabled: true
 6635dfbef89f:
   name: Dressing uitzetten na 1 uur
@@ -871,3 +870,22 @@ e4ff2a054896:
       enabled: true
       topic: knx/set/0/0/104
       value: '0'
+3f8b88e06169:
+  name: Test 2
+  category: default
+  description: ''
+  enabled: true
+  condition:
+    - type: cron
+      trigger: always
+      'on': 33 21 * * *
+      'off': '-'
+  ontrue:
+    - type: pushover
+      delay: 0
+      interval: 0
+      enabled: true
+      title: boom
+      message: boom
+      sound: magic
+      priority: '1'
