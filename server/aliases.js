@@ -18,7 +18,7 @@ class Aliases {
         this.aliases = {};
         if (fs.existsSync(FILENAME)) {
             try {
-                this.aliases = yaml.safeLoad(fs.readFileSync(FILENAME, 'utf8'));
+                this.aliases = yaml.load(fs.readFileSync(FILENAME, 'utf8'));
             } catch (e) {
                 logger.error(e.toString());
                 process.exit(1);

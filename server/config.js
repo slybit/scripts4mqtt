@@ -33,7 +33,7 @@ It will first parse this string and if formatting is ok, it will store the strin
 Note that this has no effect on the running instance. A restart is required to take effect.
 */
 updateConfig = function (c) {
-    yaml.safeLoad(c.config);
+    yaml.load(c.config);
     fs.writeFileSync(FILE, c.config);
 }
 
@@ -45,7 +45,7 @@ Reads the config file and returns it as an object.
 parse = function () {
   if (fs.existsSync(FILE)) {
     try {
-      return yaml.safeLoad(fs.readFileSync(FILE, 'utf8'));
+      return yaml.load(fs.readFileSync(FILE, 'utf8'));
     } catch (e) {
       console.log(e);
       process.exit();

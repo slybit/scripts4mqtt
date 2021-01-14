@@ -31,7 +31,7 @@ class Rules {
         this.rules = {};
         if (fs.existsSync(FILENAME)) {
             try {
-                this.jsonContents = yaml.safeLoad(fs.readFileSync(FILENAME, 'utf8'));
+                this.jsonContents = yaml.load(fs.readFileSync(FILENAME, 'utf8'));
             } catch (e) {
                 logger.error("Error parsing rules", {error: e.toString()});
                 process.exit(1);
@@ -206,7 +206,7 @@ class Rules {
         logger.info("Validating rules file");
         if (fs.existsSync(FILENAME)) {
             try {
-                this.jsonContents = yaml.safeLoad(fs.readFileSync(FILENAME, 'utf8'));
+                this.jsonContents = yaml.load(fs.readFileSync(FILENAME, 'utf8'));
             } catch (e) {
                 logger.error('Error while validating rules file: could not read rules file');
                 throw (new Error('Could not read rules file'));
