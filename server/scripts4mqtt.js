@@ -25,7 +25,7 @@ rules.scheduleTimerConditionChecker();
 let processMessage = function (topic, message, packet) {
     // message is a Buffer, so first convert it to a String
     message = message.toString();
-    logger.silly("MQTT received", {topic: topic, msg: saveJSONParse(message)});
+    logger.silly("MQTT received", {topic: topic, data: saveJSONParse(message)});
     // now parse the data
     let data = undefined;
     if (message === 'true') {

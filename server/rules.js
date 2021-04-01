@@ -131,7 +131,7 @@ class Rules {
     saveRules() {
         logger.info("Saving rules");
         try {
-            fs.writeFileSync(FILENAME, yaml.safeDump(this.jsonContents));
+            fs.writeFileSync(FILENAME, yaml.dump(this.jsonContents));
         } catch (e) {
             logger.error("Error saving rules", {error: e.message});
         }
