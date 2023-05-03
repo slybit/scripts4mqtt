@@ -155,6 +155,7 @@ export const staticData = {
             alias: {
                 type: "alias",
                 trigger: "no",
+                logic: "or",
                 alias: "__REPLACE__",
                 operator: "eq",
                 jmespath: "val",
@@ -269,7 +270,34 @@ export const staticData = {
                         { value: "always", label: "Always" }
                     ]
                 },
-                { key: "alias_", label: "Alias_", props: { required: true } },
+                { key: "alias", label: "Alias", type: "select", options: [], props: { required: true } },
+                { key: "jmespath", label: "jmespath", props: { required: true } },
+                {
+                    key: "operator", label: "Operator", type: "select", options: [
+                        { value: "eq", label: "= (equals)" },
+                        { value: "gt", label: "> (greater than)" },
+                        { value: "lt", label: "< (less than)" },
+                        { value: "neq", label: "!= (not equal to)" }
+                    ]
+                },
+                { key: "value", label: "Value", props: { required: true } }
+            ],
+            alias: [
+                {
+                    key: "trigger", label: "Trigger", type: "select", options: [
+                        { value: "no", label: "No" },
+                        { value: "on_flip", label: "On flip" },
+                        { value: "on_flip_true", label: "On flip to True" },
+                        { value: "on_flip_false", label: "On flip to False" },
+                        { value: "always", label: "Always" }
+                    ]
+                },
+                {
+                    key: "logic", label: "Logic Operator", type: "select", options: [
+                        { value: "or", label: "OR" },
+                        { value: "and", label: "AND" }
+                    ]
+                },
                 {
                     key: "alias", label: "Alias", type: "select", options: []
                 },

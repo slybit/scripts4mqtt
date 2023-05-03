@@ -1,7 +1,10 @@
 A:
-  - A
-  - B
-  - C
-B:
-  - ''
-C: []
+  - test/a
+  - test/b
+  - test/c
+a:
+  - knx/status/14/0/14
+C:
+  - knx/alias
+  - knx/belias
+  - knx/celias

@@ -23,6 +23,7 @@ It exposes the following functions:
 const vm = require('vm');
 const axios = require('axios');
 const { logger } = require('./logger.js');
+const config = require('./config.js').parse();
 
 const store = new Map();
 const testStore = new Map(); // only used for testing scripts
@@ -68,7 +69,9 @@ class Engine {
                     }
                 }
                 logger.info('ScriptAction published MQTT message', {topic: topic, msg: data, retain: retain});
-                return mqttClient.publish(topic, data, { 'retain': retain });
+                if (!config.development) {
+                    return mqttClient.publish(topic, data, { 'retain': retain });
+                }
             }
 
         }

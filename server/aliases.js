@@ -27,9 +27,9 @@ class Aliases {
     }
 
     saveAliases() {
-        logger.info("Saving aliases");
+        logger.info(`Saving aliases to ${FILENAME}`);
         try {
-            fs.writeFileSync(FILENAME, yaml.safeDump(this.aliases));
+            fs.writeFileSync(FILENAME, yaml.dump(this.aliases));
         } catch (e) {
             logger.error(e);
         }
@@ -51,6 +51,7 @@ class Aliases {
     - input: JSON with full new alias {"newname" : [ new topics ]}
     */
     updateAlias(input) {
+        console.log(input);
         try {
             // test the update, this will throw an exception if not ok
             this.validateTopicList(input);
@@ -105,7 +106,7 @@ class Aliases {
 }
 
 
+const aliases = new Aliases();
 
-
-module.exports = Aliases
+module.exports = aliases;
 

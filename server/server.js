@@ -10,7 +10,7 @@ const config = require('./config.js').parse();
 const rules = require('./rules.js');
 const Engine = require('./engine.js');
 const validator = require('./validator.js');
-const Aliases = require('./aliases.js');
+const aliases = require('./aliases.js');
 
 const app = express();
 const router = express.Router();
@@ -46,6 +46,11 @@ router.get('/rule/:ruleId', (req, res, next) => {
     next();
 });
 
+router.get('/state/rule/:ruleId', (req, res, next) => {
+    res.locals.data = rules.getRuleState(req.params.ruleId);
+    next();
+});
+
 router.put('/rule/:ruleId', (req, res, next) => {
     res.locals.data = rules.updateRule(req.params.ruleId, req.body);
     next();
@@ -58,19 +63,16 @@ router.delete('/rule/:ruleId', (req, res, next) => {
 });
 
 router.get('/aliases', (req, res, next) => {
-    let aliases = new Aliases();
     res.locals.data = aliases.listAliases();
     next();
 });
 
 router.post('/aliases', (req, res, next) => {
-    let aliases = new Aliases();
     res.locals.data = aliases.updateAlias(req.body);
     next();
 });
 
 router.delete('/alias/:aliasId', (req, res, next) => {
-    let aliases = new Aliases();
     res.locals.data = aliases.deleteAlias(req.params.aliasId);
     next();
 });

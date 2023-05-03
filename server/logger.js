@@ -142,7 +142,7 @@ const transportsList = [
                 return `${info.timestamp} | ${info.level.padEnd(7).toUpperCase()} | ${message} | ${JSON.stringify(leftovers)}`;
             })
         ),
-        level: config.debug ? 'silly' : 'error'     // overwrite the error level for the server console logs
+        level: config.debug ? config.loglevel : 'error'     // overwrite the error level for the server console logs
     }),
     //new transports.File({
     //  filename: 'default.log',

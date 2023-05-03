@@ -54,7 +54,9 @@ class SetValueAction extends Action {
                         logger.error("Could not convert value to String - sending empty message");
                     }
                 }
-                Engine.getInstance().mqttClient.publish(this.topic, data);
+                if (!config.development) {
+                    Engine.getInstance().mqttClient.publish(this.topic, data);
+                }
                 logger.info("SetValueAction executed", { ruleId: this.rule.id, ruleName: this.rule.name, type: "action", subtype: "mqtt", details: `[${data}] to ${this.topic}`, triggered: "true" });
             }
         } else {

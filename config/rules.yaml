@@ -8,10 +8,10 @@ TimeDateUpdate:
       'on': 15 * * * *
   ontrue:
     - type: script
-      script: 'write(''knx/write/15/1/0'', new Date().toString());'
+      script: write('knx/write/15/1/0', new Date().toString());
       enabled: true
     - type: script
-      script: 'write(''knx/write/15/1/1'', new Date().toString());'
+      script: write('knx/write/15/1/1', new Date().toString());
       enabled: true
   enabled: true
   pendingOption: always
@@ -374,8 +374,8 @@ Ventilatie:
   condition:
     - type: cron
       trigger: always
-      'on': '30 2 * 5,6,7,8,9 *'
-      'off': '0 8 * 5,6,7,8,9 *'
+      'on': 30 2 * 5,6,7,8,9 *
+      'off': 0 8 * 5,6,7,8,9 *
   ontrue:
     - type: mqtt
       delay: 0
@@ -396,8 +396,8 @@ a25f66c75076:
   condition:
     - type: cron
       trigger: always
-      'on': '0 10 * 1,2,3,4,10,11,12 *'
-      'off': '0 16 * 1,2,3,4,10,11,12 *'
+      'on': 0 10 * 1,2,3,4,10,11,12 *
+      'off': 0 16 * 1,2,3,4,10,11,12 *
   ontrue:
     - type: mqtt
       delay: 0
@@ -416,100 +416,16 @@ befd082fe8ba:
   category: default
   enabled: false
   condition:
-    - type: mqtt
-      trigger: always
-      topic: __remove__knx/status/31/7/0
-      jmespath: val
-      value: '0x00'
-    - type: or
-      condition:
-        - type: mqtt
-          trigger: 'no'
-          topic: __REPLACE__
-          operator: eq
-          jmespath: val
-          value: qty
-        - type: or
-          condition:
-            - type: or
-              condition:
-                - type: or
-                  condition:
-                    - type: mqtt
-                      trigger: 'no'
-                      topic: __REPLACE__
-                      operator: eq
-                      jmespath: val
-                      value: j
-        - type: or
-          condition: []
     - type: alias
       trigger: 'no'
-      alias: __REPLACE__
+      alias: A
       eval: 'true'
-  ontrue:
-    - type: pushover
-      delay: 0
-      title: Test
-      message: test
-      sound: pushover
-      priority: 0
-    - type: email
-      delay: 0
-      to: seys.stefaan@gmail.com
-      subject: Bel! Boem! Bel!
-      body: |-
-        Somebody rang the door my lord.
-
-        - Your trusty servant, scripts4mqtt
+      logic: and
+      value: '1'
+      operator: gt
+  ontrue: []
   pendingOption: always
-  onfalse:
-    - type: mqtt
-      delay: 0
-      interval: 0
-      topic: __REPLACE__
-      value: __REPLACE__
-    - type: pushover
-      delay: 0
-      interval: 0
-      title: __REPLACE__
-      message: ''
-      sound: pushover
-      priority: 0
-    - type: mqtt
-      delay: 0
-      interval: 0
-      topic: __REPLACE__
-      value: __REPLACE__
-    - type: pushover
-      delay: 0
-      interval: 0
-      title: __REPLACE__
-      message: ''
-      sound: pushover
-      priority: 0
-    - type: pushover
-      delay: 0
-      interval: 0
-      title: __REPLACE__
-      message: ''
-      sound: pushover
-      priority: 0
-    - type: mqtt
-      delay: 0
-      interval: 0
-      topic: __REPLACE__
-      value: __REPLACE__
-    - type: script
-      delay: 0
-      interval: 0
-      script: ''
-    - type: email
-      delay: 0
-      interval: 0
-      to: __REPLACE__asdf
-      subject: __REPLACE__
-      body: ''
+  onfalse: []
   description: fasas
 d976b3e963fb:
   name: Voordeur - notification

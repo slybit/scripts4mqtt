@@ -60,7 +60,7 @@ export const AppFooter = styled.div`
  * Left column, scrolling, hosting the search bar and rule list
  */
 export const LeftColumn = styled.div`
-  flex: 0 0 20em;
+  flex: 0 0 30em;
   max-width: 40em;
   border-right: 1px solid rgba(0, 0, 0, 0.125);
   overflow-y: auto;

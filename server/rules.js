@@ -5,8 +5,7 @@ const crypto = require('crypto');
 const { logger, logbooklogger } = require('./logger.js');
 const Engine = require('./engine.js');
 const { EMailAction, LogBookAction, PushoverAction, ScriptAction, SetValueAction, WebHookAction } = require('./actions.js')
-const { CronCondition, MqttCondition, SimpleCondition } = require('./conditions.js')
-const Aliases = require('./aliases.js');
+const { CronCondition, MqttCondition, AliasCondition, SimpleCondition } = require('./conditions.js')
 const { error } = require('winston');
 
 const FILENAME = process.env.MQTT4SCRIPTS_RULES || '../config/rules.yaml';
@@ -33,98 +32,23 @@ class Rules {
             try {
                 this.jsonContents = yaml.load(fs.readFileSync(FILENAME, 'utf8'));
             } catch (e) {
-                logger.error("Error parsing rules", {error: e.toString()});
+                logger.error("Error parsing rules", { error: e.toString() });
                 process.exit(1);
             }
         }
 
         for (let key in this.jsonContents) {
             try {
-                // try to build the Rule object and add it to the this.rules list
-                this.rules[key] = [];
-                for (let json of Rules.buildRuleSet(this.jsonContents[key])) {
-                    this.rules[key].push(new Rule(key, json));
-                }
+                let rule = new Rule(key, this.jsonContents[key]);
+                this.rules[key] = rule;
+                logger.info('loaded %s', rule.toString());
             } catch (e) {
-                logger.error('Error loading rule', {ruleId: key, error: e.toString()});
+                logger.error('Error loading rule', { ruleId: key, error: e.toString() });
                 process.exit(1);
             }
         }
     }
 
-    listUsedAliases() {
-        let usedAliases = [];
-        for (let id in this.jsonContents) Rules.listAliases(this.jsonContents[id].condition, usedAliases);
-        return usedAliases;
-    }
-
-
-    // build a set of rules by expanding all the aliases in a rule condition
-    // input = json describing a rule config
-    // output = array of json objects describing all the expanded rules
-    static buildRuleSet(rule) {
-        let aliases = new Aliases();
-        let ruleSet = [rule];
-        let ruleAliases = [];
-        Rules.listAliases(rule.condition, ruleAliases);
-        for (let alias of ruleAliases) {
-            let newRuleSet = []
-            for (let c of ruleSet) {
-                let topics = aliases.getTopics(alias);
-                for (let topic of topics) {
-                    let clone = JSON.parse(JSON.stringify(c));
-                    Rules.replaceAlias(clone.condition, alias, topic);
-                    newRuleSet.push(clone);
-                }
-            }
-            ruleSet = newRuleSet;
-        }
-        return ruleSet;
-    }
-
-    // go through a 'condition' JSON statement and extract all the aliases from one or more alias conditions
-    // returns an array of the unique aliases it found
-    static listAliases(condition, aliases) {
-        if (Array.isArray(condition)) {
-            for (let c of condition) this.listAliases(c, aliases);
-        } else {
-            if (!condition.type) throw new Error('No type provided for condition.');
-            switch (condition.type.toLowerCase()) {
-                case "and":
-                case "or":
-                    if (!condition.condition) throw new Error("OR and AND conditions cannot be empty.");
-                    this.listAliases(condition.condition, aliases);
-                    break;
-                case "alias":
-                    if (!aliases.includes(condition.alias)) aliases.push(condition.alias);
-                    break;
-            }
-        }
-    }
-
-    // replaces all
-    static replaceAlias(condition, aliasId, topic) {
-        if (Array.isArray(condition)) {
-            for (let c of condition) Rules.replaceAlias(c, aliasId, topic);
-        } else {
-            if (!condition.type) throw new Error('No type provided for condition.');
-            switch (condition.type.toLowerCase()) {
-                case "and":
-                case "or":
-                    if (!condition.condition) throw new Error("OR and AND conditions cannot be empty.");
-                    Rules.replaceAlias(condition.condition, aliasId, topic);
-                    break;
-                case "alias":
-                    if (condition.alias === aliasId) {
-                        delete condition.alias;
-                        condition.type = "mqtt";
-                        condition.topic = topic;
-                    }
-                    break;
-            }
-        }
-
-    }
 
 
 
@@ -133,7 +57,7 @@ class Rules {
         try {
             fs.writeFileSync(FILENAME, yaml.dump(this.jsonContents));
         } catch (e) {
-            logger.error("Error saving rules", {error: e.message});
+            logger.error("Error saving rules", { error: e.message });
         }
     }
 
@@ -152,19 +76,22 @@ class Rules {
         context.topic = topic
         context.T = topicToArray(topic);
         for (let key in this.rules) {
-            let ruleSet = this.rules[key];
-            for (let rule of ruleSet) {
-                for (let c of rule.conditions)
-                    if ((c instanceof MqttCondition) && (c.topic === topic)) {
-                        logger.silly('Rule: topic matches, evaluating...', {ruleId: rule.id, ruleName: rule.name, topic: topic});
-                        if (c.evaluate(withActions) && withActions)
-                            rule.scheduleActions(context);
-                    }
-            }
-            // TODO: add wildcard topics in the condition
+            let rule = this.rules[key];
+            for (let c of rule.conditions)
+                if ((c instanceof MqttCondition) && (c.topic === topic)) {
+                    logger.silly('Rule: topic matches, evaluating...', { ruleId: rule.id, ruleName: rule.name, topic: topic });
+                    if (c.evaluate(withActions) && withActions)
+                        rule.scheduleActions(context);
+                } else if ((c instanceof AliasCondition) && (c.usesTopic(topic))) {
+                    logger.silly('Rule: topic matches, evaluating...', { ruleId: rule.id, ruleName: rule.name, topic: topic });
+                    if (c.evaluate(withActions, topic) && withActions)
+                        rule.scheduleActions(context);
+                }
         }
-
+        // TODO: add wildcard topics in the condition
     }
+
+
 
     /*
       This runs every minute. It will go over all CronConditions in all rules and evaluate them.
@@ -181,16 +108,15 @@ class Rules {
         // prevent a double tick in a single minute (is only possible in case tasks take very long or at startup)
         if (minutes !== this.lastMinutes) {
             for (let key in this.rules) {
-                let ruleSet = this.rules[key];
-                for (let rule of ruleSet) {
-                    for (let c of rule.conditions)
-                        if ((c instanceof CronCondition)) {
-                            logger.silly('Rule: cron tick, evaluating cron expressions', {ruleId: rule.id, ruleName: rule.name});
-                            if (c.evaluate())
-                                rule.scheduleActions(context);
-                        }
-                }
+                let rule = this.rules[key];
+                for (let c of rule.conditions)
+                    if ((c instanceof CronCondition)) {
+                        logger.silly('Rule: cron tick, evaluating cron expressions', { ruleId: rule.id, ruleName: rule.name });
+                        if (c.evaluate())
+                            rule.scheduleActions(context);
+                    }
             }
+
         }
         setTimeout(this.scheduleTimerConditionChecker.bind(this), delay * 1000);
     }
@@ -215,12 +141,9 @@ class Rules {
 
         for (let key in this.jsonContents) {
             try {
-                let expandedRules = Rules.buildRuleSet(this.jsonContents[key]);
-                for (let r of expandedRules) {
-                    new Rule(key, r);
-                }
+                new Rule(key, this.jsonContents[key]);
             } catch (e) {
-                logger.error('Error while validating rule', {ruleId: key, error: e.toString()});
+                logger.error('Error while validating rule', { ruleId: key, error: e.toString() });
                 throw (new Error('Error while validating rule [' + key + ']'));
             }
         }
@@ -249,7 +172,7 @@ class Rules {
             new Rule(id, input);
         } catch (err) {
             let error = new Error("Error during new rule creation: " + err.message);
-            logger.error("Error during new rule creation", {input: input, error: err.message});
+            logger.error("Error during new rule creation", { input: input, error: err.message });
             throw error;
         }
         return this.updateRule(id, input, true);
@@ -269,18 +192,11 @@ class Rules {
                 // assign the new input to the full jsonContents
                 Object.assign(this.jsonContents[id], input);
                 // clear pending actions for the rule
-                let ruleSet = this.rules[id];
-                for (let rule of ruleSet) {
-                    rule.cancelPendingActions();
-                }
+                this.rules[id].cancelPendingActions();
             }
 
-            // replace the rule set
-            this.rules[id] = [];
-            let expandedRules = Rules.buildRuleSet(this.jsonContents[id]);
-            for (let r of expandedRules) {
-                this.rules[id].push(new Rule(id, r));
-            }
+            const rule = new Rule(id, this.jsonContents[id]);
+            this.rules[id] = rule;
 
             this.saveRules();
             return {
@@ -290,7 +206,7 @@ class Rules {
                 }
             };
         } catch (err) {
-            logger.error("Error updating rule", {id: id, input: input, error: err.message});
+            logger.error("Error updating rule", { id: id, input: input, error: err.message });
             throw error;
         }
     }
@@ -299,19 +215,14 @@ class Rules {
         // make a hard copy, apply changes and test
         const cloned = JSON.parse(JSON.stringify(this.jsonContents[id]));
         Object.assign(cloned, input);
-        let expandedRules = Rules.buildRuleSet(cloned);
-        for (let r of expandedRules) {
-            new Rule(id, r);
-        }
+        new Rule(id, cloned);
 
     }
 
     deleteRule(id) {
         // clear pending actions for the rule
-        let ruleSet = this.rules[id];
-        for (let rule of ruleSet) {
-            rule.cancelPendingActions();
-        }
+        let rule = this.rules[id];
+        rule.cancelPendingActions();
         delete this.rules[id];
         delete this.jsonContents[id];
         this.saveRules();
@@ -328,7 +239,26 @@ class Rules {
             };
         } else {
             const error = new Error('Rule id not found: ' + id);
-            logger.error("Error getting rule. Rule id not found", {id: id});
+            logger.error("Error getting rule. Rule id not found", { id: id });
+            throw error;
+        }
+    }
+
+    getRuleState(id) {
+        const rule = this.rules[id];
+        if (rule) {
+            for (let c of rule.conditions) {
+
+            }
+            return {
+                rule: {
+                    "id": id,
+                    ...this.jsonContents[id]
+                }
+            };
+        } else {
+            const error = new Error('Rule id not found: ' + id);
+            logger.error("Error getting rule. Rule id not found", { id: id });
             throw error;
         }
     }
@@ -373,8 +303,38 @@ class Rules {
     }
 
 
-}
 
+
+    /* --------------------------------------------------------------------------------------------
+    * Helper functions
+    -------------------------------------------------------------------------------------------- */
+
+    // list all aliases used by any rule
+    listUsedAliases() {
+        let usedAliases = [];
+        for (let id in this.jsonContents) Rules._listAliases(this.jsonContents[id].condition, usedAliases);
+        return usedAliases;
+    }
+
+    // go through a 'condition' JSON statement and extract all the aliases from one or more alias conditions
+    // returns an array of the unique aliases it found
+    static _listAliases(condition, usedAliases) {
+        if (Array.isArray(condition)) {
+            for (let c of condition) this.listAliases(c, usedAliases);
+        } else {
+            switch (condition.type.toLowerCase()) {
+                case "and":
+                case "or":
+                    if (condition.condition) this.listAliases(condition.condition, usedAliases);
+                    break;
+                case "alias":
+                    if (!usedAliases.includes(condition.alias)) usedAliases.push(condition.alias);
+                    break;
+            }
+        }
+    }
+
+}
 
 /* --------------------------------------------------------------------------------------------
  * Rule
@@ -478,37 +438,37 @@ class Rule {
     */
     scheduleActions(context) {
         if (context.topic === "__cron__") {
-            logger.debug('Rule triggered by cron tick', {ruleId: this.id, ruleName: this.name});
+            logger.debug('Rule triggered by cron tick', { ruleId: this.id, ruleName: this.name });
         } else {
-            logger.debug('Rule triggered by topic', {ruleId: this.id, ruleName: this.name, topic: context.topic});
+            logger.debug('Rule triggered by topic', { ruleId: this.id, ruleName: this.name, topic: context.topic });
         }
 
         if (!this.enabled) {
-            logger.debug('Rule disabled, not scheduling actions', {ruleId: this.id, ruleName: this.name});
+            logger.debug('Rule disabled, not scheduling actions', { ruleId: this.id, ruleName: this.name });
             return;
         }
 
         let actions = [];
         if (Rule.evalLogic(this.logic)) {
-            logger.debug("Rule scheduling TRUE actions", {ruleId: this.id, ruleName: this.name});
+            logger.debug("Rule scheduling TRUE actions", { ruleId: this.id, ruleName: this.name });
             actions = this.onTrueActions;
         } else {
-            logger.debug("Rule scheduling FALSE actions", {ruleId: this.id, ruleName: this.name});
+            logger.debug("Rule scheduling FALSE actions", { ruleId: this.id, ruleName: this.name });
             actions = this.onFalseActions;
         }
-        logger.debug("Rule cancelling all pending actions (delay and repeat)", {ruleId: this.id, ruleName: this.name});
+        logger.debug("Rule cancelling all pending actions (delay and repeat)", { ruleId: this.id, ruleName: this.name });
         this.cancelPendingActions();
 
         for (let a of actions) {
             if (a.delay > 0) {
-                logger.debug('Rule action schedule - delayed execution', {ruleId: a.rule.id, ruleName: a.rule.name, delay: a.delay});
+                logger.debug('Rule action schedule - delayed execution', { ruleId: a.rule.id, ruleName: a.rule.name, delay: a.delay });
                 a.pending = setTimeout(a.execute.bind(a, context), a.delay);
             } else if (a.delay == 0) {
-                logger.debug('Rule action schedule - immediate execution', {ruleId: a.rule.id, ruleName: a.rule.name});
+                logger.debug('Rule action schedule - immediate execution', { ruleId: a.rule.id, ruleName: a.rule.name });
                 a.execute(context);
             }
             if (a.interval > 0) {
-                logger.debug('Rule action schedule - repeated execution with interval', {ruleId: a.rule.id, ruleName: a.rule.name, interval: a.interval});
+                logger.debug('Rule action schedule - repeated execution with interval', { ruleId: a.rule.id, ruleName: a.rule.name, interval: a.interval });
                 a.repeater = setInterval(a.execute.bind(a, context), a.interval);
 
             }
@@ -521,12 +481,12 @@ class Rule {
                 if (a.pending !== undefined) {
                     clearTimeout(a.pending);
                     a.pending = undefined;
-                    logger.debug('Rule pending action cancelled', {ruleId: a.rule.id, ruleName: a.rule.name});
+                    logger.debug('Rule pending action cancelled', { ruleId: a.rule.id, ruleName: a.rule.name });
                 }
                 if (a.repeater !== undefined) {
                     clearInterval(a.repeater);
                     a.repeater = undefined;
-                    logger.debug('Rule repeating action cancelled', {ruleId: a.rule.id, ruleName: a.rule.name});
+                    logger.debug('Rule repeating action cancelled', { ruleId: a.rule.id, ruleName: a.rule.name });
                 }
             }
         }
@@ -564,6 +524,12 @@ class Rule {
                     break;
                 case "mqtt":
                     c = new MqttCondition(json, this);
+                    // we evaluate the condition now, but prevent any triggers, to initiate the state values
+                    c.evaluate(false);
+                    this.conditions.push(c);
+                    break;
+                case "alias":
+                    c = new AliasCondition(json, this);
                     // we evaluate the condition now, but prevent any triggers, to initiate the state values
                     c.evaluate(false);
                     this.conditions.push(c);

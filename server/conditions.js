@@ -3,7 +3,7 @@ const jmespath = require('jmespath');
 const { validateMqttCondition, validateAliasCondition, validateCronCondition } = require('./validator');
 const { logger, logbooklogger } = require('./logger.js');
 const Engine = require('./engine.js');
-const Aliases = require('./aliases.js');
+const aliases = require('./aliases.js');
 const cronmatch = require('./cronmatch.js');
 
 
@@ -109,7 +109,7 @@ class MqttCondition extends Condition {
                 }
             }
         } catch (err) {
-            logger.error('Error during MqttCondition evaluation', {error: `Could not parse message to json: ${message}`});
+            logger.error('Error during MqttCondition evaluation', { error: `Could not parse message to json: ${message}` });
             //logger.error(err.stack);
         }
         logger.info("MQTT condition evaluated", {
@@ -122,10 +122,101 @@ class MqttCondition extends Condition {
             triggered: canTrigger && this.triggered() ? "true" : "false",
             details: `topic: ${this.topic}, value: ${JSON.stringify(message, null, 1)}`,
             topic: `${this.topic}`,
-            value: {... message},        // we clone message here, because the valueAdder log formatter changes this object
+            value: { ...message },        // we clone message here, because the valueAdder log formatter changes this object
             comparison: `[${data}] ${this.operator} [${this.value}]`
-         });
+        });
         return canTrigger && this.triggered();
+    }
+
+}
+
+class AliasCondition extends Condition {
+
+    constructor(json, rule) {
+        super(json, rule);
+        this.alias = json.alias;
+        this.jmespath = json.jmespath;
+        this.operator = json.operator ? json.operator : "eq";
+        this.value = json.value;
+        this.logic = json.logic;
+        validateAliasCondition(json);
+    }
+
+    evaluate(canTrigger, topic) {
+        let topics = aliases.getTopics(this.alias);
+        this.oldState = this.state;
+        let _state;
+        try {
+            switch (this.logic) {
+                case 'or':
+                    _state = false;
+                    for (let _topic of topics) {
+                        _state = _state || this.evaluateTopic(_topic).state;
+                    }
+                    break;
+                case 'and':
+                    _state = true;
+                    for (let _topic of topics) {
+                        _state = _state && this.evaluateTopic(_topic).state;
+                    }
+                    break;
+            }
+        } catch (err) {
+            logger.error('Error during AliasCondition evaluation', { error: 'Error during AliasCondition evaluation' });
+            logger.error(err.stack);
+        }
+        // get the details of the message that triggered this alias condition evaluation
+        const logInfo = this.evaluateTopic(topic);
+        logger.info("Alias condition evaluated", {
+            ruleId: this.rule.id,
+            ruleName: this.rule.name,
+            type: "condition",
+            subtype: "alias",
+            oldState: this.oldState ? "true" : "false",
+            state: this.state ? "true" : "false",
+            triggered: canTrigger && this.triggered() ? "true" : "false",
+            details: `topic: ${topic}, value: ${JSON.stringify(logInfo.message, null, 1)}`,
+            topic: `${topic}`,
+            value: { ...logInfo.message },        // we clone message here, because the valueAdder log formatter changes this object
+            comparison: `[${logInfo.data}] ${this.operator} [${this.value}]`
+        });
+        
+        return canTrigger && this.triggered();
+    }
+
+    usesTopic(topic) {
+        return aliases.getTopics(this.alias).includes(topic);
+    }
+
+    evaluateTopic(topic) {
+        let state = false;
+        let data = undefined;
+        let message = Engine.getInstance().mqttStore.get(topic) ? Engine.getInstance().mqttStore.get(topic).data : undefined;
+        if (this.value == "*") {
+            return true;
+        } else {
+            if (this.jmespath && message)
+                data = jmespath.search(message, this.jmespath);
+            else
+                data = message;
+            switch (this.operator) {
+                case "eq":
+                    // we use double == so that Javascript converts them to the same type
+                    // this allows to compare strings with numbers
+                    state = (data == this.value);
+                    break;
+                case "gt":
+                    state = (data > this.value);
+                    break;
+                case "lt":
+                    state = (data < this.value);
+                    break;
+                case "neq":
+                    state = !(data == this.value);
+                    break;
+            }
+        }
+        return {message, data, state};
     }
 
 }
@@ -187,4 +278,4 @@ class SimpleCondition extends Condition {
 
 }
 
-module.exports = { CronCondition, MqttCondition, SimpleCondition }
+module.exports = { CronCondition, MqttCondition, AliasCondition, SimpleCondition }
