@@ -4,7 +4,7 @@ import Sortly, { useDrag, useDrop, useIsClosestDragging, findDescendants, remove
 import { HorizontalContainer, AppColumn10, RightColumn, AppEditor, Header } from "./containers";
 import { Button, UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem, InputGroup, InputGroupAddon, Input, FormGroup, Label } from 'reactstrap';
 import Icon from '@mdi/react'
-import { mdiCheckboxBlankOutline, mdiCheckBoxOutline, mdiCancel, mdiCheck, mdiDelete } from '@mdi/js'
+import { mdiCheckboxBlankOutline, mdiCheckBoxOutline, mdiCancel, mdiCheck, mdiDelete, mdiHexagon } from '@mdi/js'
 import update from 'immutability-helper';
 //import ReactJson from 'react-json-view';
 //import format from 'string-format';
@@ -26,10 +26,19 @@ const RuleEditor = (props) => {
         edData: { visible: false }
     });
 
+    const [ruleState, setRuleState] = useState(undefined);
+
 
 
     useEffect(() => {
         fetchData(props.id);
+    }, [props]);
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            fetchState(props.id);
+        }, 5000);
+        return () => clearInterval(interval)
     }, [props]);
 
 
@@ -63,11 +72,30 @@ const RuleEditor = (props) => {
                 // TODO: alert user, editor is not visible!
                 console.log(response.data);
             }
+            await fetchState(id);
         } catch (e) {
             // TODO: alert user
             console.log(e);
         }
     };
+
+    const fetchState = async (id) => {
+        console.log('fetchState');
+        try {
+            const response = await axios.get('/api/state/rule/' + id);
+            // update the state
+            if (response.data.success) {
+                setRuleState(response.data.state);
+            } else {
+                // TODO: alert user, editor is not visible!
+                console.log(response.data);
+            }
+        } catch (e) {
+            // TODO: alert user
+            console.log(e);
+        }
+
+    }
 
 
     const pushUpdate = async (itemUpdate, updateFn) => {
@@ -380,7 +408,7 @@ const RuleEditor = (props) => {
                     <UncontrolledDropdown>
                         <DropdownToggle caret>
                             Add Condition
-                            </DropdownToggle>
+                        </DropdownToggle>
                         <DropdownMenu>
                             <DropdownItem header>Logical</DropdownItem>
                             <DropdownItem onClick={() => { addNewItem("flatConditions", "or") }}>OR</DropdownItem>
@@ -397,6 +425,7 @@ const RuleEditor = (props) => {
                         items={data.flatConditions}
                         onChange={handleSortlyChange} >
                         {(props) => <ConditionItemRenderer {...props}
+                            state={ruleState ? ruleState.conditions[props.id] : false}
                             onEditableItemClick={handleEditableItemClick}
                             onConditionDropped={handleConditionDrop}
                             onDeleteClick={editorHandleDeleteClick}
@@ -409,7 +438,7 @@ const RuleEditor = (props) => {
                     <UncontrolledDropdown>
                         <DropdownToggle caret>
                             Add OnTrue Action
-                            </DropdownToggle>
+                        </DropdownToggle>
                         <DropdownMenu>
                             {newOntrueActions}
                         </DropdownMenu>
@@ -430,7 +459,7 @@ const RuleEditor = (props) => {
                     <UncontrolledDropdown>
                         <DropdownToggle caret>
                             Add OnFalse Action
-                            </DropdownToggle>
+                        </DropdownToggle>
                         <DropdownMenu>
                             {newOnfalseActions}
                         </DropdownMenu>
@@ -451,8 +480,9 @@ const RuleEditor = (props) => {
 
             </AppColumn10>
             {
-                false && <AppColumn10>
-                    {<pre className='code'>{JSON.stringify(data, undefined, 4)}</pre>}
+                <AppColumn10>
+                    {<pre className='code'>{JSON.stringify(data.flatConditions, undefined, 4)}</pre>}
+                    {<pre className='code'>{JSON.stringify(ruleState, undefined, 4)}</pre>}
                 </AppColumn10>
             }
 
@@ -502,6 +532,15 @@ const pushRightStyle = {
     cursor: 'pointer'
 };
 
+const trueStyle = {
+    color: 'LimeGreen'
+}
+
+const falseStyle = {
+    color: 'silver'
+}
+
+
 
 
 /* --------------------------------------------------------------------------------------------------------------------
@@ -513,6 +552,7 @@ const pushRightStyle = {
 const ConditionItemRenderer = (props) => {
 
     const { data, index, onEditableItemClick } = props;
+    console.log(props);
     const [{ isDragging }, drag] = useDrag({
         collect: (monitor) => ({
             isDragging: monitor.isDragging(),
@@ -566,6 +606,8 @@ const ConditionItemRenderer = (props) => {
 
     let label = "";
     let isNew = false;
+    //let isTrue = false;
+    //let isFalse = false;
     switch (data.type) {
         case "and":
             label = "AND"
@@ -603,8 +645,13 @@ const ConditionItemRenderer = (props) => {
 
     return (
         <div ref={drop}>
-            <div ref={drag} style={style} ><span style={{ cursor: 'pointer' }} onClick={handleClick}>{label}</span>
+            <div ref={drag} style={style} >
+                <span style={{ cursor: 'pointer' }} onClick={handleClick}> 
+                    {data.type !== 'and' && data.type !== 'or' && <Icon path={mdiHexagon} size={0.7} style={props.state ? {...trueStyle} : {...falseStyle}}/>}
+                    &nbsp;&nbsp;{label}
+                </span>
                 <span style={pushRightStyle}>
+                   
                     <Icon path={mdiDelete} size={1} className="deleteIcon" onClick={(e) => { props.onDeleteClick('flatConditions', index) }} />
                 </span>
             </div>

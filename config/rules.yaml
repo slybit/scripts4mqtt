@@ -6,6 +6,7 @@ TimeDateUpdate:
       trigger: always
       'off': ''
       'on': 15 * * * *
+      id: 6a5c87043d19
   ontrue:
     - type: script
       script: write('knx/write/15/1/0', new Date().toString());
@@ -26,6 +27,7 @@ Bel:
     topic: knx/status/15/2/3
     jmespath: val
     value: 1
+    id: b4590750129f
   ontrue:
     - type: pushover
       message: Notification from script4mqtt
@@ -59,6 +61,7 @@ Achtergevel:
           jmespath: val
           value: 1
           trigger: on_flip
+          id: 92f5b6fc14be
         - type: or
           condition:
             - type: mqtt
@@ -66,17 +69,20 @@ Achtergevel:
               topic: knx/status/14/0/14
               jmespath: val
               value: 0
+              id: 37d6e5a8002a
             - type: mqtt
               trigger: always
               topic: knx/status/14/0/15
               jmespath: val
               value: 0
+              id: 64fcedaad0e1
             - type: mqtt
               trigger: on_flip
               topic: knx/status/14/0/0
               operator: eq
               jmespath: val
               value: '0'
+              id: 9df005d9958c
   ontrue:
     - type: mqtt
       topic: knx/set/0/0/208
@@ -104,11 +110,13 @@ Voordeur:
           topic: knx/status/15/2/30
           jmespath: val
           value: 1
+          id: 8a8c53e1f793
         - type: mqtt
           trigger: always
           topic: knx/status/14/0/1
           jmespath: val
           value: 0
+          id: 8cf2ac3d12e5
   ontrue:
     - type: mqtt
       topic: knx/set/0/0/200
@@ -152,6 +160,7 @@ Afdak:
     topic: knx/status/15/2/10
     jmespath: val
     value: 0
+    id: 8638862d54c0
   ontrue:
     - type: script
       script: |-
@@ -194,61 +203,84 @@ StatusBeneden:
           topic: knx/status/0/1/15
           jmespath: val
           value: 1
-        - type: mqtt
-          trigger: always
-          topic: knx/status/0/1/16
-          jmespath: val
-          value: 1
+          id: 3e013e49dd69
         - type: mqtt
           trigger: always
           topic: knx/status/0/1/17
           jmespath: val
           value: 1
+          id: 6d3961c1ebc7
         - type: mqtt
           trigger: always
           topic: knx/status/0/1/18
           jmespath: val
           value: 1
+          id: a68e41f04bb8
+        - type: mqtt
+          trigger: always
+          topic: knx/status/0/1/16
+          jmespath: val
+          value: 1
+          id: '317171105600'
         - type: mqtt
           trigger: always
           topic: knx/status/0/1/19
           jmespath: val
           value: 1
+          id: 9bf487d65733
         - type: mqtt
           trigger: always
           topic: knx/status/0/1/20
           jmespath: val
           value: 1
+          id: eea6e5ec0bdb
         - type: mqtt
           trigger: always
           topic: knx/status/0/1/22
           jmespath: val
           value: 1
+          id: 29184aa25738
         - type: mqtt
           trigger: always
           topic: knx/status/0/1/23
           jmespath: val
           value: 1
+          id: 3cb64586fdac
         - type: mqtt
           trigger: always
           topic: knx/status/0/1/207
           jmespath: val
           value: 1
-        - type: mqtt
-          trigger: always
-          topic: knx/status/0/1/208
-          jmespath: val
-          value: 1
+          id: 7246157e1fc2
         - type: mqtt
           trigger: always
           topic: knx/status/0/1/211
           jmespath: val
           value: 1
+          id: e7d3c1a68eed
+        - type: mqtt
+          trigger: always
+          topic: knx/status/0/1/208
+          jmespath: val
+          value: 1
+          id: 6303d30971d6
         - type: mqtt
           trigger: always
           topic: knx/status/0/1/212
           jmespath: val
           value: 1
+          id: 6fa1a4db4fdc
+    - type: and
+      condition: []
+    - type: mqtt
+      trigger: 'no'
+      topic: __REPLACE__
+      operator: eq
+      jmespath: val
+      value: ''
+      id: ff104404cfc3
+    - type: or
+      condition: []
   ontrue:
     - type: mqtt
       topic: knx/set/0/6/1
@@ -272,6 +304,7 @@ BadkamerVentilatie:
       topic: knx/status/15/2/6
       jmespath: val
       value: 1
+      id: f26bcaaa9e81
   ontrue:
     - type: mqtt
       topic: hass/write/ventilation
@@ -322,6 +355,7 @@ Ventilatie:
       topic: hass/write/ventilation
       jmespath: val
       value: '*'
+      id: 264bcfd91617
   ontrue:
     - type: script
       script: |-
@@ -376,6 +410,7 @@ Ventilatie:
       trigger: always
       'on': 30 2 * 5,6,7,8,9 *
       'off': 0 8 * 5,6,7,8,9 *
+      id: 31dda897b4cc
   ontrue:
     - type: mqtt
       delay: 0
@@ -398,6 +433,7 @@ a25f66c75076:
       trigger: always
       'on': 0 10 * 1,2,3,4,10,11,12 *
       'off': 0 16 * 1,2,3,4,10,11,12 *
+      id: 809f76ede862
   ontrue:
     - type: mqtt
       delay: 0
@@ -416,13 +452,16 @@ befd082fe8ba:
   category: default
   enabled: false
   condition:
-    - type: alias
-      trigger: 'no'
-      alias: A
-      eval: 'true'
-      logic: and
-      value: '1'
-      operator: gt
+    - type: or
+      condition:
+        - type: alias
+          trigger: 'no'
+          alias: A
+          eval: 'true'
+          logic: and
+          value: '1'
+          operator: gt
+          id: 04e8a29b309d
   ontrue: []
   pendingOption: always
   onfalse: []
@@ -439,6 +478,7 @@ d976b3e963fb:
           topic: knx/status/14/0/1
           jmespath: val
           value: 0
+          id: cd8d33bf74c7
   ontrue:
     - type: pushover
       delay: 0
@@ -469,6 +509,7 @@ bdcb2e6336d3:
       topic: knx/status/14/0/0
       jmespath: val
       value: 0
+      id: 4972366ab47c
   ontrue:
     - type: pushover
       delay: 0
@@ -498,6 +539,7 @@ bdcb2e6336d3:
       trigger: on_flip
       'on': 34 16 * * *
       'off': 41 1 * * *
+      id: e1744e9d993d
   ontrue:
     - type: mqtt
       delay: 0
@@ -544,6 +586,7 @@ bae8ad969d85:
       topic: unifi/detection
       jmespath: ''
       value: '*'
+      id: 0f9fdd79776e
   ontrue:
     - type: logbook
       delay: 0
@@ -560,6 +603,7 @@ bae8ad969d85:
       topic: alarm/state
       jmespath: ''
       value: '*'
+      id: 66f7903d29ba
   ontrue:
     - type: script
       delay: 0
@@ -604,11 +648,13 @@ bae8ad969d85:
           topic: alarm/state
           jmespath: val
           value: alarm
+          id: d75c9764b144
         - type: mqtt
           trigger: always
           topic: unifi/recording
           jmespath: val
           value: '*'
+          id: ec2e0c2c68e8
   ontrue:
     - type: mqtt
       delay: 0
@@ -631,6 +677,7 @@ e4ff2a054896:
       operator: eq
       jmespath: val
       value: comfort
+      id: 970d1423ab85
   ontrue:
     - type: mqtt
       delay: 0
@@ -693,12 +740,14 @@ e4ff2a054896:
       operator: eq
       jmespath: val
       value: open
+      id: 4cf7304ea924
     - type: mqtt
       trigger: always
       topic: slybot/write/physicalaccess/garage
       operator: eq
       jmespath: val
       value: open
+      id: 43d75bf6cb4e
   ontrue:
     - type: script
       delay: 0
@@ -722,6 +771,7 @@ e4ff2a054896:
       operator: eq
       jmespath: val
       value: '1'
+      id: 1be920eae3c1
   ontrue:
     - type: mqtt
       delay: '3600000'
@@ -744,10 +794,12 @@ e4ff2a054896:
       trigger: always
       'on': 0 6 * * *
       'off': 0 9 * * *
+      id: b513a903f314
     - type: cron
       trigger: always
       'on': 0 19 * * *
       'off': 0 22 * * *
+      id: 8423f8bdb1d8
   ontrue:
     - type: mqtt
       delay: 0
@@ -772,6 +824,7 @@ e4ff2a054896:
       trigger: on_flip
       'on': 30 19 * * *
       'off': 0 8 * * *
+      id: 8cbcc11e2b23
   ontrue:
     - type: mqtt
       delay: 0
@@ -796,6 +849,7 @@ e4ff2a054896:
       trigger: always
       'on': 33 21 * * *
       'off': '-'
+      id: 13731e6d2b1e
   ontrue:
     - type: pushover
       delay: 0

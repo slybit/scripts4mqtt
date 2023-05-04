@@ -247,13 +247,15 @@ class Rules {
     getRuleState(id) {
         const rule = this.rules[id];
         if (rule) {
+            const state = {};
+            state.conditions = {};
             for (let c of rule.conditions) {
-
+                state.conditions[c.id] =  c.state ? c.state : false;
             }
             return {
-                rule: {
+                state: {
                     "id": id,
-                    ...this.jsonContents[id]
+                    ...state
                 }
             };
         } else {

@@ -5,6 +5,7 @@ const { logger, logbooklogger } = require('./logger.js');
 const Engine = require('./engine.js');
 const aliases = require('./aliases.js');
 const cronmatch = require('./cronmatch.js');
+const crypto = require('crypto');
 
 
 /* --------------------------------------------------------------------------------------------
@@ -27,6 +28,13 @@ const Trigger = Object.freeze({
 class Condition {
 
     constructor(json, rule) {
+        // get the condition id or create one if not specified
+        if (json.id) {
+            this.id = json.id;
+        } else {
+            this.id = Condition.generateId();
+            json.id = this.id;
+        }
         this.rule = rule;
         this.trigger = Trigger[json.trigger] ? Trigger[json.trigger] : Trigger["no"];
         this.oldState = undefined;
@@ -61,6 +69,10 @@ class Condition {
     */
     evaluate(canTrigger = true) {
         throw new Error('You have to implement the method evaluate!');
+    }
+
+    static generateId() {
+        return crypto.randomBytes(6).toString("hex");
     }
 }
 
@@ -165,6 +177,7 @@ class AliasCondition extends Condition {
             logger.error('Error during AliasCondition evaluation', { error: 'Error during AliasCondition evaluation' });
             logger.error(err.stack);
         }
+        this.state = _state;
         // get the details of the message that triggered this alias condition evaluation
         const logInfo = this.evaluateTopic(topic);
         logger.info("Alias condition evaluated", {
@@ -228,6 +241,7 @@ class CronCondition extends Condition {
         super(json, rule);
         this.onExpression = json.on ? json.on.trim() : undefined;
         this.offExpression = json.off ? json.off.trim() : undefined;
+        this.state = false;
         validateCronCondition(json);
     }
 
