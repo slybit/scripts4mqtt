@@ -7,6 +7,7 @@ const readline = require('readline');
 const fs = require('fs');
 const path = require('path');
 const { Writable } = require('stream');
+const { setMaxIdleHTTPParsers } = require('http');
 
 
 const LOGPATH = config.logpath || '../logs/';
@@ -86,7 +87,7 @@ let streamTransport = new (transports.Stream)({
         format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
         format.splat(),
         format.printf((info) => {
-            let {timestamp, level, message, ...leftovers} = info;
+            let { timestamp, level, message, ...leftovers } = info;
             return `${info.timestamp} | ` + format.colorize().colorize(info.level, `${info.level.padEnd(7).toUpperCase()}`) + ` | ${info.message} | ${JSON.stringify(leftovers)}`;
         })
     ),
@@ -121,7 +122,7 @@ let defaultTransport = new (transports.DailyRotateFile)({
         format.splat(),
         valueAdder,
         printf((info) => {
-            let {timestamp, level, message, ...leftovers} = info;
+            let { timestamp, level, message, ...leftovers } = info;
             return `${info.timestamp} | ${info.level.padEnd(7).toUpperCase()} | ${message} | ${JSON.stringify(leftovers)}`;
         })
     )
@@ -138,7 +139,7 @@ const transportsList = [
             timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
             format.splat(),
             printf((info) => {
-                let {timestamp, level, message, ...leftovers} = info;
+                let { timestamp, level, message, ...leftovers } = info;
                 return `${info.timestamp} | ${info.level.padEnd(7).toUpperCase()} | ${message} | ${JSON.stringify(leftovers)}`;
             })
         ),
@@ -228,8 +229,14 @@ const logbooklogger = createLogger({
 
 
 
-const getRuleLogs = function () {
-    return getLogs('rules');
+const getRuleLogs = function (ruleId) {
+    if (!ruleId) {
+        return getLogs('rules');
+    } else {
+        return getRuleTriggersAndActions(ruleId);
+    }
+
+
 }
 
 const getMqttLogs = function () {
@@ -238,6 +245,58 @@ const getMqttLogs = function () {
 
 const getLogbookLogs = function () {
     return getLogs('logbook');
+}
+
+const getRuleTriggersAndActions = function (ruleId) {
+    const logs = [];
+    let MAXLINES = 20;
+    return new Promise(async function (resolve) {
+        // list log files
+        const files = fs.readdirSync(LOGPATH);
+        const logfiles = files.filter(file => file.startsWith('rules-')).sort().reverse();
+
+        for (let f of logfiles) {
+            await extractRuleTriggersAndActions(path.join(LOGPATH, f), MAXLINES - logs.length, logs, ruleId);
+            if (logs.length >= MAXLINES) break;
+        }
+        // keep at max MAXLINES
+        logs.splice(MAXLINES)
+        logs.sort((a, b) => (a.ts > b.ts) ? -1 : 1);
+        resolve(logs);
+    });
+}
+
+const extractRuleTriggersAndActions = function (filename, maxLineCount, logs, ruleId) {
+    return new Promise(async function (resolve) {
+        // we read the whole file in buffer
+        // the go over that buffer from end to start to get the most recent logs
+        const buffer = [];
+
+        // create instance of readline
+        // each instance is associated with single input stream
+        let rl = readline.createInterface({
+            input: fs.createReadStream(filename)
+        });
+
+        // event is emitted after each line
+        rl.on('line', function (line) {
+            buffer.push(line);
+        });
+
+        // end
+        rl.on('close', function () {
+            for (let i = buffer.length-1; i>=0; i--) {
+                let log = JSON.parse(buffer[i]);
+                if (log.ruleId === ruleId && ((log.type === 'condition' && log.triggered === 'true') || log.type === 'action')) {
+                    logs.push(log);
+                    if (logs.length >= maxLineCount) break;
+                }
+            }
+            // keep only the required number of lines
+            logs.splice(maxLineCount);
+            resolve(logs);
+        });
+    });
 }
 
 const getLogs = function (prefix) {
