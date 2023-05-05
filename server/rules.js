@@ -7,6 +7,7 @@ const Engine = require('./engine.js');
 const { EMailAction, LogBookAction, PushoverAction, ScriptAction, SetValueAction, WebHookAction } = require('./actions.js')
 const { CronCondition, MqttCondition, AliasCondition, SimpleCondition } = require('./conditions.js')
 const { error } = require('winston');
+const { json } = require('body-parser');
 
 const FILENAME = process.env.MQTT4SCRIPTS_RULES || '../config/rules.yaml';
 
@@ -44,6 +45,7 @@ class Rules {
                 logger.info('loaded %s', rule.toString());
             } catch (e) {
                 logger.error('Error loading rule', { ruleId: key, error: e.toString() });
+                console.log(e);
                 process.exit(1);
             }
         }
@@ -350,8 +352,8 @@ class Rule {
         this.enabled = json.enabled === undefined ? true : json.enabled;
         this.conditions = [];
         this.logic = this.parseCondition(json.condition);
-        this.onFalseActions = this.parseActions(json.onfalse);
-        this.onTrueActions = this.parseActions(json.ontrue);
+        this.onFalseActions = this.parseActions(json.onfalse, false);
+        this.onTrueActions = this.parseActions(json.ontrue, true);
     }
 
     static generateId() {
@@ -391,7 +393,7 @@ class Rule {
         }
     }
 
-    parseActions(json) {
+    parseActions(json, onTrue) {
         let actions = [];
         if (json === undefined) {
             return [];
@@ -404,22 +406,22 @@ class Rule {
         for (let a of actions) {
             switch (a.type.toLowerCase()) {
                 case "mqtt":
-                    result.push(new SetValueAction(a, this));
+                    result.push(new SetValueAction(a, onTrue, this));
                     break;
                 case "script":
-                    result.push(new ScriptAction(a, this));
+                    result.push(new ScriptAction(a, onTrue, this));
                     break;
                 case "email":
-                    result.push(new EMailAction(a, this));
+                    result.push(new EMailAction(a, onTrue, this));
                     break;
                 case "pushover":
-                    result.push(new PushoverAction(a, this));
+                    result.push(new PushoverAction(a, onTrue, this));
                     break;
                 case "logbook":
-                    result.push(new LogBookAction(a, this));
+                    result.push(new LogBookAction(a, onTrue, this));
                     break;
                 case "webhook":
-                    result.push(new WebHookAction(a, this));
+                    result.push(new WebHookAction(a, onTrue, this));
                     break;
                 default:
                     throw new Error('Unknown action type ' + a.type);

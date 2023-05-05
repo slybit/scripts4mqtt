@@ -1,0 +1,81 @@
+.timeline-wrapper {
+    --bookmark-h-gap: 80px;
+    --bookmark-v-gap: 40px;
+    --bookmark-l-bg: hsl(229.1, 10.6%, 30.8%);
+    --bookmark-r-bg: hsl(229.1, 10.6%, 50.8%);
+    --marker-size: 15px;
+    --marker-bg: hsl(172.8, 28.5%, 53.9%);
+    --thread-width: 2px;
+    --thread-bg: hsl(172.8, 28.5%, 53.9%);
+    position: relative;
+  }
+  
+  .timeline {
+    position: relative;
+    margin: 20px;
+    padding: 40px 0;
+    list-style: none;
+    display: grid;
+    grid-template-columns: 1fr var(--bookmark-h-gap) 1fr;
+    grid-row-gap: var(--bookmark-v-gap);
+  }
+  
+  .timeline-item {
+    position: relative;
+    color: #fff;
+    border-radius: 8px;
+    padding: 5px 10px;
+  }
+  
+  .timeline-item-left {
+    background-color: var(--bookmark-l-bg);
+    grid-column: 1;
+  }
+  
+  .timeline-item-right {
+    background-color: var(--bookmark-r-bg);
+    grid-column: 3;
+  }
+  
+  .timeline-wrapper.with-tip .timeline-item:before {
+    content: '';
+  }
+    
+  .timeline-dotmark {
+    grid-column: 2 / span 1;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .timeline-dot {
+    width: var(--marker-size);
+    height: var(--marker-size);
+    background-color: var(--marker-bg);
+    border-radius: 50%;
+  }
+
+  .timeline-square {
+    width: var(--marker-size);
+    height: var(--marker-size);
+    background-color: var(--marker-bg);
+    border-radius: 0%;
+  }
+  
+  .timeline-dotmark:first-of-type {
+    grid-row: 1;
+  }
+  
+  .timeline-connector {
+    position: absolute;
+    top: 0;
+    left: calc(50% - calc(var(--thread-width) / 2));
+    background-color: var(--thread-bg);
+    width: var(--thread-width);
+    height: 100%;
+  }
+  
+  
+  

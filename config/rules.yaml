@@ -203,84 +203,73 @@ StatusBeneden:
           topic: knx/status/0/1/15
           jmespath: val
           value: 1
-          id: 3e013e49dd69
+          id: 47228be7aebc
         - type: mqtt
           trigger: always
           topic: knx/status/0/1/17
           jmespath: val
           value: 1
-          id: 6d3961c1ebc7
+          id: '106980808790'
         - type: mqtt
           trigger: always
           topic: knx/status/0/1/18
           jmespath: val
           value: 1
-          id: a68e41f04bb8
+          id: da2dcfb1fc56
         - type: mqtt
           trigger: always
           topic: knx/status/0/1/16
           jmespath: val
           value: 1
-          id: '317171105600'
+          id: f8ecdc41f4f4
         - type: mqtt
           trigger: always
           topic: knx/status/0/1/19
           jmespath: val
           value: 1
-          id: 9bf487d65733
+          id: c1e4ed616264
         - type: mqtt
           trigger: always
           topic: knx/status/0/1/20
           jmespath: val
           value: 1
-          id: eea6e5ec0bdb
+          id: e897357c293a
         - type: mqtt
           trigger: always
           topic: knx/status/0/1/22
           jmespath: val
           value: 1
-          id: 29184aa25738
+          id: 91ee90c1c85b
         - type: mqtt
           trigger: always
           topic: knx/status/0/1/23
           jmespath: val
           value: 1
-          id: 3cb64586fdac
+          id: 92901c27a503
         - type: mqtt
           trigger: always
           topic: knx/status/0/1/207
           jmespath: val
           value: 1
-          id: 7246157e1fc2
+          id: a812be3745b0
         - type: mqtt
           trigger: always
           topic: knx/status/0/1/211
           jmespath: val
           value: 1
-          id: e7d3c1a68eed
+          id: e07c2dca869f
         - type: mqtt
           trigger: always
           topic: knx/status/0/1/208
           jmespath: val
           value: 1
-          id: 6303d30971d6
+          id: 4b3679de9ccb
         - type: mqtt
           trigger: always
           topic: knx/status/0/1/212
           jmespath: val
           value: 1
-          id: 6fa1a4db4fdc
-    - type: and
-      condition: []
-    - type: mqtt
-      trigger: 'no'
-      topic: __REPLACE__
-      operator: eq
-      jmespath: val
-      value: ''
-      id: ff104404cfc3
-    - type: or
-      condition: []
+          id: 5d36666be0db
   ontrue:
     - type: mqtt
       topic: knx/set/0/6/1

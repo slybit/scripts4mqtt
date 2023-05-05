@@ -4,13 +4,17 @@ import Sortly, { useDrag, useDrop, useIsClosestDragging, findDescendants, remove
 import { HorizontalContainer, AppColumn10, RightColumn, AppEditor, Header } from "./containers";
 import { Button, UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem, InputGroup, InputGroupAddon, Input, FormGroup, Label } from 'reactstrap';
 import Icon from '@mdi/react'
-import { mdiCheckboxBlankOutline, mdiCheckBoxOutline, mdiCancel, mdiCheck, mdiDelete, mdiHexagon } from '@mdi/js'
+import { mdiCheckboxBlankOutline, mdiCheckBoxOutline, mdiCancel, mdiCheck, mdiDelete, mdiHexagon, mdiTimer, mdiMessageText } from '@mdi/js'
 import update from 'immutability-helper';
 //import ReactJson from 'react-json-view';
 //import format from 'string-format';
 import { addIds, stripIds, flattenConditions, buildTree, staticData, isNewItem } from './utils';
 import { DynamicEditor } from './DynamicEditor'
 import axios from 'axios';
+
+import { Timeline, Event } from './timeline';
+import './timeline/style.css';
+
 
 
 const cache = {};
@@ -27,16 +31,20 @@ const RuleEditor = (props) => {
     });
 
     const [ruleState, setRuleState] = useState(undefined);
+    const [ruleTriggers, setRuleTriggers] = useState([]);
 
 
 
     useEffect(() => {
         fetchData(props.id);
+        fetchState(props.id);
+        fetchTriggers(props.id);
     }, [props]);
 
     useEffect(() => {
         const interval = setInterval(() => {
             fetchState(props.id);
+            fetchTriggers(props.id);
         }, 5000);
         return () => clearInterval(interval)
     }, [props]);
@@ -47,7 +55,6 @@ const RuleEditor = (props) => {
     --------------------------------------------------------------------------------------------------------------- */
 
     const fetchData = async (id) => {
-        console.log('fetchData');
         //const _cache = cache;
         try {
             const response = await axios.get('/api/rule/' + id);
@@ -72,7 +79,7 @@ const RuleEditor = (props) => {
                 // TODO: alert user, editor is not visible!
                 console.log(response.data);
             }
-            await fetchState(id);
+            //await fetchState(id);
         } catch (e) {
             // TODO: alert user
             console.log(e);
@@ -80,12 +87,28 @@ const RuleEditor = (props) => {
     };
 
     const fetchState = async (id) => {
-        console.log('fetchState');
         try {
             const response = await axios.get('/api/state/rule/' + id);
             // update the state
             if (response.data.success) {
                 setRuleState(response.data.state);
+            } else {
+                // TODO: alert user, editor is not visible!
+                console.log(response.data);
+            }
+        } catch (e) {
+            // TODO: alert user
+            console.log(e);
+        }
+    }
+
+    const fetchTriggers = async (id) => {
+        console.log(`fetchTriggers ${id}`);
+        try {
+            const response = await axios.get('/api/logs/rules/' + id);
+            // update the state
+            if (response.data.success) {
+                setRuleTriggers(response.data.data);
             } else {
                 // TODO: alert user, editor is not visible!
                 console.log(response.data);
@@ -479,14 +502,22 @@ const RuleEditor = (props) => {
 
 
             </AppColumn10>
-            {
-                <AppColumn10>
-                    {<pre className='code'>{JSON.stringify(data.flatConditions, undefined, 4)}</pre>}
-                    {<pre className='code'>{JSON.stringify(ruleState, undefined, 4)}</pre>}
-                </AppColumn10>
-            }
+
 
             <AppColumn10>
+
+                { false && <pre className='code'>{JSON.stringify(ruleTriggers, undefined, 4)}</pre>}
+
+                <Timeline className="my-vertical-progress">
+                    { ruleTriggers.map( (item) => { return (
+                        <Event data={item}></Event>
+                    )
+                    }) }
+                </Timeline>
+            </AppColumn10>
+
+
+            <>
                 {data.edData.visible && <DynamicEditor
                     edData={data.edData}
                     key={data.edData.data._id}
@@ -494,7 +525,7 @@ const RuleEditor = (props) => {
                     onHandleCancelClick={editorHandleCancelClick}
                     onHandleDeleteClick={editorHandleDeleteClick} />
                 }
-            </AppColumn10>
+            </>
 
 
 
@@ -552,7 +583,6 @@ const falseStyle = {
 const ConditionItemRenderer = (props) => {
 
     const { data, index, onEditableItemClick } = props;
-    console.log(props);
     const [{ isDragging }, drag] = useDrag({
         collect: (monitor) => ({
             isDragging: monitor.isDragging(),
@@ -646,12 +676,11 @@ const ConditionItemRenderer = (props) => {
     return (
         <div ref={drop}>
             <div ref={drag} style={style} >
-                <span style={{ cursor: 'pointer' }} onClick={handleClick}> 
-                    {data.type !== 'and' && data.type !== 'or' && <Icon path={mdiHexagon} size={0.7} style={props.state ? {...trueStyle} : {...falseStyle}}/>}
+                <span style={{ cursor: 'pointer' }} onClick={handleClick}>
+                    {data.type !== 'and' && data.type !== 'or' && <Icon path={mdiHexagon} size={0.7} style={props.state ? { ...trueStyle } : { ...falseStyle }} />}
                     &nbsp;&nbsp;{label}
                 </span>
                 <span style={pushRightStyle}>
-                   
                     <Icon path={mdiDelete} size={1} className="deleteIcon" onClick={(e) => { props.onDeleteClick('flatConditions', index) }} />
                 </span>
             </div>

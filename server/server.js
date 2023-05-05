@@ -112,6 +112,21 @@ router.get('/logs/rules', async (req, res) => {
     }
 });
 
+router.get('/logs/rules/:ruleId', async (req, res) => {
+    try {
+        res.json({
+            success: true,
+            data: await getRuleLogs(req.params.ruleId)
+        });
+    } catch (err) {
+        logger.error('Error parsing rules logs');
+        res.json({
+            success: false,
+            error: err.message
+        });
+    }
+});
+
 router.get('/logs/mqtt', async (req, res) => {
     try {
         res.json({
