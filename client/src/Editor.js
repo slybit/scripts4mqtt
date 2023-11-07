@@ -189,6 +189,7 @@ class Editor extends Component {
                 {!this.state.selectedRule && <RightColumnCenter>
                     <Logo>Scripts4MQTT</Logo>
                     <SubLogo>Automation for MQTT</SubLogo>
+                    <SubLogo>Version: {metaData.version}</SubLogo>
                     <SubLogo>Build: {metaData.build} ({metaData.date})</SubLogo>
                 </RightColumnCenter>}
 
