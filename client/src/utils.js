@@ -215,7 +215,10 @@ export const staticData = {
                 delay: 0,
                 enabled: true,
                 interval: 0,
-                url: "__REPLACE__"
+                method: "get",
+                url: "__REPLACE__",
+                contenttype: "application/x-www-form-urlencoded",
+                body: ""
             }
         }
 
@@ -394,7 +397,20 @@ export const staticData = {
             webhook: [
                 { key: "delay", label: "Delay" },
                 { key: "interval", label: "Interval" },
-                { key: "url", label: "URL" }
+                {
+                    key: "method", label: "Method", type: "select", options: [
+                        { value: "post", label: "POST" },
+                        { value: "get", label: "GET" }
+                    ]
+                },
+                { key: "url", label: "URL" },
+                {
+                    key: "contenttype", label: "Content-Type", type: "select", options: [
+                        { value: "application/x-www-form-urlencoded", label: "application/x-www-form-urlencoded" },
+                        { value: "application/json", label: "application/json" }
+                    ]
+                },
+                { key: "body", label: "Body", type: "textarea", props: { rows: 5 } }
             ]
         }
     }

@@ -5,15 +5,17 @@ TimeDateUpdate:
     - type: cron
       trigger: always
       'off': ''
-      'on': 15 * * * *
-      id: 6a5c87043d19
+      'on': 42 * * * *
+      id: 19268c36619b
   ontrue:
     - type: script
       script: write('knx/write/15/1/0', new Date().toString());
       enabled: true
+      delay: ''
     - type: script
       script: write('knx/write/15/1/1', new Date().toString());
-      enabled: true
+      enabled: false
+      interval: ''
   enabled: true
   pendingOption: always
   onfalse: []
@@ -848,3 +850,23 @@ e4ff2a054896:
       message: boom
       sound: magic
       priority: '1'
+7fefc0506bcd:
+  name: New rule
+  category: default
+  description: ''
+  enabled: true
+  condition:
+    - type: cron
+      trigger: always
+      'on': '*/1 * * * *'
+      'off': '-'
+      id: f688da1428a6
+  ontrue:
+    - type: webhook
+      delay: 0
+      enabled: true
+      interval: 0
+      method: post
+      url: http://moode.home/command/system.php?cmd=poweroff
+      body: cmd=poweroff
+      contenttype: application/x-www-form-urlencoded

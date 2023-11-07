@@ -452,12 +452,15 @@ class Rule {
             return;
         }
 
+        let onTrue;
         let actions = [];
         if (Rule.evalLogic(this.logic)) {
             logger.debug("Rule scheduling TRUE actions", { ruleId: this.id, ruleName: this.name });
+            onTrue = true;
             actions = this.onTrueActions;
         } else {
             logger.debug("Rule scheduling FALSE actions", { ruleId: this.id, ruleName: this.name });
+            onTrue = false;
             actions = this.onFalseActions;
         }
         logger.debug("Rule cancelling all pending actions (delay and repeat)", { ruleId: this.id, ruleName: this.name });
@@ -465,14 +468,14 @@ class Rule {
 
         for (let a of actions) {
             if (a.delay > 0) {
-                logger.debug('Rule action schedule - delayed execution', { ruleId: a.rule.id, ruleName: a.rule.name, delay: a.delay });
+                logger.info('Rule action schedule - delayed execution', { ruleId: a.rule.id, ruleName: a.rule.name, type: "schedule", subtype: "single", state: onTrue ? "true" : "false", details: `delay: ${a.delay}` });
                 a.pending = setTimeout(a.execute.bind(a, context), a.delay);
             } else if (a.delay == 0) {
                 logger.debug('Rule action schedule - immediate execution', { ruleId: a.rule.id, ruleName: a.rule.name });
                 a.execute(context);
             }
             if (a.interval > 0) {
-                logger.debug('Rule action schedule - repeated execution with interval', { ruleId: a.rule.id, ruleName: a.rule.name, interval: a.interval });
+                logger.info('Rule action schedule - repeated execution with interval', { ruleId: a.rule.id, ruleName: a.rule.name, type: "schedule", subtype: "repeat", state: onTrue ? "true" : "false", details: `interval: ${a.interval}` });
                 a.repeater = setInterval(a.execute.bind(a, context), a.interval);
 
             }
@@ -480,18 +483,21 @@ class Rule {
     }
 
     cancelPendingActions() {
-        for (let actions of [this.onFalseActions, this.onTrueActions]) {
-            for (let a of actions) {
-                if (a.pending !== undefined) {
-                    clearTimeout(a.pending);
-                    a.pending = undefined;
-                    logger.debug('Rule pending action cancelled', { ruleId: a.rule.id, ruleName: a.rule.name });
-                }
-                if (a.repeater !== undefined) {
-                    clearInterval(a.repeater);
-                    a.repeater = undefined;
-                    logger.debug('Rule repeating action cancelled', { ruleId: a.rule.id, ruleName: a.rule.name });
-                }
+        this._cancelPendingActions(this.onTrueActions, true);
+        this._cancelPendingActions(this.onFalseActions, false);
+    }
+
+    _cancelPendingActions(actions, onTrue) {
+        for (let a of actions) {
+            if (a.pending !== undefined) {
+                clearTimeout(a.pending);
+                a.pending = undefined;
+                logger.info('Rule pending action cancelled', { ruleId: a.rule.id, ruleName: a.rule.name, type: "cancel", subtype: "single", state: onTrue ? "true" : "false", details: `delay: ${a.delay}` });
+            }
+            if (a.repeater !== undefined) {
+                clearInterval(a.repeater);
+                a.repeater = undefined;
+                logger.info('Rule repeating action cancelled', { ruleId: a.rule.id, ruleName: a.rule.name, type: "cancel", subtype: "repeat", state: onTrue ? "true" : "false", details: `interval: ${a.interval}` });
             }
         }
     }

@@ -1,10 +1,10 @@
 {
   "name": "scripts4mqtt",
-  "version": "0.0.1",
+  "version": "2.4.0",
   "description": "Automation library for MQTT message flows",
   "main": "scripts4mqtt.js",
   "dependencies": {
-    "axios": "^0.21.0",
+    "axios": "^0.21.4",
     "body-parser": "^1.19.0",
     "express": "^4.17.1",
     "jmespath": "^0.15.0",

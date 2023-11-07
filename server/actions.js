@@ -60,10 +60,10 @@ class SetValueAction extends Action {
                 if (!config.development) {
                     Engine.getInstance().mqttClient.publish(this.topic, data);
                 }
-                logger.info("SetValueAction executed", { ruleId: this.rule.id, ruleName: this.rule.name, type: "action", subtype: "mqtt", details: `[${data}] to ${this.topic}`, state: this.onTrue ? "true" : false, triggered: "true" });
+                logger.info("SetValueAction executed", { ruleId: this.rule.id, ruleName: this.rule.name, type: "action", subtype: "mqtt", details: `[${data}] to ${this.topic}`, state: this.onTrue ? "true" : "false", triggered: "true" });
             }
         } else {
-            logger.info("SetValueAction not executed (disabled)", { ruleId: this.rule.id, ruleName: this.rule.name, type: "action", subtype: "mqtt", details: 'Action disabled', state: this.onTrue ? "true" : false, triggered: "false" });
+            logger.info("SetValueAction not executed (disabled)", { ruleId: this.rule.id, ruleName: this.rule.name, type: "action", subtype: "mqtt", details: 'Action disabled', state: this.onTrue ? "true" : "false", triggered: "false" });
         }
 
         //TODO: add option for retain true or false
@@ -84,12 +84,12 @@ class ScriptAction extends Action {
         if (this.enabled) {
             try {
                 Engine.getInstance().runScript(this.script, context);
-                logger.info("ScriptAction executed", { ruleId: this.rule.id, ruleName: this.rule.name, type: "action", subtype: "script", state: this.onTrue ? "true" : false, triggered: "true" });
+                logger.info("ScriptAction executed", { ruleId: this.rule.id, ruleName: this.rule.name, type: "action", subtype: "script", state: this.onTrue ? "true" : "false", triggered: "true" });
             } catch (err) {
-                logger.error("ScriptAction execution failed", { ruleId: this.rule.id, ruleName: this.rule.name, type: "action", subtype: "script", state: this.onTrue ? "true" : false, triggered: "true", error: err.message });
+                logger.error("ScriptAction execution failed", { ruleId: this.rule.id, ruleName: this.rule.name, type: "action", subtype: "script", state: this.onTrue ? "true" : "false", triggered: "true", error: err.message });
             }
         } else {
-            logger.info("ScriptAction not executed (disabled)", { ruleId: this.rule.id, ruleName: this.rule.name, type: "action", subtype: "script", details: 'Action disabled', state: this.onTrue ? "true" : false, triggered: "false" });
+            logger.info("ScriptAction not executed (disabled)", { ruleId: this.rule.id, ruleName: this.rule.name, type: "action", subtype: "script", details: 'Action disabled', state: this.onTrue ? "true" : "false", triggered: "false" });
         }
     }
 
@@ -127,19 +127,19 @@ class EMailAction extends Action {
 
                 SMTPTransporter.sendMail(mailOptions, function (err, info) {
                     if (err) {
-                        logger.error("EMailAction execution failed", { ruleId: action.rule.id, ruleName: action.rule.name, type: "action", subtype: "email", details: `subject: ${data.subject}`, state: action.onTrue ? "true" : false, triggered: "true", error: err.message });
+                        logger.error("EMailAction execution failed", { ruleId: action.rule.id, ruleName: action.rule.name, type: "action", subtype: "email", details: `subject: ${data.subject}`, state: action.onTrue ? "true" : "false", triggered: "true", error: err.message });
                         //logger.error('Rule [%s]: ERROR EMailAction failed', action.rule.name);
                         //logger.error(err.message);
                     } else {
                         //logger.info('Rule [%s]: EMailAction executed', action.rule.name);
-                        logger.info("EMailAction executed", { ruleId: action.rule.id, ruleName: action.rule.name, type: "action", subtype: "email", details: `subject: ${data.subject}`, state: action.onTrue ? "true" : false, triggered: "true" });
+                        logger.info("EMailAction executed", { ruleId: action.rule.id, ruleName: action.rule.name, type: "action", subtype: "email", details: `subject: ${data.subject}`, state: action.onTrue ? "true" : "false", triggered: "true" });
                     }
                 });
             } catch (err) {
-                logger.error("EMailAction execution failed", { ruleId: action.rule.id, ruleName: action.rule.name, type: "action", subtype: "email", details: `subject: ${data.subject}`, state: action.onTrue ? "true" : false, triggered: "true", error: err.message });
+                logger.error("EMailAction execution failed", { ruleId: action.rule.id, ruleName: action.rule.name, type: "action", subtype: "email", details: `subject: ${data.subject}`, state: action.onTrue ? "true" : "false", triggered: "true", error: err.message });
             }
         } else {
-            logger.info("EMailAction not executed (disabled)", { ruleId: this.rule.id, ruleName: this.rule.name, type: "action", subtype: "email", details: 'Action disabled', state: action.onTrue ? "true" : false, triggered: "false" });
+            logger.info("EMailAction not executed (disabled)", { ruleId: this.rule.id, ruleName: this.rule.name, type: "action", subtype: "email", details: 'Action disabled', state: action.onTrue ? "true" : "false", triggered: "false" });
         }
     }
 
@@ -172,16 +172,16 @@ class PushoverAction extends Action {
                 data.title = mustache.render(data.title, context);
                 pushover.send(data, function (err, result) {
                     if (err) {
-                        logger.error("PushoverAction execution failed", { ruleId: action.rule.id, ruleName: action.rule.name, type: "action", subtype: "pushover", details: `subject: ${data.title}`, state: action.onTrue ? "true" : false, triggered: "true", error: err.message });
+                        logger.error("PushoverAction execution failed", { ruleId: action.rule.id, ruleName: action.rule.name, type: "action", subtype: "pushover", details: `subject: ${data.title}`, state: action.onTrue ? "true" : "false", triggered: "true", error: err.message });
                     } else {
-                        logger.info("PushoverAction executed", { ruleId: action.rule.id, ruleName: action.rule.name, type: "action", subtype: "pushover", details: `subject: ${data.title}`, state: action.onTrue ? "true" : false, triggered: "true" });
+                        logger.info("PushoverAction executed", { ruleId: action.rule.id, ruleName: action.rule.name, type: "action", subtype: "pushover", details: `subject: ${data.title}`, state: action.onTrue ? "true" : "false", triggered: "true" });
                     }
                 });
             } catch (err) {
-                logger.error("PushoverAction execution failed", { ruleId: action.rule.id, ruleName: action.rule.name, type: "action", subtype: "pushover", details: `subject: ${data.title}`, state: action.onTrue ? "true" : false, triggered: "true", error: err.message });
+                logger.error("PushoverAction execution failed", { ruleId: action.rule.id, ruleName: action.rule.name, type: "action", subtype: "pushover", details: `subject: ${data.title}`, state: action.onTrue ? "true" : "false", triggered: "true", error: err.message });
             }
         } else {
-            logger.info("PushoverAction not executed (disabled)", { ruleId: this.rule.id, ruleName: this.rule.name, type: "action", subtype: "pushover", details: 'Action disabled', state: action.onTrue ? "true" : false, triggered: "false" });
+            logger.info("PushoverAction not executed (disabled)", { ruleId: this.rule.id, ruleName: this.rule.name, type: "action", subtype: "pushover", details: 'Action disabled', state: action.onTrue ? "true" : "false", triggered: "false" });
         }
     }
 
@@ -203,13 +203,13 @@ class LogBookAction extends Action {
                     let finalMessage = mustache.render(this.message, context);
                     logbooklogger.info(finalMessage);
                     //logger.info('Rule [%s]: LogBookAction called with message %s', this.rule.name, finalMessage);
-                    logger.info("LogBookAction executed", { ruleId: this.rule.id, ruleName: this.rule.name, type: "action", subtype: "logbook", details: `message: ${finalMessage}`, state: this.onTrue ? "true" : false, triggered: "true" });
+                    logger.info("LogBookAction executed", { ruleId: this.rule.id, ruleName: this.rule.name, type: "action", subtype: "logbook", details: `message: ${finalMessage}`, state: this.onTrue ? "true" : "false", triggered: "true" });
                 } catch (err) {
-                    logger.error("LogBookAction executed", { ruleId: this.rule.id, ruleName: this.rule.name, type: "action", subtype: "logbook", details: `message: ${finalMessage}`, state: this.onTrue ? "true" : false, triggered: "true", error: err.message });
+                    logger.error("LogBookAction executed", { ruleId: this.rule.id, ruleName: this.rule.name, type: "action", subtype: "logbook", details: `message: ${finalMessage}`, state: this.onTrue ? "true" : "false", triggered: "true", error: err.message });
                 }
             }
         } else {
-            logger.info("LogBookAction not executed (disabled)", { ruleId: this.rule.id, ruleName: this.rule.name, type: "action", subtype: "logbook", details: 'Action disabled', state: this.onTrue ? "true" : false, triggered: "false" });
+            logger.info("LogBookAction not executed (disabled)", { ruleId: this.rule.id, ruleName: this.rule.name, type: "action", subtype: "logbook", details: 'Action disabled', state: this.onTrue ? "true" : "false", triggered: "false" });
         }
     }
 
@@ -221,6 +221,9 @@ class WebHookAction extends Action {
     constructor(json, onTrue, rule) {
         super(json, onTrue, rule);
         this.url = json.url;
+        this.contenttype = json.contenttype;
+        this.method = json.method;
+        this.body = json.body;
     }
 
     execute(context) {
@@ -230,18 +233,44 @@ class WebHookAction extends Action {
             try {
                 // render the URL
                 let url = mustache.render(action.url, context);
-                axios.get(url)
-                    .then((response) => {
-                        logger.info("WebHookAction executed", { ruleId: action.rule.id, ruleName: action.rule.name, type: "action", subtype: "webhook", details: `return code: ${response.status}, url: ${url}`, state: this.onTrue ? "true" : false, triggered: "true" });
-                    })
-                    .catch((err) => {
-                        logger.error("WebHookAction execution failed", { ruleId: action.rule.id, ruleName: action.rule.name, type: "action", subtype: "webhook", details: `return code: ${response.status}, url: ${url}`, state: this.onTrue ? "true" : false, triggered: "true", error: err.message });
-                    });
+                // render the body
+                let body = mustache.render(action.body, context);
+                // turn into an object if we are sending JSON
+                if (action.contenttype == "application/json") body = JSON.parse(body);
+                switch (action.method) {
+                    case "post":
+                        axios.post(url, body, {
+                            headers: {
+                                'Content-Type': action.contenttype
+                            }
+                        })
+                            .then((response) => {
+                                console.log(JSON.stringify(response.data, null, 4));
+                                logger.info("WebHookAction executed", { ruleId: action.rule.id, ruleName: action.rule.name, type: "action", subtype: "webhook", details: `return code: ${response.status}, url: ${url}`, state: this.onTrue ? "true" : "false", triggered: "true" });
+                            })
+                            .catch((err) => {
+                                logger.error("WebHookAction execution failed", { ruleId: action.rule.id, ruleName: action.rule.name, type: "action", subtype: "webhook", details: `url: ${url}`, state: this.onTrue ? "true" : "false", triggered: "true", error: err.message });
+                            });
+                        break;
+
+                    case "get":
+                        axios.get(url)
+                            .then((response) => {
+                                logger.info("WebHookAction executed", { ruleId: action.rule.id, ruleName: action.rule.name, type: "action", subtype: "webhook", details: `return code: ${response.status}, url: ${url}`, state: this.onTrue ? "true" : "false", triggered: "true" });
+                            })
+                            .catch((err) => {
+                                logger.error("WebHookAction execution failed", { ruleId: action.rule.id, ruleName: action.rule.name, type: "action", subtype: "webhook", details: `return code: ${response.status}, url: ${url}`, state: this.onTrue ? "true" : "false", triggered: "true", error: err.message });
+                            });
+                        break;
+
+
+                }
+
             } catch (err) {
-                logger.error("WebHookAction execution failed", { ruleId: action.rule.id, ruleName: action.rule.name, type: "action", subtype: "webhook", details: `return code: ${response.status}, url: ${url}`, state: this.onTrue ? "true" : false, triggered: "true", error: err.message });
+                logger.error("WebHookAction execution failed", { ruleId: action.rule.id, ruleName: action.rule.name, type: "action", subtype: "webhook", details: ``, state: this.onTrue ? "true" : "false", triggered: "true", error: err.message });
             }
         } else {
-            logger.info("WebHookAction not executed (disabled)", { ruleId: action.rule.id, ruleName: action.rule.name, type: "action", subtype: "webhook", details: 'Action disabled', state: this.onTrue ? "true" : false, triggered: "false" });
+            logger.info("WebHookAction not executed (disabled)", { ruleId: action.rule.id, ruleName: action.rule.name, type: "action", subtype: "webhook", details: 'Action disabled', state: this.onTrue ? "true" : "false", triggered: "false" });
         }
     }
 

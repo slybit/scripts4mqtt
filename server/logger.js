@@ -286,11 +286,15 @@ const extractRuleTriggersAndActions = function (filename, maxLineCount, logs, ru
         // end
         rl.on('close', function () {
             for (let i = buffer.length-1; i>=0; i--) {
+                try {
                 let log = JSON.parse(buffer[i]);
-                if (log.ruleId === ruleId && ((log.type === 'condition' && log.triggered === 'true') || log.type === 'action')) {
+                if (log.ruleId === ruleId && (log.type === 'condition' || log.type === 'action') && log.triggered === 'true') {
                     logs.push(log);
                     if (logs.length >= maxLineCount) break;
                 }
+            } catch (e) {
+                console.log(`Could not parse ${buffer[i]} as JSON`);
+            }
             }
             // keep only the required number of lines
             logs.splice(maxLineCount);
