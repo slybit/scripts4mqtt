@@ -139,7 +139,7 @@ class EMailAction extends Action {
                 logger.error("EMailAction execution failed", { ruleId: action.rule.id, ruleName: action.rule.name, type: "action", subtype: "email", details: `subject: ${data.subject}`, state: action.onTrue ? "true" : "false", triggered: "true", error: err.message });
             }
         } else {
-            logger.info("EMailAction not executed (disabled)", { ruleId: this.rule.id, ruleName: this.rule.name, type: "action", subtype: "email", details: 'Action disabled', state: action.onTrue ? "true" : "false", triggered: "false" });
+            logger.info("EMailAction not executed (disabled)", { ruleId: this.rule.id, ruleName: this.rule.name, type: "action", subtype: "email", details: 'Action disabled', state: this.onTrue ? "true" : "false", triggered: "false" });
         }
     }
 
@@ -181,7 +181,7 @@ class PushoverAction extends Action {
                 logger.error("PushoverAction execution failed", { ruleId: action.rule.id, ruleName: action.rule.name, type: "action", subtype: "pushover", details: `subject: ${data.title}`, state: action.onTrue ? "true" : "false", triggered: "true", error: err.message });
             }
         } else {
-            logger.info("PushoverAction not executed (disabled)", { ruleId: this.rule.id, ruleName: this.rule.name, type: "action", subtype: "pushover", details: 'Action disabled', state: action.onTrue ? "true" : "false", triggered: "false" });
+            logger.info("PushoverAction not executed (disabled)", { ruleId: this.rule.id, ruleName: this.rule.name, type: "action", subtype: "pushover", details: 'Action disabled', state: this.onTrue ? "true" : "false", triggered: "false" });
         }
     }
 
