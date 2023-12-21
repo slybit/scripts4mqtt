@@ -30,6 +30,7 @@ jobs:
             - name: Build the react app
               run: |
                 cd client
+                npm install
                 npm run build
 
             # - name: Log in to Docker Hub
