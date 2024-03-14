@@ -1,4 +1,4 @@
-FROM node:erbium-alpine
+FROM node:current-alpine
 
 # Install tzdata so we can set the timezone
 RUN apk add tzdata

@@ -43,22 +43,21 @@ Exported
 Reads the config file and returns it as an object.
 */
 parse = function () {
-  if (fs.existsSync(FILE)) {
-    try {
-      return yaml.load(fs.readFileSync(FILE, 'utf8'));
-    } catch (e) {
-      console.log(e);
-      process.exit();
+    let config = {};
+    // read the original config in 'config'
+    if (fs.existsSync(FILE)) {
+        try {
+            config = yaml.load(fs.readFileSync(FILE, 'utf8'));
+        } catch (e) {
+            console.log(e);
+            process.exit();
+        }
+    } else {
+        console.log("Config file not found at " + FILE);
+        process.exit();
     }
-  } else {
-    return {
-      loglevel: 'silly',
-      port: 4000,
-      mqtt: {
-        url: 'mqtt://localhost'
-      }
-    }
-  }
+
+    return config;
 }
 
 module.exports = { parse, getConfig, updateConfig }

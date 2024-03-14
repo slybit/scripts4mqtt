@@ -25,7 +25,7 @@ rules.scheduleTimerConditionChecker();
 let processMessage = function (topic, message, packet) {
     // message is a Buffer, so first convert it to a String
     message = message.toString();
-    logger.silly("MQTT received", {topic: topic, data: saveJSONParse(message)});
+    logger.debug("MQTT received", {topic: topic, data: saveJSONParse(message)});
     // now parse the data
     let data = undefined;
     if (message === 'true') {
@@ -75,7 +75,7 @@ let setMqttHandlers = function (mqttClient) {
     });
 
     mqttClient.on('close', function () {
-        logger.info('MQTT disconnected');
+        logger.warn('MQTT disconnected');
     });
 
     mqttClient.on('reconnect', function () {
@@ -87,7 +87,7 @@ let setMqttHandlers = function (mqttClient) {
         // ignore the initial retained messages
         if (!packet.retain) justStarted = false;
         // log the message to the mqtt logger if not justStarted (old, retained messages are not logged)
-        if (!justStarted) mqttlogger.info("MQTT message recieved", {"topic" : topic, "msg": message.toString()});
+        if (!justStarted) mqttlogger.debug("MQTT message recieved", {"topic" : topic, "msg": message.toString()});
 
         let withActions = !justStarted || config.retained
         // send the message to the rule engine

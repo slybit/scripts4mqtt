@@ -26,7 +26,7 @@ class Rules {
     }
 
     loadRules() {
-        logger.info("Parsing rules");
+        logger.debug("Parsing rules");
         this.jsonContents = {};
         this.rules = {};
         if (fs.existsSync(FILENAME)) {
@@ -42,7 +42,7 @@ class Rules {
             try {
                 let rule = new Rule(key, this.jsonContents[key]);
                 this.rules[key] = rule;
-                logger.info('loaded %s', rule.toString());
+                logger.debug('loaded %s', rule.toString());
             } catch (e) {
                 logger.error('Error loading rule', { ruleId: key, error: e.toString() });
                 console.log(e);
@@ -55,7 +55,7 @@ class Rules {
 
 
     saveRules() {
-        logger.info("Saving rules");
+        logger.debug("Saving rules");
         try {
             fs.writeFileSync(FILENAME, yaml.dump(this.jsonContents));
         } catch (e) {
@@ -81,11 +81,11 @@ class Rules {
             let rule = this.rules[key];
             for (let c of rule.conditions)
                 if ((c instanceof MqttCondition) && (c.topic === topic)) {
-                    logger.silly('Rule: topic matches, evaluating...', { ruleId: rule.id, ruleName: rule.name, topic: topic });
+                    logger.debug('Rule: topic matches, evaluating...', { ruleId: rule.id, ruleName: rule.name, topic: topic });
                     if (c.evaluate(withActions) && withActions)
                         rule.scheduleActions(context);
                 } else if ((c instanceof AliasCondition) && (c.usesTopic(topic))) {
-                    logger.silly('Rule: topic matches, evaluating...', { ruleId: rule.id, ruleName: rule.name, topic: topic });
+                    logger.debug('Rule: topic matches, evaluating...', { ruleId: rule.id, ruleName: rule.name, topic: topic });
                     if (c.evaluate(withActions, topic) && withActions)
                         rule.scheduleActions(context);
                 }
@@ -113,7 +113,7 @@ class Rules {
                 let rule = this.rules[key];
                 for (let c of rule.conditions)
                     if ((c instanceof CronCondition)) {
-                        logger.silly('Rule: cron tick, evaluating cron expressions', { ruleId: rule.id, ruleName: rule.name });
+                        logger.debug('Rule: cron tick, evaluating cron expressions', { ruleId: rule.id, ruleName: rule.name });
                         if (c.evaluate())
                             rule.scheduleActions(context);
                     }
@@ -131,7 +131,7 @@ class Rules {
      -------------------------------------------------------------------------------------------- */
 
     validateRulesFile() {
-        logger.info("Validating rules file");
+        logger.debug("Validating rules file");
         if (fs.existsSync(FILENAME)) {
             try {
                 this.jsonContents = yaml.load(fs.readFileSync(FILENAME, 'utf8'));
@@ -471,7 +471,7 @@ class Rule {
                 logger.info('Rule action schedule - delayed execution', { ruleId: a.rule.id, ruleName: a.rule.name, type: "schedule", subtype: "single", state: onTrue ? "true" : "false", details: `delay: ${a.delay}` });
                 a.pending = setTimeout(a.execute.bind(a, context), a.delay);
             } else if (a.delay == 0) {
-                logger.debug('Rule action schedule - immediate execution', { ruleId: a.rule.id, ruleName: a.rule.name });
+                logger.info('Rule action schedule - immediate execution', { ruleId: a.rule.id, ruleName: a.rule.name });
                 a.execute(context);
             }
             if (a.interval > 0) {

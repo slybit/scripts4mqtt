@@ -38,6 +38,10 @@ const valueAdder = format((info) => {
     return info;
 })();
 
+const addLabel = format((info) => {
+    return {"label": "SCRIPTS4MQTT", ...info};
+})();
+
 
 // Only log rule related log events
 const filterRules = format((info, opts) => {
@@ -100,7 +104,7 @@ let esTransport = undefined;
 if (config.es && config.es.enabled) {
     const esTransportOpts = {
         level: config.loglevel,
-        format: combine(format.splat(), valueAdder),
+        format: combine(format.splat(), valueAdder, addLabel),
         clientOpts: {
             node: config.es.node ? config.es.node : 'http://localhost:9200'
         }

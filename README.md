@@ -76,6 +76,8 @@ $ ./build_docker.sh VERSION
 
 The script basically goes through the steps above (building the client, etc.) and then runs a 'docker build' to create an image tagged with 'scripts4mqtt:VERSION'.
 
+!!Build it using node v16!!
+
 Finally start your own container:
 
 ```sh
