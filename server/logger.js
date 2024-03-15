@@ -85,7 +85,7 @@ stream._write = (chunk, encoding, next) => {
 }
 
 let streamTransport = new (transports.Stream)({
-    level: debug,
+    level: 'debug',
     stream: stream,
     format: format.combine(
         format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
