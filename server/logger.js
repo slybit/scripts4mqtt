@@ -61,7 +61,7 @@ const filterRules = format((info, opts) => {
 
 // Transport for the Rules logs
 let rulesTransport = new (transports.DailyRotateFile)({
-    level: 'info',
+    level: 'debug',
     filename: 'rules-%DATE%.log',
     datePattern: 'YYYY-MM-DD',
     zippedArchive: false,
@@ -85,7 +85,7 @@ stream._write = (chunk, encoding, next) => {
 }
 
 let streamTransport = new (transports.Stream)({
-    level: config.loglevel,
+    level: debug,
     stream: stream,
     format: format.combine(
         format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
@@ -147,7 +147,7 @@ const transportsList = [
                 return `${info.timestamp} | ${info.level.padEnd(7).toUpperCase()} | ${message} | ${JSON.stringify(leftovers)}`;
             })
         ),
-        level: config.debug ? config.loglevel : 'error'     // overwrite the error level for the server console logs
+        level: config.loglevel
     }),
     //new transports.File({
     //  filename: 'default.log',
@@ -178,6 +178,7 @@ const logger = createLogger({
 
 // Transport for the MQTT logs
 let mqttTransport = new (transports.DailyRotateFile)({
+    level: 'info',
     filename: 'mqtt-%DATE%.log',
     datePattern: 'YYYY-MM-DD',
     zippedArchive: false,
@@ -202,6 +203,7 @@ const mqttlogger = createLogger({
 
 // Transport for the LogBook logs
 let logbookTransport = new (transports.DailyRotateFile)({
+    level: 'info',
     filename: 'logbook-%DATE%.log',
     datePattern: 'YYYY-MM',
     zippedArchive: false,
