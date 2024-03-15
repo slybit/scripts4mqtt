@@ -81,11 +81,11 @@ class Rules {
             let rule = this.rules[key];
             for (let c of rule.conditions)
                 if ((c instanceof MqttCondition) && (c.topic === topic)) {
-                    logger.debug('Rule: topic matches, evaluating...', { ruleId: rule.id, ruleName: rule.name, topic: topic });
+                    logger.silly('Rule: topic matches, evaluating...', { ruleId: rule.id, ruleName: rule.name, topic: topic });
                     if (c.evaluate(withActions) && withActions)
                         rule.scheduleActions(context);
                 } else if ((c instanceof AliasCondition) && (c.usesTopic(topic))) {
-                    logger.debug('Rule: topic matches, evaluating...', { ruleId: rule.id, ruleName: rule.name, topic: topic });
+                    logger.silly('Rule: topic matches, evaluating...', { ruleId: rule.id, ruleName: rule.name, topic: topic });
                     if (c.evaluate(withActions, topic) && withActions)
                         rule.scheduleActions(context);
                 }
@@ -113,7 +113,7 @@ class Rules {
                 let rule = this.rules[key];
                 for (let c of rule.conditions)
                     if ((c instanceof CronCondition)) {
-                        logger.debug('Rule: cron tick, evaluating cron expressions', { ruleId: rule.id, ruleName: rule.name });
+                        logger.silly('Rule: cron tick, evaluating cron expressions', { ruleId: rule.id, ruleName: rule.name });
                         if (c.evaluate())
                             rule.scheduleActions(context);
                     }
@@ -442,40 +442,40 @@ class Rule {
     */
     scheduleActions(context) {
         if (context.topic === "__cron__") {
-            logger.debug('Rule triggered by cron tick', { ruleId: this.id, ruleName: this.name });
+            logger.silly('Rule triggered by cron tick', { ruleId: this.id, ruleName: this.name });
         } else {
-            logger.debug('Rule triggered by topic', { ruleId: this.id, ruleName: this.name, topic: context.topic });
+            logger.silly('Rule triggered by topic', { ruleId: this.id, ruleName: this.name, topic: context.topic });
         }
 
         if (!this.enabled) {
-            logger.debug('Rule disabled, not scheduling actions', { ruleId: this.id, ruleName: this.name });
+            logger.silly('Rule disabled, not scheduling actions', { ruleId: this.id, ruleName: this.name });
             return;
         }
 
         let onTrue;
         let actions = [];
         if (Rule.evalLogic(this.logic)) {
-            logger.debug("Rule scheduling TRUE actions", { ruleId: this.id, ruleName: this.name });
+            logger.silly("Rule scheduling TRUE actions", { ruleId: this.id, ruleName: this.name });
             onTrue = true;
             actions = this.onTrueActions;
         } else {
-            logger.debug("Rule scheduling FALSE actions", { ruleId: this.id, ruleName: this.name });
+            logger.silly("Rule scheduling FALSE actions", { ruleId: this.id, ruleName: this.name });
             onTrue = false;
             actions = this.onFalseActions;
         }
-        logger.debug("Rule cancelling all pending actions (delay and repeat)", { ruleId: this.id, ruleName: this.name });
+        logger.silly("Rule cancelling all pending actions (delay and repeat)", { ruleId: this.id, ruleName: this.name });
         this.cancelPendingActions();
 
         for (let a of actions) {
             if (a.delay > 0) {
-                logger.info('Rule action schedule - delayed execution', { ruleId: a.rule.id, ruleName: a.rule.name, type: "schedule", subtype: "single", state: onTrue ? "true" : "false", details: `delay: ${a.delay}` });
+                logger.silly('Rule action schedule - delayed execution', { ruleId: a.rule.id, ruleName: a.rule.name, type: "schedule", subtype: "single", state: onTrue ? "true" : "false", details: `delay: ${a.delay}` });
                 a.pending = setTimeout(a.execute.bind(a, context), a.delay);
             } else if (a.delay == 0) {
-                logger.info('Rule action schedule - immediate execution', { ruleId: a.rule.id, ruleName: a.rule.name });
+                logger.silly('Rule action schedule - immediate execution', { ruleId: a.rule.id, ruleName: a.rule.name, type: "schedule", subtype: "single", state: onTrue ? "true" : "false", details: `delay: 0` });
                 a.execute(context);
             }
             if (a.interval > 0) {
-                logger.info('Rule action schedule - repeated execution with interval', { ruleId: a.rule.id, ruleName: a.rule.name, type: "schedule", subtype: "repeat", state: onTrue ? "true" : "false", details: `interval: ${a.interval}` });
+                logger.silly('Rule action schedule - repeated execution with interval', { ruleId: a.rule.id, ruleName: a.rule.name, type: "schedule", subtype: "repeat", state: onTrue ? "true" : "false", details: `interval: ${a.interval}` });
                 a.repeater = setInterval(a.execute.bind(a, context), a.interval);
 
             }
@@ -492,12 +492,12 @@ class Rule {
             if (a.pending !== undefined) {
                 clearTimeout(a.pending);
                 a.pending = undefined;
-                logger.info('Rule pending action cancelled', { ruleId: a.rule.id, ruleName: a.rule.name, type: "cancel", subtype: "single", state: onTrue ? "true" : "false", details: `delay: ${a.delay}` });
+                logger.silly('Rule pending action cancelled', { ruleId: a.rule.id, ruleName: a.rule.name, type: "cancel", subtype: "single", state: onTrue ? "true" : "false", details: `delay: ${a.delay}` });
             }
             if (a.repeater !== undefined) {
                 clearInterval(a.repeater);
                 a.repeater = undefined;
-                logger.info('Rule repeating action cancelled', { ruleId: a.rule.id, ruleName: a.rule.name, type: "cancel", subtype: "repeat", state: onTrue ? "true" : "false", details: `interval: ${a.interval}` });
+                logger.silly('Rule repeating action cancelled', { ruleId: a.rule.id, ruleName: a.rule.name, type: "cancel", subtype: "repeat", state: onTrue ? "true" : "false", details: `interval: ${a.interval}` });
             }
         }
     }

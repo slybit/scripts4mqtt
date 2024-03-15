@@ -5,9 +5,9 @@ loglevel: 'info'
 # The location where the logs files will be stored. This can be relative or absolute.
 # This should not be touched when running scripts4mqtt inside a docker container.
 logpath: '../logs'
-# Debug mode
-# If disabled, the console logs will only contain error logs. Otherwise they follow the loglevel above.
-debug: true
+# Silly mode
+# If enabled, the dynamic server logs inside the WEB UI will show all logs. Otherwise they show 'debug' and above.
+silly: true
 # Development mode (default false)
 # If enabled, no actual MQTT messages will be sent out
 development: true

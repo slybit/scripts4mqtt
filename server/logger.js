@@ -56,7 +56,8 @@ const filterRules = format((info, opts) => {
        - file in log folder
        - elasticsearch
        - rule logs (for UI)
-    The log level is defined by the user in the config
+    The log level of CONSOLE and ELATICSEARCH is defined by the user in the config.
+    The other levels are fixed.
 ----------------------------------------------------------------------------------------------- */
 
 // Transport for the Rules logs
@@ -85,7 +86,7 @@ stream._write = (chunk, encoding, next) => {
 }
 
 let streamTransport = new (transports.Stream)({
-    level: 'debug',
+    level: config.silly ? 'silly' : 'debug',
     stream: stream,
     format: format.combine(
         format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),

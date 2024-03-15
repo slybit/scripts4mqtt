@@ -124,7 +124,7 @@ class MqttCondition extends Condition {
             logger.error('Error during MqttCondition evaluation', { error: `Could not parse message to json: ${message}` });
             //logger.error(err.stack);
         }
-        logger.info("MQTT condition evaluated", {
+        logger.debug("MQTT condition evaluated", {
             ruleId: this.rule.id,
             ruleName: this.rule.name,
             type: "condition",
@@ -193,7 +193,7 @@ class AliasCondition extends Condition {
             value: { ...logInfo.message },        // we clone message here, because the valueAdder log formatter changes this object
             comparison: `[${logInfo.data}] ${this.operator} [${this.value}]`
         });
-        
+
         return canTrigger && this.triggered();
     }
 
@@ -264,7 +264,7 @@ class CronCondition extends Condition {
 
         if (match) {
             //logger.info('Rule [%s]: cron evaluated: state: %s, match: %s, flipped: %s', this.rule.name, this.state, match, this.flipped());
-            logger.info("Cron condition evaluated", {
+            logger.debug("Cron condition evaluated", {
                 ruleId: this.rule.id,
                 ruleName: this.rule.name,
                 type: "condition",
